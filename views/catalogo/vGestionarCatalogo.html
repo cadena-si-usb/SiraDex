@@ -1,0 +1,50 @@
+{{ extend 'SIRADEXLayout.html' }}
+        <!-- Contenido principal de la pagina -->
+        <section class = "main">
+            <section class = "contenido">
+                <div class = "session_message">
+                    {{ =message or ''}}
+                </div>
+                <h3 id = "titulo"> Gestión de Catalogos </h3>
+                <br/>
+                <div class= "table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <td class="col-md-4"><b>Nombre</b></td>
+                            <td class="col-md-2"><b>Editar</b></td>
+                            <td class="col-md-2"><b>Examinar</b></td>
+                            <td class="col-md-2"><b>Eliminar</b></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{for catalogo in catalogos:}}
+                            <tr>
+                                <td class="col-md-4">
+                                    {{ =catalogo.nombre}}
+                                </td>
+                                <td class="col-md-2">
+                                    <a href = "{{=URL(f='vModificarCatalogo', args=[ catalogo.nombre ])}}">
+                                        {{=IMG(_src=URL('static', 'iconos/Edit.png')), }}
+                                    </a>
+                                </td>
+                                <td class="col-md-2">
+                                    <a href = "{{=URL(f='vMostrarCatalogo', args=[ catalogo.nombre ])}}">
+                                        {{=IMG(_src=URL('static', 'iconos/Examine_26x26.png')), }}
+                                    </a>
+                                </td>
+                                <td class="col-md-2">
+                                <a onClick = "if(confirm('¿Está seguro de que desea eliminar el catalogo?')) {window.location.href = '{{=URL(f='eliminarCampos',args=[ catalogo.nombre ] )}}';}">
+                                    {{=IMG(_src=URL('static', 'iconos/Delete.png')), }}
+                                </td>
+                            </tr>
+                        {{pass}}
+                    </tbody>
+                </table>
+                </div>
+                <br/>
+                
+            </section><!-- close main -->
+        </section>
+    </body>
+</html>

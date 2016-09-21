@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+{{extend 'SIRADEXLayout.html'}}
+			<h3>
+				<div id ="titulo"> Mi Perfil </div>
+			</h3>
+            <br>
+			<h4>
+				<a id="editar" href="{{=URL('vEditarPerfil')}}" >
+					{{=IMG(_src=URL('static', 'iconos/Edit.png')), }}
+					Editar Perfil
+				</a>
+			</h4>
+            <br>
+            <div class="container-fluid col-md-6 col-md-offset-4">
+                {{=form1}}
+            </div>

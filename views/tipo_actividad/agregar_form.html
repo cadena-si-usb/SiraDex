@@ -1,0 +1,17 @@
+{{extend 'SIRADEXLayout.html'}}
+
+<!-- <link href="{{=URL('static', 'css/camposFormStyle.css')}}" rel="stylesheet" type="text/css" /> -->
+{{# = form }}
+<form enctype="multipart/form-data"
+      action="{{=URL()}}" method="post">
+Nombre:
+<input name="nombre" />
+Tipo:
+<input name="tipo" />
+Obligatoria:
+<input name="oblig" type = "checkbox" />
+Catalogo:
+<input name="name" />
+<input type="submit" />
+</form>
+{{ = A('Agregar', _href = URL('tipo_actividad', 'campos_agregados'), cid = 'campos') }}

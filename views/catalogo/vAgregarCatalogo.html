@@ -1,0 +1,19 @@
+{{ extend 'SIRADEXLayout.html' }}
+        <!-- Contenido principal de la pagina -->
+        <section class = "main">
+            <section class = "contenido">
+                <div class = "session_message">
+                    {{ =session.message or ''}}
+                </div>
+                <h4 id = "titulo"> Agregar Catalogo </h4>                 
+                <br/>
+                <div>
+                    {{=forma}}
+                </div>
+                <br/>
+                
+            </section><!-- close main -->
+        </section>
+        <!-- Es un footer pues -->
+    </body>
+</html>

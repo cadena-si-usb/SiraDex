@@ -1,0 +1,80 @@
+<html>
+	<head>
+		<meta charset = "UTF-8">
+		{{include 'web2py_ajax.html'}}
+		{{response.files.append(URL('static','css/layoutStyle.css'))}}
+		<!-- Hago link con bootstrap, css del layout y archivo JavaScript de Web2PY -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <link href="{{=URL('static', 'css/layoutStyle.css')}}" rel="stylesheet" type="text/css" />
+        <link href="{{=URL('static', 'js/web2py.js')}}" />
+        <link rel="shortcut icon" href="{{=URL('static','iconos/favicon.ico')}}" type="image/x-icon">
+        <!-- Selecciono el template (colores) de la pagina -->
+        {{ if session.template == 1:}}
+            <link href="{{=URL('static', 'css/templateAzulClaro.css')}}" rel="stylesheet" type="text/css" />
+        {{ elif session.template == 2:}}
+            <link href="{{=URL('static', 'css/templateAzulOscuro.css')}}" rel="stylesheet" type="text/css" />
+        {{ elif session.template == 3:}}
+            <link href="{{=URL('static', 'css/templateMarron.css')}}" rel="stylesheet" type="text/css" />
+        {{ elif session.template == 4:}}
+            <link href="{{=URL('static', 'css/templateVerde.css')}}" rel="stylesheet" type="text/css" />
+        {{ else: }}
+            <link href="{{=URL('static', 'css/templateAzulClaro.css')}}" rel="stylesheet" type="text/css" />
+        {{ pass }}
+		<title> SIRADEX </title>
+	</head>
+
+	<body>
+		<header>
+			<!-- Banner de SIRADEX -->
+			<div id = "logo">
+				{{=IMG(_src=URL('static', 'images/banner.jpg')) }}
+			</div>
+			<!-- Menu del headder -->
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <ul class="nav navbar-nav navbar-right">
+                    {{ if admin == 1: }}
+                        <li><a href="{{=URL(c='default', f='setVista.html', args=[2])}}">Administrador</a></li>
+                        <li><a href="{{=URL(c='default', f='setVista.html', args=[1])}}">DEX</a></li>
+                    {{ elif admin == 2: }}
+                        <li><a href="{{=URL(c='default', f='setVista.html', args=[1])}}">DEX</a></li>
+                    {{ pass }}
+                        <li><a href="{{=URL(c='default', f='setVista.html', args=[0])}}">Usuario</a></li>
+                        <li><a href="{{=URL(c='default', f='vVerPerfil.html')}}">Ver Perfil</a></li>
+                        <li><a href="{{=URL(c='busq_val', f='busqueda.html')}}">Búsqueda</a></li>
+                        <li><a href="#">Ayuda</a></li>
+                        <li>
+                            <a class ='btn btn-xs' href="{{=URL(c='default', f='logout_cas.html')}}">
+                                <span class="glyphicon glyphicon-user"></span>
+                                Cerrar Sesión
+                            </a>
+                        </li>
+                </ul>
+              </div>
+            </nav>
+		</header>
+		<!-- Contenido principal de la pagina -->
+		<section class = "main">
+			<!-- En esta seccion va t0do el contenido de la pagina -->
+			<section class = "contenido">
+				<!-- Cuando se extienda este layout, el contenido del html
+				     entrara aqui -->
+				{{include}}
+
+			</section><!-- close contenido -->
+		</section><!-- close main -->
+		<!-- Es un footer pues -->
+        <footer>
+            <nav class="navbar navbar-default">
+              <div class="container-fluid">
+                <p id="footerContactenos">Sartenejas, Baruta, Edo. Miranda - Apartado 89000 - Cable Unibolivar - Caracas Venezuela. Teléfono +58 0212-906.3111</p>
+              </div>
+            </nav>
+		</footer>
+
+        <!-- JavaScript de bootstrap -->
+        <script src="{{=URL('static','js/bootstrap.min.js')}}"></script>
+        <script src="{{=URL('static','js/web2py-bootstrap3.js')}}"></script>
+
+	</body>
+</html>

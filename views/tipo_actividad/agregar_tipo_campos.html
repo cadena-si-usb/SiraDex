@@ -1,0 +1,61 @@
+{{#extend 'SIRADEX_tipos_Actividad_layout.html'}}
+{{extend 'SIRADEXLayout.html'}}
+<link href="{{=URL('static', 'css/camposFormStyle.css')}}" rel="stylesheet" type="text/css" />
+<div class = "session_message">
+    {{ = session.message or ''}}
+</div>
+Agregue la cantidad de campos que desee
+<br/>
+<br/>
+<div id = 'campos' >
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <td class="col-md-6">Nombre</td>
+                <td class="col-md-3">Tipo</td>
+                <td class="col-md-2">Obligatorio</td>
+                <td class="col-md-1"></td>
+            </tr>
+        </thead>
+        <tbody>
+            {{for campo in campos:}}
+                <tr>
+                    <td class="col-md-6">{{=campo.CAMPO.nombre}}</td>
+                    <td class="col-md-3">{{=campo.CAMPO.lista}}</td>
+                    <td class="col-md-2">{{=campo.CAMPO.obligatorio}}</td>
+                    <td class="col-md-1">
+                        <a href = "{{=URL(f='eliminar_campo', args=[ campo.CAMPO.id_campo ] )}}">
+                            {{=IMG(_src=URL('static', 'iconos/Delete_26x26.png'))}}
+                        </a>
+                    </td>
+                </tr>
+            {{pass}}
+        </tbody>
+    </table>
+</div>
+<br/>
+<div id = 'formulario'>
+    {{= form.custom.begin}}
+    <table class="table table-condensed">
+        <tr>
+        <td class="col-md-2">Nombre</td>     <td class="col-md-3">{{= form.custom.widget.Nombre}}</td>
+        <td class="col-md-1">Tipo</td>       <td class="col-md-2">{{= form.custom.widget.Tipo}}</td>
+        <td class="col-md-2">Obligatorio</td><td class="col-md-1">{{= form.custom.widget.Obligatorio}}</td>
+        <td class="col-md-2">Catalogo</td>   <td class="col-md-3">{{= form.custom.widget.Catalogo}}</td>
+        <td class="col-md-2">{{= form.custom.submit}}</td>
+        </tr>
+    </table>
+    {{= form.custom.end}}
+
+</div>
+<br/><br/><br/>
+<div id="buttons" class="container-fluid">
+    <row>
+        <div class="col-md-2">
+        <input type=button class="btn btn-primary" onClick="parent.location='{{=URL('tipo_actividad', 'agregar_tipo_aux')}}'" value='Finalizar'>
+        </div>
+        <div class="col-md-2 col-md-offset-3">
+        <input type=button class="btn btn-primary" onClick="parent.location='{{=URL('tipo_actividad', 'eliminar_campos') }}'" value='Abortar'>
+        </div>
+    </row>
+</div>

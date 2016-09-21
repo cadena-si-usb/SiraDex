@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta charset = "UTF-8">
+		{{include 'web2py_ajax.html'}}
+		{{response.files.append(URL('static','css/layoutStyle.css'))}}
+		<!-- hago el link con el CSS de esta pagina -->
+		<link href="{{=URL('static', 'css/layoutStyle.css')}}" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		<title> SIRADEX </title>
+		
+	</head>
+
+	<body>
+		<header>
+			<!-- Banner de SIRADEX -->
+			<div id = "logo">
+				{{=IMG(_src=URL('static', 'images/banner.jpg')) }}
+			</div>
+			
+			<!-- Menu del headder -->
+			<nav>
+				<ul>
+					<li><a href = "#">Ayuda</a></li>
+					<li> | </li>
+					<li><a href = "#">Contáctenos</a></li>
+					<li> | </li>
+					<li><a href = "#">Búsqueda</a></li>
+					<li> | </li>
+					<li><a href = "{{=URL(c='default', f='index.html')}}">Inicio</a></li>
+					<!-- No se como hacer esto en web2py --^  -->
+				</ul>
+			</nav>
+		</header>
+			
+		<!-- Contenido principal de la pagina -->
+		<section class = "main">
+			
+			<!-- Menu de navegacion lateral -->
+			<aside>
+				<ul>
+					<li id="layout_aside_gestionar">
+                        <h4> Gestionar:</h4>
+                    </li>
+					<!-- No se como hacer esto en web2py ---v  -->
+					<li id=layout_aside_tipos_de_actividad>
+                        <a href="{{=URL(c='tipo_actividad', f='gestionar.html')}}">Tipos de Actividad</a>
+                    </li>
+					<li id="layout_aside_agregar_tipo">
+                        <a href="#">
+                            Actividades
+                        </a>
+                    </li>
+					<li id="layout_aside_validaciones">
+                        <a href="{{=URL(c='busq_val', f='gestionar_validacion.html')}}">
+                            Validaciones
+                        </a>
+                    </li>
+					<li id="layout_aside_catalogos">
+                        <a href="#">
+                            Catálogos
+                        </a>
+                    </li>
+					<li id="layout_aside_usuarios">
+                        <a href="#">
+                        Usuarios
+                        </a>
+                    </li>
+					<li id="layout_aside_backups">
+                        <a href="#">
+                            Backups
+                        </a>
+                    </li>
+					<br/>
+					<li id="layout_aside_logs">
+                        <a href="#">
+                            Logs
+                        </a>
+                    </li>
+					<br/>
+					<li id="layout_aside_cambiar_tipo_usuario">
+                        <a href="#">
+                            Cambiar Tipo de Usuario
+                        </a>
+                    </li>
+				</ul>
+			</aside>
+			
+			<!-- En esta seccion va todo el contenido de la pagina -->
+			<section class = "contenido">
+				
+				<!-- Cuando se retorne ejecute una funcion va a poner
+					 lo que esta retorne aqui -->
+				{{include}}
+
+			</section><!-- close contenido -->
+			
+		</section><!-- close main -->
+		
+		
+		<!-- Es un footer pues -->
+		<footer>
+			<p> Universidad Simón Bolívar </p>
+		</footer>
+
+	</body>
+</html>

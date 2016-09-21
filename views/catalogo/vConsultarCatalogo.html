@@ -1,0 +1,15 @@
+{{ extend 'SIRADEXLayout.html' }}
+        <!-- Contenido principal de la pagina -->
+        <section class = "main">
+            <section class = "contenido">
+                <h4 id = "titulo"> Gestión de Catalogos </h4>
+                <p>
+                    <a href = "{{=URL('vAgregarElementoCampo')}}">
+                        {{=IMG(_src=URL('static', 'iconos/Add_26x26.png')) }}
+                        Agregar Elemento
+                    </a>
+                </p>
+            </section><!-- close main -->
+        </section>
+    </body>
+</html>

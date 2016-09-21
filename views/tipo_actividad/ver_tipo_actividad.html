@@ -1,0 +1,44 @@
+{{#extend 'SIRADEX_tipos_Actividad_layout.html'}}
+{{extend 'SIRADEXLayout.html'}}
+
+<h3 id="titulo"> Consulta de Tipo de Actividad</h3>
+<br/>
+<!-- Boton para volver, se elimino porque se pensaba no tenia mucha utilidad
+<button class="btn btn-default">
+    <a href="{{=request.env.http_referer}}">Volver</a>
+</button>
+-->
+<!-- <button class="btn btn-default" onClick="{{=URL(c='tipo_actividad', f='modificar_tipo.html', args=[tipo.id_tipo])}}"> -->
+<!-- <button class="btn btn-link"> -->
+    <a href="{{=URL(c='tipo_actividad', f='modificar_tipo.html', args=[tipo.id_tipo])}}">Modificar</a>
+<!-- </button> -->
+<br/>
+<br/>
+
+<table class="table table-bordered">
+    <tr> <th class="col-md-2">Nombre</td>           <td class="col-md-6">{{=tipo.nombre}}</td> </tr>
+    <tr> <th class="col-md-2">Descripción</td>      <td class="col-md-6">{{=tipo.descripcion}}</td> </tr>
+    <tr> <th class="col-md-2">Tipo de Programa</td> <td class="col-md-6">{{=tipo.tipo_p_r}}</td> </tr>
+    <tr> <th class="col-md-2">Programa</td>         <td class="col-md-6">{{=tipo.programa}}</td> </tr>
+    <!--<tr> <th class="col-md-2">Producto</td>         <td class="col-md-6">{{=tipo.producto}}</td> </tr>-->
+</table>
+
+<h4> Campos </h4>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="col-md-4">Nombre</td>
+            <th class="col-md-3">Tipo</td>
+            <th class="col-md-2">Obligatorio</td>
+        </tr>
+    </thead>
+    <tbody>
+        {{for campo in campos:}}
+            <tr>
+                <td class="col-md-4">{{=campo.nombre}}</td>
+                <td class="col-md-3">{{=campo.lista}}</td>
+                <td class="col-md-2">{{=campo.obligatorio}}</td>
+            </tr>
+        {{pass}}
+    </tbody>
+</table>

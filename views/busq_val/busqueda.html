@@ -1,0 +1,110 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
+{{ extend 'SIRADEXLayout.html'}}
+
+<head>
+    {{response.files.append(URL('static','css/validacion.css'))}}
+    {{response.files.append(URL('static','css/layoutStyle.css'))}}
+    <link href="{{=URL('static', 'css/validacion.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{=URL('static', 'css/layoutStyle.css')}}" rel="stylesheet" type="text/css" />
+</head>
+<h1 id="banner_h1">
+
+<body>
+    <h3 id = "titulo"> Búsquedas Públicas </h4>
+    <br>
+    <div class = "session_message">
+        {{= session.message or ''}}
+        {{ session.message = '' }}
+    </div>
+    <br/>
+    <input type="text" id="search" placeholder="Busqueda">
+    <section class = "main">
+        <!-- Menu de navegacion lateral -->
+        <aside>
+            <ul>
+                <li id="layout_aside_filtros">
+            <h4 > Búsqueda avanzada:</h4>
+                </li>
+                <select id="clmn_name">
+                    <option>ID</option>
+                    <option>Estado actividad</option>
+                    <option>Nombre Actividad</option>
+                </select>
+                <input id="kwd_search" >
+
+            </ul>
+        </aside>
+        
+        <section class="contenido">
+            <table id="table" class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="col-md-4">ID</td>
+                    <th class="col-md-7">Nombre actividad</td>
+                    <th class="col-md-7">Estado actividad</td>
+                </tr>
+                </thead>
+                <tbody>
+                    {{for actividad in actividades:}}
+                        <tr>
+                            <td class="col-md-4">
+                                {{=actividad.id_actividad}}
+                            </td>
+                            {{for tipo in tipos:}}
+                                {{if actividad.id_tipo == tipo.id_tipo:}}
+                                    <td class="col-md-7">
+                                        {{=tipo.nombre}}
+                                    </td>
+                                    {{break}}
+                                {{pass}}
+                            
+                            
+                                {{if actividad.estado != None:}}
+                                    <td class="col-md-7">
+                                        {{=actividad.estado}}
+                                    </td>
+                                {{else:}}
+                                    <td class="col-md-7">
+                                        Inactivo
+                                    </td>
+                                {{pass}}
+                            {{pass}}
+                            
+                        </tr>
+                    {{pass}}
+                </tbody>
+            </table>
+            <script>
+                $(document).ready(function () {
+                var $s = $('#clmn_name').on('change', filter);
+                var $i = $("#kwd_search").on('keyup', filter);
+                var $rows = $("#table tbody > tr");
+
+                function filter() {
+                    var index = $s.prop('selectedIndex');
+                    var term = $.trim($i.val().toLowerCase());
+                    if (term.length === 0) {
+                        $rows.show();
+                        return;
+                    }
+
+                    $rows.hide().filter(function () {
+                        return this.cells[index].textContent.toLowerCase().indexOf(term) > -1;
+                    }).show();
+
+                };
+            });
+                var $rows = $('#table tr');
+                $('#search').keyup(function() {
+                    var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+
+                    $rows.show().filter(function() {
+                        var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+                        return !~text.indexOf(val);
+                    }).hide();
+                });
+            </script>
+        </section>
+    </section>
+</body>
+</h1>

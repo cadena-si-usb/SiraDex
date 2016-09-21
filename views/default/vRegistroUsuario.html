@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+{{extend 'SIRADEXLayoutSimple.html'}}
+		<!-- Contenido principal de la pagina -->
+		<section class = "main">
+			<h3 id = titulo> Registro de Usuario </h3>
+            <br>
+			<p ALIGN = center> Por favor, complete sus datos, luego presione <b> Registrarse </b> 
+			para finalizar su registro como usuario de SIRADEX. </p>
+            <br>
+			<!-- En esta seccion va todo el contenido de la pagina -->
+			<section class = "contenido">
+				<!-- Cuando se retorne ejecute una funcion va a poner
+					 lo que esta retorne aqui -->
+                <div>
+                    <div class="container-fluid col-md-4">
+                    </div>
+                    <div class=" container-fluid col-xs-6">
+                     {{=form1}}
+                     {{=form}}
+                    </div>
+                    <div class="container-fluid col-md-4">
+                    </div>
+                </div>
+			</section><!-- close contenido -->
+		</section><!-- close main -->
+	</body>
+</html>

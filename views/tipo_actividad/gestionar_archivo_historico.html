@@ -1,0 +1,55 @@
+{{extend 'SIRADEXLayout.html'}}
+
+<head>
+    {{response.files.append(URL('static','css/agregarTipo.css')) }}
+    <link href="{{=URL('static', 'css/agregarTipo.css')}}" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <h3 id="titulo"> Gestión de Archivo Histórico </h3>
+
+    <div class = "session_message">
+        {{= session.message or ''}}
+        {{ session.message = '' }}
+    </div>
+    <br/>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th class="col-md-4">Nombre</td>
+            <th class="col-md-7">Descripcion</td>
+            <th class="col-md-1"> </td>
+            <td class="col-md-1"> </td>
+        </tr>
+        </thead>
+        <tbody>
+            {{for tipo in tipos_papelera:}}
+                <tr>
+                    <td class="col-md-4">
+                        <a href="{{=URL(f='ver_tipo_actividad.html', args=[tipo.id_tipo])}}">
+                            {{ =tipo.nombre}}
+                        </a>
+                    </td>
+                    <td class="col-md-7">{{ =tipo.descripcion}}</td>
+                    <td class="col-md-1">
+                        <input id="icono" type="image" src="{{=URL('static', 'iconos/restaurar.png')}}"
+                               onClick="if(confirm('¿Está seguro que quiere restaurar este tipo de actividad?'))
+                                        {window.location.href = '{{=URL(f='restaurar_tipo.html', args=[ tipo.id_tipo ] )}}';}">
+
+                         <!--<a href = "{{=URL(f='restaurar_tipo.html', args=[ tipo.id_tipo ] )}}">
+                                {{=IMG(_src=URL('static', 'iconos/restaurar.png'))}}
+                        </a> -->
+                    </td>
+                    <!--BOTON DE ELIMINAR, FUE QUITADO PARA EVITAR ELIMINAR TIPOS DE MANERA PERMANENTE, LA FUNCIONALIDAD SIGUE ACIVA -->
+                    <td class="col-md-1">
+                        <input id="icono" type="image" src="{{=URL('static', 'iconos/ex.png')}}"
+                               onClick="if(confirm('¿Está seguro que desea eliminar de manera permanente este tipo de actividad? Se borraran todas las actividades asociadas al mismo.'))
+                                        {window.location.href = '{{=URL(f='eliminar_tipo_papelera.html', args=[ tipo.id_tipo ] )}}';}">
+                        </a>
+                    </td>
+                </tr>
+            {{pass}}
+        </tbody>
+    </table>
+
+</body>

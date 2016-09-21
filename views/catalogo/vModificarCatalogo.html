@@ -1,0 +1,52 @@
+{{ extend 'SIRADEXLayout.html' }}
+<link href="{{=URL('static', 'css/camposFormStyle.css')}}" rel="stylesheet" type="text/css" />
+<div class = "session_message">
+    {{ =session.message}}
+</div>
+Agregue la cantidad de campos que desee
+<br/>
+<br/>
+<div id = 'campos' >
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <td class="col-md-6">Nombre</td>
+                <td class="col-md-3">Tipo</td>
+                <td class="col-md-2">Eliminar</td>
+            </tr>
+        </thead>
+        <tbody>
+            {{for campo in campos_guardados:}}
+                <tr>
+                    <td class="col-md-6">{{=campo.CAMPO_CATALOGO.nombre}}</td>
+                    <td class="col-md-3">{{=campo.CAMPO_CATALOGO.tipo_cat}}</td>
+                    <td class="col-md-2">
+                        <a onClick = "if(confirm('¿Está seguro de que desea eliminar el campo?')) {window.location.href = '{{=URL(f='eliminarCampos2',args=[ campo.CATALOGO.nombre, campo.CAMPO_CATALOGO.id_campo_cat ] )}}';}">
+                                    {{=IMG(_src=URL('static', 'iconos/Delete.png')), }}
+                                    </a></td>
+            </tr>
+            {{pass}}
+        </tbody>
+    </table>
+</div>
+<br/>
+<div id = 'formulario'>
+    {{= form.custom.begin}}
+    <table class="table table-condensed">
+        <tr>
+        <td class="col-md-1">Nombre</td>     <td class="col-md-3">{{= form.custom.widget.nombre}}</td>
+        <td class="col-md-1">Tipo</td>       <td class="col-md-2">{{= form.custom.widget.tipo_cat}}</td>
+        <td class="col-md-2">{{= form.custom.submit}}</td>
+        </tr>
+    </table>
+    {{= form.custom.end}}
+
+</div>
+<br/><br/><br/>
+<div id="buttons" class="container-fluid">
+    <row>
+        <div class="col-md-2">
+        <input type=button class="btn btn-primary" onClick="parent.location='{{=URL('catalogo', 'agregarTipoAux2')}}'" value='Finalizar'>
+        </div>
+    </row>
+</div>
