@@ -1,0 +1,75 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background: #FFFFFF;
+}
+
+header, .main {
+	background: #FFFFFF;
+	width: 90%;
+	max-width: 1060px;
+	margin: 20px auto;	/* Esto hace que se centre (con espaciado de 20px) */
+}
+
+header nav{
+	overflow: hidden;	/* Resuelve problema con float:right */
+	background: #AFC1CB;
+	padding: 4px 5px;
+}
+
+header nav ul {
+	list-style: none;	/* Quita los puntos */
+}
+
+header nav ul li {
+	float: right;
+	padding: 0px 3px;
+}
+
+header nav ul li a {
+	text-decoration: none;
+}
+
+.main .contenido {
+	width: 80%;
+	float: left;
+	padding: 2%;
+	/*border-style: solid;*/
+}
+
+#titulo{
+	color: black
+	margin: 25px auto;
+	text-align: center;
+}
+
+#login{
+    margin: auto 939px;
+}
+
+/* Background y borde del navbar */
+.navbar-default {
+	background-color: #6384d4;
+	border-color: #6384d4;
+	/*border-radius: 0px;*/
+}
+
+/* esta vaina lo pone pequeno */
+.navbar-nav > li > a, .navbar-brand {
+    padding-top:4px !important; 
+    padding-bottom:0 !important;
+    height: 28px;
+    border-radius: 3px;
+}
+.navbar {min-height:28px !important;}
+
+/* Footer color y tamaño del texto  */
+#footerContactenos {
+    color: #FFFFFF;
+    font-size: 14px;
+    margin: 10px 0 0 0;
+    min-height: 28px;
+}

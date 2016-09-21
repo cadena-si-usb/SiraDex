@@ -1,0 +1,98 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background: #FFFFFF;
+}
+
+header, .main, footer {
+	background: #FFFFFF;
+	width: 90%;
+	max-width: 1060px;
+	margin: 20px auto;	/* Esto hace que se centre (con espaciado de 20px) */
+}
+
+header nav {
+	overflow: hidden;	/* Resuelve problema con float:right */
+	background: #AFC1CB;
+	padding: 4px 5px;
+}
+
+header nav ul {
+	list-style: none;	/* Quita los puntos */
+}
+
+header nav ul li {
+	float: right;
+	padding: 0px 3px;
+}
+
+header nav ul li a {
+	text-decoration: none;
+}
+
+.main .contenido {
+	width: 80%;
+	float: left;
+	padding: 2%;
+	/*border-style: solid;*/
+}
+
+#titulo{
+	color: blue;
+	margin: auto 250px;
+}
+
+#editar{
+	text-decoration: none;
+	color: blue;
+	margin: auto 250px;
+}
+
+#asterisco{
+	color: red;
+}
+
+#texto {
+	margin: auto 280px;
+}
+
+#campos {
+	margin: auto 285px;
+}
+
+footer {
+	background: #AFC1CB;
+	text-align: center;
+	margin: auto auto;
+	clear: both;
+	padding: 10px 0px;
+}
+
+footer nav {
+	overflow: hidden;	/* Resuelve problema con float:right */
+	background: #AFC1CB;
+	padding: 4px 5px;
+    display: inline-block;
+    float: none;
+    vertical-align: top;
+}
+
+footer nav ul {
+	list-style: none;	/* Quita los puntos */
+}
+
+footer nav ul li {
+	float: right;
+	padding: 0px 3px;
+}
+
+footer nav ul li a {
+	text-decoration: none;
+}
+
+section img {
+    width: 26px;
+}

@@ -1,0 +1,101 @@
+body, footer {
+	background: #FFFF90;
+	}
+
+/* de aqui pa alante */
+/* Background y borde del navbar */
+.navbar-default {
+	background-color: #147963;
+	border-color: #147963;
+
+	/*border-radius: 0px;*/
+}
+
+/* npi */
+.navbar-default .navbar-brand {
+	color: #ffffff;
+}
+
+/* npi */
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+	color: #c9c9c9;
+}
+
+/* Color del texto del nav */
+.navbar-default .navbar-text {
+	color: #ffffff;
+}
+
+/* Color de los links del nav */
+.navbar-default .navbar-nav > li > a {
+	color: #ffffff;
+}
+
+/* Color de los links al hacerlo focus y hover */
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+	color: #c9c9c9;
+}
+
+/* esta vaina lo pone pequeno */
+.navbar-nav > li > a, .navbar-brand {
+    padding-top:4px !important;
+    padding-bottom:0 !important;
+    height: 28px;
+}
+.navbar {min-height:28px !important;}
+
+/* Color de los links del menu desplegable */
+.dropdown-menu li a {
+    color: #FFFFFF;
+}
+
+/* Color de los links del menu desplegable cuando estas posicionado sobre el mismo*/
+a.dropdown-toggle:hover {
+    color:black;
+}
+
+/* Color de los links del menu desplegable cuando esta activo*/
+a.dropdown-toggle:focus {
+    color:black;
+}
+
+/* Color de los links del menu desplegable cuando este se abre*/
+.dropdown.open a.dropdown-toggle{
+    color:black;
+}
+
+/* Color de fondo de los nav-items cuando estas posicionado sobre el mismo*/
+.nav li a:focus, .nav li a:hover {
+    background-color: #FFFFFF
+}
+
+/* Color de fondo de los nav-items cuando este se abre*/
+.nav .open > a, .nav .open > a:focus, .nav .open > a:hover {
+    background-color: #FFFFFF
+}
+
+/* Color del titulo del menu lateral*/
+strong {
+    color: #FFFFFF;
+}
+
+/* Color de fondo del menu desplegable*/
+.dropdown-menu {
+    background-color: #147963;
+}
+
+
+/* Footer color y tamaño del texto  */
+#footerContactenos {
+    color: #FFFFFF;
+    font-size: 14px;
+    margin: 10px 0 0 0;
+    min-height: 28px;
+}
+
+/* para que salgan letras blancas en el fucking nav */
+nav a{
+    color: white;
+}

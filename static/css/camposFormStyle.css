@@ -1,0 +1,36 @@
+input, label {
+    float: left;
+}
+
+.session_message {
+    color: red;
+    text-align: center;
+    padding: 5px;
+}
+
+table {
+  table-layout: fixed;
+  width: 100%;
+  /*border: 2px solid #47A2D0;*/
+}
+
+table tr td {
+    /*width: 25%;*/
+    word-break: break-all;
+    /*border: 1px solid black;*/
+    text-align: center;
+    padding: 2px;
+}
+
+
+#tit {
+    text-align: center;
+    border-bottom: none;
+}
+
+
+#buttons {
+    /*display:block;*/
+    margin:0 auto;
+    width: 35%;
+}
