@@ -12,7 +12,7 @@
   - BASE DE DATOS: PostgreSQL
 
 
-2. WEB2PY
+1. WEB2PY
 ################################################################################
 
 Bajar y descomprimir web2py en el directorio de preferencia.
@@ -21,7 +21,7 @@ Copiar el contenido del repositorio en la carpeta web2py/applications/ dentro
 de un nuevo directorio llamado SiraDex.
 
 
-3. REQUERIMIENTOS PYTHON
+2. REQUERIMIENTOS PYTHON
 ################################################################################
 
 Asegurarse de tener python 2.7 y la version de pip para python 2.7
@@ -34,7 +34,7 @@ Ir al directorio SiraDex e instalar las librerias con
 
     $ sudo pip install -r requirements.txt
 
-1. BASE DE DATOS
+3. BASE DE DATOS
 ################################################################################
 
 Instalar PostgreSQL desde el terminal.
@@ -49,8 +49,8 @@ Iniciar sesion como usuario postgres y crear la base de datos Siradex
 Crear el usuario Siradex y garantizar el acceso a la base de datos.
 
     $ psql
-    $ CREATE USER Siradex WITH PASSWORD 'Siradex';
-    $ GRANT ALL PRIVILEGES ON DATABASE "Siradex" TO "Siradex";
+    $ CREATE USER "Siradex" WITH PASSWORD 'Siradex'; 
+    $ GRANT ALL PRIVILEGES ON DATABASE Siradex to "Siradex";
 
 Cuando este listo el script SQL, se subira el esquema. Mientras tanto, se usan
 las definiciones directas de web2py. Antes del paso 4, primero borrar todos los
