@@ -28,7 +28,7 @@ if not request.env.web2py_runtime_gae:
     # ---------------------------------------------------------------------
     # if NOT running on Google App Engine use SQLite or other DB
     # ---------------------------------------------------------------------
-    db = DAL('postgres://Siradex:Siradex@localhost/Siradex', pool_size = 10, migrate_enabled=True)
+    db = DAL('postgres://Siradex:Siradex@localhost/Siradex', pool_size = 10)
 else:
     # ---------------------------------------------------------------------
     # connect to Google BigTable (optional 'google:datastore://namespace')
@@ -142,48 +142,46 @@ db.define_table('USUARIO',
     Field('correo_alter', type='string'),
     Field('tipo',type='string',length=15,requires=IS_IN_SET(['Usuario', 'DEX', 'Administrador','Bloqueado'])),
     primarykey=['ci'],
-    migrate=True,
-    # redefine=True,
-    # migrate='usuario.table',
+    migrate=False,
 );
 
 db.define_table('USBID',
     Field('ci_usuario',db.USUARIO.ci),
     Field('usbid',type='string',length=20, notnull=True, unique=True),
     primarykey=['ci_usuario'],
-    migrate=True
+    migrate=False
 );
 
 db.define_table('JEFE_DEPENDENCIA',
     Field('id_jefe', type='string'),
     Field('ci_usuario',db.USUARIO.ci),
     primarykey=['id_jefe'],
-    migrate=True
+    migrate=False
 );
 
 db.define_table('TIPO_ACTIVIDAD',
-    Field('id_tipo', type='string'),
+    Field('id_tipo', type='id'),
     Field('nombre',type='string',length=128, notnull=True,unique=True,
-        requires=[IS_LENGTH(128,error_message='Tamaño máximo de 128 caracteres')]),
+           requires=[IS_LENGTH(128,error_message='Tamaño máximo de 128 caracteres')]),
     Field('tipo_p_r',type='string', length=1, notnull=True, requires=IS_IN_SET(["P", "R"]), default="P"),
     Field('descripcion',type='string',length=2048, notnull=True,
-        requires=[IS_LENGTH(2048,error_message='Tamaño máximo de 2048 caracteres')]),
+           requires=[IS_LENGTH(2048,error_message='Tamaño máximo de 2048 caracteres')]),
     Field('programa',type='string', length=128, notnull=True,
-        requires=[IS_LENGTH(128, error_message='Tamaño máximo de 128 caracteres')]),
-    Field('validacion',type='string', length=128, notnull=True,default='True'),
+           requires=[IS_LENGTH(128, error_message='Tamaño máximo de 128 caracteres')]),
+    Field('validacion',type='string', length=128, notnull=True, default='True'),
     Field('producto', type='string', length=256,
-        requires=[IS_NOT_EMPTY(error_message='No puede ser vacía'),
-        IS_LENGTH(256,error_message='El nombre no pude ser más de 256 caracteres')]),
+           requires=[IS_NOT_EMPTY(error_message='No puede ser vacía'),
+                     IS_LENGTH(256,error_message='El nombre no pude ser más de 256 caracteres')]),
     Field('nro_campos', type='integer', requires=IS_NOT_EMPTY(error_message='No puede ser vacía')),
     Field('id_jefe_creador',db.JEFE_DEPENDENCIA.id_jefe),
     Field('ci_usuario_propone',db.USUARIO.ci),
     Field('papelera', type='boolean', notnull = True, default=False),
     primarykey=['id_tipo'],
-    migrate=True
+    migrate=False
 );
 
 db.define_table('ACTIVIDAD',
-    Field('id_actividad',  type='string'),
+    Field('id_actividad',  type='id'),
     Field('id_tipo', db.TIPO_ACTIVIDAD.id_tipo),
     Field('validacion',type='string',default='En espera'),
     Field('estado',type='string'),
@@ -193,28 +191,28 @@ db.define_table('ACTIVIDAD',
     Field('ci_usuario_elimina', db.USUARIO.ci),
     Field('ci_usuario_crea', db.USUARIO.ci),
     primarykey=['id_actividad'],
-    migrate=True
+    migrate=False
 );
 
 db.define_table('PERMISOS_TIPO_ACT',
     Field('permiso',type='string',length=256),
     Field('id_tipo', db.TIPO_ACTIVIDAD.id_tipo),
     primarykey=['permiso','id_tipo'],
-    migrate=True
+    migrate=False
 
 );
 
 db.define_table('CATALOGO',
-    Field('id_catalogo', type='string'),
+    Field('id_catalogo', type='id'),
     Field('nro_campos',type='integer'),
     Field('nombre',type='string',length=128, unique = True),
     primarykey=['id_catalogo'],
-    migrate=True
+    migrate=False
 );
 
 
 db.define_table('CAMPO',
-    Field('id_campo', type='string'),
+    Field('id_campo', type='id'),
     Field('obligatorio', type='boolean'),
     Field('nombre',type='string', length=64,
         requires = [IS_NOT_IN_DB(db, 'CAMPO.nombre',error_message='')]),
@@ -223,30 +221,30 @@ db.define_table('CAMPO',
         widget = SQLFORM.widgets.options.widget),
     Field('despliega_cat',db.CATALOGO.id_catalogo),
     primarykey=['id_campo'],
-    migrate=True
+    migrate=False
 );
 
 
 db.define_table('CAMPO_CATALOGO',
-    Field('id_campo_cat',  type='string'),
+    Field('id_campo_cat',  type='id'),
     Field('tipo_cat',type='string', length=256,
           requires = [IS_IN_SET(tipo_campos)],
         widget = SQLFORM.widgets.options.widget),
     Field('nombre', type='string', length=64),
     Field('eliminar', type='boolean'),
     primarykey=['id_campo_cat'],
-    migrate=True
+    migrate=False
 );
 
 
 db.define_table('LOG_SIRADEX',
     Field('accion',type='string'),
-    Field('accion_fecha',type='datetime'),
-    Field('accion_ip',type='string'),
+    Field('accion_fecha',type='date'),
+    Field('accion_ip',type='string', length=256),
     Field('descripcion',type='string'),
     Field('ci_usuario',db.USUARIO.ci),
     primarykey=['accion','accion_fecha','accion_ip'],
-    migrate=True
+    migrate=False
 );
 
 
@@ -254,7 +252,7 @@ db.define_table('PARTICIPA_ACT',
     Field('ci_usuario',db.USUARIO.ci),
     Field('id_actividad',db.ACTIVIDAD.id_actividad),
     primarykey=['ci_usuario','id_actividad'],
-    migrate=True
+    migrate=False
 );
 
 db.define_table('TIENE_CAMPO',
@@ -262,21 +260,21 @@ db.define_table('TIENE_CAMPO',
     Field('id_campo', db.CAMPO.id_campo),
     Field('valor_campo', type='string', length=256),
     primarykey=['id_actividad', 'id_campo'],
-    migrate=True
+    migrate=False
 );
 
 db.define_table('ACT_POSEE_CAMPO',
     Field('id_tipo_act', db.TIPO_ACTIVIDAD.id_tipo),
     Field('id_campo', db.CAMPO.id_campo),
     primarykey=['id_tipo_act', 'id_campo'],
-    migrate=True
+    migrate=False
 );
 
 db.define_table('GESTIONA_TIPO_ACT',
     Field('id_jefe', db.JEFE_DEPENDENCIA.id_jefe),
     Field('id_tipo_act', db.TIPO_ACTIVIDAD.id_tipo),
     primarykey=['id_jefe','id_tipo_act'],
-    migrate=True
+    migrate=False
 );
 
 
@@ -284,14 +282,14 @@ db.define_table('GESTIONA_CATALOGO',
     Field('id_jefe', db.JEFE_DEPENDENCIA.id_jefe),
     Field('id_catalogo',db.CATALOGO.id_catalogo),
     primarykey=['id_jefe','id_catalogo'],
-    migrate=True
+    migrate=False
 );
 
 db.define_table('CATALOGO_TIENE_CAMPO',
     Field('id_catalogo',db.CATALOGO.id_catalogo),
     Field('id_campo_cat',db.CAMPO_CATALOGO.id_campo_cat),
     primarykey=['id_catalogo','id_campo_cat'],
-    migrate=True
+    migrate=False
 );
 
 db.define_table('VALORES_CAMPO_CATALOGO',
@@ -299,5 +297,5 @@ db.define_table('VALORES_CAMPO_CATALOGO',
     Field('id_campo_cat',db.CAMPO_CATALOGO.id_campo_cat),
     Field('valor',type='string', length=256, notnull = True),
     primarykey=['id_catalogo','id_campo_cat','valor'],
-    migrate=True
+    migrate=False
 );
