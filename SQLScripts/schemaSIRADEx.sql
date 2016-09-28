@@ -34,12 +34,22 @@ CREATE TABLE JEFE_DEPENDENCIA(
              REFERENCES  USUARIO(ci)
 );
 
+CREATE TABLE PROGRAMA(
+  id_programa  SERIAL        NOT NULL,
+  nombre       VARCHAR(256)  NOT NULL,
+  descripcion  Varchar(2048) NOT NULL,
+
+  CONSTRAINT PK_PROGRAMA
+             PRIMARY KEY (id_programa)
+
+);
+
 CREATE TABLE TIPO_ACTIVIDAD(
   id_tipo             SERIAL        NOT NULL,
   nombre              VARCHAR(128)  NOT NULL,
   tipo_p_r            VARCHAR(1)    NOT NULL,
   descripcion         VARCHAR(2048) NOT NULL,
-  programa            VARCHAR(128)  NOT NULL,
+  id_programa         INT           NOT NULL,
   validacion          VARCHAR(128)  NOT NULL,
   producto            VARCHAR(256),
   nro_campos          INT,
@@ -54,7 +64,10 @@ CREATE TABLE TIPO_ACTIVIDAD(
              REFERENCES  USUARIO(ci),
   CONSTRAINT FK_TIPO_ACTIVIDAD_ID_JEFE_CREADOR
              FOREIGN KEY (id_jefe_creador)
-             REFERENCES  JEFE_DEPENDENCIA(id_jefe)
+             REFERENCES  JEFE_DEPENDENCIA(id_jefe),
+  CONSTRAINT FK_TIPO_ACTIVIDAD_ID_PROGRAMA
+             FOREIGN KEY (id_programa)
+             REFERENCES  PROGRAMA(id_programa)
 );
 
 CREATE TABLE ACTIVIDAD(

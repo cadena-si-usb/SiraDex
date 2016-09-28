@@ -153,9 +153,17 @@ db.define_table('USBID',
 );
 
 db.define_table('JEFE_DEPENDENCIA',
-    Field('id_jefe', type='string'),
+    Field('id_jefe', type='id'),
     Field('ci_usuario',db.USUARIO.ci),
     primarykey=['id_jefe'],
+    migrate=False
+);
+
+db.define_table('PROGRAMA',
+    Field('id_programa', type='id'),
+    Field('nombre',type='string',length=256, notnull=True, unique=True),
+    Field('descripcion',type='string',length=2048, notnull=True, unique=True),
+    primarykey=['id_programa'],
     migrate=False
 );
 
@@ -166,8 +174,7 @@ db.define_table('TIPO_ACTIVIDAD',
     Field('tipo_p_r',type='string', length=1, notnull=True, requires=IS_IN_SET(["P", "R"]), default="P"),
     Field('descripcion',type='string',length=2048, notnull=True,
            requires=[IS_LENGTH(2048,error_message='Tamaño máximo de 2048 caracteres')]),
-    Field('programa',type='string', length=128, notnull=True,
-           requires=[IS_LENGTH(128, error_message='Tamaño máximo de 128 caracteres')]),
+    Field('id_programa',db.PROGRAMA.id_programa),
     Field('validacion',type='string', length=128, notnull=True, default='True'),
     Field('producto', type='string', length=256,
            requires=[IS_NOT_EMPTY(error_message='No puede ser vacía'),
