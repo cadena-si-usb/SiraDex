@@ -62,6 +62,13 @@ Salir y entrar en la base de datos Siradex como usuario Siradex
     $ \q
     $ psql -d Siradex -U Siradex (recordar que el password es: Siradex)
 
+    ###########################################################
+    NOTA IMPORTANTE:
+    Si este paso da error de Autenticacion con PEER,
+    leer el punto de Errores al final de estas instrucciones
+    antes de continuar.
+    ###########################################################
+
 Cargar los scrips de la base de datos:
 
     #Si se esta creando la base de datos por primera vez:
@@ -99,6 +106,8 @@ Hasta ahora, las tablas que deben aparecer son:
     public | log_siradex                     | table    | Siradex
     public | participa_act                   | table    | Siradex
     public | permisos_tipo_act               | table    | Siradex
+    public | programa                        | table    | Siradex
+    public | programa_id_programa_seq        | sequence | Siradex
     public | tiene_campo                     | table    | Siradex
     public | tipo_actividad                  | table    | Siradex
     public | tipo_actividad_id_tipo_seq      | sequence | Siradex
@@ -121,7 +130,42 @@ Verificar cualquier error y reportarlo como Issue en el repo de GitHub:
 
     https://github.com/SergioTeranZ/Sistemas2/issues/
 
+5. ERRORES FRECUENTES
 ################################################################################
-Ult. Modificacion: 26/09/2016
+
+ERROR:
+
+  FATAL: Peer authentication failed for user "Siradex"
+
+SOL:
+  a. Crear password para postgres:
+
+        $ sudo -su postgres
+        $ psql (EN ESTE PASO TOMAR NOTA DE LA VERSION DE POSTGRES, Ej. 9.3)
+        $ ALTER USER postgres WITH PASSWORD 'tupassword';
+
+  b. Salir de postgres y editar el archivo 'pg_hba.conf'
+
+        $ sudo gedit /etc/postgresql/X.X/main/pg_hba.conf
+          (Donde X.X e la version de postres, Ej. 9.3)
+
+     cambiar en el archivo las siguientes lineas:
+
+       local    all   postgres    peer
+       local    all   all         peer
+
+     por:
+
+       local    all   postgres    md5
+       local    all   all         md5
+
+      y guardar el archivo.
+
+   c. Reiniciar Postgres.
+
+        $ sudo service postgresql restart
+
+################################################################################
+Ult. Modificacion: 28/09/2016
 por Leonardo Martinez (martinezazuaje@gmail.com)
 ################################################################################
