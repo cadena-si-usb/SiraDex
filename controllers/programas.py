@@ -12,8 +12,11 @@ def agregar_programa():
 
     admin = get_tipo_usuario
     formulario = SQLFORM.factory(
-                        Field('Nombre', requires=IS_NOT_EMPTY()),
-                        Field('Descripcion', type="text", requires=IS_NOT_EMPTY()),
+                        Field('Nombre',
+                              requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacio.'),
+                                          IS_MATCH('([A-Za-z])([A-Za-z0-9" "])*', error_message="El nombre del programa no puede iniciar con numeros.")]),
+                        Field('Descripcion', type="text",
+                              requires=IS_NOT_EMPTY(error_message='La descripcion del programa no puede quedar vacia.')),
                         submit_button = 'Agregar',
                         labels = {'Descripcion' : 'Descripción',
                                   'Nombre' : 'Nombre del Programa'},
@@ -29,7 +32,7 @@ def agregar_programa():
         redirect(URL('gestionar_programas.html'))
     # En caso de que el formulario no sea aceptado
     elif formulario.errors:
-        session.message = 'Error en el formulario.'
+        session.message = 'Error en los datos del formulario, por favor intente nuevamente.'
     # Metodo GET
     else:
         session.message = ''
