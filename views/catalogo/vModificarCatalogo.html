@@ -21,7 +21,7 @@ Agregue la cantidad de campos que desee
                     <td class="col-md-6">{{=campo.CAMPO_CATALOGO.nombre}}</td>
                     <td class="col-md-3">{{=campo.CAMPO_CATALOGO.tipo_cat}}</td>
                     <td class="col-md-2">
-                        <a onClick = "if(confirm('¿Está seguro de que desea eliminar el campo?')) {window.location.href = '{{=URL(f='eliminarCampos2',args=[ campo.CATALOGO.nombre, campo.CAMPO_CATALOGO.id_campo_cat ] )}}';}">
+                        <a onClick = "if(confirm('¿Está seguro de que desea eliminar el campo?')) {window.location.href = '{{=URL(f='eliminarCampos2',args=[ campo.CATALOGO.id_catalogo, campo.CAMPO_CATALOGO.id_campo_cat ] )}}';}">
                                     {{=IMG(_src=URL('static', 'iconos/Delete.png')), }}
                                     </a></td>
             </tr>

@@ -7,7 +7,7 @@
                 </div>
                 <h3 id = "titulo"> Gestión de Catálogos </h3>
                 <h4>
-                    <a href = "{{=URL(f='vAgregarElementoCampo',args =[nombre])}}">
+                    <a href = "{{=URL(f='vAgregarElementoCampo',args = [ nombre ])}}">
                         {{=IMG(_src=URL('static', 'iconos/Add_26x26.png')) }}
                         Agregar Valores
                     </a>
@@ -31,12 +31,12 @@
                                     <td class="col-md">{{=i['valor']}}</td>
                                 {{pass}}
                                 <td class="col-md-2">
-                                    <a href = "{{=URL(f='vModificarCampos',args =[filas[j][0]['valor'],j])}}">
+                                    <a href = "{{=URL(f='vModificarCampos',args =[filas[j][0]['id_campo_cat'],j])}}">
                                         {{=IMG(_src=URL('static', 'iconos/Edit.png')), }}
                                     </a>
                                 </td>
                                 <td class="col-md-2">
-                                <a onClick = "if(confirm('¿Está seguro de que desea eliminar los valores?')) {window.location.href = '{{=URL(f='eliminarValorCampo',args=[ filas[j][0]['valor'] ] )}}';}">
+                                <a onClick = "if(confirm('¿Está seguro de que desea eliminar los valores?')) {window.location.href = '{{=URL(f='eliminarValorCampo',args=[ filas[j][0]['id_campo_cat'], filas[j][0]['valor'] ] )}}';}">
                                     {{=IMG(_src=URL('static', 'iconos/Delete.png')), }}
                                 </td>
                               {{pass}}
