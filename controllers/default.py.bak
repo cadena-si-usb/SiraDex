@@ -81,11 +81,7 @@ def login_cas():
         if not db(tablaUsuarios.usbid == usbid).isempty():
             datosUsuario = db(tablaUsuarios.usbid==usbid).select()[0]
             session.usuario['tipo'] = datosUsuario.tipo
-            if datosUsuario.tipo == "Bloqueado":
-                response.flash = T("Usuario bloqueado")
-                redirect(URL(c = "default",f="index"))
-            else:
-                redirect(URL('vMenuPrincipal'))
+            redirect(URL('vMenuPrincipal'))
         else:
             session.usuario['tipo'] = "Usuario"
             db.USUARIO.insert(ci=session.usuario["cedula"],  # Lo insertamos en la base de datos.
