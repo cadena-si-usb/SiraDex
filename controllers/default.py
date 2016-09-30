@@ -92,17 +92,6 @@ def get_tipo_usuario():
 #             tipo = "Administrador")
 #             redirect(URL('vRegistroUsuario'))
 
-def login_cas():
-
-    session.usuario = dict()
-    session.usuario['usbid'] = "00-00000"
-    session.usuario['tipo']  = "Administrador"
-    session.usuario['first_name'] = "Usuario"
-    session.usuario['last_name']  = "Parche"
-    session.usuario['email']  = "usuario@email.com"
-    session.usuario['cedula'] = 12345678
-    redirect(URL('vMenuPrincipal'))
-
 def logout_cas():
     session.usuario = None
     return response.render()

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+#. --------------------------------------------------------------------------- .
 '''
 Vista de Gestionar Tipo Actividad, tiene las opciones:
 - Agregar Tipo
@@ -24,6 +24,7 @@ def gestionar():
 
     return dict(ids=ids,nombres=nombres,descripcion=descripcion, programas = programas, tipos=tipos, admin = get_tipo_usuario())
 
+#. --------------------------------------------------------------------------- .
 '''
     Permite añadir un nuevo tipo de actividad.
 '''
@@ -78,6 +79,7 @@ def agregar_tipo():
 
     return dict(formulario=formulario, admin = get_tipo_usuario())
 
+#. --------------------------------------------------------------------------- .
 '''
 Vista con el formulario para agregar campos al tipo actividad,
 tambien tiene una tabla con los campos que ya han sido agregados
@@ -154,6 +156,7 @@ def agregar_tipo_campos():
 
     return dict(form = form, campos = campos_guardados, admin = get_tipo_usuario())
 
+#. --------------------------------------------------------------------------- .
 '''
 Metodo auxiliar usado para agregar el mensaje de exito
 al agregar un tipo actividad, solo guarda el mensaje y redirige a
@@ -164,6 +167,7 @@ def agregar_tipo_aux():
     session.message = 'Tipo agregado exitosamente'
     redirect(URL('gestionar.html'))
 
+#. --------------------------------------------------------------------------- .
 '''
 Metodo que aborta la creacion de un tipo_actividad en la vista de
 agregar campos, no solo elimina los campos y las relaciones sino
@@ -195,6 +199,7 @@ def eliminar_campos():
 
     redirect(URL('gestionar.html'))
 
+#. --------------------------------------------------------------------------- .
 '''
  Funcion que envia un tipo actividad a la papelera
  el tipo es especificado por un parametr de URL
@@ -205,6 +210,7 @@ def enviar_tipo_papelera():
     session.message = 'Tipo Enviado a la Papelera'
     redirect(URL('gestionar.html'))
 
+#. --------------------------------------------------------------------------- .
 '''
  Vista de gestion de la papelera
 '''
@@ -215,6 +221,7 @@ def gestionar_archivo_historico():
 
     return dict(tipos_papelera = aux,admin=get_tipo_usuario())
 
+#. --------------------------------------------------------------------------- .
 '''
  Metodo que elimina un tipo actividad de la base de datos
  de manera definitiva
@@ -244,7 +251,7 @@ def eliminar_tipo_papelera():
     session.message = 'Tipo Eliminado'
     redirect(URL('gestionar_archivo_historico.html'))
 
-
+#. --------------------------------------------------------------------------- .
 '''
  Metodo que restaura un tipo actividad de la papelera
 '''
@@ -254,6 +261,7 @@ def restaurar_tipo():
     session.message = 'Tipo Restaurado'
     redirect(URL('gestionar.html'))
 
+#. --------------------------------------------------------------------------- .
 def ver_tipo_actividad():
     id_tipo = int(request.args[0])
 
@@ -267,6 +275,7 @@ def ver_tipo_actividad():
 
     return dict(campos = campos_guardados, tipo = tipo, admin = get_tipo_usuario())
 
+#. --------------------------------------------------------------------------- .
 def eliminar_campo():
     id_campo = int(request.args[0])
 
@@ -275,6 +284,7 @@ def eliminar_campo():
 
     redirect(URL('agregar_tipo_campos.html'))
 
+#. --------------------------------------------------------------------------- .
 def modificar_tipo():
     id_tipo = int(request.args[0])
 
@@ -308,6 +318,7 @@ def modificar_tipo():
 
     return dict(tipo=tipo, form=form, admin=get_tipo_usuario())
 
+#. --------------------------------------------------------------------------- .
 def get_tipo_usuario():
     if session.usuario != None:
         if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
@@ -323,3 +334,5 @@ def get_tipo_usuario():
         redirect(URL(c ="default",f="index"))
 
     return admin
+
+#. --------------------------------------------------------------------------- .
