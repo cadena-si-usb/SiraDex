@@ -1,6 +1,6 @@
 $(document).ready(function(){
   var maxLongNombre  = 128;    // Longitud máxima que tendrá el campo nombre.
-  var maxLongDescrip = 2048;  // Longitud máxima que tendrá el campo descripción.
+  var maxLongDescrip = 2048;   // Longitud máxima que tendrá el campo descripción.
 
   // Muestra la cantidad de caracteres disponible en el textfield de nombre.
   textoRestante(maxLongNombre,  "#no_table_Nombre");
