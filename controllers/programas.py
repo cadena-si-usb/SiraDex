@@ -69,7 +69,7 @@ def editar_programa():
                         Field('Nombre',
                               default = programa.nombre,
                               requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacio.'),
-                                          IS_MATCH('([A-Za-z])([A-Za-z0-9" "])*', error_message="El nombre del programa no puede iniciar con numeros.")]),
+                                          IS_MATCH('([A-Za-z])([A-Za-z0-9" "])*', error_message="El nombre del programa debe comenzar con una letra.")]),
                         Field('Descripcion', type="text",
                               default = programa.descripcion,
                               requires=IS_NOT_EMPTY(error_message='La descripcion del programa no puede quedar vacia.')),
