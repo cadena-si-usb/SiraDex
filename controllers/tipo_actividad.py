@@ -67,7 +67,6 @@ def agregar_tipo():
                                  tipo_p_r = request.vars.Tipo,
                                  descripcion = request.vars.Descripcion,
                                  id_programa = id_programa
-                                 #id_jefe_creador = session.usuario['cedula']
                                  )
         redirect(URL('agregar_tipo_campos.html'))
     # En caso de que el formulario no sea aceptado
