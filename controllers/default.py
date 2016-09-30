@@ -119,7 +119,6 @@ def vRegistroUsuario():
         usuarios = db(db.USUARIO).select()
         for raw in usuarios:
             if raw.ci == session.usuario["cedula"]:
-                print("SE metio")
                 forma=SQLFORM(
                     db.USUARIO,
                     raw,

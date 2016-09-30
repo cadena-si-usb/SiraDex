@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-''' '''
+
 '''
 Vista de Gestionar Tipo Actividad, tiene las opciones:
 - Agregar Tipo
@@ -10,18 +10,18 @@ def gestionar():
     # Obtengo datos de los tipo_actividades en base de datos para generar
     # tabla que los muestre
     query = reduce(lambda a, b: (a&b),[db.TIPO_ACTIVIDAD.id_tipo != None, db.TIPO_ACTIVIDAD.papelera == False])
-   
+
     ids = db(query).select(db.TIPO_ACTIVIDAD.id_tipo)
     nombres = db(query).select(db.TIPO_ACTIVIDAD.nombre)
     descripcion = db(query).select(db.TIPO_ACTIVIDAD.descripcion)
-    programas = db(query).select(db.TIPO_ACTIVIDAD.programa)
+    programas = db(query).select(db.TIPO_ACTIVIDAD.id_programa)
 
     tipos = db(query).select(db.TIPO_ACTIVIDAD.nombre, db.TIPO_ACTIVIDAD.descripcion, db.TIPO_ACTIVIDAD.id_tipo)
 
     # Decido que mensaje se va a mostrar
     if(session.message not in ['Tipo Eliminado', 'Tipo agregado exitosamente']):
         session.message = ''
-    
+
     return dict(ids=ids,nombres=nombres,descripcion=descripcion, programas = programas, tipos=tipos, admin = get_tipo_usuario())
 
 '''
@@ -38,39 +38,18 @@ def agregar_tipo():
     db.TIPO_ACTIVIDAD.tipo_p_r.widget = horizontal_radio
 
     # Genero el formulario para el tipo_actividad
-    '''
-    formulario = SQLFORM(db.TIPO_ACTIVIDAD,
-                         buttons=['submit'],
-                         fields=[
-                                # 'nombre','tipo_p_r','descripcion','programa','producto'
-                                 'nombre','tipo_p_r','descripcion','programa'
-                                ],
-                         labels = {'tipo_p_r' : 'Tipo de Producto', 'descripcion' : 'Descripción'},
-                         submit_button='Agregar'
-                        )
-    '''
-    catalogo = db(db.CATALOGO.nombre == 'Programas').select(db.CATALOGO.ALL).first()
-    programas2 = []
-    if(catalogo != None):
-        #programas2.append(catalogo.id_catalogo)
-        query = reduce(lambda a, b: (a&b),[db.CATALOGO_TIENE_CAMPO.id_catalogo == catalogo.id_catalogo,
-                                           db.CAMPO_CATALOGO.nombre == 'Nombre',
-                                           db.CAMPO_CATALOGO.id_campo_cat == db.CATALOGO_TIENE_CAMPO.id_campo_cat,
-                                           db.VALORES_CAMPO_CATALOGO.id_campo_cat == db.CAMPO_CATALOGO.id_campo_cat,
-                                           db.VALORES_CAMPO_CATALOGO.id_catalogo == catalogo.id_catalogo
-                                          ])
-    
-        programas = db(query).select(db.VALORES_CAMPO_CATALOGO.ALL)
-    
-        for i in range(0, len(programas)):
-            programas2.append(programas[i].valor)
-            #programas2.append(programas[i].id_catalogo)
+
+    lista_programas = db().select(db.PROGRAMA.ALL)
+    programas = []
+
+    for programa in lista_programas:
+        programas.append(programa.nombre)
 
     formulario = SQLFORM.factory(
                         Field('Nombre', requires=IS_NOT_EMPTY()),
                         Field('Tipo', requires=IS_IN_SET(['P', 'R']), default='P'),
                         Field('Descripcion', requires=IS_NOT_EMPTY()),
-                        Field('Programa', requires=IS_IN_SET(programas2)),
+                        Field('Programa', requires=IS_IN_SET(programas, zero="Seleccione...")),
                         submit_button = 'Agregar',
                         labels = {'Descripcion' : 'Descripción'},
                         )
@@ -79,10 +58,11 @@ def agregar_tipo():
     # En caso de que los datos del formulario sean aceptados
     if formulario.accepts(request.vars, session):
         session.form_nombre = request.vars.Nombre
+        id_programa = db(db.PROGRAMA.nombre == request.vars.Programa).select()[0].id_programa
         db.TIPO_ACTIVIDAD.insert(nombre = request.vars.Nombre,
                                  tipo_p_r = request.vars.Tipo,
                                  descripcion = request.vars.Descripcion,
-                                 programa = request.vars.Programa
+                                 id_programa = id_programa
                                  #id_jefe_creador = session.usuario['cedula']
                                  )
         redirect(URL('agregar_tipo_campos.html'))
@@ -92,7 +72,7 @@ def agregar_tipo():
     # Metodo GET
     else:
         session.message = ''
-        
+
     return dict(formulario=formulario, admin = get_tipo_usuario())
 
 '''
@@ -110,7 +90,7 @@ def agregar_tipo_campos():
                                       db.ACT_POSEE_CAMPO.id_campo == db.CAMPO.id_campo])
     # Guardo los resultados de dicho query en 'campos_guardados'
     campos_guardados = db(query).select(db.CAMPO.ALL, db.ACT_POSEE_CAMPO.ALL)
-    
+
     # Busco los catalogos disponibles
     catalogos = db().select(db.CATALOGO.nombre, db.CATALOGO.id_catalogo)
     nombres_catalogos = ['---']
@@ -138,11 +118,11 @@ def agregar_tipo_campos():
             print(nombres_catalogos[i], request.vars.Catalogo)
             if(nombres_catalogos[i] == request.vars.Catalogo):
                 indice = i
-        
+
         # Agrego el campo a la base
         if request.vars.Obligatorio == None:
             request.vars.Obligatorio = False
-            
+
         if indice == -1:
             db.CAMPO.insert(nombre = request.vars.Nombre,
                             obligatorio = request.vars.Obligatorio,
@@ -177,7 +157,7 @@ al agregar un tipo actividad, solo guarda el mensaje y redirige a
 la pagina de gestionar
 '''
 def agregar_tipo_aux():
-    
+
     session.message = 'Tipo agregado exitosamente'
     redirect(URL('gestionar.html'))
 
@@ -209,7 +189,7 @@ def eliminar_campos():
 
     # Borro el tipo actiidad
     db(db.TIPO_ACTIVIDAD.nombre == nombre_tipo).delete()
-    
+
     redirect(URL('gestionar.html'))
 
 '''
@@ -284,19 +264,6 @@ def ver_tipo_actividad():
 
     return dict(campos = campos_guardados, tipo = tipo, admin = get_tipo_usuario())
 
-def ver_tipo_actividad():
-    id_tipo = int(request.args[0])
-
-    query = reduce(lambda a, b: (a & b), [db.TIPO_ACTIVIDAD.id_tipo == id_tipo,
-                                          db.TIPO_ACTIVIDAD.id_tipo == db.ACT_POSEE_CAMPO.id_tipo_act,
-                                          db.ACT_POSEE_CAMPO.id_campo == db.CAMPO.id_campo])
-
-    campos_guardados = db(query).select(db.CAMPO.ALL)
-
-    tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
-
-    return dict(campos = campos_guardados, tipo = tipo, admin=get_tipo_usuario())
-
 def eliminar_campo():
     id_campo = int(request.args[0])
 
@@ -304,23 +271,23 @@ def eliminar_campo():
     db(db.CAMPO.id_campo == id_campo).delete()
 
     redirect(URL('agregar_tipo_campos.html'))
-    
+
 def modificar_tipo():
     id_tipo = int(request.args[0])
 
     tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
 
     db.TIPO_ACTIVIDAD.nombre.writable = False
-    db.TIPO_ACTIVIDAD.programa.writable = False
+    db.TIPO_ACTIVIDAD.id_programa.writable = False
 
     form = SQLFORM.factory(db.TIPO_ACTIVIDAD, record=tipo,
-                   fields = ['nombre', 'tipo_p_r', 'descripcion', 'programa'],
+                   fields = ['nombre', 'tipo_p_r', 'descripcion', 'id_programa'],
                    labels={'tipo_p_r': 'Tipo de Producto','descripcion':'Descripción'},
                    submit_button='Relizar Cambios'
                    )
 
     db.TIPO_ACTIVIDAD.nombre.writable = True
-    db.TIPO_ACTIVIDAD.programa.writable = True
+    db.TIPO_ACTIVIDAD.id_programa.writable = True
 
     # Metodos POST
     # En caso de que los datos del formulario sean aceptados
@@ -351,5 +318,5 @@ def get_tipo_usuario():
             redirect(URL(c ="default",f="vMenuPrincipal"))
     else:
         redirect(URL(c ="default",f="index"))
-        
+
     return admin
