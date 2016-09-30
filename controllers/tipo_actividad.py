@@ -41,7 +41,8 @@ def agregar_tipo():
     formulario = SQLFORM.factory(
                         Field('Nombre',
                                requires = [IS_NOT_EMPTY(error_message='El nombre del tipo de actividad no puede quedar vacío.'),
-                                           IS_MATCH('([A-Za-z])([A-Za-z0-9" "])*', error_message="El nombre del tipo de actividad debe comenzar con una letra.")]),
+                                           IS_MATCH('([A-Za-z])([A-Za-z0-9" "])*', error_message="El nombre del tipo de actividad debe comenzar con una letra."),
+                                           IS_LENGTH(128)]),
                         Field('Tipo', default = 'Seleccione...',
                               requires = IS_IN_SET({'P':'Evaluables por pares académicos', 'R':'No evaluables por pares académicos'},
                                                     zero=T('Seleccione...'),

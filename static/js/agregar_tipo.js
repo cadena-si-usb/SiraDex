@@ -2,65 +2,53 @@ $(document).ready(function(){
   var maxLongNombre  = 128;    // Longitud máxima que tendrá el campo nombre.
   var maxLongDescrip = 2048;  // Longitud máxima que tendrá el campo descripción.
 
-  // Se elimina el div de "error_wrapper" en nombre, si existe, porque repite la información.
-  if ($("#no_table_Nombre").siblings(".error_wrapper").length > 0){
-    $("#no_table_Nombre").siblings(".error_wrapper").remove();
-  }
+  textoRestante(maxLongNombre,  "#no_table_Nombre");
+  textoRestante(maxLongDescrip, "#no_table_Descripcion");
+});
 
-  // Se elimina el div de "error_wrapper" en descripción, si existe, porque repite la información.
-  if ($("#no_table_Descripcion").siblings(".error_wrapper").length > 0){
-    $("#no_table_Descripcion").siblings(".error_wrapper").remove();
+/*
+  - Descripción:
+        permite mostrar, y calcular, cuantos caracteres quedan disponible en un
+        textfield/textarea.
+
+  - Parámetros:
+        @param maxLong  : número máximo de caracteres a utilizar.
+        @param idDivUsar: identificador del div donde se mostrára el texto.
+*/
+function textoRestante(maxLong, idDivUsar){
+  var longitudTexto = $(idDivUsar).val().length;
+  var textoRestante = maxLong - longitudTexto;
+
+  // Se elimina el div de "error_wrapper", si existe, porque repite la información.
+  if ($(idDivUsar).siblings(".error_wrapper").length > 0){
+    $(idDivUsar).siblings(".error_wrapper").remove();
   }
 
   // Selecciono el div que es "hermano" del textfield de nombre.
-  var longitudTextoAct = $("#no_table_Nombre").val().length;
+  var longitudTextoAct = $(idDivUsar).val().length;
   if (longitudTextoAct == 0){
-    $("#no_table_Nombre").siblings(".help-block").html(maxLongNombre + " caracteres (No puede estar vacío)");
+    $(idDivUsar).siblings(".help-block").html(maxLong + " caracteres (No puede estar vacío)");
   }else{
-    $("#no_table_Nombre").siblings(".help-block").html((maxLongNombre - longitudTextoAct) + " caracteres");
-  }
-
-  // Selecciono el div que es "hermano" del textarea de descripción.
-  longitudTextoAct = $("#no_table_Nombre").val().length;
-  if (longitudTextoAct == 0){
-    $("#no_table_Descripcion").siblings(".help-block").html(maxLongDescrip + " caracteres. (No puede estar vacío)");
-  }else{
-    $("#no_table_Descripcion").siblings(".help-block").html((maxLongDescrip - longitudTextoAct) + " caracteres.");
+    $(idDivUsar).siblings(".help-block").html((maxLong - longitudTextoAct) + " caracteres");
   }
 
   // Si estoy escribiendo en el textfield de nombre, entonces...
-  $("#no_table_Nombre").keyup(function(){
-    var longitudTexto = $("#no_table_Nombre").val().length;
-    var textoRestante = maxLongNombre - longitudTexto;
+  $(idDivUsar).keyup(function(){
+    var longitudTexto = $(idDivUsar).val().length;
+    var textoRestante = maxLong - longitudTexto;
 
-    if (textoRestante == maxLongNombre){
-      $("#no_table_Nombre").siblings(".help-block").html(textoRestante + " caracteres (No puede estar vacío)");
+    if (textoRestante == maxLong){
+      $(idDivUsar).siblings(".help-block").html(textoRestante + " caracteres. (No puede estar vacío)");
     }else{
-      $("#no_table_Nombre").siblings(".help-block").html(textoRestante + " caracteres");
+      $(idDivUsar).siblings(".help-block").html(textoRestante + " caracteres.");
     }
 
     if (textoRestante < 0){
       $(".btn-primary").prop('disabled',true);
-    }else if(textoRestante >= 0 && $(".btn-primary").is(":disabled")){
+      $(idDivUsar).siblings(".help-block").css("color","red");
+    }else if (textoRestante >= 0 && $(".btn-primary").is(":disabled")){
       $(".btn-primary").prop('disabled',false);
+      $(idDivUsar).siblings(".help-block").css("color","");
     }
   });
-
-  // Si estoy escribiendo en el textarea de descripción, entonces...
-  $("#no_table_Descripcion").keyup(function(){
-    var longitudTexto = $("#no_table_Descripcion").val().length;
-    var textoRestante = maxLongDescrip - longitudTexto;
-
-    if (textoRestante == maxLongDescrip){
-      $("#no_table_Descripcion").siblings(".help-block").html(textoRestante + " caracteres. (No puede estar vacío)");
-    }else{
-      $("#no_table_Descripcion").siblings(".help-block").html(textoRestante + " caracteres.");
-    }
-
-    if (textoRestante < 0){
-      $(".btn-primary").prop('disabled',true);
-    }else if(textoRestante >= 0 && $(".btn-primary").is(":disabled")){
-      $(".btn-primary").prop('disabled',false);
-    }
-  });
-});
+}
