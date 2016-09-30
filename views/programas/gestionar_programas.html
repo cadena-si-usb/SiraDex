@@ -1,0 +1,36 @@
+{{extend 'SIRADEXLayout.html'}}
+
+<h3 id = "titulo">
+    Modificar Programas
+</h3>
+
+{{block contenido}}
+
+<h3>Programas Registrados en el Sistema</h3>
+<h4>Por ahora solo estamos mostrando los tipos de programas.</h4>
+<br>
+<table class="table table-striped table-hover sortable">
+    <thead>
+        <tr>
+            <th>Titulo</th>
+            <th>Descripcion</th>
+        </tr>
+    </thead>
+    <tbody id="actividades">
+    {{if len(programas) == 0:}}
+        No hay programas que mostrar.
+    {{else:}}
+        {{for programa in programas:}}
+        <tr>
+            <td> {{=programa.nombre}}</td>
+            <td> {{=programa.descripcion}}</td>
+        </tr>
+        {{pass}}
+     {{pass}}
+    </tbody>
+</table>
+      <div class="col-md-12 text-center">
+      <ul class="pagination pagination-lg pager" id="myPager"></ul>
+      </div>
+
+{{end}}
