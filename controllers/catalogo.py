@@ -36,7 +36,7 @@ def vAgregarCatalogo():
                               labels={'nombre':'Nombre'})
 
     if formulario.accepts(request.vars, session):
-        # Creamos el catalogo y obtenemos su id
+        # Creamos el catalogo y obtenemos su id, para pasarlo al controlador de agregar campo.
         id_catalogo = db.CATALOGO.insert(nombre = request.vars.nombre)['id_catalogo']
         redirect(URL('vAgregarCampos.html',args=[id_catalogo]))
     # En caso de que el formulario no sea aceptado
@@ -87,7 +87,7 @@ def vAgregarCampos():
             db.CATALOGO_TIENE_CAMPO.insert(id_catalogo = id_cat, id_campo_cat = idd_campo)
             session.msgErr = 0
         # Redirijo a la misma pagina para seguir agregando campos
-        redirect(URL('vAgregarCampos'))
+        redirect(URL('vAgregarCampos', args=[id_cat]))
     # En caso de que el formulario no sea aceptado
     elif form.errors:
         session.message = 'Datos invalidos'
