@@ -38,8 +38,9 @@
         <thead>
             <tr>
                 <th class="col-md-4">Nombre</td>
-                <th class="col-md-7">Descripción</td>
-                <th class="col-md-1"> </td>
+                <th class="col-md-6">Descripción</td>
+                <th class="col-md-1"></td>
+                <th class="col-md-1"></td>
             </tr>
         </thead>
         <tbody>
@@ -50,7 +51,12 @@
                             {{ =tipo.nombre}}
                         </a>
                     </td>
-                    <td class="col-md-7">{{ =tipo.descripcion}}</td>
+                    <td class="col-md-6">{{ =tipo.descripcion}}</td>
+                    <td>
+                      <a href = "{{=URL(c='tipo_actividad', f='editar_tipo', args=[tipo.id_tipo])}}">
+                          {{=IMG(_src=URL('static', 'iconos/Edit.png')), }}
+                      </a>
+                    </td>
                     <td class="col-md-1">
                         <input id="icono" type="image" src="{{=URL('static', 'iconos/Delete.png')}}"
                                onClick="if(confirm('¿Está seguro que desea enviar al Archivo Histórico este tipo de actividad?'))
