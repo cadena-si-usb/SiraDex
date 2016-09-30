@@ -75,3 +75,193 @@ CREATE TABLE auth_cas(
     renew CHAR(1)
 );
 success!
+timestamp: 2016-09-25T17:23:23.905905
+CREATE TABLE auth_user(
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(128),
+    last_name VARCHAR(128),
+    email VARCHAR(512),
+    password VARCHAR(512),
+    registration_key VARCHAR(512),
+    reset_password_key VARCHAR(512),
+    registration_id VARCHAR(512)
+);
+success!
+timestamp: 2016-09-25T17:23:24.078580
+CREATE TABLE auth_group(
+    id SERIAL PRIMARY KEY,
+    role VARCHAR(512),
+    description TEXT
+);
+success!
+timestamp: 2016-09-25T17:23:24.223269
+CREATE TABLE auth_membership(
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
+    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE  
+);
+success!
+timestamp: 2016-09-25T17:23:24.311341
+CREATE TABLE auth_permission(
+    id SERIAL PRIMARY KEY,
+    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE  ,
+    name VARCHAR(512),
+    table_name VARCHAR(512),
+    record_id INTEGER
+);
+success!
+timestamp: 2016-09-25T17:23:24.446345
+CREATE TABLE auth_event(
+    id SERIAL PRIMARY KEY,
+    time_stamp TIMESTAMP,
+    client_ip VARCHAR(512),
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
+    origin VARCHAR(512),
+    description TEXT
+);
+success!
+timestamp: 2016-09-25T17:23:24.580167
+CREATE TABLE auth_cas(
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
+    created_on TIMESTAMP,
+    service VARCHAR(512),
+    ticket VARCHAR(512),
+    renew CHAR(1)
+);
+success!
+timestamp: 2016-09-25T17:23:24.714283
+CREATE TABLE USUARIO(
+    ci VARCHAR(8) NOT NULL UNIQUE,
+    usbid VARCHAR(512) NOT NULL UNIQUE,
+    nombres VARCHAR(50),
+    apellidos VARCHAR(50),
+    telefono VARCHAR(15),
+    correo_inst VARCHAR(512) NOT NULL,
+    correo_alter VARCHAR(512),
+    tipo VARCHAR(15),
+    PRIMARY KEY(ci)) ;
+success!
+timestamp: 2016-09-25T17:23:24.902529
+CREATE TABLE USBID(
+    ci_usuario VARCHAR(8), CONSTRAINT  "FK_USBID_ci_usuario__constraint" FOREIGN KEY (ci_usuario) REFERENCES USUARIO (ci) ON DELETE CASCADE,
+    usbid VARCHAR(20) NOT NULL UNIQUE,
+    PRIMARY KEY(ci_usuario)) ;
+success!
+timestamp: 2016-09-25T17:23:25.012888
+CREATE TABLE JEFE_DEPENDENCIA(
+    id_jefe VARCHAR(512) NOT NULL,
+    ci_usuario VARCHAR(8), CONSTRAINT  "FK_JEFE_DEPENDENCIA_ci_usuario__constraint" FOREIGN KEY (ci_usuario) REFERENCES USUARIO (ci) ON DELETE CASCADE,
+    PRIMARY KEY(id_jefe)) ;
+success!
+timestamp: 2016-09-25T17:23:25.137463
+CREATE TABLE TIPO_ACTIVIDAD(
+    id_tipo VARCHAR(512) NOT NULL,
+    nombre VARCHAR(128) NOT NULL UNIQUE,
+    tipo_p_r VARCHAR(1) NOT NULL DEFAULT 'P',
+    descripcion VARCHAR(2048) NOT NULL,
+    programa VARCHAR(128) NOT NULL,
+    validacion VARCHAR(128) NOT NULL DEFAULT 'True',
+    producto VARCHAR(256),
+    nro_campos INTEGER,
+    id_jefe_creador VARCHAR(512), CONSTRAINT  "FK_TIPO_ACTIVIDAD_id_jefe_creador__constraint" FOREIGN KEY (id_jefe_creador) REFERENCES JEFE_DEPENDENCIA (id_jefe) ON DELETE CASCADE,
+    ci_usuario_propone VARCHAR(8), CONSTRAINT  "FK_TIPO_ACTIVIDAD_ci_usuario_propone__constraint" FOREIGN KEY (ci_usuario_propone) REFERENCES USUARIO (ci) ON DELETE CASCADE,
+    papelera CHAR(1) NOT NULL DEFAULT 'F',
+    PRIMARY KEY(id_tipo)) ;
+success!
+timestamp: 2016-09-25T17:23:25.317216
+CREATE TABLE ACTIVIDAD(
+    id_actividad VARCHAR(512) NOT NULL,
+    id_tipo VARCHAR(512), CONSTRAINT  "FK_ACTIVIDAD_id_tipo__constraint" FOREIGN KEY (id_tipo) REFERENCES TIPO_ACTIVIDAD (id_tipo) ON DELETE CASCADE,
+    validacion VARCHAR(512),
+    estado VARCHAR(512),
+    evaluacion_criterio VARCHAR(256),
+    evaluacion_valor VARCHAR(256),
+    ci_usuario_modifica VARCHAR(8), CONSTRAINT  "FK_ACTIVIDAD_ci_usuario_modifica__constraint" FOREIGN KEY (ci_usuario_modifica) REFERENCES USUARIO (ci) ON DELETE CASCADE,
+    ci_usuario_elimina VARCHAR(8), CONSTRAINT  "FK_ACTIVIDAD_ci_usuario_elimina__constraint" FOREIGN KEY (ci_usuario_elimina) REFERENCES USUARIO (ci) ON DELETE CASCADE,
+    ci_usuario_crea VARCHAR(8), CONSTRAINT  "FK_ACTIVIDAD_ci_usuario_crea__constraint" FOREIGN KEY (ci_usuario_crea) REFERENCES USUARIO (ci) ON DELETE CASCADE,
+    PRIMARY KEY(id_actividad)) ;
+success!
+timestamp: 2016-09-25T17:23:25.438715
+CREATE TABLE PERMISOS_TIPO_ACT(
+    permiso VARCHAR(256) NOT NULL,
+    id_tipo VARCHAR(512), CONSTRAINT  "FK_PERMISOS_TIPO_ACT_id_tipo__constraint" FOREIGN KEY (id_tipo) REFERENCES TIPO_ACTIVIDAD (id_tipo) ON DELETE CASCADE,
+    PRIMARY KEY(permiso, id_tipo)) ;
+success!
+timestamp: 2016-09-25T17:23:25.583537
+CREATE TABLE CATALOGO(
+    id_catalogo VARCHAR(512) NOT NULL,
+    nro_campos INTEGER,
+    nombre VARCHAR(128) UNIQUE,
+    PRIMARY KEY(id_catalogo)) ;
+success!
+timestamp: 2016-09-25T17:23:25.761912
+CREATE TABLE CAMPO(
+    id_campo VARCHAR(512) NOT NULL,
+    obligatorio CHAR(1),
+    nombre VARCHAR(64),
+    lista VARCHAR(64),
+    despliega_cat VARCHAR(512), CONSTRAINT  "FK_CAMPO_despliega_cat__constraint" FOREIGN KEY (despliega_cat) REFERENCES CATALOGO (id_catalogo) ON DELETE CASCADE,
+    PRIMARY KEY(id_campo)) ;
+success!
+timestamp: 2016-09-25T17:23:25.883959
+CREATE TABLE CAMPO_CATALOGO(
+    id_campo_cat VARCHAR(512) NOT NULL,
+    tipo_cat VARCHAR(256),
+    nombre VARCHAR(64),
+    eliminar CHAR(1),
+    PRIMARY KEY(id_campo_cat)) ;
+success!
+timestamp: 2016-09-25T17:23:25.996470
+CREATE TABLE LOG_SIRADEX(
+    accion VARCHAR(512) NOT NULL,
+    accion_fecha TIMESTAMP NOT NULL,
+    accion_ip VARCHAR(512) NOT NULL,
+    descripcion VARCHAR(512),
+    ci_usuario VARCHAR(8), CONSTRAINT  "FK_LOG_SIRADEX_ci_usuario__constraint" FOREIGN KEY (ci_usuario) REFERENCES USUARIO (ci) ON DELETE CASCADE,
+    PRIMARY KEY(accion, accion_fecha, accion_ip)) ;
+success!
+timestamp: 2016-09-25T17:23:26.128792
+CREATE TABLE PARTICIPA_ACT(
+    ci_usuario VARCHAR(8), CONSTRAINT  "FK_PARTICIPA_ACT_ci_usuario__constraint" FOREIGN KEY (ci_usuario) REFERENCES USUARIO (ci) ON DELETE CASCADE,
+    id_actividad VARCHAR(512), CONSTRAINT  "FK_PARTICIPA_ACT_id_actividad__constraint" FOREIGN KEY (id_actividad) REFERENCES ACTIVIDAD (id_actividad) ON DELETE CASCADE,
+    PRIMARY KEY(ci_usuario, id_actividad)) ;
+success!
+timestamp: 2016-09-25T17:23:26.262134
+CREATE TABLE TIENE_CAMPO(
+    id_actividad VARCHAR(512), CONSTRAINT  "FK_TIENE_CAMPO_id_actividad__constraint" FOREIGN KEY (id_actividad) REFERENCES ACTIVIDAD (id_actividad) ON DELETE CASCADE,
+    id_campo VARCHAR(512), CONSTRAINT  "FK_TIENE_CAMPO_id_campo__constraint" FOREIGN KEY (id_campo) REFERENCES CAMPO (id_campo) ON DELETE CASCADE,
+    valor_campo VARCHAR(256),
+    PRIMARY KEY(id_actividad, id_campo)) ;
+success!
+timestamp: 2016-09-25T17:23:26.396681
+CREATE TABLE ACT_POSEE_CAMPO(
+    id_tipo_act VARCHAR(512), CONSTRAINT  "FK_ACT_POSEE_CAMPO_id_tipo_act__constraint" FOREIGN KEY (id_tipo_act) REFERENCES TIPO_ACTIVIDAD (id_tipo) ON DELETE CASCADE,
+    id_campo VARCHAR(512), CONSTRAINT  "FK_ACT_POSEE_CAMPO_id_campo__constraint" FOREIGN KEY (id_campo) REFERENCES CAMPO (id_campo) ON DELETE CASCADE,
+    PRIMARY KEY(id_tipo_act, id_campo)) ;
+success!
+timestamp: 2016-09-25T17:23:26.507587
+CREATE TABLE GESTIONA_TIPO_ACT(
+    id_jefe VARCHAR(512), CONSTRAINT  "FK_GESTIONA_TIPO_ACT_id_jefe__constraint" FOREIGN KEY (id_jefe) REFERENCES JEFE_DEPENDENCIA (id_jefe) ON DELETE CASCADE,
+    id_tipo_act VARCHAR(512), CONSTRAINT  "FK_GESTIONA_TIPO_ACT_id_tipo_act__constraint" FOREIGN KEY (id_tipo_act) REFERENCES TIPO_ACTIVIDAD (id_tipo) ON DELETE CASCADE,
+    PRIMARY KEY(id_jefe, id_tipo_act)) ;
+success!
+timestamp: 2016-09-25T17:23:26.632050
+CREATE TABLE GESTIONA_CATALOGO(
+    id_jefe VARCHAR(512), CONSTRAINT  "FK_GESTIONA_CATALOGO_id_jefe__constraint" FOREIGN KEY (id_jefe) REFERENCES JEFE_DEPENDENCIA (id_jefe) ON DELETE CASCADE,
+    id_catalogo VARCHAR(512), CONSTRAINT  "FK_GESTIONA_CATALOGO_id_catalogo__constraint" FOREIGN KEY (id_catalogo) REFERENCES CATALOGO (id_catalogo) ON DELETE CASCADE,
+    PRIMARY KEY(id_jefe, id_catalogo)) ;
+success!
+timestamp: 2016-09-25T17:23:26.774964
+CREATE TABLE CATALOGO_TIENE_CAMPO(
+    id_catalogo VARCHAR(512), CONSTRAINT  "FK_CATALOGO_TIENE_CAMPO_id_catalogo__constraint" FOREIGN KEY (id_catalogo) REFERENCES CATALOGO (id_catalogo) ON DELETE CASCADE,
+    id_campo_cat VARCHAR(512), CONSTRAINT  "FK_CATALOGO_TIENE_CAMPO_id_campo_cat__constraint" FOREIGN KEY (id_campo_cat) REFERENCES CAMPO_CATALOGO (id_campo_cat) ON DELETE CASCADE,
+    PRIMARY KEY(id_catalogo, id_campo_cat)) ;
+success!
+timestamp: 2016-09-25T17:23:26.908492
+CREATE TABLE VALORES_CAMPO_CATALOGO(
+    id_catalogo VARCHAR(512), CONSTRAINT  "FK_VALORES_CAMPO_CATALOGO_id_catalogo__constraint" FOREIGN KEY (id_catalogo) REFERENCES CATALOGO (id_catalogo) ON DELETE CASCADE,
+    id_campo_cat VARCHAR(512), CONSTRAINT  "FK_VALORES_CAMPO_CATALOGO_id_campo_cat__constraint" FOREIGN KEY (id_campo_cat) REFERENCES CAMPO_CATALOGO (id_campo_cat) ON DELETE CASCADE,
+    valor VARCHAR(256) NOT NULL,
+    PRIMARY KEY(id_catalogo, id_campo_cat, valor)) ;
+success!

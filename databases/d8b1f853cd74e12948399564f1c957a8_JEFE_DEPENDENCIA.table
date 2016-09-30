@@ -1,0 +1,42 @@
+(dp1
+S'id_jefe'
+p2
+(dp3
+S'length'
+p4
+I512
+sS'unique'
+p5
+I00
+sS'sortable'
+p6
+I1
+sS'sql'
+p7
+S'VARCHAR(512) NOT NULL'
+p8
+sS'notnull'
+p9
+I01
+sS'type'
+p10
+S'string'
+p11
+ssS'ci_usuario'
+p12
+(dp13
+g4
+I512
+sg5
+I00
+sg6
+I2
+sg7
+S'VARCHAR(8), CONSTRAINT  "FK_JEFE_DEPENDENCIA_ci_usuario__constraint" FOREIGN KEY (ci_usuario) REFERENCES USUARIO (ci) ON DELETE CASCADE'
+p14
+sg9
+I00
+sg10
+S'reference USUARIO.ci'
+p15
+ss.

@@ -14,6 +14,7 @@
         <tr>
             <th>Titulo</th>
             <th>Descripcion</th>
+            <th></th>
         </tr>
     </thead>
     <tbody id="actividades">
@@ -24,6 +25,11 @@
         <tr>
             <td> {{=programa.nombre}}</td>
             <td> {{=programa.descripcion}}</td>
+            <td>
+              <a href = "{{=URL(c='programas', f='editar_programa', args=[programa.id])}}">
+                  {{=IMG(_src=URL('static', 'iconos/Edit.png')), }}
+              </a>
+            </td>
         </tr>
         {{pass}}
      {{pass}}
