@@ -68,13 +68,13 @@ def vAgregarCampos():
     campos_guardados = db(query).select(db.CAMPO_CATALOGO.ALL, db.CATALOGO_TIENE_CAMPO.ALL,db.CATALOGO.ALL)
     # Busco el id del catalogo
     # Genero formulario para los campos
-    form = SQLFORM(db.CAMPO_CATALOGO,
+    formulario = SQLFORM(db.CAMPO_CATALOGO,
                    submit_button='Agregar',
                    fields = ['nombre', 'tipo_cat', 'eliminar'],
                    labels = {'tipo_cat' : 'Tipo'}
                    )
     # En caso de que los datos del formulario sean aceptados
-    if form.accepts(request.vars, session):
+    if formulario.accepts(request.vars, session):
         # Busco el id del campo(que fue agregado al presionar boton
         # de submit) y agrego el campo al catalogo en caso de que no exista.
         idd_campo = db(db.CAMPO_CATALOGO.nombre == request.vars.nombre).select(db.CAMPO_CATALOGO.id_campo_cat)[0].id_campo_cat
@@ -89,13 +89,13 @@ def vAgregarCampos():
         # Redirijo a la misma pagina para seguir agregando campos
         redirect(URL('vAgregarCampos', args=[id_cat]))
     # En caso de que el formulario no sea aceptado
-    elif form.errors:
+    elif formulario.errors:
         session.message = 'Datos invalidos'
     else:
         if(not(session.msgErr)):
             session.message = ''
 
-    return dict(form = form, campos_guardados = campos_guardados,admin = admin)
+    return dict(formulario = formulario, campos_guardados = campos_guardados,admin = admin)
 
 '''
 Funcion auxiliar que se encarga de colocar
@@ -365,7 +365,7 @@ def eliminarValorCampo():
 
     # Genero un query para buscar los campos que tiene el catalogo.
     query = reduce(lambda a, b: (a&b),[db.CATALOGO.id_catalogo == diccionario['id_catalogo'],
-                                      db.CATALOGO.id_catalogo == db.CATALOGO_TIENE_CAMPO.id_catalogo,
+                                       db.CATALOGO.id_catalogo == db.CATALOGO_TIENE_CAMPO.id_catalogo,
                                       db.CATALOGO_TIENE_CAMPO.id_campo_cat == db.CAMPO_CATALOGO.id_campo_cat])
     aux = db(query).select(db.CAMPO_CATALOGO.nombre)
     # Arreglos auxiliares para guardar los campos y los ids respectivamente.

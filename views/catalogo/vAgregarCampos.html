@@ -31,15 +31,15 @@ Agregue la cantidad de campos que desee
 </div>
 <br/>
 <div id = 'formulario'>
-    {{= form.custom.begin}}
+    {{= formulario.custom.begin}}
     <table class="table table-condensed">
         <tr>
-        <td class="col-md-1">Nombre</td>     <td class="col-md-3">{{= form.custom.widget.nombre}}</td>
-        <td class="col-md-1">Tipo</td>       <td class="col-md-2">{{= form.custom.widget.tipo_cat}}</td>
-        <td class="col-md-2">{{= form.custom.submit}}</td>
+        <td class="col-md-1">Nombre</td>     <td class="col-md-4">{{= formulario.custom.widget.nombre}}</td>
+        <td class="col-md-1">Tipo</td>       <td class="col-md-3">{{= formulario.custom.widget.tipo_cat}}</td>
+        <td class="col-md-1">{{= formulario.custom.submit}}</td>
         </tr>
     </table>
-    {{= form.custom.end}}
+    {{= formulario.custom.end}}
 
 </div>
 <br/><br/><br/>
