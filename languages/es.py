@@ -169,6 +169,7 @@
 'El nombre del programa debe comenzar con una letra.': 'El nombre del programa debe comenzar con una letra.',
 'El nombre del programa no puede iniciar con numeros.': 'El nombre del programa no puede iniciar con numeros.',
 'El nombre del programa no puede quedar vacio.': 'El nombre del programa no puede quedar vacio.',
+'El nombre del tipo de actividad debe comenzar con una letra.': 'El nombre del tipo de actividad debe comenzar con una letra.',
 'El nombre del tipo de actividad no puede quedar vacío.': 'El nombre del tipo de actividad no puede quedar vacío.',
 'El numero debe ser de la forma X.X, donde X esta entre -+9000000000000000000': 'El numero debe ser de la forma X.X, donde X esta entre -+9000000000000000000',
 'El Usuario no se encuentra registrado': 'El Usuario no se encuentra registrado',
