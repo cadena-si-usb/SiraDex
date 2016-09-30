@@ -45,52 +45,52 @@ def get_tipo_usuario():
     else:
         redirect(URL(c ="default",f="index"))
 
-# def login_cas():
-#     if not request.vars.getfirst('ticket'):
-#         #redirect(URL('error'))
-#         pass
-#     try:
-#         import urllib2, ssl
-#         ssl._create_default_https_context = ssl._create_unverified_context
-#         url = "https://secure.dst.usb.ve/validate?ticket="+\
-#               request.vars.getfirst('ticket') +\
-#               "&service=" + URL_RETORNO
-#         req = urllib2.Request(url)
-#         response = urllib2.urlopen(req)
-#         the_page = response.read()
-#
-#     except Exception, e:
-#         print "Exception: "
-#         print e
-#         # redirect(URL('error'))
-#
-#     if the_page[0:2] == "no":
-#         pass
-#     else:
-#         # session.casticket = request.vars.getfirst('ticket')
-#         data  = the_page.split()
-#         usbid = data[1]
-#
-#         usuario = get_ldap_data(usbid) #Se leen los datos del CAS
-#         tablaUsuarios = db.USUARIO
-#
-#         session.usuario = usuario
-#         print "Hola",session.usuario
-#         session.usuario['usbid'] = usbid
-#
-#         if not db(tablaUsuarios.usbid == usbid).isempty():
-#             datosUsuario = db(tablaUsuarios.usbid==usbid).select()[0]
-#             session.usuario['tipo'] = datosUsuario.tipo
-#             redirect(URL('vMenuPrincipal'))
-#         else:
-#             session.usuario['tipo'] = "Administrador"
-#             db.USUARIO.insert(ci=session.usuario["cedula"],  # Lo insertamos en la base de datos.
-#             usbid=session.usuario["usbid"],
-#             nombres=session.usuario["first_name"],
-#             apellidos=session.usuario["last_name"],
-#             correo_inst=session.usuario["email"],
-#             tipo = "Administrador")
-#             redirect(URL('vRegistroUsuario'))
+def login_cas():
+    if not request.vars.getfirst('ticket'):
+        #redirect(URL('error'))
+        pass
+    try:
+        import urllib2, ssl
+        ssl._create_default_https_context = ssl._create_unverified_context
+        url = "https://secure.dst.usb.ve/validate?ticket="+\
+              request.vars.getfirst('ticket') +\
+              "&service=" + URL_RETORNO
+        req = urllib2.Request(url)
+        response = urllib2.urlopen(req)
+        the_page = response.read()
+
+    except Exception, e:
+        print "Exception: "
+        print e
+        # redirect(URL('error'))
+
+    if the_page[0:2] == "no":
+        pass
+    else:
+        # session.casticket = request.vars.getfirst('ticket')
+        data  = the_page.split()
+        usbid = data[1]
+
+        usuario = get_ldap_data(usbid) #Se leen los datos del CAS
+        tablaUsuarios = db.USUARIO
+
+        session.usuario = usuario
+        print "Hola",session.usuario
+        session.usuario['usbid'] = usbid
+
+        if not db(tablaUsuarios.usbid == usbid).isempty():
+            datosUsuario = db(tablaUsuarios.usbid==usbid).select()[0]
+            session.usuario['tipo'] = datosUsuario.tipo
+            redirect(URL('vMenuPrincipal'))
+        else:
+            session.usuario['tipo'] = "Administrador"
+            db.USUARIO.insert(ci=session.usuario["cedula"],  # Lo insertamos en la base de datos.
+            usbid=session.usuario["usbid"],
+            nombres=session.usuario["first_name"],
+            apellidos=session.usuario["last_name"],
+            correo_inst=session.usuario["email"],
+            tipo = "Administrador")
+            redirect(URL('vRegistroUsuario'))
 
 def logout_cas():
     session.usuario = None
