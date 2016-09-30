@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-
+#. --------------------------------------------------------------------------- .
 '''
 Vista de Gestionar Tipo Actividad, tiene las opciones:
 - Agregar Tipo
+- Modificar Tipo
 - Eliminar Tipo
 - Papelera (No funcional)
 '''
@@ -24,35 +25,39 @@ def gestionar():
 
     return dict(ids=ids,nombres=nombres,descripcion=descripcion, programas = programas, tipos=tipos, admin = get_tipo_usuario())
 
+#. --------------------------------------------------------------------------- .
 '''
-Vista con el formulario para agregar un Tipo Actividad
+    Permite añadir un nuevo tipo de actividad.
 '''
 def agregar_tipo():
-    # Configuro widgets para el formulario de Agregar Tipo Actividad
-    db.TIPO_ACTIVIDAD.nombre.widget = SQLFORM.widgets.string.widget
-    db.TIPO_ACTIVIDAD.descripcion.widget = SQLFORM.widgets.text.widget
-    db.TIPO_ACTIVIDAD.producto.widget = SQLFORM.widgets.text.widget
-    db.TIPO_ACTIVIDAD.nro_campos.widget = SQLFORM.widgets.integer.widget
-    def horizontal_radio(f, v):
-        return SQLFORM.widgets.radio.widget(f, v, cols=2)
-    db.TIPO_ACTIVIDAD.tipo_p_r.widget = horizontal_radio
 
-    # Genero el formulario para el tipo_actividad
-
+    # Se obtienen todos los programas almacenados en la base de datos.
     lista_programas = db().select(db.PROGRAMA.ALL)
     programas = []
 
-    for programa in lista_programas:
-        programas.append(programa.nombre)
+    # Se crea un diccionario para almacenar unicamente los nombres de los programas almacenados.
+    for programa in lista_programas: programas.append(programa.nombre)
 
+    # AQUI VA UN CONDICIONAL.
+    # Para agregar un tipo de actividad se debe tener al menos un programa.
     formulario = SQLFORM.factory(
-                        Field('Nombre', requires=IS_NOT_EMPTY()),
-                        Field('Tipo', requires=IS_IN_SET(['P', 'R']), default='P'),
-                        Field('Descripcion', requires=IS_NOT_EMPTY()),
-                        Field('Programa', requires=IS_IN_SET(programas, zero="Seleccione...")),
+                        Field('Nombre',
+                               requires = [IS_NOT_EMPTY(error_message='El nombre del tipo de actividad no puede quedar vacío.'),
+                                           IS_MATCH('([A-Za-z])([A-Za-z0-9" "])*', error_message="El nombre del tipo de actividad debe comenzar con una letra."),
+                                           IS_LENGTH(128)]),
+                        Field('Tipo', default = 'Seleccione...',
+                              requires = IS_IN_SET({'P':'Evaluables por pares académicos', 'R':'No evaluables por pares académicos'},
+                                                    zero=T('Seleccione...'),
+                                                    error_message = 'Debes elegir entre "Evaluables por pares académicos" o "No evaluables por pares académicos"')),
+                        Field('Descripcion', type="text",
+                              requires = [IS_NOT_EMPTY(error_message='La descripción del tipo de actividad no puede quedar vacía.'),
+                                          IS_LENGTH(2048)]),
+                        Field('Programa',
+                              requires = IS_IN_SET(programas, zero="Seleccione...",
+                                                   error_message = 'Debes elegir uno de los programas listados.')),
                         submit_button = 'Agregar',
                         labels = {'Descripcion' : 'Descripción'},
-                        )
+                )
 
     # Metodos POST
     # En caso de que los datos del formulario sean aceptados
@@ -63,18 +68,18 @@ def agregar_tipo():
                                  tipo_p_r = request.vars.Tipo,
                                  descripcion = request.vars.Descripcion,
                                  id_programa = id_programa
-                                 #id_jefe_creador = session.usuario['cedula']
                                  )
         redirect(URL('agregar_tipo_campos.html'))
     # En caso de que el formulario no sea aceptado
     elif formulario.errors:
-        session.message = 'Error en el formulario'
+        session.message = 'Lo sentimos, hubo un problema en el formulario.'
     # Metodo GET
     else:
         session.message = ''
 
     return dict(formulario=formulario, admin = get_tipo_usuario())
 
+#. --------------------------------------------------------------------------- .
 '''
 Vista con el formulario para agregar campos al tipo actividad,
 tambien tiene una tabla con los campos que ya han sido agregados
@@ -151,6 +156,7 @@ def agregar_tipo_campos():
 
     return dict(form = form, campos = campos_guardados, admin = get_tipo_usuario())
 
+#. --------------------------------------------------------------------------- .
 '''
 Metodo auxiliar usado para agregar el mensaje de exito
 al agregar un tipo actividad, solo guarda el mensaje y redirige a
@@ -161,6 +167,7 @@ def agregar_tipo_aux():
     session.message = 'Tipo agregado exitosamente'
     redirect(URL('gestionar.html'))
 
+#. --------------------------------------------------------------------------- .
 '''
 Metodo que aborta la creacion de un tipo_actividad en la vista de
 agregar campos, no solo elimina los campos y las relaciones sino
@@ -192,6 +199,7 @@ def eliminar_campos():
 
     redirect(URL('gestionar.html'))
 
+#. --------------------------------------------------------------------------- .
 '''
  Funcion que envia un tipo actividad a la papelera
  el tipo es especificado por un parametr de URL
@@ -202,6 +210,7 @@ def enviar_tipo_papelera():
     session.message = 'Tipo Enviado a la Papelera'
     redirect(URL('gestionar.html'))
 
+#. --------------------------------------------------------------------------- .
 '''
  Vista de gestion de la papelera
 '''
@@ -212,6 +221,7 @@ def gestionar_archivo_historico():
 
     return dict(tipos_papelera = aux,admin=get_tipo_usuario())
 
+#. --------------------------------------------------------------------------- .
 '''
  Metodo que elimina un tipo actividad de la base de datos
  de manera definitiva
@@ -241,7 +251,7 @@ def eliminar_tipo_papelera():
     session.message = 'Tipo Eliminado'
     redirect(URL('gestionar_archivo_historico.html'))
 
-
+#. --------------------------------------------------------------------------- .
 '''
  Metodo que restaura un tipo actividad de la papelera
 '''
@@ -251,6 +261,7 @@ def restaurar_tipo():
     session.message = 'Tipo Restaurado'
     redirect(URL('gestionar.html'))
 
+#. --------------------------------------------------------------------------- .
 def ver_tipo_actividad():
     id_tipo = int(request.args[0])
 
@@ -264,6 +275,7 @@ def ver_tipo_actividad():
 
     return dict(campos = campos_guardados, tipo = tipo, admin = get_tipo_usuario())
 
+#. --------------------------------------------------------------------------- .
 def eliminar_campo():
     id_campo = int(request.args[0])
 
@@ -272,39 +284,66 @@ def eliminar_campo():
 
     redirect(URL('agregar_tipo_campos.html'))
 
-def modificar_tipo():
-    id_tipo = int(request.args[0])
+#. --------------------------------------------------------------------------- .
+def editar_tipo():
 
-    tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
+    admin = get_tipo_usuario()  # Obtengo el tipo del usuario actual.
+    id = request.args[0]        # Se identifica cual tipo de actividad se identificará.
 
-    db.TIPO_ACTIVIDAD.nombre.writable = False
-    db.TIPO_ACTIVIDAD.id_programa.writable = False
+    # Se busca el tipo de actividad en la base de datos.
+    tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id).select()[0]
 
-    form = SQLFORM.factory(db.TIPO_ACTIVIDAD, record=tipo,
-                   fields = ['nombre', 'tipo_p_r', 'descripcion', 'id_programa'],
-                   labels={'tipo_p_r': 'Tipo de Producto','descripcion':'Descripción'},
-                   submit_button='Relizar Cambios'
-                   )
+    # Se obtienen todos los programas almacenados en la base de datos.
+    lista_programas = db().select(db.PROGRAMA.ALL)
+    programas = {}
 
-    db.TIPO_ACTIVIDAD.nombre.writable = True
-    db.TIPO_ACTIVIDAD.id_programa.writable = True
+    # Se crea un diccionario para almacenar unicamente los nombres de los programas almacenados.
+    for programa in lista_programas:
+        programas[programa.id_programa] = programa.nombre
+
+    # Para modificar un tipo de actividad se debe tener al menos un programa.
+    formulario = SQLFORM.factory(
+                        Field('Nombre',
+                              default = tipo.nombre,
+                              requires = [IS_NOT_EMPTY(error_message='El nombre del tipo de actividad no puede quedar vacío.'),
+                                           IS_MATCH('([A-Za-z])([A-Za-z0-9" "])*', error_message="El nombre del tipo de actividad debe comenzar con una letra."),
+                                           IS_LENGTH(128)]),
+                        Field('Tipo', default = tipo.tipo_p_r,
+                              requires = IS_IN_SET({'P':'Evaluables por pares académicos', 'R':'No evaluables por pares académicos'},
+                                                    zero=T('Seleccione...'),
+                                                    error_message = 'Debes elegir entre "Evaluables por pares académicos" o "No evaluables por pares académicos"')),
+                        Field('Descripcion', type="text",
+                              default = tipo.descripcion,
+                              requires = [IS_NOT_EMPTY(error_message='La descripción del tipo de actividad no puede quedar vacía.'),
+                                          IS_LENGTH(2048)]),
+                        Field('Programa', default = tipo.id_programa,
+                              requires = IS_IN_SET(programas, zero="Seleccione...",
+                                                   error_message = 'Debes elegir uno de los programas listados.')),
+                        submit_button = 'Actualizar',
+                        labels = {'Descripcion' : 'Descripción'},
+                )
 
     # Metodos POST
     # En caso de que los datos del formulario sean aceptados
-    if form.accepts(request.vars, session):
-        db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).update(descripcion = request.vars.descripcion,
-                                                        producto = request.vars.producto)
-        redirect(URL('ver_tipo_actividad.html', args=[id_tipo]))
+    if formulario.accepts(request.vars, session):
+        session.form_nombre = request.vars.Nombre
+        tipo.nombre = request.vars.Nombre
+        tipo.tipo_p_r = request.vars.Tipo
+        tipo.descripcion = request.vars.Descripcion
+        tipo.id_programa = request.vars.Programa
+        tipo.update_record()                                 # Se actualiza el tipo de actividad.
+        redirect(URL('ver_tipo_actividad.html', args=[id]))  # Se redirige a la vista del preview del T.A. modificado.
 
     # En caso de que el formulario no sea aceptado
-    elif form.errors:
+    elif formulario.errors:
         session.message = 'Error en el formulario'
     # Metodo GET
     else:
         session.message = ''
 
-    return dict(tipo=tipo, form=form, admin=get_tipo_usuario())
+    return dict(tipo=tipo, formulario=formulario, admin=get_tipo_usuario())
 
+#. --------------------------------------------------------------------------- .
 def get_tipo_usuario():
     if session.usuario != None:
         if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
@@ -320,3 +359,5 @@ def get_tipo_usuario():
         redirect(URL(c ="default",f="index"))
 
     return admin
+
+#. --------------------------------------------------------------------------- .
