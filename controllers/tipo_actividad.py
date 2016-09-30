@@ -25,34 +25,36 @@ def gestionar():
     return dict(ids=ids,nombres=nombres,descripcion=descripcion, programas = programas, tipos=tipos, admin = get_tipo_usuario())
 
 '''
-Vista con el formulario para agregar un Tipo Actividad
+    Permite añadir un nuevo tipo de actividad.
 '''
 def agregar_tipo():
-    # Configuro widgets para el formulario de Agregar Tipo Actividad
-    db.TIPO_ACTIVIDAD.nombre.widget = SQLFORM.widgets.string.widget
-    db.TIPO_ACTIVIDAD.descripcion.widget = SQLFORM.widgets.text.widget
-    db.TIPO_ACTIVIDAD.producto.widget = SQLFORM.widgets.text.widget
-    db.TIPO_ACTIVIDAD.nro_campos.widget = SQLFORM.widgets.integer.widget
-    def horizontal_radio(f, v):
-        return SQLFORM.widgets.radio.widget(f, v, cols=2)
-    db.TIPO_ACTIVIDAD.tipo_p_r.widget = horizontal_radio
 
-    # Genero el formulario para el tipo_actividad
-
+    # Se obtienen todos los programas almacenados en la base de datos.
     lista_programas = db().select(db.PROGRAMA.ALL)
     programas = []
 
-    for programa in lista_programas:
-        programas.append(programa.nombre)
+    # Se crea un diccionario para almacenar unicamente los nombres de los programas almacenados.
+    for programa in lista_programas: programas.append(programa.nombre)
 
+    # AQUI VA UN CONDICIONAL.
+    # Para agregar un tipo de actividad se debe tener al menos un programa.
     formulario = SQLFORM.factory(
-                        Field('Nombre', requires=IS_NOT_EMPTY()),
-                        Field('Tipo', requires=IS_IN_SET(['P', 'R']), default='P'),
-                        Field('Descripcion', requires=IS_NOT_EMPTY()),
-                        Field('Programa', requires=IS_IN_SET(programas, zero="Seleccione...")),
+                        Field('Nombre',
+                               requires = [IS_NOT_EMPTY(error_message='El nombre del tipo de actividad no puede quedar vacío.'),
+                                           IS_MATCH('([A-Za-z])([A-Za-z0-9" "])*', error_message="El nombre del tipo de actividad debe comenzar con una letra.")]),
+                        Field('Tipo', default = 'Seleccione...',
+                              requires = IS_IN_SET({'P':'Evaluables por pares académicos', 'R':'No evaluables por pares académicos'},
+                                                    zero=T('Seleccione...'),
+                                                    error_message = 'Debes elegir entre "Evaluables por pares académicos" o "No evaluables por pares académicos"')),
+                        Field('Descripcion', type="text",
+                              requires = [IS_NOT_EMPTY(error_message='La descripción del tipo de actividad no puede quedar vacía.'),
+                                          IS_LENGTH(2048)]),
+                        Field('Programa',
+                              requires = IS_IN_SET(programas, zero="Seleccione...",
+                                                   error_message = 'Debes elegir uno de los programas listados.')),
                         submit_button = 'Agregar',
                         labels = {'Descripcion' : 'Descripción'},
-                        )
+                )
 
     # Metodos POST
     # En caso de que los datos del formulario sean aceptados
