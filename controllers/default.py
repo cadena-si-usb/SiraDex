@@ -46,7 +46,16 @@ def get_tipo_usuario():
         redirect(URL(c ="default",f="index"))
 
 def login_cas():
-    if not request.vars.getfirst('ticket'):
+    session.usuario = dict()
+    session.usuario['usbid'] = "00-00000"
+    session.usuario['tipo'] = "Administrador"
+    session.usuario["first_name"] = "Usuario"
+    session.usuario["last_name"] = "Parche"
+    session.usuario['cedula'] = 00000000
+    session.usuario["email"] = "usuarioparche@gmail.com"
+    redirect(URL('vMenuPrincipal'))
+
+'''if not request.vars.getfirst('ticket'):
         #redirect(URL('error'))
         pass
     try:
@@ -91,6 +100,7 @@ def login_cas():
             correo_inst=session.usuario["email"],
             tipo = "Administrador")
             redirect(URL('vRegistroUsuario'))
+'''
 
 def logout_cas():
     session.usuario = None
