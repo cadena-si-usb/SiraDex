@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 from funciones_siradex import get_tipo_usuario
 
+
+tipo_campos = ['Fecha', 'Teléfono', 'Texto','Documento', 'Imagen', 'Número']
+
 '''
 Funcion que se encarga de obtener los datos para mostrar los catalogos
 que existen en el sistema.
 '''
-def vGestionarCatalogo():
+def vGestionarCatalogos():
     # Obtengo el tipo del usuario para permitir el acceso a la visa
     # Limpio el Session del sistema.
     admin = get_tipo_usuario()
-    session.nombreMostrar = ""
-    session.nombreModificar = ""
-    message = session.message
-    session.message = ""
+    message = ""
     # Se obtienen los nombres de todos los catalogos y se pasan al html.
-    aux = db(db.CATALOGO).select(db.CATALOGO.nombre, db.CATALOGO.id_catalogo)
-    return dict(admin = admin, catalogos = aux, message = message)
+    catalogos = db(db.CATALOGO).select(db.CATALOGO.nombre, db.CATALOGO.id_catalogo)
+    return dict(admin = admin, catalogos = catalogos, message = message)
 
 '''
 Funcion que se encarga de agregar un catalogo a la
@@ -67,10 +67,18 @@ def vModificarCatalogo():
 
     # Busco el id del catalogo
     # Genero formulario para los campos
-    formulario = SQLFORM(db.CAMPO_CATALOGO,
-                   submit_button='Agregar',
-                   fields = ['nombre', 'tipo_campo', 'obligatorio'],
-                   labels = {'tipo_campo' : 'Tipo'}
+    formulario = SQLFORM.factory(
+                    Field('nombre',
+                          requires = [IS_NOT_EMPTY(error_message='El nombre del campo no puede quedar vacio.'),
+                                      IS_MATCH('([A-Za-z])([A-Za-z0-9" "])*', error_message="El nombre del campo debe comenzar con una letra.")]),
+                    Field('tipo_campo',
+                           requires = [IS_IN_SET(tipo_campos, zero='Seleccione...', error_message="Debe seleccionar un tipo para el campo.")],
+                           widget = SQLFORM.widgets.options.widget),
+                    Field('obligatorio', type='boolean', default = False),
+                    labels = {'nombre'      : 'Nombre',
+                              'tipo_campo'  : 'Tipo',
+                              'obligatorio' : 'Obligatorio'},
+                    submit_button='Agregar'
                    )
     # En caso de que los datos del formulario sean aceptados
     if formulario.accepts(request.vars, session):
@@ -113,7 +121,7 @@ el mensaje de exito.
 '''
 def agregarTipoAux():
     session.message = 'Catalogo agregado exitosamente'
-    redirect(URL('vGestionarCatalogo.html'))
+    redirect(URL('vGestionarCatalogos.html'))
 
 
 '''
@@ -122,54 +130,24 @@ el mensaje de exito.
 '''
 def agregarTipoAux2():
     session.message = 'Catalogo editado exitosamente'
-    redirect(URL('vGestionarCatalogo.html'))
+    redirect(URL('vGestionarCatalogos.html'))
 
 '''
 Funcion que se encarga de eliminar un catalogo, los campos
 que este posee y todas las relaciones entre ellos.
 '''
-def deshabilitarCatalogo():
-    # Obtengo el id o nombre del Catalogo
-    if len(request.args)!=0:
-        nombreCat = request.args[0]
-        subQueryCatalogoActual = (db.CATALOGO.id_catalogo == nombreCat)
-    else:
-        nombreCat = session.catAgregar
-        subQueryCatalogoActual = (db.CATALOGO.nombreCat == nombreCat)
-    # Construyo query para obtener la relacion entre los campos y el catalogo
-    # que debo eliminar
-    queryCamposDelCatalogo = reduce(lambda a, b: (a&b),[subQueryCatalogoActual,
-                                      db.CATALOGO.id_catalogo == db.CATALOGO_TIENE_CAMPO.id_catalogo,
-                                      db.CATALOGO_TIENE_CAMPO.id_campo_cat == db.CAMPO_CATALOGO.id_campo_cat])
+def eliminarCatalogo():
 
-    # Guardo los resultados en 'aux'
-    camposDelCatalogo = db(queryCamposDelCatalogo).select(db.CATALOGO_TIENE_CAMPO.ALL)
+    # Obtengo el id del Catalogo a eliminar
+    id_catalogo = request.args[0]
 
-    # Borro las relaciones (en caso de que hayan)
-    if(len(camposDelCatalogo) > 0):
-        camposDeActividad = db(db.CAMPO.despliega_cat == camposDelCatalogo[0].id_catalogo).select()
-        #Se borran los campos del catalogo
-        db(db.VALORES_CAMPO_CATALOGO.id_catalogo == camposDelCatalogo[0].id_catalogo).delete()
-        #Si una actividad esta asociada a un catalogo
-        if(len(camposDeActividad) >0):
-            #Se elimina la relación con la actividad
-            db(db.ACT_POSEE_CAMPO.id_campo == camposDeActividad[0]['id_campo']).delete()
-        #Se elimina la relacion entre los campos y el catalogo
-        db(db.CATALOGO_TIENE_CAMPO.id_catalogo == camposDelCatalogo[0].id_catalogo).delete()
-        #Se eliminan los campos asociados a las actividades
-        db(db.CAMPO.despliega_cat == camposDelCatalogo[0].id_catalogo).delete()
+    #eliminamos todos los campos de ese catalogo
+    campos_del_catalogo = db(db.CAMPO_CATALOGO.id_catalogo == id_catalogo).delete()
 
-    # Borro los campos asociados a estas relaciones
-    for row in camposDelCatalogo:
-        queryCampo = db.CAMPO_CATALOGO.id_campo_cat == row.id_campo_cat
-        campoCatalogo = db(queryCampo).select(db.CAMPO_CATALOGO.ALL)
-        db(db.CAMPO_CATALOGO.id_campo_cat == campoCatalogo[0].id_campo_cat).delete()
+    #eliminarmos el catalogo.
+    del db.CATALOGO[id_catalogo]
 
-
-    # Borro el catalogo
-    db(subQueryCatalogoActual).delete()
-
-    redirect(URL('vGestionarCatalogo.html'))
+    redirect(URL('vGestionarCatalogos.html'))
 
 # '''
 # Funcion que se encarga de agregar valores a los
@@ -207,7 +185,7 @@ def deshabilitarCatalogo():
 #             *arreglo)
 #     else:
 #         session.message = "El catalogo no posee campos"
-#         redirect(URL('vGestionarCatalogo.html'))
+#         redirect(URL('vGestionarCatalogos.html'))
 #
 #     if len(request.vars)>0:
 #         for i in range(0, cantidadCampos):
@@ -267,10 +245,18 @@ def vModificarCampo():
     #obtenemos los datos de ese campo
     datos_campo = db.CAMPO_CATALOGO[id_campo]
 
-    formulario = SQLFORM(db.CAMPO_CATALOGO,
-                   submit_button='Guardar',
-                   fields = ['nombre', 'tipo_campo', 'obligatorio'],
-                   labels = {'tipo_campo' : 'Tipo'}
+    formulario = SQLFORM.factory(
+                    Field('nombre',
+                          requires = [IS_NOT_EMPTY(error_message='El nombre del campo no puede quedar vacio.'),
+                                      IS_MATCH('([A-Za-z])([A-Za-z0-9" "])*', error_message="El nombre del campo debe comenzar con una letra.")]),
+                    Field('tipo_campo',
+                           requires = [IS_IN_SET(tipo_campos, zero='Seleccione...', error_message="Debe seleccionar un tipo para el campo.")],
+                           widget = SQLFORM.widgets.options.widget),
+                    Field('obligatorio', type='boolean', default = False),
+                    labels = {'nombre'      : 'Nombre',
+                              'tipo_campo'  : 'Tipo',
+                              'obligatorio' : 'Obligatorio'},
+                    submit_button='Guardar'
                    )
 
     #Prellenamos el formulario con los campos que ya tenia el formulario.
@@ -378,6 +364,6 @@ def eliminarCampos():
 
     # Elimino el campo del catalogo. Esto no afecta los tipos de actividades
     # Que estan definidas ya, ni los productos ya listos.
-    db(db.CAMPO_CATALOGO.id_campo_cat == id_campo_cat).delete()
+    del db.CAMPO_CATALOGO[id_campo_cat]
 
     redirect(URL('vModificarCatalogo.html', args=[id_catalogo]))

@@ -34,7 +34,7 @@
                                     </a>
                                 </td>
                                 <td class="col-md-2">
-                                <a onClick = "if(confirm('¿Está seguro de que desea eliminar el catalogo?')) {window.location.href = '{{=URL(f='eliminarCampos',args=[ catalogo.id_catalogo ] )}}';}">
+                                <a onClick = "if(confirm('¿Está seguro de que desea eliminar el catalogo?')) {window.location.href = '{{=URL(f='eliminarCatalogo',args=[ catalogo.id_catalogo ] )}}';}">
                                     {{=IMG(_src=URL('static', 'iconos/Delete.png')), }}
                                 </td>
                             </tr>
@@ -43,8 +43,6 @@
                 </table>
                 </div>
                 <br/>
-                
+
             </section><!-- close main -->
         </section>
-    </body>
-</html>
