@@ -69,7 +69,7 @@
 	#degradado nav a{
 	}
 	.navbar-default .navbar-nav>.activo>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover{
-		background-color:#03A9F4;
+		background-color:#286090;
 		color: #FFF;	
 	}	
 
@@ -102,7 +102,7 @@
 /*        Barra  buscadora        */
 /*                                */
 /**********************************/
-	#contenido .btn-default {
+	#contenido #btn-lupa{
 	    border: 1px solid #0288D1;	
 		border-left-style: none;
 		color:#0288D1;
@@ -121,7 +121,7 @@
 		width: 100%;
 	}
 
-	#contenido .form-control {
+	#contenido #form-busqueda{
 	    border: 1px solid #0288D1;	
 		border-right-style: none;
 		border-top-left-radius : 2em;
@@ -144,30 +144,43 @@
 	    height: 8em;
 	}
 
-#striped-list li{
-	color: #fff;
-}
+/**********************************/
+/*                                */
+/*              Listas            */
+/*                                */
+/**********************************/
+	#striped-list li{
+		color: #fff;
+	}
 
-#dv-act>#striped-sublist li:nth-child(odd) {
-background-color: #4CAF50;  
-}
+	#dv-act>#striped-sublist li:nth-child(odd) {
+		background-color: #4CAF50;  
+	}
 
-#dv-act>#striped-sublist li:nth-child(even) {
-background-color: #8BC34A;  
-}
+	#dv-act>#striped-sublist li:nth-child(even) {
+		background-color: #8BC34A;  
+	}
 
-#dv-esp>#striped-sublist li:nth-child(odd) {
-background-color: #607D8B;  
-}
+	#dv-esp>#striped-sublist li:nth-child(odd) {
+		background-color: #607D8B;  
+	}
 
-#dv-esp>#striped-sublist li:nth-child(even) {
-background-color: #9E9E9E;  
-}
+	#dv-esp>#striped-sublist li:nth-child(even) {
+		background-color: #9E9E9E;  
+	}
 
-#dv-rec>#striped-sublist li:nth-child(odd) {
-background-color: #F44336;  
-}
+	#dv-rec>#striped-sublist li:nth-child(odd) {
+		background-color: #F44336;  
+	}
 
-#dv-rec>#striped-sublist li:nth-child(even) {
-background-color: #DE6E4B;  
-}
+	#dv-rec>#striped-sublist li:nth-child(even) {
+		background-color: #DE6E4B;  
+	}
+
+	#sombra>img{
+    box-shadow: 0.2em 0.2em 0.5em  rgba(0, 0, 0, 0.2);
+    border-radius: 100%;
+    position: relative;
+    top:-4em;
+    margin-left: 93%;
+	}    

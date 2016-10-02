@@ -199,7 +199,7 @@ def vMenuDex():
     else:
         redirect(URL("index"))
 
-def vEditarPerfil():
+def EditarPerfil():
     if session.usuario != None:
         if session.usuario["tipo"] == "Bloqueado":
             redirect(URL("index"))
