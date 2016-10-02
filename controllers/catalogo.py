@@ -132,37 +132,42 @@ def deshabilitarCatalogo():
     # Obtengo el id o nombre del Catalogo
     if len(request.args)!=0:
         nombreCat = request.args[0]
-        subQueryCatalogo = (db.CATALOGO.id_catalogo == nombreCat)
+        subQueryCatalogoActual = (db.CATALOGO.id_catalogo == nombreCat)
     else:
         nombreCat = session.catAgregar
-        subQueryCatalogo = (db.CATALOGO.nombreCat == nombreCat)
+        subQueryCatalogoActual = (db.CATALOGO.nombreCat == nombreCat)
     # Construyo query para obtener la relacion entre los campos y el catalogo
     # que debo eliminar
-    query = reduce(lambda a, b: (a&b),[subQueryCatalogo,
+    queryCamposDelCatalogo = reduce(lambda a, b: (a&b),[subQueryCatalogoActual,
                                       db.CATALOGO.id_catalogo == db.CATALOGO_TIENE_CAMPO.id_catalogo,
                                       db.CATALOGO_TIENE_CAMPO.id_campo_cat == db.CAMPO_CATALOGO.id_campo_cat])
 
     # Guardo los resultados en 'aux'
-    aux = db(query).select(db.CATALOGO_TIENE_CAMPO.ALL)
+    camposDelCatalogo = db(queryCamposDelCatalogo).select(db.CATALOGO_TIENE_CAMPO.ALL)
 
     # Borro las relaciones (en caso de que hayan)
-    if(len(aux) > 0):
-        aux2 = db(db.CAMPO.despliega_cat == aux[0].id_catalogo).select()
-        db(db.VALORES_CAMPO_CATALOGO.id_catalogo == aux[0].id_catalogo).delete()
-        if(len(aux2) >0):
-            db(db.ACT_POSEE_CAMPO.id_campo == aux2[0]['id_campo']).delete()
-        db(db.CATALOGO_TIENE_CAMPO.id_catalogo == aux[0].id_catalogo).delete()
-        db(db.CAMPO.despliega_cat == aux[0].id_catalogo).delete()
+    if(len(camposDelCatalogo) > 0):
+        camposDeActividad = db(db.CAMPO.despliega_cat == camposDelCatalogo[0].id_catalogo).select()
+        #Se borran los campos del catalogo
+        db(db.VALORES_CAMPO_CATALOGO.id_catalogo == camposDelCatalogo[0].id_catalogo).delete()
+        #Si una actividad esta asociada a un catalogo
+        if(len(camposDeActividad) >0):
+            #Se elimina la relación con la actividad
+            db(db.ACT_POSEE_CAMPO.id_campo == camposDeActividad[0]['id_campo']).delete()
+        #Se elimina la relacion entre los campos y el catalogo
+        db(db.CATALOGO_TIENE_CAMPO.id_catalogo == camposDelCatalogo[0].id_catalogo).delete()
+        #Se eliminan los campos asociados a las actividades
+        db(db.CAMPO.despliega_cat == camposDelCatalogo[0].id_catalogo).delete()
 
     # Borro los campos asociados a estas relaciones
-    for row in aux:
-        query2 = reduce(lambda a,b: (a&b),[db.CAMPO_CATALOGO.id_campo_cat == row.id_campo_cat])
-        aux3 = db(query2).select(db.CAMPO_CATALOGO.ALL)
-        db(db.CAMPO_CATALOGO.id_campo_cat == aux3[0].id_campo_cat).delete()
+    for row in camposDelCatalogo:
+        queryCampo = db.CAMPO_CATALOGO.id_campo_cat == row.id_campo_cat
+        campoCatalogo = db(queryCampo).select(db.CAMPO_CATALOGO.ALL)
+        db(db.CAMPO_CATALOGO.id_campo_cat == campoCatalogo[0].id_campo_cat).delete()
 
 
     # Borro el catalogo
-    db(subQueryCatalogo).delete()
+    db(subQueryCatalogoActual).delete()
 
     redirect(URL('vGestionarCatalogo.html'))
 
