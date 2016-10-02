@@ -38,7 +38,7 @@ def vAgregarCatalogo():
     if formulario.accepts(request.vars, session):
         # Creamos el catalogo y obtenemos su id, para pasarlo al controlador de agregar campo.
         id_catalogo = db.CATALOGO.insert(nombre = request.vars.nombre)['id_catalogo']
-        redirect(URL('vAgregarCampos.html',args=[id_catalogo]))
+        redirect(URL('vModificarCatalogo.html',args=[id_catalogo]))
     # En caso de que el formulario no sea aceptado
     elif formulario.errors:
         session.message = 'Error en el Formulario.'
@@ -48,19 +48,21 @@ def vAgregarCatalogo():
     return(dict(formulario = formulario, admin = admin))
 
 '''
-Funcion que se encarga de agregar un campo al catalogo,
-crearlo y relacionarlo con el catalogo indicado.
+Funcion que se encarga de mostrar los campos del catalogo,
+permite crear y elminiar campos relacionados con el catalogo indicado.
 '''
-def vAgregarCampos():
+def vModificarCatalogo():
 
     admin = get_tipo_usuario()
 
     # Obtengo el id del catalogo
-    id_cat = request.args[0]
+    id_catalogo = request.args[0]
 
     # Creo query para realizar busqueda de los campos que ya han sido agregados
     # a ese catalogo
-    campos_guardados = db(db.CAMPO_CATALOGO.id_catalogo == id_cat).select()
+    campos_guardados = db(db.CAMPO_CATALOGO.id_catalogo == id_catalogo).select()
+    #Como los catalogos son unicos, tomamos siempre el primer elemento del query.
+    nombre_catalogo  = db(db.CATALOGO.id_catalogo == id_catalogo).select()[0].nombre
 
     # Busco el id del catalogo
     # Genero formulario para los campos
@@ -85,13 +87,13 @@ def vAgregarCampos():
             session.msgErr = 1
             session.message = 'Ya existe el campo'
         else:
-            db.CAMPO_CATALOGO.insert(id_catalogo = id_cat,
+            db.CAMPO_CATALOGO.insert(id_catalogo = id_catalogo,
                                      nombre =  nombre_campo_nuevo,
                                      tipo_campo = request.vars.tipo_campo,
                                      obligatorio = request.vars.obligatorio)
             session.msgErr = 0
         # Redirijo a la misma pagina para seguir agregando campos
-        redirect(URL('vAgregarCampos', args=[id_cat]))
+        redirect(URL('vModificarCatalogo', args=[id_catalogo]))
     # En caso de que el formulario no sea aceptado
     elif formulario.errors:
         session.message = 'Datos invalidos para el campo.'
@@ -99,7 +101,10 @@ def vAgregarCampos():
         if(not(session.msgErr)):
             session.message = ''
 
-    return dict(formulario = formulario, campos_guardados = campos_guardados,admin = admin)
+    return dict(formulario = formulario,
+                campos_guardados = campos_guardados,
+                nombre_catalogo = nombre_catalogo,
+                admin      = admin)
 
 '''
 Funcion auxiliar que se encarga de colocar
@@ -225,58 +230,19 @@ de los campos de un catalogo en una tabla.
 '''
 def vMostrarCatalogo():
     admin = get_tipo_usuario()
-    # Obtengo el nombre del catalogo a mostrar
-    if(session.nombreMostrar != ""):
-        id_catalogo = session.nombreMostrar
-    else:
-        id_catalogo = request.args[0]
+    # Obtengo el id del catalogo a mostrar
+    id_catalogo = request.args[0]
 
-    # Creo 2 queries para buscar los campos que contiene el catalogo
-    # y los valores de cada uno de ellos.
-    query = reduce(lambda a, b: (a&b),[db.CATALOGO.id_catalogo == id_catalogo,
-                                      db.CATALOGO.id_catalogo == db.CATALOGO_TIENE_CAMPO.id_catalogo,
-                                      db.CATALOGO_TIENE_CAMPO.id_campo_cat == db.CAMPO_CATALOGO.id_campo_cat])
-    query2 = reduce(lambda a, b: (a&b),[db.CATALOGO.id_catalogo == id_catalogo,
-                                       db.VALORES_CAMPO_CATALOGO.id_campo_cat == db.CAMPO_CATALOGO.id_campo_cat,
-                                       db.VALORES_CAMPO_CATALOGO.id_catalogo == db.CATALOGO.id_catalogo])
+    # Buscamos los campos que se necesitan de los catalogos.
+    campos_guardados = db(db.CAMPO_CATALOGO.id_catalogo == id_catalogo).select()
 
-    # Guardo los resultados del los queries creados
-    campos_guardados = db(query).select(db.CAMPO_CATALOGO.ALL, db.CATALOGO_TIENE_CAMPO.ALL)
-    id_campos = db(query).select(db.CATALOGO_TIENE_CAMPO.ALL)
-    valores_campos = db(query2).select(db.VALORES_CAMPO_CATALOGO.ALL)
-    nroCampos = len(campos_guardados)
-    nroValores = len(valores_campos)
+    #Como los catalogos son unicos, tomamos siempre el primer elemento del query.
+    nombre_catalogo  = db(db.CATALOGO.id_catalogo == id_catalogo).select()[0].nombre
 
-    # Calculo el numero de filas que debera mostrar la tabla.
-    if(nroCampos != 0):
-        nroFilas = nroValores/nroCampos
-    else:
-        nroFilas = 0
-
-    # Arreglos auxiliares para almacenar las filas y las columnas de la tabla
-    filas = []
-    columnas = []
-    j = 0
-    # Creo las columnas de la tabla (Los valores de cada campo)
-    for i in range(0,len(id_campos)):
-        arr = []
-        id_act = id_campos[i]['id_campo_cat']
-        for j in range(0,len(valores_campos)):
-            if(valores_campos[j]['id_campo_cat'] == id_act):
-                arr.append(valores_campos[j])
-        columnas.append(arr)
-    j = 0
-    # Creo las filas que se mostraran en la tabla.
-    for i in range(0,nroFilas):
-        aux = []
-        for j in range(0,len(columnas)):
-            aux.append(columnas[j][i])
-        filas.insert(-1,aux)
-    # Guardo las filas globalmente para poder acceder a ellas de forma sencilla y eficiente.
-    session.filas = filas
-    nombre = db(db.CATALOGO.id_catalogo == id_catalogo).select(db.CATALOGO.nombre)
-    print("VMostrarCatalogo filas: ",filas)
-    return dict(campos_guardados = campos_guardados,filas = filas, admin = admin, nombre = id_catalogo)
+    return dict(campos_guardados = campos_guardados,
+                id_catalogo      = id_catalogo,
+                nombre_catalogo  = nombre_catalogo,
+                admin = admin)
 
 '''
 Funcion que se encarga de modificar el valor de una
@@ -306,7 +272,7 @@ def vModificarCampos():
     for row in aux:
         cmpo.append(row['nombre'])
 
-    id_cat = db(db.CATALOGO.id_catalogo == diccionario['id_catalogo']).select(db.CATALOGO.id_catalogo)[0]['id_catalogo']
+    id_catalogo = db(db.CATALOGO.id_catalogo == diccionario['id_catalogo']).select(db.CATALOGO.id_catalogo)[0]['id_catalogo']
     arrId = db(query).select(db.CAMPO_CATALOGO.id_campo_cat)
 
     # Ids de los campos
@@ -332,7 +298,7 @@ def vModificarCampos():
                     df = f['valor']
             valor = request.vars["pr"+str(i)]
             if(valor != df):
-                query2 = reduce(lambda a, b: (a&b), [db.VALORES_CAMPO_CATALOGO.valor == valor, db.VALORES_CAMPO_CATALOGO.id_catalogo == id_cat,
+                query2 = reduce(lambda a, b: (a&b), [db.VALORES_CAMPO_CATALOGO.valor == valor, db.VALORES_CAMPO_CATALOGO.id_catalogo == id_catalogo,
                                                      db.VALORES_CAMPO_CATALOGO.id_campo_cat == ids[i]])
                 if(len(db(query2).select()) > 0):
                     session.nombreMostrar = id_catalogo
@@ -344,7 +310,7 @@ def vModificarCampos():
                     df = f['valor']
             valor = request.vars["pr"+str(i)]
             db(db.VALORES_CAMPO_CATALOGO.valor == df).delete()
-            db.VALORES_CAMPO_CATALOGO.insert(id_campo_cat = ids[i], id_catalogo = id_cat, valor = valor)
+            db.VALORES_CAMPO_CATALOGO.insert(id_campo_cat = ids[i], id_catalogo = id_catalogo, valor = valor)
         session.nombreMostrar = id_catalogo
         redirect(URL('vMostrarCatalogo.html'))
     return (dict(forma = forma, admin = admin))
@@ -395,100 +361,18 @@ def eliminarValorCampo():
     redirect(URL('vMostrarCatalogo.html'))
 
 '''
-Funcion que se encarga de modificar un catalogo
-permitiendo agregar o eliminar campos del mismo.
-'''
-def vModificarCatalogo():
-    # Obtengo el tipo del usuario conectado.
-    admin = get_tipo_usuario()
-    # Obtengo el nombre del catalogo a modificar.
-    if(session.nombreModificar != ""):
-        nombreCat = session.nombreModificar
-    else:
-        nombreCat = request.args[0]
-        valorStr = ""
-        for i in range(0,len(request.args[0])):
-            if(request.args[0][i] == "_"):
-                valorStr += " "
-            else:
-                valorStr += request.args[0][i]
-        #nombreCat = valorStr
-
-    # Creo 2 querys para buscar los valores de los campos y los campos que hay en el catalogo.
-    query = reduce(lambda a, b: (a&b),[db.CATALOGO.id_catalogo  == nombreCat,
-                                      db.CATALOGO.id_catalogo == db.CATALOGO_TIENE_CAMPO.id_catalogo,
-                                      db.CATALOGO_TIENE_CAMPO.id_campo_cat == db.CAMPO_CATALOGO.id_campo_cat])
-    query2 = reduce(lambda a, b: (a&b),[db.CATALOGO.id_catalogo  == nombreCat,
-                                      db.CATALOGO.id_catalogo == db.CATALOGO_TIENE_CAMPO.id_catalogo,
-                                      db.CATALOGO_TIENE_CAMPO.id_campo_cat == db.CAMPO_CATALOGO.id_campo_cat,
-                                      db.VALORES_CAMPO_CATALOGO.id_campo_cat == db.CAMPO_CATALOGO.id_campo_cat,
-                                      db.VALORES_CAMPO_CATALOGO.id_catalogo == db.CATALOGO.id_catalogo])
-
-    # Guardo los resultados de dichos queries
-    campos_guardados = db(query).select(db.CAMPO_CATALOGO.ALL, db.CATALOGO.ALL)
-    valores = db(query2).select(db.VALORES_CAMPO_CATALOGO.ALL)
-    campos = db(query).select(db.CAMPO_CATALOGO.ALL)
-
-    if(len(campos) > 0):
-        total = len(valores)/len(campos)
-    else:
-        total = 0
-    # Busco el id del catalogo
-    id_cat = db(db.CATALOGO.id_catalogo  == nombreCat).select()[0].id_catalogo
-
-    # Genero formulario para los campos
-    form = SQLFORM(db.CAMPO_CATALOGO,
-                   submit_button='Agregar',
-                   fields = ['nombre', 'tipo_cat', 'eliminar'],
-                   labels = {'tipo_cat' : 'Tipo'}
-                   )
-    # En caso de que los datos del formulario sean aceptados
-    if form.accepts(request.vars, session):
-        # Busco el id del campo(que fue agregado al presionar boton
-        # de submit) y agrego el campo en caso de que este no exista.
-        print("492: ",request.vars)
-        idd_campo = db(db.CAMPO_CATALOGO.nombre  == request.vars.nombre.strip(' ')).select(db.CAMPO_CATALOGO.id_campo_cat)[0].id_campo_cat
-        query2 = reduce(lambda a, b: (a&b), [db.CATALOGO_TIENE_CAMPO.id_campo_cat == idd_campo,
-                                             db.CATALOGO_TIENE_CAMPO.id_catalogo == id_cat])
-        if len(db(query2).select())>0:
-            session.msgErr = 1
-            session.message = 'Ya existe el campo'
-        else:
-            db.CATALOGO_TIENE_CAMPO.insert(id_catalogo = id_cat, id_campo_cat = idd_campo)
-            valor_aux = " "
-            for i in range(0,total):
-                db.VALORES_CAMPO_CATALOGO.insert(id_catalogo = id_cat, id_campo_cat = idd_campo, valor = valor_aux*(i+1))
-            session.msgErr = 0
-        # Redirijo a la misma pagina para seguir agregando campos
-        session.nombreModificar = nombreCat
-        redirect(URL('vModificarCatalogo'))
-    # En caso de que el formulario no sea aceptado
-    elif form.errors:
-        session.message = 'Datos invalidos'
-    # Metodo GET
-    else:
-        if(not(session.msgErr)):
-            session.message = ''
-
-    return dict(form = form, campos_guardados = campos_guardados,admin = admin)
-
-'''
 Funcion que se encarga de eliminar un campo del catalogo,
 eliminando todas las relaciones existentes e instancias
 del catalogo.
 '''
 def eliminarCampos():
-    # Obtengo el nombre del campo que se eliminara
-    if len(request.args)!=0:
-        nombreCat = request.args[0]
-    else:
-        nombreCat = session.catAgregar
 
-    # Elimino todas las relaciones relacionadas con el campo
-    db(db.CATALOGO_TIENE_CAMPO.id_campo_cat == request.args[1]).delete()
-    db(db.VALORES_CAMPO_CATALOGO.id_campo_cat == request.args[1]).delete()
+    # Obtengo el id del campo que se eliminara
+    id_campo_cat = request.args[0]
+    id_catalogo  = request.args[1]
 
-    db(db.CAMPO_CATALOGO.id_campo_cat == request.args[1]).delete()
-    session.nombreModificar = nombreCat
+    # Elimino el campo del catalogo. Esto no afecta los tipos de actividades
+    # Que estan definidas ya, ni los productos ya listos.
+    db(db.CAMPO_CATALOGO.id_campo_cat == id_campo_cat).delete()
 
-    redirect(URL('vModificarCatalogo.html'))
+    redirect(URL('vModificarCatalogo.html', args=[id_catalogo]))

@@ -5,47 +5,56 @@
                 <div class = "session_message">
                     {{ =session.message or ''}}
                 </div>
-                <h3 id = "titulo"> Gestión de Catálogos </h3>
+                <h3 id = "titulo"> Catalogo {{= nombre_catalogo}} </h3>
                 <h4>
-                    <a href = "{{=URL(f='vAgregarElementoCampo',args = [ nombre ])}}">
+                    <a href = "{{=URL(f='vModificarCatalogo',args = [id_catalogo])}}">
                         {{=IMG(_src=URL('static', 'iconos/Add_26x26.png')) }}
-                        Agregar Valores
+                        Agregar Campos
                     </a>
                 </h4>
                 <br>
-                <div class = "table-responsive">
-                <table class = "table table-bordered">
-                    <thead>
-                        <tr>
-                            {{for campo in campos_guardados:}}
-                                <td class="col-md">{{=campo.CAMPO_CATALOGO.nombre}}</td>
-                        {{pass}}
-                            <td class="col-md-2"><b>Editar</b></td>
-                            <td class="col-md-2"><b>Eliminar</b></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                            {{for j in range (0,len(filas)):}}
-                                <tr>
-                                {{for i in filas[j]:}}
-                                    <td class="col-md">{{=i['valor']}}</td>
+                <div id = 'campos' >
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <td class="col-md-6">Nombre del Campo</td>
+                                <td class="col-md-3">Tipo</td>
+                                <td class="col-md-2">Obligatorio</td>
+                                <td class="col-md-1">Editar</td>
+                                <td class="col-md-2">Eliminar</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{if len(campos_guardados) > 0 :}}
+                                {{for campo in campos_guardados:}}
+                                    <tr>
+                                        <td class="col-md-6">{{=campo.nombre}}</td>
+                                        <td class="col-md-3">{{=campo.tipo_campo}}</td>
+                                        {{if campo.obligatorio:}}
+                                            <td class="col-md-2">Si</td>
+                                        {{else:}}
+                                             <td class="col-md-2">No</td>
+                                        {{pass}}
+                                        <td class="col-md-1">
+                                          <a href = "{{=URL(f='vModificarCatalogo', args=[campo.id_campo_cat])}}">
+                                              {{=IMG(_src=URL('static', 'iconos/Edit.png')), }}
+                                          </a>
+                                        </td>
+                                        <td class="col-md-2">
+                                            <a onClick = "if(confirm('¿Está seguro de que desea eliminar el campo?')) {window.location.href = '{{=URL(f='eliminarCampos',args=[campo.id_campo_cat, campo.id_catalogo])}}';}">
+                                                        {{=IMG(_src=URL('static', 'iconos/Delete.png')), }}
+                                                        </a>
+                                        </td>
+                                     </tr>
                                 {{pass}}
-                                <td class="col-md-2">
-                                    <a href = "{{=URL(f='vModificarCampos',args =[filas[j][0]['id_campo_cat'],j])}}">
-                                        {{=IMG(_src=URL('static', 'iconos/Edit.png')), }}
-                                    </a>
-                                </td>
-                                <td class="col-md-2">
-                                <a onClick = "if(confirm('¿Está seguro de que desea eliminar los valores?')) {window.location.href = '{{=URL(f='eliminarValorCampo',args=[ filas[j][0]['id_campo_cat'], filas[j][0]['valor'] ] )}}';}">
-                                    {{=IMG(_src=URL('static', 'iconos/Delete.png')), }}
-                                </td>
+                              {{else:}}
+                                <tr>
+                                  <h4>Este catalogo aun no tiene campos agregados</h4>
+                                </tr>
                               {{pass}}
-                              </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
                 </div>
                 <br/>
             </section><!-- close main -->
         </section>
-    </body>
-</html>
