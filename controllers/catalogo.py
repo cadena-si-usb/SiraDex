@@ -61,8 +61,9 @@ def vModificarCatalogo():
     # Creo query para realizar busqueda de los campos que ya han sido agregados
     # a ese catalogo
     campos_guardados = db(db.CAMPO_CATALOGO.id_catalogo == id_catalogo).select()
+
     #Como los catalogos son unicos, tomamos siempre el primer elemento del query.
-    nombre_catalogo  = db(db.CATALOGO.id_catalogo == id_catalogo).select()[0].nombre
+    nombre_catalogo  = db.CATALOGO[id_catalogo].nombre
 
     # Busco el id del catalogo
     # Genero formulario para los campos
@@ -165,64 +166,64 @@ def deshabilitarCatalogo():
 
     redirect(URL('vGestionarCatalogo.html'))
 
-'''
-Funcion que se encarga de agregar valores a los
-campos de un catalogo, en caso de que no exista
-otra instancia con el mismo valor.
-'''
-def vAgregarElementoCampo():
-    # Obtengo el tipo del usuario y el id del catalogo.
-    admin = get_tipo_usuario()
-    id_catalogo = request.args[0]
-
-    # Busco los campos asociados al catalogo.
-    query = reduce(lambda a, b: (a&b),[db.CATALOGO.id_catalogo == id_catalogo,
-                                      db.CATALOGO.id_catalogo == db.CATALOGO_TIENE_CAMPO.id_catalogo,
-                                      db.CATALOGO_TIENE_CAMPO.id_campo_cat == db.CAMPO_CATALOGO.id_campo_cat])
-    aux = db(query).select(db.CAMPO_CATALOGO.nombre)
-    # Creo 2 arreglos para almacenar los campos y los id de cada campo.
-    campos = []
-    idsCampos = []
-    # Nombres de los campos
-    for row in aux:
-        campos.append(row['nombre'])
-
-    arrId = db(query).select(db.CAMPO_CATALOGO.id_campo_cat)
-    cantidadCampos = len(campos)
-    # Obtengo los ids de los campos
-    for row in arrId:
-        idsCampos.append(row['id_campo_cat'])
-    # Creo un arreglo con todos los campos del formulario.
-    arreglo = []
-    for i in range (0,len(campos)):
-        arreglo += [ Field("pr"+str(i),'string', label=T(str(campos[i]))) ]
-    if(len(arreglo) > 0):
-        forma = SQLFORM.factory(
-            *arreglo)
-    else:
-        session.message = "El catalogo no posee campos"
-        redirect(URL('vGestionarCatalogo.html'))
-
-    if len(request.vars)>0:
-        for i in range(0, cantidadCampos):
-            valor = request.vars["pr"+str(i)]
-
-            # Genero un query para revisar si el valor existe en alguna instancia del campo.
-            query2 = reduce(lambda a, b: (a&b), [db.VALORES_CAMPO_CATALOGO.valor == valor, db.VALORES_CAMPO_CATALOGO.id_catalogo == id_catalogo,
-                                                 db.VALORES_CAMPO_CATALOGO.id_campo_cat == idsCampos[i]])
-            if(len(db(query2).select()) > 0):
-                session.nombreMostrar = id_catalogo
-                session.message = "El valor de un campo esta duplicado"
-                redirect(URL('vMostrarCatalogo.html'))
-
-        # Almaceno los valores en cada uno de los campos
-        for i in range(0, cantidadCampos):
-            valor = request.vars["pr"+str(i)]
-            db.VALORES_CAMPO_CATALOGO.insert(id_campo_cat = idsCampos[i], id_catalogo = id_catalogo, valor = valor)
-        session.nombreMostrar = id_catalogo
-        redirect(URL('vMostrarCatalogo.html'))
-
-    return (dict(forma = forma, admin = admin))
+# '''
+# Funcion que se encarga de agregar valores a los
+# campos de un catalogo, en caso de que no exista
+# otra instancia con el mismo valor.
+# '''
+# def vAgregarElementoCampo():
+#     # Obtengo el tipo del usuario y el id del catalogo.
+#     admin = get_tipo_usuario()
+#     id_catalogo = request.args[0]
+#
+#     # Busco los campos asociados al catalogo.
+#     query = reduce(lambda a, b: (a&b),[db.CATALOGO.id_catalogo == id_catalogo,
+#                                       db.CATALOGO.id_catalogo == db.CATALOGO_TIENE_CAMPO.id_catalogo,
+#                                       db.CATALOGO_TIENE_CAMPO.id_campo_cat == db.CAMPO_CATALOGO.id_campo_cat])
+#     aux = db(query).select(db.CAMPO_CATALOGO.nombre)
+#     # Creo 2 arreglos para almacenar los campos y los id de cada campo.
+#     campos = []
+#     idsCampos = []
+#     # Nombres de los campos
+#     for row in aux:
+#         campos.append(row['nombre'])
+#
+#     arrId = db(query).select(db.CAMPO_CATALOGO.id_campo_cat)
+#     cantidadCampos = len(campos)
+#     # Obtengo los ids de los campos
+#     for row in arrId:
+#         idsCampos.append(row['id_campo_cat'])
+#     # Creo un arreglo con todos los campos del formulario.
+#     arreglo = []
+#     for i in range (0,len(campos)):
+#         arreglo += [ Field("pr"+str(i),'string', label=T(str(campos[i]))) ]
+#     if(len(arreglo) > 0):
+#         forma = SQLFORM.factory(
+#             *arreglo)
+#     else:
+#         session.message = "El catalogo no posee campos"
+#         redirect(URL('vGestionarCatalogo.html'))
+#
+#     if len(request.vars)>0:
+#         for i in range(0, cantidadCampos):
+#             valor = request.vars["pr"+str(i)]
+#
+#             # Genero un query para revisar si el valor existe en alguna instancia del campo.
+#             query2 = reduce(lambda a, b: (a&b), [db.VALORES_CAMPO_CATALOGO.valor == valor, db.VALORES_CAMPO_CATALOGO.id_catalogo == id_catalogo,
+#                                                  db.VALORES_CAMPO_CATALOGO.id_campo_cat == idsCampos[i]])
+#             if(len(db(query2).select()) > 0):
+#                 session.nombreMostrar = id_catalogo
+#                 session.message = "El valor de un campo esta duplicado"
+#                 redirect(URL('vMostrarCatalogo.html'))
+#
+#         # Almaceno los valores en cada uno de los campos
+#         for i in range(0, cantidadCampos):
+#             valor = request.vars["pr"+str(i)]
+#             db.VALORES_CAMPO_CATALOGO.insert(id_campo_cat = idsCampos[i], id_catalogo = id_catalogo, valor = valor)
+#         session.nombreMostrar = id_catalogo
+#         redirect(URL('vMostrarCatalogo.html'))
+#
+#     return (dict(forma = forma, admin = admin))
 
 '''
 Funcion encargada de mostrar todas las instancias
@@ -237,7 +238,7 @@ def vMostrarCatalogo():
     campos_guardados = db(db.CAMPO_CATALOGO.id_catalogo == id_catalogo).select()
 
     #Como los catalogos son unicos, tomamos siempre el primer elemento del query.
-    nombre_catalogo  = db(db.CATALOGO.id_catalogo == id_catalogo).select()[0].nombre
+    nombre_catalogo  = db.CATALOGO[id_catalogo].nombre
 
     return dict(campos_guardados = campos_guardados,
                 id_catalogo      = id_catalogo,
@@ -245,120 +246,119 @@ def vMostrarCatalogo():
                 admin = admin)
 
 '''
-Funcion que se encarga de modificar el valor de una
-instancia de los campos de un catalogo.
+Funcion que se encarga de modificar las caracteriticas de un
+campo de un catalogo.
 '''
-def vModificarCampos():
-    # Obtengo el tipo de usuario y el id del campo a modificar.
+def vModificarCampo():
+
+    #Obtenemos el tipo de Usuario.
     admin = get_tipo_usuario()
-    id_campo = request.args[0]
-    # Busco el diccionario al cual esta asociado la fila de campos que deseo modificar.
-    for j in session.filas[int(request.args[1])]:
-        if str(j['id_campo_cat'])==id_campo:
-            diccionario = j
-            dcc = session.filas[int(request.args[1])]
-    print("333: KKKK", request.args)
-    # Creo un query para sacar los campos que tiene el catalogo.
-    query = reduce(lambda a, b: (a&b),[db.CATALOGO.id_catalogo == diccionario['id_catalogo'],
-                                      db.CATALOGO.id_catalogo == db.CATALOGO_TIENE_CAMPO.id_catalogo,
-                                      db.CATALOGO_TIENE_CAMPO.id_campo_cat == db.CAMPO_CATALOGO.id_campo_cat])
-    # Guardo los resultados del query en aux
-    aux = db(query).select(db.CAMPO_CATALOGO.nombre)
-    id_catalogo= db(query).select(db.CATALOGO.id_catalogo)[0]['id_catalogo']
-    # Arreglos auxiliares para guardar los nombres y ids de los campos respectivamente.
-    cmpo = []
-    ids = []
-    # Nombres de los campos
-    for row in aux:
-        cmpo.append(row['nombre'])
 
-    id_catalogo = db(db.CATALOGO.id_catalogo == diccionario['id_catalogo']).select(db.CATALOGO.id_catalogo)[0]['id_catalogo']
-    arrId = db(query).select(db.CAMPO_CATALOGO.id_campo_cat)
+    #obtenemos el campo que queremos modificar:
+    id_campo    = request.args[0]
+    #obtenemos el id del catalogo al que pertenece el campo en cuestion
+    id_catalogo = request.args[1]
 
-    # Ids de los campos
-    for row in arrId:
-        ids.append(row['id_campo_cat'])
-    print(ids[0])
-    arreglo = []
-    df =None
-    # Almaceno los campos a mostrar en el formulario
-    for i in range(0,len(cmpo)):
-        for f in dcc:
-            if(f['id_campo_cat'] == ids[i]):
-                df = f['valor']
-        if df != None:
-            arreglo += [ Field("pr"+str(i),'string',default= df, label=T(str(cmpo[i]))) ]
-    forma = SQLFORM.factory(
-        *arreglo)
-    # Reviso si ningun valor esta duplicado para luego insertarlo en la base.
-    if len(request.vars)>0:
-        for i in range(0,len(cmpo)):
-            for f in dcc:
-                if(f['id_campo_cat'] == ids[i]):
-                    df = f['valor']
-            valor = request.vars["pr"+str(i)]
-            if(valor != df):
-                query2 = reduce(lambda a, b: (a&b), [db.VALORES_CAMPO_CATALOGO.valor == valor, db.VALORES_CAMPO_CATALOGO.id_catalogo == id_catalogo,
-                                                     db.VALORES_CAMPO_CATALOGO.id_campo_cat == ids[i]])
-                if(len(db(query2).select()) > 0):
-                    session.nombreMostrar = id_catalogo
-                    session.message = "El valor de un campo esta duplicado"
-                    redirect(URL('vMostrarCatalogo.html'))
-        for i in range(0,len(cmpo)):
-            for f in dcc:
-                if(f['id_campo_cat'] == ids[i]):
-                    df = f['valor']
-            valor = request.vars["pr"+str(i)]
-            db(db.VALORES_CAMPO_CATALOGO.valor == df).delete()
-            db.VALORES_CAMPO_CATALOGO.insert(id_campo_cat = ids[i], id_catalogo = id_catalogo, valor = valor)
-        session.nombreMostrar = id_catalogo
-        redirect(URL('vMostrarCatalogo.html'))
-    return (dict(forma = forma, admin = admin))
+    #obtenemos los datos de ese campo
+    datos_campo = db.CAMPO_CATALOGO[id_campo]
 
-'''
-Funcion que se encarga de eliminar una instancia
-de los campos de un catalogo.
-'''
-def eliminarValorCampo():
-    # Obtengo el tipo del usuario y el nombre del campo a eliminar.
-    admin = get_tipo_usuario()
-    id_campo = request.args[0]
-    valor = request.args[1]
-    print("id_campo: ", id_campo, " valor: ", valor)
-    for dic in session.filas:
-        for i in dic:
-            if (str(i['id_campo_cat'])==id_campo) and (str(i['valor']) == valor):
-                diccionario = i
-                dcc = dic
-                print("request.args: ", request.args)
-                print("session.filas: ", session.filas)
+    formulario = SQLFORM(db.CAMPO_CATALOGO,
+                   submit_button='Guardar',
+                   fields = ['nombre', 'tipo_campo', 'obligatorio'],
+                   labels = {'tipo_campo' : 'Tipo'}
+                   )
 
-    # Genero un query para buscar los campos que tiene el catalogo.
-    query = reduce(lambda a, b: (a&b),[db.CATALOGO.id_catalogo == diccionario['id_catalogo'],
-                                       db.CATALOGO.id_catalogo == db.CATALOGO_TIENE_CAMPO.id_catalogo,
-                                      db.CATALOGO_TIENE_CAMPO.id_campo_cat == db.CAMPO_CATALOGO.id_campo_cat])
-    aux = db(query).select(db.CAMPO_CATALOGO.nombre)
-    # Arreglos auxiliares para guardar los campos y los ids respectivamente.
-    cmpo = []
-    ids = []
-    # Nombres de los campos
-    for row in aux:
-        cmpo.append(row['nombre'])
+    #Prellenamos el formulario con los campos que ya tenia el formulario.
+    print datos_campo
 
-    arrId = db(query).select(db.CAMPO_CATALOGO.id_campo_cat)
+    formulario.vars.nombre      = datos_campo.nombre
+    formulario.vars.tipo_campo  = datos_campo.tipo_campo
+    formulario.vars.obligatorio = datos_campo.obligatorio
 
-    # Ids de los campos
-    for row in arrId:
-        ids.append(row['id_campo_cat'])
-    # Voy eliminando el valor de cada campo de la fila seleccionada
-    for i in range(0,len(cmpo)):
-        for f in dcc:
-            if(f['id_campo_cat'] == ids[i]):
-                df = f['valor']
+    # En caso de que los datos del formulario sean aceptados
+    if formulario.accepts(request.vars, session):
 
-        db(db.VALORES_CAMPO_CATALOGO.valor == df).delete()
-    session.nombreMostrar = db(db.CATALOGO.id_catalogo == diccionario['id_catalogo']).select(db.CATALOGO.id_catalogo)[0].id_catalogo
-    redirect(URL('vMostrarCatalogo.html'))
+        nombre_nuevo = request.vars.nombre
+        nombre_repetido    = False
+
+        #Bucamos los campos que esten guardados
+        campos_guardados = db(db.CAMPO_CATALOGO.id_catalogo == id_catalogo).select()
+
+        #Si existe un campo que tenga el mismo nombre
+        #Y no sea el campo que estamos modificando.
+        #Entonces existe un campo con nombre repetido.
+        for campo in campos_guardados:
+            if (campo.nombre == nombre_nuevo and
+                campo.id_campo_cat != datos_campo.id_campo_cat):
+                nombre_repetido = True
+                break
+
+        # Si el nombre no esta repetido, modificamos el campo
+        if nombre_repetido:
+            session.msgErr = 1
+            session.message = 'Ya existe un campo llamado "' + nombre_nuevo + '" en el catalogo.'
+        else:
+            #Actualizamos el campo
+            db.CAMPO_CATALOGO[id_campo] = dict(nombre      = nombre_nuevo,
+                                               tipo_campo  = request.vars.tipo_campo,
+                                               obligatorio = request.vars.obligatorio)
+
+            session.msgErr = 0
+        # Redirijo a la misma pagina para seguir agregando campos
+        redirect(URL('vModificarCatalogo', args=[id_catalogo]))
+    # En caso de que el formulario no sea aceptado
+    elif formulario.errors:
+        session.message = 'Datos invalidos para el campo.'
+    else:
+        if(not(session.msgErr)):
+            session.message = ''
+
+    return(dict(formulario=formulario, admin=admin))
+
+# '''
+# Funcion que se encarga de eliminar una instancia
+# de los campos de un catalogo.
+# '''
+# def eliminarValorCampo():
+#     # Obtengo el tipo del usuario y el nombre del campo a eliminar.
+#     admin = get_tipo_usuario()
+#     id_campo = request.args[0]
+#     valor = request.args[1]
+#     print("id_campo: ", id_campo, " valor: ", valor)
+#     for dic in session.filas:
+#         for i in dic:
+#             if (str(i['id_campo_cat'])==id_campo) and (str(i['valor']) == valor):
+#                 diccionario = i
+#                 dcc = dic
+#                 print("request.args: ", request.args)
+#                 print("session.filas: ", session.filas)
+#
+#     # Genero un query para buscar los campos que tiene el catalogo.
+#     query = reduce(lambda a, b: (a&b),[db.CATALOGO.id_catalogo == diccionario['id_catalogo'],
+#                                        db.CATALOGO.id_catalogo == db.CATALOGO_TIENE_CAMPO.id_catalogo,
+#                                       db.CATALOGO_TIENE_CAMPO.id_campo_cat == db.CAMPO_CATALOGO.id_campo_cat])
+#     aux = db(query).select(db.CAMPO_CATALOGO.nombre)
+#     # Arreglos auxiliares para guardar los campos y los ids respectivamente.
+#     cmpo = []
+#     ids = []
+#     # Nombres de los campos
+#     for row in aux:
+#         cmpo.append(row['nombre'])
+#
+#     arrId = db(query).select(db.CAMPO_CATALOGO.id_campo_cat)
+#
+#     # Ids de los campos
+#     for row in arrId:
+#         ids.append(row['id_campo_cat'])
+#     # Voy eliminando el valor de cada campo de la fila seleccionada
+#     for i in range(0,len(cmpo)):
+#         for f in dcc:
+#             if(f['id_campo_cat'] == ids[i]):
+#                 df = f['valor']
+#
+#         db(db.VALORES_CAMPO_CATALOGO.valor == df).delete()
+#     session.nombreMostrar = db(db.CATALOGO.id_catalogo == diccionario['id_catalogo']).select(db.CATALOGO.id_catalogo)[0].id_catalogo
+#     redirect(URL('vMostrarCatalogo.html'))
 
 '''
 Funcion que se encarga de eliminar un campo del catalogo,

@@ -27,7 +27,7 @@
                              <td class="col-md-2">No</td>
                         {{pass}}
                         <td class="col-md-1">
-                          <a href = "{{=URL(f='vModificarCatalogo', args=[campo.id_campo_cat])}}">
+                          <a href = "{{=URL(f='vModificarCampo', args=[campo.id_campo_cat, campo.id_catalogo])}}">
                               {{=IMG(_src=URL('static', 'iconos/Edit.png')), }}
                           </a>
                         </td>
@@ -65,9 +65,6 @@
     <row>
         <div class="col-md-2">
         <input type=button class="btn btn-primary" onClick="parent.location='{{=URL('catalogo', 'agregarTipoAux')}}'" value='Finalizar'>
-        </div>
-        <div class="col-md-2 col-md-offset-3">
-        <input type=button class="btn btn-primary" onClick="parent.location='{{=URL('catalogo', 'eliminarCampos') }}'" value='Abortar'>
         </div>
     </row>
 </div>
