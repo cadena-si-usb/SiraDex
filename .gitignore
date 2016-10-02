@@ -2,6 +2,12 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
+
+# wb2py
+sessions/
+uploads/
+errors/
 
 # C extensions
 *.so
