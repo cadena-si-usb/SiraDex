@@ -273,7 +273,7 @@ def ver_tipo_actividad():
 
     tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
 
-    return dict(campos = campos_guardados, tipo = tipo, admin = get_tipo_usuario())
+    return dict(campos = campos_guardados, tipo = tipo, admin = get_tipo_usuario(), tipo_nombre = request.args[1], programa_nombre = request.args[2])
 
 #. --------------------------------------------------------------------------- .
 def eliminar_campo():
@@ -332,7 +332,11 @@ def editar_tipo():
         tipo.descripcion = request.vars.Descripcion
         tipo.id_programa = request.vars.Programa
         tipo.update_record()                                 # Se actualiza el tipo de actividad.
-        redirect(URL('ver_tipo_actividad.html', args=[id]))  # Se redirige a la vista del preview del T.A. modificado.
+
+        tipo_nombre = 'Evaluables por pares académicos' if tipo.tipo_p_r == 'P' else 'No evaluables por pares académicos'
+        programa_nombre = programas[request.vars.Programa]
+
+        redirect(URL('ver_tipo_actividad.html', args=[id, tipo_nombre, programa_nombre]))  # Se redirige a la vista del preview del T.A. modificado.
 
     # En caso de que el formulario no sea aceptado
     elif formulario.errors:
