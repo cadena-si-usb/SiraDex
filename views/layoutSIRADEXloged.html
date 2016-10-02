@@ -1,0 +1,134 @@
+{{extend 'layoutSIRADEX.html'}}
+
+{{block navegacion}}
+
+<nav class="navbar navbar-default" style="border-color:#FFF">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      
+
+      <ul class="nav navbar-nav navbar-right">
+        <!-- Sistema -->
+        <li class="dropdown">
+          <a    href="#" 
+                class="dropdown-toggle" 
+                data-toggle="dropdown" 
+                role="button" 
+                aria-haspopup="true" 
+                aria-expanded="false"
+                style="border-radius:0.2em">
+                    Sistema
+                    <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a  class ='btn btn-xs' 
+                            href="#">
+                            Papelera
+                        </a></li>
+                    <li><a  class ='btn btn-xs' 
+                            href="#">
+                            BackUp
+                        </a></li>                        
+                    <li><a  class ='btn btn-xs' 
+                            href="#">
+                            Notificaciones
+                        </a></li>
+                    <li><a  class ='btn btn-xs' 
+                            href="#">
+                            Catalogos
+                        </a></li>
+                    <li><a  class ='btn btn-xs' 
+                            href="#">
+                            Consultar Log
+                        </a></li>                                            
+          </ul>        
+        <!-- Solicitudes -->
+        <li class="dropdown">
+            <a    href="#" 
+                class="dropdown-toggle" 
+                data-toggle="dropdown" 
+                role="button" 
+                aria-haspopup="true" 
+                aria-expanded="false"
+                style="border-radius:0.2em">
+                    Solicitudes
+                    <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a  class ='btn btn-xs' 
+                            href="#">
+                            Validadas
+                        </a></li>
+                    <li><a  class ='btn btn-xs' 
+                            href="#">
+                            En Espera
+                        </a></li>    
+                    <li><a  class ='btn btn-xs' 
+                            href="#">
+                            Rechazadas
+                        </a></li>                                            
+          </ul>        
+        <!-- Actividades -->
+        <li><a href="#">Actividades</a></li>
+        <!-- Sesion -->
+        <li class="dropdown activo">
+          <a    href="#" 
+                class="dropdown-toggle" 
+                data-toggle="dropdown" 
+                role="button" 
+                aria-haspopup="true" 
+                aria-expanded="false"
+                style="border-radius:0.2em">
+                    Sergio Alejandro
+                    <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="{{=URL(c='default',f='perfil')}}"
+                        class ='btn btn-xs'>
+                        Ver Perfil</a></li>
+                    <li><a href="#"
+                        class ='btn btn-xs'>
+                    Editar Perfil</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                    <!--Cierre de sesion-->    
+                    <a  class ='btn btn-xs' 
+                        href="{{=URL(c='default', f='logout_cas.html')}}">
+                            Cerrar Sesión
+                    </a>
+                    </li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+{{end}}
+
+{{block footer}}
+        <div class="row">
+            <div class="col-md-3 col-md-offset-1">
+                <!-- AQUI VA OPCIONES DE COLORES -->
+                    <div class="btn-group dropup">
+                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Tema <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a href="#">Default</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Amarillo</a></li>
+                        <li><a href="#">Rosa</a></li>
+                        <li><a href="#">Verde</a></li>
+                      </ul>
+                    </div>
+            </div>
+            <div class="col-md-7">
+{{end}}

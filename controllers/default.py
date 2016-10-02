@@ -41,7 +41,7 @@ def get_tipo_usuario():
             else:
                 admin = 0
         else:
-            redirect(URL(c ="default",f="vMenuPrincipal"))
+            redirect(URL(c ="default",f="perfil"))
     else:
         redirect(URL(c ="default",f="index"))
 
@@ -85,7 +85,7 @@ def login_cas():
                 response.flash = T("Usuario bloqueado")
                 redirect(URL(c = "default",f="index"))
             else:
-                redirect(URL('vMenuPrincipal'))
+                redirect(URL('perfil'))
         else:
             session.usuario['tipo'] = "Usuario"
             db.USUARIO.insert(ci=session.usuario["cedula"],  # Lo insertamos en la base de datos.
@@ -131,12 +131,12 @@ def vRegistroUsuario():
             nuevoTelefono = request.vars.telefono
             nuevoCorreoAlter = request.vars.correo_alter
             db(db.USUARIO.ci == session.usuario["cedula"]).update(telefono=nuevoTelefono, correo_alter=nuevoCorreoAlter)
-            redirect(URL('vMenuPrincipal'))        # Redirige al usuario al menu principal.
+            redirect(URL('perfil'))        # Redirige al usuario al menu principal.
         return dict(form1 = form, form = forma, admin=get_tipo_usuario())
     else:
         redirect(URL("index"))
 
-def vVerPerfil():
+def perfil():
     if session.usuario != None:
 	if session.usuario["tipo"] == "Bloqueado":
 	    redirect(URL("index"))
@@ -168,7 +168,7 @@ def vVerPerfil():
     else:
         redirect(URL("index"))
 
-def vMenuPrincipal():
+def perfil():
     if session.usuario != None:
         admin = 4
         if(session.usuario["tipo"] == "DEX"):
@@ -195,7 +195,7 @@ def vMenuDex():
                 admin = 0
             return dict(admin = admin)
         else:
-            redirect(URL("vMenuPrincipal"))
+            redirect(URL("perfil"))
     else:
         redirect(URL("index"))
 
@@ -229,7 +229,7 @@ def vEditarPerfil():
             nuevoTelefono = request.vars.telefono
             nuevoCorreoAlter = request.vars.correo_alter
             db(db.USUARIO.ci == session.usuario["cedula"]).update(telefono=nuevoTelefono, correo_alter=nuevoCorreoAlter)
-            redirect(URL('vVerPerfil'))
+            redirect(URL('perfil'))
 
         return dict(form1 = form, form = forma, admin = admin)
     else:
@@ -247,7 +247,7 @@ def vMenuAdmin():
             session.message = ""
             return response.render(admin = get_tipo_usuario())
         else:
-            redirect(URL("vMenuPrincipal"))
+            redirect(URL("perfil"))
     else:
         redirect(URL("index"))
 
@@ -261,7 +261,7 @@ def vGestionarUsuarios():
             aux = db(db.USUARIO).select(db.USUARIO.usbid,db.USUARIO.nombres,db.USUARIO.apellidos,db.USUARIO.tipo)
             return dict(usuarios = aux,message = message, admin=get_tipo_usuario())
         else:
-            redirect(URL("vMenuPrincipal"))
+            redirect(URL("perfil"))
     else:
         redirect(URL("index"))
 
@@ -343,7 +343,7 @@ def vAgregarUsuario():
                         #return dict(message = response.flash)
             return dict(form = forma,message = message, admin=get_tipo_usuario())
         else:
-            redirect(URL("vMenuPrincipal"))
+            redirect(URL("perfil"))
     else:
         redirect(URL("index"))
 
@@ -362,7 +362,7 @@ def vEliminarUsuario():
                     session.message = T("Para eliminar su cuenta, por favor comuníquese con un administrador")
                     redirect(URL('vGestionarUsuarios'))
         else:
-            redirect(URL("vMenuPrincipal"))
+            redirect(URL("perfil"))
     else:
         redirect(URL("index"))
 
@@ -393,7 +393,7 @@ def vModificarRol():
 
             return dict(forma = form, form = forma, message = message, admin=get_tipo_usuario())
         else:
-            redirect(URL("vMenuPrincipal"))
+            redirect(URL("perfil"))
     else:
         redirect(URL("index"))
 
@@ -421,7 +421,7 @@ def get_tipo_usuario():
             else:
                 admin = 0
         else:
-            redirect(URL(c ="default",f="vMenuPrincipal"))
+            redirect(URL(c ="default",f="perfil"))
     else:
         redirect(URL(c ="default",f="index"))
 

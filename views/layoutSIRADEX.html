@@ -1,0 +1,115 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
+
+<html>
+<head>
+    <!--*********************************************
+    **********************************************-->
+    <meta charset = "UTF-8">
+    <title> SIRADEX </title>
+    
+    <!--*********************************************
+        Extend e include
+    **********************************************-->
+        {{include 'web2py_ajax.html'}}
+        {{response.files.append(URL('static','css/layoutStyle.css'))}}
+
+    <!--*********************************************
+        Link con bootstrap, CSS y JavaScript
+    **********************************************-->
+        <link   rel="stylesheet" 
+                href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" 
+                integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" 
+                crossorigin="anonymous">
+        
+        <link   href="{{=URL('static', 'css/layoutStyle.css')}}" 
+                rel="stylesheet" 
+                type="text/css" />
+        
+        <link   href="{{=URL('static', 'js/web2py.js')}}" />
+        
+        <link   rel="shortcut icon" 
+                href="{{=URL('static','iconos/favicon.ico')}}" 
+                type="image/x-icon">
+</head>
+
+<body style="position: relative;min-height: 100%;top: 0px;">
+    <!--*********************************************
+        MAIN
+    *********************************************-->
+        <div class="container">
+            <div clas=="row">        
+            <div id="degradado" class="col-md-10 col-md-offset-1">    
+                <!--*********************************************
+                    HEADER
+                **********************************************--> 
+                    <header>   
+                        <!--*********************************************
+                            Banner SiraDex
+                        **********************************************--> 
+                            <!---->
+                            {{=IMG(_src=URL('static', 'images', args='banner.jpg')) }} 
+                        
+                        <!--*********************************************
+                            Navegacion
+                        **********************************************-->
+                            {{block navegacion}}
+                            {{end}}
+                    </header>
+
+                <!--*********************************************
+                    CONTENIDO PAGINA
+                **********************************************-->
+                    <section id = "contenido">
+                        <!--*********************************************
+                            Titulo
+                        **********************************************-->
+                            <h1 id="titulo">
+                                {{block titulo}}
+                                {{end}}
+                            </h1>
+                            <h2 id="subtitulo">
+                                {{block subtitulo}}
+                                {{end}}
+                            </h2>
+                        
+                        <!--*********************************************
+                            Descripcion pagina
+                        **********************************************-->
+                                {{block descripcion}}
+                                {{end}}
+
+                        <!--*********************************************
+                            Contenido
+                        **********************************************-->
+                            {{block contenido}}
+                            {{end}}
+                    </section>
+            </div>
+            </div>
+        </div>
+
+    <!--*********************************************
+        FOOTER
+    *********************************************-->
+        <div id="footer" class="container-fluid">
+    {{block footer}}
+
+    {{end}}
+                    
+                Sartenejas, Baruta, Edo. Miranda - Apartado 89000 Cable Unibolivar Caracas Venezuela. Teléfono +58 0212-9063111
+                <br>
+                Litoral. Camurí Grande, Edo. Vargas Parroquia Naiguatá. Teléfono +58 0212-9069000 
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>      
+
+    <!--*********************************************
+        JavaScript de bootstrap
+    *********************************************-->
+        <script src="{{=URL('static','js/bootstrap.min.js')}}"></script>
+        <script src="{{=URL('static','js/web2py-bootstrap3.js')}}"></script>
+        
+        {{block script}}{{end}}
+</body>
+</html>

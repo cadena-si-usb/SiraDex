@@ -61,13 +61,22 @@
 		margin: 0.2em;
 	}
 
-	#degradado nav a{
-		background-color:#0288D1;
+	.navbar-default .navbar-nav>.activo>a:hover{
+		background-color:#03A9F4;
 		color: #FFF;
-		max-height: 3em;
-		padding:0.2em 0.5em 0.2em 0.5em;
 	}
+		
+	#degradado nav a{
+	}
+	.navbar-default .navbar-nav>.activo>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover{
+		background-color:#03A9F4;
+		color: #FFF;	
+	}	
 
+	.dropdown:hover .dropdown-menu {
+	    display: block;
+	    margin-top: 0; /*remove the gap so it doesn't close*/
+	 }
 
 /**********************************/
 /*                                */
@@ -135,7 +144,30 @@
 	    height: 8em;
 	}
 
+#striped-list li{
+	color: #fff;
+}
 
+#dv-act>#striped-sublist li:nth-child(odd) {
+background-color: #4CAF50;  
+}
 
+#dv-act>#striped-sublist li:nth-child(even) {
+background-color: #8BC34A;  
+}
 
+#dv-esp>#striped-sublist li:nth-child(odd) {
+background-color: #607D8B;  
+}
 
+#dv-esp>#striped-sublist li:nth-child(even) {
+background-color: #9E9E9E;  
+}
+
+#dv-rec>#striped-sublist li:nth-child(odd) {
+background-color: #F44336;  
+}
+
+#dv-rec>#striped-sublist li:nth-child(even) {
+background-color: #DE6E4B;  
+}
