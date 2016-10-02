@@ -25,7 +25,7 @@ function textoRestante(maxLong, idDivUsar){
   }
 
   // Si estoy escribiendo en el textfield de nombre, entonces...
-  $(idDivUsar).keyup(function(){
+  $(idDivUsar).on('keypress keyup keydown', function(e){
     var longitudTexto = $(idDivUsar).val().length;
     var textoRestante = maxLong - longitudTexto;
 
@@ -35,12 +35,11 @@ function textoRestante(maxLong, idDivUsar){
       $(idDivUsar).siblings(".help-block").html(textoRestante + " caracteres.");
     }
 
-    if (textoRestante < 0){
-      $(".btn-primary").prop('disabled',true);
-      $(idDivUsar).siblings(".help-block").css("color","red");
-    }else if (textoRestante >= 0 && $(".btn-primary").is(":disabled")){
-      $(".btn-primary").prop('disabled',false);
-      $(idDivUsar).siblings(".help-block").css("color","");
+    /* keyCode.46: delete, keyCode.8: enter, keyCode.37 al keyCode.40: arrows. */
+    if (textoRestante <= 0 && e.keyCode != 46 && e.keyCode != 8 && e.keyCode != 37
+        && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40){
+          $(idDivUsar).val($(idDivUsar).val().substring(0, maxLong));
+          return false;
     }
   });
 }
