@@ -30,7 +30,7 @@ def vAgregarCatalogo():
     formulario = SQLFORM.factory(
                         Field('nombre',
                               requires = [IS_NOT_EMPTY(error_message='El nombre del catalogo no puede quedar vacio.'),
-                                          IS_MATCH('([A-Za-z])([A-Za-z0-9" "])*', error_message="El nombre del catalogo no puede iniciar con numeros."),
+                                          IS_MATCH('([A-Za-z])([A-Za-z0-9" "])*', error_message="El nombre del catalogo debe comenzar con una letra."),
                                           IS_NOT_IN_DB(db, 'CATALOGO.nombre', error_message="Ya existe un catalogo con ese nombre.")]),
                               submit_button='Agregar',
                               labels={'nombre':'Nombre'})
@@ -60,37 +60,41 @@ def vAgregarCampos():
 
     # Creo query para realizar busqueda de los campos que ya han sido agregados
     # a ese catalogo
-    query = reduce(lambda a, b: (a&b),[db.CATALOGO.id_catalogo == id_cat,
-                                      db.CATALOGO.id_catalogo == db.CATALOGO_TIENE_CAMPO.id_catalogo,
-                                      db.CATALOGO_TIENE_CAMPO.id_campo_cat == db.CAMPO_CATALOGO.id_campo_cat])
+    campos_guardados = db(db.CAMPO_CATALOGO.id_catalogo == id_cat).select()
 
-    # Guardo los resultados de dicho query en 'campos_guardados'
-    campos_guardados = db(query).select(db.CAMPO_CATALOGO.ALL, db.CATALOGO_TIENE_CAMPO.ALL,db.CATALOGO.ALL)
     # Busco el id del catalogo
     # Genero formulario para los campos
     formulario = SQLFORM(db.CAMPO_CATALOGO,
                    submit_button='Agregar',
-                   fields = ['nombre', 'tipo_cat', 'eliminar'],
-                   labels = {'tipo_cat' : 'Tipo'}
+                   fields = ['nombre', 'tipo_campo', 'obligatorio'],
+                   labels = {'tipo_campo' : 'Tipo'}
                    )
     # En caso de que los datos del formulario sean aceptados
     if formulario.accepts(request.vars, session):
-        # Busco el id del campo(que fue agregado al presionar boton
-        # de submit) y agrego el campo al catalogo en caso de que no exista.
-        idd_campo = db(db.CAMPO_CATALOGO.nombre == request.vars.nombre).select(db.CAMPO_CATALOGO.id_campo_cat)[0].id_campo_cat
-        query2 = reduce(lambda a, b: (a&b), [db.CATALOGO_TIENE_CAMPO.id_campo_cat == idd_campo,
-                                             db.CATALOGO_TIENE_CAMPO.id_catalogo == id_cat])
-        if len(db(query2).select())>0:
+
+        nombre_campo_nuevo = request.vars.nombre
+        nombre_repetido    = False
+
+        for campo in campos_guardados:
+            if campo.nombre == nombre_campo_nuevo:
+                nombre_repetido = True
+                break
+
+        # Si el nombre no esta repetido, lo eliminamos.
+        if nombre_repetido:
             session.msgErr = 1
             session.message = 'Ya existe el campo'
         else:
-            db.CATALOGO_TIENE_CAMPO.insert(id_catalogo = id_cat, id_campo_cat = idd_campo)
+            db.CAMPO_CATALOGO.insert(id_catalogo = id_cat,
+                                     nombre =  nombre_campo_nuevo,
+                                     tipo_campo = request.vars.tipo_campo,
+                                     obligatorio = request.vars.obligatorio)
             session.msgErr = 0
         # Redirijo a la misma pagina para seguir agregando campos
         redirect(URL('vAgregarCampos', args=[id_cat]))
     # En caso de que el formulario no sea aceptado
     elif formulario.errors:
-        session.message = 'Datos invalidos'
+        session.message = 'Datos invalidos para el campo.'
     else:
         if(not(session.msgErr)):
             session.message = ''
@@ -118,7 +122,7 @@ def agregarTipoAux2():
 Funcion que se encarga de eliminar un catalogo, los campos
 que este posee y todas las relaciones entre ellos.
 '''
-def eliminarCampos():
+def deshabilitarCatalogo():
     # Obtengo el id o nombre del Catalogo
     if len(request.args)!=0:
         nombreCat = request.args[0]
@@ -473,8 +477,8 @@ Funcion que se encarga de eliminar un campo del catalogo,
 eliminando todas las relaciones existentes e instancias
 del catalogo.
 '''
-def eliminarCampos2():
-    # Obtengo el nombre del catalogo
+def eliminarCampos():
+    # Obtengo el nombre del campo que se eliminara
     if len(request.args)!=0:
         nombreCat = request.args[0]
     else:

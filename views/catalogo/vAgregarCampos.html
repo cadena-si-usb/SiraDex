@@ -10,21 +10,27 @@ Agregue la cantidad de campos que desee
     <table class="table table-bordered">
         <thead>
             <tr>
-                <td class="col-md-6">Nombre</td>
+                <td class="col-md-6">Nombre del Campo</td>
                 <td class="col-md-3">Tipo</td>
+                <td class="col-md-2">Obligatorio</td>
                 <td class="col-md-2">Eliminar</td>
             </tr>
         </thead>
         <tbody>
             {{for campo in campos_guardados:}}
                 <tr>
-                    <td class="col-md-6">{{=campo.CAMPO_CATALOGO.nombre}}</td>
-                    <td class="col-md-3">{{=campo.CAMPO_CATALOGO.tipo_cat}}</td>
+                    <td class="col-md-6">{{=campo.nombre}}</td>
+                    <td class="col-md-3">{{=campo.tipo_campo}}</td>
+                    {{if campo.obligatorio }}
+                        <td class="col-md-2">Si</td>
+                    {{else}}
+                         <td class="col-md-2">No</td>
+                    {{pass}}
                     <td class="col-md-2">
-                        <a onClick = "if(confirm('¿Está seguro de que desea eliminar el campo?')) {window.location.href = '{{=URL(f='eliminarCampos2',args=[ campo.CATALOGO.nombre, campo.CAMPO_CATALOGO.id_campo_cat ] )}}';}">
+                        <a onClick = "if(confirm('¿Está seguro de que desea eliminar el campo?')) {window.location.href = '{{=URL(f='eliminarCampos2',args=[campo.id_campo_cat])}}';}">
                                     {{=IMG(_src=URL('static', 'iconos/Delete.png')), }}
                                     </a></td>
-                </tr>
+                 </tr>
             {{pass}}
         </tbody>
     </table>
@@ -35,12 +41,12 @@ Agregue la cantidad de campos que desee
     <table class="table table-condensed">
         <tr>
         <td class="col-md-1">Nombre</td>     <td class="col-md-4">{{= formulario.custom.widget.nombre}}</td>
-        <td class="col-md-1">Tipo</td>       <td class="col-md-3">{{= formulario.custom.widget.tipo_cat}}</td>
+        <td class="col-md-1">Tipo</td>       <td class="col-md-3">{{= formulario.custom.widget.tipo_campo}}</td>
+        <td class="col-md-2">Obligatorio</td><td class="col-md-1">{{= formulario.custom.widget.obligatorio}}</td>
         <td class="col-md-1">{{= formulario.custom.submit}}</td>
         </tr>
     </table>
     {{= formulario.custom.end}}
-
 </div>
 <br/><br/><br/>
 <div id="buttons" class="container-fluid">
