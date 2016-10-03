@@ -59,13 +59,13 @@ def agregar_tipo():
                         labels = {'Descripcion' : 'Descripción'},
                 )
     
-    programa = db(db.PROGRAMA.nombre == request.vars.Programa).select()
     hayPrograma = len(programas) != 0
     
     # Metodos POST
     # En caso de que los datos del formulario sean aceptados
     if hayPrograma and formulario.accepts(request.vars, session):
         session.form_nombre = request.vars.Nombre
+        programa = db(db.PROGRAMA.nombre == request.vars.Programa).select()
         id_programa = programa[0].id_programa
         db.TIPO_ACTIVIDAD.insert(nombre = request.vars.Nombre,
                                  tipo_p_r = request.vars.Tipo,
@@ -100,16 +100,16 @@ def agregar_tipo_campos():
                                       db.ACT_POSEE_CAMPO.id_campo == db.CAMPO.id_campo])
     # Guardo los resultados de dicho query en 'campos_guardados'
     campos_guardados = db(query).select(db.CAMPO.ALL, db.ACT_POSEE_CAMPO.ALL)
-
+    
     # Busco los catalogos disponibles
     catalogos = db().select(db.CATALOGO.nombre, db.CATALOGO.id_catalogo)
     nombres_catalogos = ['---']
     for i in range(0, len(catalogos)):
         nombres_catalogos.append(catalogos[i].nombre)
-
+    
     # Busco el id del tipo_actividad
     id_tipo = db(db.TIPO_ACTIVIDAD.nombre == nombre_tipo).select(db.TIPO_ACTIVIDAD.id_tipo)[0].id_tipo
-
+    
     # Genero formulario para los campos
     form = SQLFORM.factory(
                     Field('Nombre', requires=IS_NOT_EMPTY()),
@@ -128,11 +128,11 @@ def agregar_tipo_campos():
             print(nombres_catalogos[i], request.vars.Catalogo)
             if(nombres_catalogos[i] == request.vars.Catalogo):
                 indice = i
-
+    
         # Agrego el campo a la base
         if request.vars.Obligatorio == None:
             request.vars.Obligatorio = False
-
+    
         if indice == -1:
             db.CAMPO.insert(nombre = request.vars.Nombre,
                             obligatorio = request.vars.Obligatorio,
