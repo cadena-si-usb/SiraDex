@@ -30,14 +30,14 @@ def gestionar():
     Permite añadir un nuevo tipo de actividad.
 '''
 def agregar_tipo():
-
+    
     # Se obtienen todos los programas almacenados en la base de datos.
     lista_programas = db().select(db.PROGRAMA.ALL)
     programas = []
-
+    
     # Se crea un diccionario para almacenar unicamente los nombres de los programas almacenados.
     for programa in lista_programas: programas.append(programa.nombre)
-
+    
     # AQUI VA UN CONDICIONAL.
     # Para agregar un tipo de actividad se debe tener al menos un programa.
     formulario = SQLFORM.factory(
@@ -58,25 +58,30 @@ def agregar_tipo():
                         submit_button = 'Agregar',
                         labels = {'Descripcion' : 'Descripción'},
                 )
-
+    
+    programa = db(db.PROGRAMA.nombre == request.vars.Programa).select()
+    hayPrograma = len(programas) != 0
+    
     # Metodos POST
     # En caso de que los datos del formulario sean aceptados
-    if formulario.accepts(request.vars, session):
+    if hayPrograma and formulario.accepts(request.vars, session):
         session.form_nombre = request.vars.Nombre
-        id_programa = db(db.PROGRAMA.nombre == request.vars.Programa).select()[0].id_programa
+        id_programa = programa[0].id_programa
         db.TIPO_ACTIVIDAD.insert(nombre = request.vars.Nombre,
                                  tipo_p_r = request.vars.Tipo,
                                  descripcion = request.vars.Descripcion,
                                  id_programa = id_programa
                                  )
         redirect(URL('agregar_tipo_campos.html'))
+    elif not hayPrograma :
+        session.message = 'Lo sentimos, no existen programas.'
     # En caso de que el formulario no sea aceptado
     elif formulario.errors:
         session.message = 'Lo sentimos, hubo un problema en el formulario.'
     # Metodo GET
     else:
         session.message = ''
-
+    
     return dict(formulario=formulario, admin = get_tipo_usuario())
 
 #. --------------------------------------------------------------------------- .
