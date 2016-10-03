@@ -269,17 +269,18 @@ def restaurar_tipo():
 #. --------------------------------------------------------------------------- .
 def ver_tipo_actividad():
     id_tipo = int(request.args[0])
-
+    
     query = reduce(lambda a, b: (a & b), [db.TIPO_ACTIVIDAD.id_tipo == id_tipo,
                                           db.TIPO_ACTIVIDAD.id_tipo == db.ACT_POSEE_CAMPO.id_tipo_act,
                                           db.ACT_POSEE_CAMPO.id_campo == db.CAMPO.id_campo])
-
+    
     campos_guardados = db(query).select(db.CAMPO.ALL)
-
+    
     tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
-
-    return dict(campos = campos_guardados, tipo = tipo, admin = get_tipo_usuario(), tipo_nombre = request.args[1], programa_nombre = request.args[2])
-
+    programa = db(db.PROGRAMA.id_programa == tipo.id_programa).select(db.PROGRAMA.ALL).first()
+    
+    return dict(campos = campos_guardados, tipo = tipo, admin = get_tipo_usuario(), tipo_nombre = tipo.nombre, programa_nombre = programa.nombre)
+    
 #. --------------------------------------------------------------------------- .
 def eliminar_campo():
     id_campo = int(request.args[0])
