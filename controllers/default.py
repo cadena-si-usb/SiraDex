@@ -437,7 +437,13 @@ def cambiar_colores():
     return dict()
 
 def index():
-    rows = db(db.PROGRAMA).select('nombre')
+    rows = db(db.PROGRAMA).select()
+    diccProgramas = dict()
+    for programa in rows:
+        tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa['id']).select('nombre')
+        diccProgramas[programa['nombre']]=[]
+        for tipo in tiposA:
+            diccProgramas[programa['nombre']].append(tipo)
     return locals()
 
 def listaTipos():
