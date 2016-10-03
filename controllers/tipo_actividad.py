@@ -292,21 +292,21 @@ def eliminar_campo():
 
 #. --------------------------------------------------------------------------- .
 def editar_tipo():
-
+    
     admin = get_tipo_usuario()  # Obtengo el tipo del usuario actual.
     id = request.args[0]        # Se identifica cual tipo de actividad se identificará.
-
+    
     # Se busca el tipo de actividad en la base de datos.
     tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id).select()[0]
-
+    
     # Se obtienen todos los programas almacenados en la base de datos.
     lista_programas = db().select(db.PROGRAMA.ALL)
     programas = {}
-
+    
     # Se crea un diccionario para almacenar unicamente los nombres de los programas almacenados.
     for programa in lista_programas:
         programas[programa.id_programa] = programa.nombre
-
+    
     # Para modificar un tipo de actividad se debe tener al menos un programa.
     formulario = SQLFORM.factory(
                         Field('Nombre',
@@ -328,7 +328,7 @@ def editar_tipo():
                         submit_button = 'Actualizar',
                         labels = {'Descripcion' : 'Descripción'},
                 )
-
+    
     # Metodos POST
     # En caso de que los datos del formulario sean aceptados
     if formulario.accepts(request.vars, session):
@@ -338,19 +338,19 @@ def editar_tipo():
         tipo.descripcion = request.vars.Descripcion
         tipo.id_programa = request.vars.Programa
         tipo.update_record()                                 # Se actualiza el tipo de actividad.
-
+    
         tipo_nombre = 'Evaluables por pares académicos' if tipo.tipo_p_r == 'P' else 'No evaluables por pares académicos'
-        programa_nombre = programas[request.vars.Programa]
-
+        programa_nombre = programas[int(request.vars.Programa)]
+    
         redirect(URL('ver_tipo_actividad.html', args=[id, tipo_nombre, programa_nombre]))  # Se redirige a la vista del preview del T.A. modificado.
-
+    
     # En caso de que el formulario no sea aceptado
     elif formulario.errors:
         session.message = 'Error en el formulario'
     # Metodo GET
     else:
         session.message = ''
-
+    
     return dict(tipo=tipo, formulario=formulario, admin=get_tipo_usuario())
 
 #. --------------------------------------------------------------------------- .
