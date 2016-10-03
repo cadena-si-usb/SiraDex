@@ -53,7 +53,7 @@ def login_cas():
     session.usuario["last_name"] = "Parche"
     session.usuario['cedula'] = 00000000
     session.usuario["email"] = "usuarioparche@gmail.com"
-    redirect(URL('perfil'))
+    redirect(URL('vMenuPrincipal'))
 
 #def login_cas():
 #    if not request.vars.getfirst('ticket'):
@@ -179,6 +179,19 @@ def perfil():
         redirect(URL("index"))
 
 def perfil():
+    if session.usuario != None:
+        admin = 4
+        if(session.usuario["tipo"] == "DEX"):
+            admin = 2
+        elif(session.usuario["tipo"] == "Administrador"):
+            admin = 1
+        else:
+            admin = 0
+        return dict(admin = admin)
+    else:
+        redirect(URL("index"))
+
+def vMenuPrincipal():
     if session.usuario != None:
         admin = 4
         if(session.usuario["tipo"] == "DEX"):
