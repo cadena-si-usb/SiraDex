@@ -75,13 +75,15 @@
             <div id="filtros">
                 <!-- Split button -->
                 <div class="btn-group">
-                  <button type="button" class="btn">Programa</button>
+                  <button type="button" class="btn" onload="ajax('{{=URL('default', 'listaProgramas')}}', [''], 'target')">Programa</button>
                   <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="caret"></span>
                     <span class="sr-only">Toggle Dropdown</span>
                   </button>
                   <ul class="dropdown-menu">
-                    <li><a href="#">Opcion 1</a></li>
+                      {{for x in rows:}}
+                    <li onclick="ajax('{{=URL('default', 'listaTipos')}}', [''], 'target')"><a href="#" >{{=x['nombre']}}</a></li>
+                      {{pass}}
                   </ul>
                 </div>
 
@@ -92,8 +94,8 @@
                     <span class="caret"></span>
                     <span class="sr-only">Toggle Dropdown</span>
                   </button>
-                  <ul class="dropdown-menu">
-                    <li><a href="#">Opcion 1</a></li>
+                  <ul class="dropdown-menu" id="listaTipos">
+
                   </ul>
                 </div>
 
@@ -139,5 +141,6 @@
             $("#filtros").toggle(300);
                 });
             });
+
     </script>
 {{end}}

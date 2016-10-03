@@ -435,3 +435,15 @@ def cambiar_colores():
         redirect(request.env.http_referer)
 
     return dict()
+
+def index():
+    rows = db(db.PROGRAMA).select('nombre')
+    return locals()
+
+def listaTipos():
+    print "entre"
+    print request.vars(0)
+    tipoActividades = db(db.PROGRAMA.nombre == request.vars(0)).select('nombre')
+    for tipo in tipoActividades:
+        print tipo
+    return locals()

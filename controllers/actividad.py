@@ -63,6 +63,8 @@ def agregar():
     for row in rows:
         rows_campo = db(db.CAMPO.id_campo == row.id_campo).select().first()
         nombre = rows_campo.nombre
+        print nombre
+        print "hola"
         nombre = nombre.replace(" ", "_")
         obligatorio = rows_campo.obligatorio
         tipo_campo = ''
