@@ -10,7 +10,7 @@
 -->
 <!-- <button class="btn btn-default" onClick="{{=URL(c='tipo_actividad', f='modificar_tipo.html', args=[tipo.id_tipo])}}"> -->
 <!-- <button class="btn btn-link"> -->
-    <a href="{{=URL(c='tipo_actividad', f='modificar_tipo.html', args=[tipo.id_tipo])}}">Modificar</a>
+    <a href="{{=URL(c='tipo_actividad', f='editar_tipo.html', args=[tipo.id_tipo])}}">Editar</a>
 <!-- </button> -->
 <br/>
 <br/>
@@ -18,8 +18,8 @@
 <table class="table table-bordered">
     <tr> <th class="col-md-2">Nombre</td>           <td class="col-md-6">{{=tipo.nombre}}</td> </tr>
     <tr> <th class="col-md-2">Descripción</td>      <td class="col-md-6">{{=tipo.descripcion}}</td> </tr>
-    <tr> <th class="col-md-2">Tipo de Programa</td> <td class="col-md-6">{{=tipo.tipo_p_r}}</td> </tr>
-    <tr> <th class="col-md-2">Programa</td>         <td class="col-md-6">{{=tipo.id_programa}}</td> </tr>
+    <tr> <th class="col-md-2">Tipo de Programa</td> <td class="col-md-6">{{=tipo_nombre}}</td> </tr>
+    <tr> <th class="col-md-2">Programa</td>         <td class="col-md-6">{{=programa_nombre}}</td> </tr>
     <!--<tr> <th class="col-md-2">Producto</td>         <td class="col-md-6">{{=tipo.producto}}</td> </tr>-->
 </table>
 
