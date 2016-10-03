@@ -68,6 +68,7 @@
 		
 	#degradado nav a{
 	}
+	
 	.navbar-default .navbar-nav>.activo>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover{
 		background-color:#286090;
 		color: #FFF;	
@@ -102,7 +103,7 @@
 /*        Barra  buscadora        */
 /*                                */
 /**********************************/
-	 #btn-lupa{
+	#btn-lupa{
 	    border: 1px solid #0288D1;	
 		border-left-style: none;
 		color:#0288D1;
@@ -111,7 +112,7 @@
 		background-color: #92D3EF;
 	}
 
-	 #btn-filtro{
+	#btn-filtro{
 		background-color: #B3E5FC;
 	    border: 1px solid #0288D1;	
 		border-left-style: none;
@@ -121,7 +122,7 @@
 		width: 100%;
 	}
 
-	 #form-busqueda{
+	#form-busqueda{
 	    border: 1px solid #0288D1;	
 		border-right-style: none;
 		border-top-left-radius : 2em;
@@ -177,7 +178,6 @@
 		background-color: #DE6E4B;  
 	}
 
-
 /**********************************/
 /*                                */
 /*              Botones            */
@@ -190,3 +190,12 @@
     top:-4em;
     margin-left: 93%;
 	}    
+
+
+a#disabled-dropdown,
+a#disabled-dropdown:visited ,
+a#disabled-dropdown:active,
+a#disabled-dropdown:hover {
+    background-color:#d9d9d9 !important;
+    color:#aaa !important;
+}	
