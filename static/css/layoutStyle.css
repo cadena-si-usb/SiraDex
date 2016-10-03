@@ -102,7 +102,7 @@
 /*        Barra  buscadora        */
 /*                                */
 /**********************************/
-	#contenido #btn-lupa{
+	 #btn-lupa{
 	    border: 1px solid #0288D1;	
 		border-left-style: none;
 		color:#0288D1;
@@ -111,7 +111,7 @@
 		background-color: #92D3EF;
 	}
 
-	#contenido #btn-filtro{
+	 #btn-filtro{
 		background-color: #B3E5FC;
 	    border: 1px solid #0288D1;	
 		border-left-style: none;
@@ -121,7 +121,7 @@
 		width: 100%;
 	}
 
-	#contenido #form-busqueda{
+	 #form-busqueda{
 	    border: 1px solid #0288D1;	
 		border-right-style: none;
 		border-top-left-radius : 2em;
@@ -177,6 +177,12 @@
 		background-color: #DE6E4B;  
 	}
 
+
+/**********************************/
+/*                                */
+/*              Botones            */
+/*                                */
+/**********************************/
 	#sombra>img{
     box-shadow: 0.2em 0.2em 0.5em  rgba(0, 0, 0, 0.2);
     border-radius: 100%;

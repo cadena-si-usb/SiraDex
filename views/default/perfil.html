@@ -6,7 +6,8 @@
 
 {{block subtitulo}}
     <!-- Nombre del usuario -->
-    Sergio Alejandro
+    <!-- Sergio Alejandro -->
+    {{=session.usuario['first_name']}}
     <!-- icono editar -->
     <a id="editar" href="{{=URL('EditarPerfil')}}" >
     {{=IMG(_src=URL('static', 'icon', args='i_edit.png'),_style='max-height:1em') }} 
@@ -84,7 +85,7 @@
         </ul>
             
          <button type="button" class="btn btn-default center-block">
-        <a href="{{=URL(c='actividad',f='EditarPerfil')}}">
+        <a href="{{=URL(c='actividad',f='gestionar')}}">
             Ver Todas Mis Actividades
         </a>
          </button>
