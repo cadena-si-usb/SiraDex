@@ -77,12 +77,12 @@ def agregar_tipo():
         session.message = 'Lo sentimos, no existen programas.'
     # En caso de que el formulario no sea aceptado
     elif formulario.errors:
-        session.message = 'Lo sentimos, hubo un problema en el formulario.'
+        session.message = 'Lo sentimos, todos los campos son obligatorios.'
     # Metodo GET
     else:
         session.message = ''
     
-    return dict(formulario=formulario, admin = get_tipo_usuario())
+    return dict(formulario=formulario, admin = get_tipo_usuario(), mensaje=session.message)
 
 #. --------------------------------------------------------------------------- .
 '''
