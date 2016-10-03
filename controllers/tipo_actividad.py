@@ -136,14 +136,14 @@ def agregar_tipo_campos():
         if indice == -1:
             db.CAMPO.insert(nombre = request.vars.Nombre,
                             obligatorio = request.vars.Obligatorio,
-                            lista = request.vars.Tipo,
-                            despliega_cat = None
+                            tipo_campo = request.vars.Tipo,
+                            id_catalogo = None
                             )
         else:
             db.CAMPO.insert(nombre = request.vars.Nombre,
                             obligatorio = request.vars.Obligatorio,
-                            lista = request.vars.Tipo,
-                            despliega_cat = catalogos[indice-1].id_catalogo
+                            tipo_campo = request.vars.Tipo,
+                            id_catalogo = catalogos[indice-1].id_catalogo
                             )
         # Busco el id del campo(que fue agregado al presionar boton
         # de submit) y agrego el objeto de tipo ACT_POSEE_CAMPO a la base
@@ -158,7 +158,7 @@ def agregar_tipo_campos():
     # Metodo GET
     else:
         session.message = ''
-
+    
     return dict(form = form, campos = campos_guardados, admin = get_tipo_usuario())
 
 #. --------------------------------------------------------------------------- .

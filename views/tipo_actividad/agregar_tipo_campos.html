@@ -21,11 +21,11 @@ Agregue la cantidad de campos que desee
             {{for campo in campos:}}
                 <tr>
                     <td class="col-md-6">{{=campo.CAMPO.nombre}}</td>
-                    <td class="col-md-3">{{=campo.CAMPO.lista}}</td>
+                    <td class="col-md-3">{{=campo.CAMPO.tipo_campo}}</td>
                     <td class="col-md-2">{{=campo.CAMPO.obligatorio}}</td>
                     <td class="col-md-1">
                         <a href = "{{=URL(f='eliminar_campo', args=[ campo.CAMPO.id_campo ] )}}">
-                            {{=IMG(_src=URL('static', 'iconos/Delete_26x26.png'))}}
+                            {{=IMG(_src=URL('static', 'iconos/Delete.png'))}}
                         </a>
                     </td>
                 </tr>
