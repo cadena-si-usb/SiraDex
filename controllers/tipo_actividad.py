@@ -93,9 +93,6 @@ def agregar_tipo_campos():
     # Obtengo el nombre del tipo_actividad desde el objeto global 'session'
     nombre_tipo = session.form_nombre
 
-    print "-"
-    print "El request es: " + str(request.vars)
-
     # Se definen los posibles tipos de campo.
     tipo_campos = ['Fecha', 'Participante', 'CI', 'Comunidad', 'Teléfono',
                     'Texto','Documento', 'Imagen', 'Cantidad entera', 'Cantidad decimal']
@@ -163,18 +160,24 @@ def agregar_tipo_campos():
         # Se redirige a la vista permitiendo agregar más campos.
         redirect(URL('agregar_tipo_campos.html'))
     # En caso de que el formulario no sea aceptado
-    elif formSimple.errors:
+    elif ('Nombre' in request.vars and formSimple.errors):
+        print "Explote aqui"
         session.message = 'Datos invalidos'
-    # Metodo GET
-    else:
-        session.message = ''
-
     # Métodos POST
     # En caso de que los datos del formulario multiple sean aceptados.
-    if formMultiple.accepts(request.vars, session):
+    elif formMultiple.accepts(request.vars, session):
+        print "ESTO ES MULTIPLE"
         # Busco el id del catálogo que se deseó utilizar.
         id_catalogo = request.vars.Catalogo
-        print "El id es: " + id_catalogo
+
+        campo_catalogo = db(db.CAMPO_CATALOGO.id_catalogo == id_catalogo).select(db.CAMPO_CATALOGO)
+
+        for campo in campo_catalogo:
+            print campo
+    elif ('Catalogo' in request.vars and formMultiple.errors):
+        session.message = 'Datos inválidos en el catálogo.'
+    else:
+        session.message = ''
 
     return dict(formSimple = formSimple, formMultiple = formMultiple,
                 campos = campos_guardados, admin = get_tipo_usuario())
