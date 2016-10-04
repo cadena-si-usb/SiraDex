@@ -124,15 +124,15 @@ def agregar_tipo_campos():
     if form.accepts(request.vars, session):
         # Busco el id del catalogo en caso de que haya uno
         indice = -1
-        for i in range(1, len(nombres_catalogos)):
-            print(nombres_catalogos[i], request.vars.Catalogo)
+        for i in range(0, len(nombres_catalogos)):
+            
             if(nombres_catalogos[i] == request.vars.Catalogo):
                 indice = i
-    
+        
         # Agrego el campo a la base
         if request.vars.Obligatorio == None:
             request.vars.Obligatorio = False
-    
+        
         if indice == -1:
             db.CAMPO.insert(nombre = request.vars.Nombre,
                             obligatorio = request.vars.Obligatorio,
@@ -143,8 +143,43 @@ def agregar_tipo_campos():
             db.CAMPO.insert(nombre = request.vars.Nombre,
                             obligatorio = request.vars.Obligatorio,
                             tipo_campo = request.vars.Tipo,
-                            id_catalogo = catalogos[indice-1].id_catalogo
+                            id_catalogo = None
                             )
+            
+            id_catalogo = catalogos[indice-1].id_catalogo
+            
+            queryCampo = reduce(lambda a, b: (a&b),[db.CAMPO.nombre == request.vars.Nombre,
+                                                db.CAMPO.tipo_campo == request.vars.Tipo,
+                                                db.CAMPO.obligatorio == request.vars.Obligatorio])
+            
+            id_campo = db(queryCampo).select(db.CAMPO.id_campo).first()
+            db.ACT_POSEE_CAMPO.insert(id_tipo_act = id_tipo, id_campo = id_campo)
+            
+            
+            
+            #Tengo que duplicar los campos del catálogo
+            
+            
+            camposParaDuplicar = db(db.CAMPO_CATALOGO.id_catalogo == id_catalogo).select(db.CAMPO_CATALOGO.ALL)
+            for campo in camposParaDuplicar :
+                
+                db.CAMPO.insert(nombre = campo.nombre,
+                            obligatorio = campo.obligatorio,
+                            tipo_campo = campo.tipo_campo,
+                            id_catalogo = id_catalogo
+                            )
+                
+                queryCampo = reduce(lambda a, b: (a&b),[db.CAMPO.nombre == campo.nombre,
+                                                db.CAMPO.tipo_campo == campo.tipo_campo,
+                                                db.CAMPO.obligatorio == campo.obligatorio,
+                                                db.CAMPO.id_catalogo == id_catalogo])
+                
+                id_campo = db(queryCampo).select(db.CAMPO.id_campo).first()
+                db.ACT_POSEE_CAMPO.insert(id_tipo_act = id_tipo, id_campo = id_campo)
+                
+            
+            redirect(URL('agregar_tipo_campos.html'))
+        
         # Busco el id del campo(que fue agregado al presionar boton
         # de submit) y agrego el objeto de tipo ACT_POSEE_CAMPO a la base
         # (es la relacion entre el campo y el tipo)
