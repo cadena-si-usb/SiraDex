@@ -92,29 +92,29 @@ tambien tiene una tabla con los campos que ya han sido agregados
 def agregar_tipo_campos():
     # Obtengo el nombre del tipo_actividad desde el objeto global 'session'
     nombre_tipo = session.form_nombre
-
+    
     # Se definen los posibles tipos de campo.
     tipo_campos = ['Fecha', 'Participante', 'CI', 'Comunidad', 'Teléfono',
                     'Texto','Documento', 'Imagen', 'Cantidad entera', 'Cantidad decimal']
-
+    
     # Creo query para realizar busqueda de los campos que ya han sido agregados
     # a ese tipo actividad
     query = reduce(lambda a, b: (a&b),[db.TIPO_ACTIVIDAD.nombre == nombre_tipo,
                                       db.TIPO_ACTIVIDAD.id_tipo == db.ACT_POSEE_CAMPO.id_tipo_act,
                                       db.ACT_POSEE_CAMPO.id_campo == db.CAMPO.id_campo])
-
+    
     # Guardo los resultados de dicho query en 'campos_guardados'
     campos_guardados = db(query).select(db.CAMPO.ALL, db.ACT_POSEE_CAMPO.ALL)
-
+    
     # Busco el id del tipo_actividad utilizado.
     id_tipo = db(db.TIPO_ACTIVIDAD.nombre == nombre_tipo).select(db.TIPO_ACTIVIDAD.id_tipo)[0].id_tipo
-
+    
     # Obtengo todos los catálogos almacenados.
     lista_catalogos = db().select(db.CATALOGO.ALL)
     catalogos = {}
-
+    
     for catalogo in lista_catalogos: catalogos[catalogo.id] = catalogo.nombre
-
+    
     # Genero formulario para los campos.
     # Si no se utiliza catálogo.
     formSimple = SQLFORM.factory(
@@ -123,7 +123,7 @@ def agregar_tipo_campos():
                     Field('Obligatorio', widget=SQLFORM.widgets.boolean.widget),
                     submit_button = 'Agregar'
                     )
-
+    
     # Si se utilizan catálogos.
     formMultiple = SQLFORM.factory(
                         Field('Catalogo', default='Seleccione...',
@@ -132,53 +132,69 @@ def agregar_tipo_campos():
                         labels = {'Catalogo' : 'Catálogo'},
                         submit_button = 'Agregar'
                     )
-
+    
     # Metodos POST
     # En caso de que los datos del formulario simple sean aceptados
-    if formSimple.accepts(request.vars, session):
+    if formSimple.accepts(request.vars, session,formname="formSimple"):
         # Verifico si se seleccionó el campo "Obligatorio".
         if request.vars.Obligatorio == None:
             request.vars.Obligatorio = False
-
+        
         # Se inserta el campo, en la base de datos, que se desea utilizar.
         db.CAMPO.insert(nombre = request.vars.Nombre,
                         obligatorio = request.vars.Obligatorio,
                         tipo_campo = request.vars.Tipo,
                         id_catalogo = None)
-
+        
         # Se busca el id del campo.
         queryCampo = reduce(lambda a, b: (a&b),[db.CAMPO.nombre == request.vars.Nombre,
                                             db.CAMPO.tipo_campo == request.vars.Tipo,
                                             db.CAMPO.obligatorio == request.vars.Obligatorio])
-
+        
         id_campo = db(queryCampo).select(db.CAMPO.id_campo).first()
-
+        
         # Se almacena la relación entre el campo añadido y el tipo de actividad
         # correspondiente.
         db.ACT_POSEE_CAMPO.insert(id_tipo_act = id_tipo, id_campo = id_campo)
-
+        
         # Se redirige a la vista permitiendo agregar más campos.
         redirect(URL('agregar_tipo_campos.html'))
     # En caso de que el formulario no sea aceptado
     elif ('Nombre' in request.vars and formSimple.errors):
-        print "Explote aqui"
+        
         session.message = 'Datos invalidos'
     # Métodos POST
     # En caso de que los datos del formulario multiple sean aceptados.
-    elif formMultiple.accepts(request.vars, session):
-        print "ESTO ES MULTIPLE"
+    elif formMultiple.accepts(request.vars, session,formname="formMultiple"):
+        
         # Busco el id del catálogo que se deseó utilizar.
         id_catalogo = request.vars.Catalogo
-
-        campo_catalogo = db(db.CAMPO_CATALOGO.id_catalogo == id_catalogo).select(db.CAMPO_CATALOGO)
-
-        for campo in campo_catalogo:
-            print campo
+        
+        campos_catalogo = db(db.CAMPO_CATALOGO.id_catalogo == id_catalogo).select(db.CAMPO_CATALOGO.ALL)
+        
+        # Duplico los campos del catálogo
+        for campo in campos_catalogo:
+            
+            db.CAMPO.insert(nombre = campo.nombre,
+                            obligatorio = campo.obligatorio,
+                            tipo_campo = campo.tipo_campo,
+                            id_catalogo = id_catalogo
+                            )
+            
+            queryCampo = reduce(lambda a, b: (a&b),[db.CAMPO.nombre == campo.nombre,
+                                                db.CAMPO.tipo_campo == campo.tipo_campo,
+                                                db.CAMPO.obligatorio == campo.obligatorio,
+                                                db.CAMPO.id_catalogo == id_catalogo])
+            
+            id_campo = db(queryCampo).select(db.CAMPO.id_campo).first()
+            db.ACT_POSEE_CAMPO.insert(id_tipo_act = id_tipo, id_campo = id_campo)
+        
+        redirect(URL('agregar_tipo_campos.html'))
     elif ('Catalogo' in request.vars and formMultiple.errors):
         session.message = 'Datos inválidos en el catálogo.'
     else:
         session.message = ''
-
+    
     return dict(formSimple = formSimple, formMultiple = formMultiple,
                 campos = campos_guardados, admin = get_tipo_usuario())
 
