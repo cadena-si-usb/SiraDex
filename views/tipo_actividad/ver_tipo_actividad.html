@@ -36,8 +36,13 @@
         {{for campo in campos:}}
             <tr>
                 <td class="col-md-4">{{=campo.nombre}}</td>
-                <td class="col-md-3">{{=campo.lista}}</td>
+                <td class="col-md-3">{{=campo.tipo_campo}}</td>
                 <td class="col-md-2">{{=campo.obligatorio}}</td>
+                <td class="col-md-1">
+                    <a href="{{=URL(c='tipo_actividad', f='editar_campo', args=[campo.id_campo])}}">
+                        {{=IMG(_src=URL('static', 'iconos/Edit.png')), }}
+                    </a>
+                </td>
             </tr>
         {{pass}}
     </tbody>

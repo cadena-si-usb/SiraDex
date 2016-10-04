@@ -1,6 +1,9 @@
 {{#extend 'SIRADEX_tipos_Actividad_layout.html'}}
 {{extend 'SIRADEXLayout.html'}}
 <link href="{{=URL('static', 'css/camposFormStyle.css')}}" rel="stylesheet" type="text/css" />
+<script src="{{=URL('static','js/global.js')}}"></script>
+<script src="{{=URL('static','js/campo_tipo_actividad.js')}}"></script>
+
 <div class = "session_message">
     {{ = session.message or ''}}
 </div>
@@ -21,11 +24,11 @@ Agregue la cantidad de campos que desee
             {{for campo in campos:}}
                 <tr>
                     <td class="col-md-6">{{=campo.CAMPO.nombre}}</td>
-                    <td class="col-md-3">{{=campo.CAMPO.lista}}</td>
+                    <td class="col-md-3">{{=campo.CAMPO.tipo_campo}}</td>
                     <td class="col-md-2">{{=campo.CAMPO.obligatorio}}</td>
                     <td class="col-md-1">
                         <a href = "{{=URL(f='eliminar_campo', args=[ campo.CAMPO.id_campo ] )}}">
-                            {{=IMG(_src=URL('static', 'iconos/Delete_26x26.png'))}}
+                            {{=IMG(_src=URL('static', 'iconos/Delete.png'))}}
                         </a>
                     </td>
                 </tr>
@@ -35,17 +38,27 @@ Agregue la cantidad de campos que desee
 </div>
 <br/>
 <div id = 'formulario'>
-    {{= form.custom.begin}}
+    <!-- Formulario para agregar un único campo. -->
+    {{= formSimple.custom.begin}}
     <table class="table table-condensed">
         <tr>
-        <td class="col-md-2">Nombre</td>     <td class="col-md-3">{{= form.custom.widget.Nombre}}</td>
-        <td class="col-md-1">Tipo</td>       <td class="col-md-2">{{= form.custom.widget.Tipo}}</td>
-        <td class="col-md-2">Obligatorio</td><td class="col-md-1">{{= form.custom.widget.Obligatorio}}</td>
-        <td class="col-md-2">Catalogo</td>   <td class="col-md-3">{{= form.custom.widget.Catalogo}}</td>
-        <td class="col-md-2">{{= form.custom.submit}}</td>
+        <td class="col-md-2">Nombre</td>     <td class="col-md-3">{{= formSimple.custom.widget.Nombre}}</td>
+        <td class="col-md-1">Tipo</td>       <td class="col-md-2">{{= formSimple.custom.widget.Tipo}}</td>
+        <td class="col-md-2">Obligatorio</td><td class="col-md-1">{{= formSimple.custom.widget.Obligatorio}}</td>
+        <td class="col-md-2">{{= formSimple.custom.submit}}</td>
         </tr>
     </table>
-    {{= form.custom.end}}
+    {{= formSimple.custom.end}}
+
+    <!-- formulario para agregar campos provenientes de un catálogo. -->
+    {{= formMultiple.custom.begin}}
+    <table class="table table-condensed">
+        <tr>
+          <td class="col-md-2">Catalogo</td>   <td class="col-md-3">{{= formMultiple.custom.widget.Catalogo}}</td>
+          <td class="col-md-2">{{= formMultiple.custom.submit}}</td>
+        </tr>
+    </table>
+    {{= formMultiple.custom.end}}
 
 </div>
 <br/><br/><br/>

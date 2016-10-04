@@ -32,7 +32,7 @@
                     </td>
                     <td class="col-md-7">{{ =tipo.descripcion}}</td>
                     <td class="col-md-1">
-                        <input id="icono" type="image" src="{{=URL('static', 'iconos/restaurar.png')}}"
+                        <input id="icono" type="image" src="{{=URL('static', 'iconos/check.png')}}"
                                onClick="if(confirm('¿Está seguro que quiere restaurar este tipo de actividad?'))
                                         {window.location.href = '{{=URL(f='restaurar_tipo.html', args=[ tipo.id_tipo ] )}}';}">
 
