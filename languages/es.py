@@ -129,6 +129,7 @@
 'DB': 'BDD',
 'db': 'bdd',
 'DB Model': 'Modelo BDD',
+'Debe elegir alguno de los catálogos.': 'Debe elegir alguno de los catálogos.',
 'Debe subirse un archivo': 'Debe subirse un archivo',
 'Debes elegir entre "Evaluables por pares académicos" o "No evaluables por pares académicos"': 'Debes elegir entre "Evaluables por pares académicos" o "No evaluables por pares académicos"',
 'Debes elegir uno de los programas listados.': 'Debes elegir uno de los programas listados.',

@@ -93,6 +93,9 @@ def agregar_tipo_campos():
     # Obtengo el nombre del tipo_actividad desde el objeto global 'session'
     nombre_tipo = session.form_nombre
 
+    print "--------------------"
+    print "El request es: " + str(request.vars)
+
     # Se definen los posibles tipos de campo.
     tipo_campos = ['Fecha', 'Participante', 'CI', 'Comunidad', 'Teléfono',
                     'Texto','Documento', 'Imagen', 'Cantidad entera', 'Cantidad decimal']
@@ -134,44 +137,49 @@ def agregar_tipo_campos():
                     )
 
     # Metodos POST
-    # En caso de que los datos del formulario simple sean aceptados
-    if formSimple.accepts(request.vars, session):
-        # Verifico si se seleccionó el campo "Obligatorio".
-        if request.vars.Obligatorio == None:
-            request.vars.Obligatorio = False
+    # Si en el request tenemos la clave 'Nombre' entonces usamos el form simple.
+    if ('Nombre' in request.vars):
+        # En caso de que los datos del formulario simple sean aceptados
+        if formSimple.accepts(request.vars, session):
+            # Verifico si se seleccionó el campo "Obligatorio".
+            print "Paso form"
+            if request.vars.Obligatorio == None:
+                request.vars.Obligatorio = False
 
-        # Se inserta el campo, en la base de datos, que se desea utilizar.
-        db.CAMPO.insert(nombre = request.vars.Nombre,
-                        obligatorio = request.vars.Obligatorio,
-                        tipo_campo = request.vars.Tipo,
-                        id_catalogo = None)
+            # Se inserta el campo, en la base de datos, que se desea utilizar.
+            db.CAMPO.insert(nombre = request.vars.Nombre,
+                            obligatorio = request.vars.Obligatorio,
+                            tipo_campo = request.vars.Tipo,
+                            id_catalogo = None)
 
-        # Se busca el id del campo.
-        queryCampo = reduce(lambda a, b: (a&b),[db.CAMPO.nombre == request.vars.Nombre,
-                                            db.CAMPO.tipo_campo == request.vars.Tipo,
-                                            db.CAMPO.obligatorio == request.vars.Obligatorio])
+            # Se busca el id del campo.
+            queryCampo = reduce(lambda a, b: (a&b),[db.CAMPO.nombre == request.vars.Nombre,
+                                                db.CAMPO.tipo_campo == request.vars.Tipo,
+                                                db.CAMPO.obligatorio == request.vars.Obligatorio])
 
-        id_campo = db(queryCampo).select(db.CAMPO.id_campo).first()
+            id_campo = db(queryCampo).select(db.CAMPO.id_campo).first()
 
-        # Se almacena la relación entre el campo añadido y el tipo de actividad
-        # correspondiente.
-        db.ACT_POSEE_CAMPO.insert(id_tipo_act = id_tipo, id_campo = id_campo)
+            # Se almacena la relación entre el campo añadido y el tipo de actividad
+            # correspondiente.
+            db.ACT_POSEE_CAMPO.insert(id_tipo_act = id_tipo, id_campo = id_campo)
 
-        # Se redirige a la vista permitiendo agregar más campos.
-        redirect(URL('agregar_tipo_campos.html'))
-    # En caso de que el formulario no sea aceptado
-    elif formSimple.errors:
-        session.message = 'Datos invalidos'
-    # Metodo GET
-    else:
-        session.message = ''
+            # Se redirige a la vista permitiendo agregar más campos.
+            redirect(URL('agregar_tipo_campos.html'))
+        # En caso de que el formulario no sea aceptado
+        elif formSimple.errors:
+            session.message = 'Datos invalidos'
+        # Metodo GET
+        else:
+            session.message = ''
 
     # Métodos POST
-    # En caso de que los datos del formulario multiple sean aceptados.
-    if formMultiple.accepts(request.vars, session):
-        # Busco el id del catálogo que se deseó utilizar.
-        id_catalogo = request.vars.Catalogo
-        print id_catalogo
+    # Si en el request tenemos la clave 'Catalogo' entonces usamos el form multiple.
+    if ('Catalogo' in request.vars):
+        # En caso de que los datos del formulario multiple sean aceptados.
+        if formMultiple.accepts(request.vars, session):
+            # Busco el id del catálogo que se deseó utilizar.
+            id_catalogo = request.vars.Catalogo
+            print "El id es: " + id_catalogo
 
     return dict(formSimple = formSimple, formMultiple = formMultiple,
                 campos = campos_guardados, admin = get_tipo_usuario())
