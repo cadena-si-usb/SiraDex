@@ -170,6 +170,16 @@ def agregar_tipo_campos():
         # Busco el id del catálogo que se deseó utilizar.
         id_catalogo = request.vars.Catalogo
         
+        # Se determina si los campos del catálogo ya habían sido agregados
+        for campo_guardado in campos_guardados :
+            if str(campo_guardado.CAMPO.id_catalogo) == id_catalogo :
+                session.message = "El catálogo seleccionado ya había sido agregado."
+                return dict(formSimple = formSimple, 
+                            formMultiple = formMultiple,
+                            campos = campos_guardados, 
+                            admin = get_tipo_usuario())
+                
+        
         campos_catalogo = db(db.CAMPO_CATALOGO.id_catalogo == id_catalogo).select(db.CAMPO_CATALOGO.ALL)
         
         # Duplico los campos del catálogo
