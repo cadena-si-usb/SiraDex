@@ -18,6 +18,11 @@
 		font-size: 1.2em;
 	}
 
+    .container {
+        width: 1300 !important;
+    }
+
+
 /**********************************/
 /*                                */
 /*        Caja de contenido       */
@@ -94,7 +99,7 @@
 		max-height: 100%;
 		text-align: left;
 		padding: 0.5em 2em 0.5em 2em;
-		margin: 0.5em 4em 0.5em 4em;
+		margin: 0.5em 2.5em 0.5em 2.5em;
 		font-size: 100%;
 	}
 
@@ -260,5 +265,5 @@ a#disabled-dropdown:hover {
     line-height: 1.42857143;
     color: #777;
     white-space: nowrap;
-    font-size: smaller;
+    font-size: small;
 }

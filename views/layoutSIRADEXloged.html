@@ -16,7 +16,7 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      
+
       <form class="navbar-form navbar-left" role="search">
         <div class="input-group">
           <input    type="text" 
@@ -56,44 +56,23 @@
                 </ul>
             </li>
             <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="{{=URL(c='default', f='setVista.html', args=[1])}}"> DEX</a>
+                <a class="dropdown-toggle" data-toggle="dropdown"> Solicitudes</a>
                 <ul class="dropdown-menu" style="right:auto">
-                    <li><a href="#">Busqueda Avanzadas</a></li>
 
-                    <li class="dropdown-submenu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Programas</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{=URL(c='programas',f='agregar_programa')}}">Agregar</a></li>
-                            <li><a href="#">Modificar</a></li>
-                        </ul>
-                    </li>
+                    <li><a href="#">Validados</a></li>
 
-                    <li class="dropdown-submenu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tipos de Actividad</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Consultar</a></li>
-                            <li><a href="#">Agregar</a></li>
-                            <li><a href="#">Archivo Histórico</a></li>
-                        </ul>
-                    </li>
+                    <li><a href="#">En Espera</a></li>
 
-                    <li><a href="#">Validaciones</a></li>
+                    <li><a href="#">Rechazados</a></li>
                 </ul>
             </li>
-            <li><a>
-                Solicitudes
+            <li><a href="{{=URL(c='programas', f='gestionar_programas.html')}}">
+                Programas
             </a></li>
 
             {{ pass }}
 
             <!--Opciones basicas-->
-            <li><a href="{{=URL(c='actividad', f='gestionar.html')}}">
-                Productos
-            </a></li>
-
-            <li><a href="{{=URL(c='busq_val', f='busqueda.html')}}">
-                Búsqueda
-            </a></li>
 
                 <!--Cierre de sesion-->
           <li class="dropdown-toggle activo" data-toggle="dropdown">
@@ -109,6 +88,7 @@
                 <ul class="dropdown-menu" style="right:auto">
                     <li><a href="{{=URL(c='default',f='perfil')}}">Ver Perfil</a></li>
                     <li><a href="{{=URL(c='default',f='EditarPerfil')}}">Editar Perfil</a></li>
+                    <li><a href="#">Mis Productos</a></li>
                     <li role="separator" class="divider"></li>
                     <li>
                     <!--Cierre de sesion-->
@@ -123,8 +103,6 @@
   </div><!-- /.container-fluid -->
 </nav>
 {{end}}
-
-
 
 {{block footer}}
         <div class="row">
