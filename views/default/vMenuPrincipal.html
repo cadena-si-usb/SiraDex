@@ -7,23 +7,108 @@
             <!--Opciones administrador-->
             {{ if admin == 1: }}
             <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="{{=URL(c='default', f='setVista.html', args=[2])}}"> Administrador
-                <span class="caret"></span></a>
+                <a class="dropdown-toggle" data-toggle="dropdown" href="{{=URL(c='default', f='setVista.html', args=[2])}}"> Administrador</a>
+                <ul class="dropdown-menu" style="right:auto">
+
+                  <li><a href="#">Consultar Log</a></li>
+
+                  <li class="dropdown-submenu">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">Backup</a>
+                          <ul class="dropdown-menu">
+                              <li><a href="#">Consultar</a></li>
+                              <li><a href="#">Crear</a></li>
+                              <li><a href="#">Restaurar</a></li>
+                          </ul>
+                  </li>
+
+                 <li class="dropdown-submenu">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">Catálogos</a>
+                          <ul class="dropdown-menu">
+                              <li><a href="#">Consultar</a></li>
+                              <li><a href="#">Agregar</a></li>
+                          </ul>
+                  </li>
+
+                  <li class="dropdown-submenu">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">Usuarios</a>
+                          <ul class="dropdown-menu">
+                              <li><a href="#">Consultar</a></li>
+                              <li><a href="#">Agregar</a></li>
+                          </ul>
+                  </li>
+
+                  <li class="dropdown-submenu">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">Notificaciones</a>
+                          <ul class="dropdown-menu">
+                              <li><a href="#">Agregar</a></li>
+                              <li><a href="#">Modificar</a></li>
+                              <li><a href="#">Eliminar</a></li>
+                          </ul>
+                  </li>
+                </ul>
             </li>
-                <li><a href="{{=URL(c='default', f='setVista.html', args=[1])}}">
-                DEX
-                </a></li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="{{=URL(c='default', f='setVista.html', args=[1])}}"> DEX</a>
+                <ul class="dropdown-menu" style="right:auto">
+                  <li><a href="#">Busqueda Avanzadas</a></li>
+
+                  <li class="dropdown-submenu">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">Programas</a>
+                          <ul class="dropdown-menu">
+                              <li><a href="#">Agregar</a></li>
+                              <li><a href="#">Modificar</a></li>
+                          </ul>
+                  </li>
+
+                  <li class="dropdown-submenu">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tipos de Actividad</a>
+                          <ul class="dropdown-menu">
+                              <li><a href="#">Consultar</a></li>
+                              <li><a href="#">Agregar</a></li>
+                              <li><a href="#">Archivo Histórico</a></li>
+                          </ul>
+                  </li>
+
+                  <li><a href="#">Validaciones</a></li>
+                </ul>
+            </li>
 
             {{ elif admin == 2: }}
-                <li><a href="{{=URL(c='default', f='setVista.html', args=[1])}}">
-                DEX
-                </a></li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="{{=URL(c='default', f='setVista.html', args=[1])}}"> DEX</a>
+                <ul class="dropdown-menu" style="right:auto">
+                  <li><a href="#">Busqueda Avanzadas</a></li>
+
+                  <li class="dropdown-submenu">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">Programas</a>
+                          <ul class="dropdown-menu">
+                              <li><a href="#">Agregar</a></li>
+                              <li><a href="#">Modificar</a></li>
+                          </ul>
+                  </li>
+
+                  <li class="dropdown-submenu">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tipos de Actividad</a>
+                          <ul class="dropdown-menu">
+                              <li><a href="#">Consultar</a></li>
+                              <li><a href="#">Agregar</a></li>
+                              <li><a href="#">Archivo Histórico</a></li>
+                          </ul>
+                  </li>
+
+                  <li><a href="#">Validaciones</a></li>
+                </ul>
+            </li>
             {{ pass }}
 
             <!--Opciones basicas-->
-                <li><a href="{{=URL(c='default', f='setVista.html', args=[0])}}">
-                    Actividades
-                </a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="{{=URL(c='default', f='setVista.html', args=[0])}}"> Actividades </a>
+                    <ul class="dropdown-menu" style="right:auto">
+                      <li><a href="#">Gestionar</a></li>
+                      <li><a href="#">Agregar</a></li>
+                    </ul>
+                </li>
                 <li><a href="{{=URL(c='default', f='vVerPerfil.html')}}">
                     Ver Perfil
                 </a></li>
