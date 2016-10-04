@@ -373,10 +373,10 @@ def editar_tipo():
         tipo.descripcion = request.vars.Descripcion
         tipo.id_programa = request.vars.Programa
         tipo.update_record()                                 # Se actualiza el tipo de actividad.
-    
+        
         tipo_nombre = 'Evaluables por pares académicos' if tipo.tipo_p_r == 'P' else 'No evaluables por pares académicos'
         programa_nombre = programas[int(request.vars.Programa)]
-    
+        
         redirect(URL('ver_tipo_actividad.html', args=[id, tipo_nombre, programa_nombre]))  # Se redirige a la vista del preview del T.A. modificado.
     
     # En caso de que el formulario no sea aceptado
@@ -387,6 +387,50 @@ def editar_tipo():
         session.message = ''
     
     return dict(tipo=tipo, formulario=formulario, admin=get_tipo_usuario())
+
+#. --------------------------------------------------------------------------- .
+#"""
+#   Método que permite editar un campo cuyo id es request.args[0]
+#"""
+def editar_campo():
+    
+    admin = get_tipo_usuario()  # Obtengo el tipo del usuario actual.
+    
+    id_campo = request.args[0]
+    
+    # Los atributos del campo son puestos por defecto en el formulario
+    campo = db(db.CAMPO.id_campo == id_campo).select(db.CAMPO.ALL).first()
+    
+    tipo_campos = ['fecha', 'participante', 'ci', 'comunidad', 'telefono', 'texto','documento', 'imagen', 'cantidad entera', 'cantidad decimal']
+    
+    formulario = SQLFORM.factory(
+                    Field('Nombre', requires=IS_NOT_EMPTY(), default=campo.nombre),
+                    Field('Tipo', requires=IS_IN_SET(tipo_campos), default=campo.tipo_campo),
+                    Field('Obligatorio', widget=SQLFORM.widgets.boolean.widget, default=campo.obligatorio),
+                    submit_button = 'Editar'
+                    )
+    
+    if formulario.accepts(request.vars, session):
+        
+        campo.update_record(nombre = request.vars.Nombre,
+                            tipo_campo = request.vars.Tipo,
+                            obligatorio = request.vars.obligatorio)
+        
+        
+        # Se obtiene el id del tipo de actividad asociado al campo para
+        # hacer un redirect
+        
+        relacionActividadCampo = db(db.ACT_POSEE_CAMPO.id_campo == id_campo).select(db.ACT_POSEE_CAMPO.id_tipo_act).first()
+        redirect(URL("ver_tipo_actividad.html", args=[relacionActividadCampo.id_tipo_act]))
+        
+    elif formulario.errors :
+        
+        mensaje = "Ocurrió un error con el formulario."
+        
+    else :
+        mensaje = ""
+    
+    return dict(formulario = formulario, mensaje=mensaje, admin=admin)
 
 #. --------------------------------------------------------------------------- .
 def get_tipo_usuario():
