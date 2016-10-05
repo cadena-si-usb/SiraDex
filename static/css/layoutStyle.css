@@ -276,8 +276,17 @@ a#disabled-dropdown:hover {
     vertical-align: middle !important;
 }
 
+.green {
+    color: #7CB342 !important;
+}
+
+.green:hover {
+    color: #FAFAFA !important;
+    background-color: #7CB342 !important;
+}
+
 .blue {
-    color: #03A9F4;
+    color: #03A9F4 !important;
     font-size: 20px;
 }
 

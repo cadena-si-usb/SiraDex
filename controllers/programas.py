@@ -50,4 +50,18 @@ def gestionar_programas():
     # Seleccionamos todos los programas.
     programas = db().select(db.PROGRAMA.ALL)
 
-    return dict(programas=programas, admin = admin)
+    admin = get_tipo_usuario
+    formulario = SQLFORM.factory(
+        Field('Nombre',
+              requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacio.'),
+                          IS_MATCH('([A-Za-z])([A-Za-z0-9" "])*', error_message="El nombre del programa no puede iniciar con numeros.")]),
+        Field('Descripcion', type="text",
+              requires=IS_NOT_EMPTY(error_message='La descripcion del programa no puede quedar vacia.')),
+        submit_button = 'Agregar',
+        labels = {'Descripcion' : 'Descripción',
+                  'Nombre' : 'Nombre del Programa'},
+        )
+    formulario.element(_type='submit')['_class']="btn btn-success"
+    formulario.element(_type='submit')['_value']="Agregar"
+
+    return dict(programas=programas, admin = admin, form=formulario)
