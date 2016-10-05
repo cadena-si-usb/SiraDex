@@ -110,12 +110,14 @@
         </div>
         <div class="modal-body">
             <center> <p>Está seguro que quiere eliminar este programa.</p> </center>
-        </div>
-        <div class="modal-footer">
-          <a href="{{=URL('eliminar_programa', args=[programa.id])}}">
-              <button type="button" class="btn blue-add btn-border">Eliminar</button>
-          </a>
-          <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
+            <br>
+            <center>
+                <a href="{{=URL('eliminar_programa', args=[programa.id])}}">
+                  <button type="button" class="btn blue-add btn-border">Eliminar</button>
+                </a>
+                <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
+            </center>
+          </div>
         </div>
       </div>
     </div>
