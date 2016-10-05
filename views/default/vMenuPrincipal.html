@@ -1,49 +1,4 @@
-{{extend 'layoutSIRADEX.html'}}
-
-{{block navegacion}}
-    <nav class="navbar navbar-default" style="border-color:#FFF">
-        <div class="container-fluid">
-            <ul class="nav navbar-nav navbar-right">
-            <!--Opciones administrador-->
-            {{ if admin == 1: }}
-                <li><a href="{{=URL(c='default', f='setVista.html', args=[2])}}">
-                Administrador
-                </a></li>
-                <li><a href="{{=URL(c='default', f='setVista.html', args=[1])}}">
-                DEX
-                </a></li>
-            
-            {{ elif admin == 2: }}
-                <li><a href="{{=URL(c='default', f='setVista.html', args=[1])}}">
-                DEX
-                </a></li>
-            {{ pass }}
-            
-            <!--Opciones basicas-->
-                <li><a href="{{=URL(c='default', f='setVista.html', args=[0])}}">
-                    Actividades
-                </a></li>
-                <li><a href="{{=URL(c='default', f='vVerPerfil.html')}}">
-                    Ver Perfil
-                </a></li>
-                <li><a href="{{=URL(c='busq_val', f='busqueda.html')}}">
-                    Búsqueda
-                </a></li>
-                <li><a href="#">
-                    Ayuda
-                </a></li>
-                <li>
-
-            <!--Cierre de sesion-->    
-                <a  class ='btn btn-xs' 
-                    href="{{=URL(c='default', f='logout_cas.html')}}">
-                        Cerrar Sesión
-                </a>
-                </li>
-        </ul>
-      </div>
-    </nav>                                   
-{{end}}
+{{extend 'layoutSIRADEXloged.html'}}
 
 {{block titulo}}
     Bienvenido al SIRADEX
@@ -54,7 +9,7 @@
     Sergio Alejandro
     <!-- icono editar -->
     <a id="editar" href="{{=URL('vEditarPerfil')}}" >
-    {{=IMG(_src=URL('static', 'icon', args='i_edit.png'),_style='max-height:1em') }} 
+    {{=IMG(_src=URL('static', 'icon', args='i_edit.png'),_style='max-height:1em') }}
     </a>
 
 {{end}}
@@ -63,8 +18,8 @@
 <div class="col-lg-6">
 <!-- Datos del usuario -->
     <p class="text-justify">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt sed corporis dolores totam excepturi commodi nobis expedita quo officiis sint facere id dicta rerum dolor amet, obcaecati aliquam fugit perspiciatis                           
-    </p>    
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt sed corporis dolores totam excepturi commodi nobis expedita quo officiis sint facere id dicta rerum dolor amet, obcaecati aliquam fugit perspiciatis
+    </p>
 </div>
 <div class="col-lg-6">
     AQUI VA LA GRAFICA
@@ -77,31 +32,31 @@
             <form class="navbar-form" role="search">
                 <div class="input-group col-lg-12 col-lg-offset-1">
                     <!-- barra de busqueda -->
-                        <input  type="text" 
-                                class="form-control" 
+                        <input  type="text"
+                                class="form-control"
                                 placeholder="Encuentra cosas brutales">
-                    
+
                     <!-- btn filtros -->
                         <span class="input-group-btn" >
                             <button type="button" class="btn btn-default" id="btn-filtro">
                                 Filtros
                             </button>
                         </span>
-                    
+
                     <!-- Lupa -->
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-default">
                                 O
                             </button>
-                        </span>                                        
+                        </span>
                 </div>
             </form>
-        
+
         <!-- Filtros -->
             <div id="filtros">
                 DESPLIEGE DE LOS FILTROS DE BUSQUEDA
             </div>
-{{end}}                                    
+{{end}}
 
 {{block script}}
     <script>
@@ -114,4 +69,3 @@
             });
     </script>
 {{end}}
-
