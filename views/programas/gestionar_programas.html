@@ -1,36 +1,123 @@
 {{extend 'layoutSIRADEXloged.html'}}
 
 {{block titulo}}
-    Modificar Programas
+<h2><center> Programas Registrados en el Sistema</center></h2>
 {{end}}
 
 {{block contenido}}
+    <br>
+    <div class="row">
+        <div class="col-sm-6">
+             <form class="navbar-form" role="search">
+                <div class="input-group col-lg-12">
+                    <!-- barra de busqueda -->
+                        <input  type="text" 
+                                class="form-control" 
+                                placeholder="Buscar Productos"
+                                id="form-busqueda">
 
-<h3>Programas Registrados en el Sistema</h3>
-<h4>Por ahora solo estamos mostrando los tipos de programas.</h4>
-<br>
-<table class="table table-striped table-hover sortable">
-    <thead>
-        <tr>
-            <th>Titulo</th>
-            <th>Descripcion</th>
-        </tr>
-    </thead>
-    <tbody id="actividades">
-    {{if len(programas) == 0:}}
-        No hay programas que mostrar.
-    {{else:}}
-        {{for programa in programas:}}
-        <tr>
-            <td> {{=programa.nombre}}</td>
-            <td> {{=programa.descripcion}}</td>
-        </tr>
-        {{pass}}
-     {{pass}}
-    </tbody>
-</table>
-      <div class="col-md-12 text-center">
-      <ul class="pagination pagination-lg pager" id="myPager"></ul>
+                    <!-- Lupa -->
+                    <span class="input-group-btn">
+                        <button type="submit" 
+                                class="btn btn-default glyphicon glyphicon-search"
+                                id="btn-lupa">
+                        </button>
+                    </span>
+                 </div>
+            </form>
+        </div>
+        <div class="col-sm-6 col-sm-push-3" style="margin-top:10px;">
+            <button type="button" class="btn btn-default green btn-border" data-toggle="modal" data-target="#myModal">
+              <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Programa
+            </button>
+   <!--         <a href="{{=URL(c='programas', f='agregar_programa.html')}}">
+                {{=IMG(_src=URL('static', 'icon/i_add.png'),_height='30'), }}
+                </a> -->
+        </div>
+    </div>
+    <br>
+    <div class="container-fluid">
+    <table class="table table-striped table-condensed table-hover sortable">
+        <thead>
+            <tr>
+                <th>Titulo</th>
+                <th>Descripción</th>
+                <th><center>Editar</center></th>
+                <th><center>Eliminar</center></th>
+            </tr>
+        </thead>
+        <tbody id="actividades">
+        {{if len(programas) == 0:}}
+            No hay programas que mostrar.
+        {{else:}}
+            {{for programa in programas:}}
+            <tr>
+                <td> {{=programa.nombre}}</td>
+                <td> {{=programa.descripcion}}</td>
+<!---                <td> <center> {{=IMG(_src=URL('static', 'icon/i_edit_disable.png'),_height='25'), }} </center></td>
+                     <td> <center> {{=IMG(_src=URL('static', 'icon/i_delete.png'),_height='25'), }} </center> </td>      -->
+                <td class="center-vertically">
+                    <center>
+                        <a href="{{=URL('modificar_programa', args=[programa.id])}}">
+                            <span class="glyphicon glyphicon-edit blue"></span>
+                        </a>
+                    <center>
+                 </td>
+                <td class="center-vertically">
+                    <center>
+                        <a>
+                           <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalDelete" aria-hidden="true"></span>
+                        </a>
+                    <center>
+                </td>
+            </tr>
+            {{pass}}
+         {{pass}}
+        </tbody>
+    </table>
+    </div>
+          <div class="col-md-12 text-center">
+          <ul class="pagination pagination-lg pager" id="myPager"></ul>
+          </div>
+
+<!-- Modal Agregar-->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <center><h4 class="modal-title">Agregar Programa</h4><center>
       </div>
+      <div class="modal-body">
+        <p> {{=form}}.</p>
+      </div>
+    </div>
+  </div>
+</div>
 
+<!-- PRUEBA MODALS PEQUENOS -->
+<div class="container">
+  <!-- Modal -->
+  <div class="modal fade" id="myModalDelete" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <center> <h4 class="modal-title">Eliminar Programa - {{=programa.nombre}}</h4> </center>
+        </div>
+        <div class="modal-body">
+            <center> <p>Está seguro que quiere eliminar este programa.</p> </center>
+        </div>
+        <div class="modal-footer">
+          <a href="{{=URL('eliminar_programa', args=[programa.id])}}">
+              <button type="button" class="btn blue-add btn-border">Eliminar</button>
+          </a>
+          <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {{end}}
