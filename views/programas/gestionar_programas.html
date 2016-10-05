@@ -20,7 +20,7 @@
                     <span class="input-group-btn">
                         <button type="submit" 
                                 class="btn btn-default glyphicon glyphicon-search"
-                                id="btn-lupa">
+                                id="btn-lupa" style="top:0px !important;">
                         </button>
                     </span>
                  </div>
@@ -66,7 +66,8 @@
                 <td class="center-vertically">
                     <center>
                         <a>
-                           <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalDelete" aria-hidden="true"></span>
+                           <span data-id="{{=programa.id}}" class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalDelete"></span>
+<!-- <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalDelete" aria-hidden="true" onclick="myFunction(programa.id)"></span> -->
                         </a>
                     <center>
                 </td>
@@ -105,7 +106,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <center> <h4 class="modal-title">Eliminar Programa - {{=programa.nombre}}</h4> </center>
+            <center> <h4 class="modal-title">Eliminar Programa</h4> </center>
         </div>
         <div class="modal-body">
             <center> <p>Está seguro que quiere eliminar este programa.</p> </center>
@@ -120,4 +121,8 @@
     </div>
   </div>
 </div>
+{{end}}
+
+{{block script}}
+
 {{end}}
