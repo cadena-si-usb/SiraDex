@@ -237,6 +237,7 @@
 'invalid ticket': 'tiquete inválido',
 'Is Active': 'Está Activo',
 'Key': 'Llave',
+'La descripcion del programa no puede quedar vacia.': 'La descripcion del programa no puede quedar vacia.',
 'language file "%(filename)s" created/updated': 'archivo de lenguaje "%(filename)s" creado/actualizado',
 'Language files (static strings) updated': 'Archivos de lenguaje (cadenas estáticas) actualizados',
 'languages': 'lenguajes',

@@ -268,7 +268,7 @@ a#disabled-dropdown:hover {
     font-size: small;
 }
 
-/* Styles */
+/* Styles iconos y botones */
 
 .center-vertically {
     min-height: 10em;
@@ -276,24 +276,33 @@ a#disabled-dropdown:hover {
     vertical-align: middle !important;
 }
 
+.btn-border {
+    border-radius: 200px !important;
+}
+
 .green {
     color: #286090 !important;
     background-color: #FAFAFA !important;
+    border: 1px solid #286090 !important;
 }
 
 .green:hover {
     color: #FAFAFA !important;
     background-color: #286090 !important;
+    border: 1px solid #286090 !important;
+    
 }
 
 .blue-add {
     color: #FAFAFA !important;
     background-color: #286090 !important;
+    border: 1px solid #286090 !important;
 }
 
 .blue-add:hover {
     color: #286090 !important;
     background-color: #FAFAFA !important;
+    border: 1px solid #286090 !important;
 }
 
 .blue {

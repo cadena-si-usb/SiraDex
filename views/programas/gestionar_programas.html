@@ -27,7 +27,7 @@
             </form>
         </div>
         <div class="col-sm-6 col-sm-push-3" style="margin-top:10px;">
-            <button type="button" class="btn btn-default green" data-toggle="modal" data-target="#myModal">
+            <button type="button" class="btn btn-default green btn-border" data-toggle="modal" data-target="#myModal">
               <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Programa
             </button>
    <!--         <a href="{{=URL(c='programas', f='agregar_programa.html')}}">
@@ -65,8 +65,8 @@
                  </td>
                 <td class="center-vertically">
                     <center>
-                        <a href="{{=URL('eliminar_programa', args=[programa.id])}}">
-                            <span class="glyphicon glyphicon-remove red" aria-hidden="true"></span>
+                        <a>
+                           <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalDelete" aria-hidden="true"></span>
                         </a>
                     <center>
                 </td>
@@ -80,7 +80,7 @@
           <ul class="pagination pagination-lg pager" id="myPager"></ul>
           </div>
 
-<!-- Modal -->
+<!-- Modal Agregar-->
 <div id="myModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
@@ -94,7 +94,30 @@
         <p> {{=form}}.</p>
       </div>
     </div>
+  </div>
+</div>
 
+<!-- PRUEBA MODALS PEQUENOS -->
+<div class="container">
+  <!-- Modal -->
+  <div class="modal fade" id="myModalDelete" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <center> <h4 class="modal-title">Eliminar Programa</h4> </center>
+        </div>
+        <div class="modal-body">
+            <center> <p>Está seguro que quiere eliminar este programa.</p> </center>
+        </div>
+        <div class="modal-footer">
+          <a href="{{=URL('eliminar_programa', args=[programa.id])}}">
+              <button type="button" class="btn blue-add btn-border">Eliminar</button>
+          </a>
+          <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 {{end}}

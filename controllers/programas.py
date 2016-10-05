@@ -73,7 +73,7 @@ def gestionar_programas():
     else:
         session.message = ''
 
-    formulario.element(_type='submit')['_class']="btn blue-add btn-block"
+    formulario.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
     formulario.element(_type='submit')['_value']="Agregar"
 
     return dict(programas=programas, admin = admin, form=formulario)
