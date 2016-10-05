@@ -42,8 +42,8 @@
             <tr>
                 <th>Titulo</th>
                 <th>Descripción</th>
-                <th>Editar</th>
-                <th>Eliminar</th>
+                <th><center>Editar</center></th>
+                <th><center>Eliminar</center></th>
             </tr>
         </thead>
         <tbody id="actividades">
@@ -56,8 +56,20 @@
                 <td> {{=programa.descripcion}}</td>
 <!---                <td> <center> {{=IMG(_src=URL('static', 'icon/i_edit_disable.png'),_height='25'), }} </center></td>
                      <td> <center> {{=IMG(_src=URL('static', 'icon/i_delete.png'),_height='25'), }} </center> </td>      -->
-                <td class="center-vertically"> <center> <span class="glyphicon glyphicon-edit blue"></i> </span> <center></td>
-                <td class="center-vertically"><center><span class="glyphicon glyphicon-remove red" aria-hidden="true"></span><center></td>
+                <td class="center-vertically">
+                    <center>
+                        <a href="{{=URL('modificar_programa', args=[programa.id])}}">
+                            <span class="glyphicon glyphicon-edit blue"></span>
+                        </a>
+                    <center>
+                 </td>
+                <td class="center-vertically">
+                    <center>
+                        <a href="{{=URL('eliminar_programa', args=[programa.id])}}">
+                            <span class="glyphicon glyphicon-remove red" aria-hidden="true"></span>
+                        </a>
+                    <center>
+                </td>
             </tr>
             {{pass}}
          {{pass}}
@@ -85,13 +97,4 @@
 
   </div>
 </div>
-
 {{end}}
-
-
-
-<script>
-$('#myModal').on('shown.bs.modal', function () {
-  $('#myInput').focus()
-})
-</script>

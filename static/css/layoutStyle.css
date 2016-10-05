@@ -277,12 +277,23 @@ a#disabled-dropdown:hover {
 }
 
 .green {
-    color: #7CB342 !important;
+    color: #286090 !important;
+    background-color: #FAFAFA !important;
 }
 
 .green:hover {
     color: #FAFAFA !important;
-    background-color: #7CB342 !important;
+    background-color: #286090 !important;
+}
+
+.blue-add {
+    color: #FAFAFA !important;
+    background-color: #286090 !important;
+}
+
+.blue-add:hover {
+    color: #286090 !important;
+    background-color: #FAFAFA !important;
 }
 
 .blue {
