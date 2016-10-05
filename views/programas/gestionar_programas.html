@@ -101,11 +101,11 @@
 <div class="container">
   <!-- Modal -->
   <div class="modal fade" id="myModalDelete" role="dialog">
-    <div class="modal-dialog modal-sm">
+    <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <center> <h4 class="modal-title">Eliminar Programa</h4> </center>
+            <center> <h4 class="modal-title">Eliminar Programa - {{=programa.nombre}}</h4> </center>
         </div>
         <div class="modal-body">
             <center> <p>Está seguro que quiere eliminar este programa.</p> </center>
@@ -114,7 +114,7 @@
           <a href="{{=URL('eliminar_programa', args=[programa.id])}}">
               <button type="button" class="btn blue-add btn-border">Eliminar</button>
           </a>
-          <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
         </div>
       </div>
     </div>

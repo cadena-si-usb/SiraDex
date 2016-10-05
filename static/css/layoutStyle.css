@@ -215,7 +215,7 @@ a#disabled-dropdown:hover {
 
 .dropdown-submenu>.dropdown-menu {
     top: 0;
-    left: 100%;
+    left: 100% !important;
     margin-top: -6px;
     margin-left: -1px;
     -webkit-border-radius: 0;
