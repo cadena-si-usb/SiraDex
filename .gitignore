@@ -1,5 +1,6 @@
 .*
 !.gitignore
+*.orig
 *.pyc
 *.pyo
 *.log
