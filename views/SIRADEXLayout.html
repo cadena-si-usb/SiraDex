@@ -58,52 +58,161 @@
 	</head>
 
 	<body>
+
         <!--*********************************************
             HEADER
         **********************************************-->    
-    		<header>
-    			<!--*************
-                    Banner de SIRADEX 
-                **************-->
-        			<div id = "logo">
-        				{{=IMG(_src=URL('static', 'images/banner.jpg')) }}
-        			</div>
-                
-                <!--*************
-                    Navegador header
-                **************-->
-                    <nav class="navbar navbar-default">
-                        <div class="container-fluid">
-                            <ul class="nav navbar-nav navbar-right">
-                            <!--Opciones administrador-->
-                            {{ if admin == 1: }}
-                                <li><a href="{{=URL(c='default', f='setVista.html', args=[2])}}">
-                                Administrador
-                                </a></li>
-                                <li><a href="{{=URL(c='default', f='setVista.html', args=[1])}}">
-                                DEX
-                                </a></li>
-                            
-                            {{ elif admin == 2: }}
-                                <li><a href="{{=URL(c='default', f='setVista.html', args=[1])}}">
-                                DEX
-                                </a></li>
-                            {{ pass }}
-                            
-                            <!--Opciones basicas-->
-                                <li><a href="{{=URL(c='default', f='setVista.html', args=[0])}}">
-                                    Actividades
-                                </a></li>
-                                <li><a href="{{=URL(c='default', f='vVerPerfil.html')}}">
-                                    Ver Perfil
-                                </a></li>
-                                <li><a href="{{=URL(c='busq_val', f='busqueda.html')}}">
-                                    Búsqueda
-                                </a></li>
-                                <li><a href="#">
-                                    Ayuda
-                                </a></li>
-                                <li>
+		<header>
+			<!-- Banner de SIRADEX -->
+			<div id = "logo">
+				{{=IMG(_src=URL('static', 'images/banner.jpg')) }}
+			</div>
+			<!-- Menu del headder -->
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <ul class="nav navbar-nav navbar-right">
+                    {{ if admin == 1: }}
+                        <li><a href="{{=URL(c='default', f='setVista.html', args=[2])}}">Administrador</a></li>
+                        <li><a href="{{=URL(c='default', f='setVista.html', args=[1])}}">DEX</a></li>
+                    {{ elif admin == 2: }}
+                        <li><a href="{{=URL(c='default', f='setVista.html', args=[1])}}">DEX</a></li>
+                    {{ pass }}
+                        <li><a href="{{=URL(c='default', f='setVista.html', args=[0])}}">Productos</a></li>
+                        <li><a href="{{=URL(c='default', f='vVerPerfil.html')}}">Ver Perfil</a></li>
+                        <li><a href="{{=URL(c='busq_val', f='busqueda.html')}}">Búsqueda</a></li>
+                        <li><a href="#">Ayuda</a></li>
+                        <li>
+                            <a class ='btn btn-xs' href="{{=URL(c='default', f='logout_cas.html')}}">
+                                <span class="glyphicon glyphicon-user"></span>
+                                Cerrar Sesión
+                            </a>
+                        </li>
+                </ul>
+              </div>
+            </nav>
+		</header>
+		<!-- Contenido principal de la pagina -->
+		<section class = "main">
+			<!-- Menu de navegacion lateral -->
+            <aside>
+                <nav class="navbar navbar-default" role="navigation">
+                    <ul class="nav nav-pills nav-stacked" id="nav">
+                        <!-- Header -->
+                        <li class="nav-item">
+                            <h4> <strong> MENÚ </strong> </h4>
+                        </li>
+                        {{ if session.vista == 0: }}
+			    <!--productos -->
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Productos</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{=URL(c='producto', f='gestionar.html')}}">Gestionar</a></li>
+                                    <li><a href="{{=URL(c='producto', f='tipos.html')}}">Agregar</a></li>
+                                </ul>
+                            </li>
+                        {{ elif session.vista == 1: }}
+                            <!-- Búsqueda Avanzadas -->
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Búsquedas Avanzadas</a>
+                            </li>
+														<!-- Programas -->
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Programas</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{=URL(c='programas', f='agregar_programa.html')}}">  Agregar</a></li>
+                                    <li><a href="{{=URL(c='programas', f='gestionar_programas.html')}}">Modificar</a></li>
+                                </ul>
+                            </li>
+                            <!-- Tipos de Actividad -->
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tipos de Actividad</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{=URL(c='tipo_actividad', f='gestionar.html')}}">Gestionar</a></li>
+                                    <li><a href="{{=URL(c='tipo_actividad', f='agregar_tipo.html')}}">Agregar</a></li>
+                                    <li><a href="{{=URL(c='tipo_actividad', f='gestionar_archivo_historico.html')}}">Archivo Histórico</a></li>
+                                </ul>
+                            </li>
+                            <!-- Validaciones -->
+                            <li><a href="{{=URL(c='busq_val', f='gestionar_validacion.html')}}"> Validaciones</a></li>
+                        {{ elif session.vista == 2:}}
+                            <!-- Consultar Log -->
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Consultar Log</a>
+                            </li>
+                            <!-- Backup -->
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Backup</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Gestionar</a></li>
+                                    <li><a href="#">Crear</a></li>
+                                    <li><a href="#">Restaurar</a></li>
+                                </ul>
+                            </li>
+                            <!-- Catálogos -->
+                            <!--<li class="nav-item">-->
+                                <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Catálogos</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{=URL(c='catalogo', f='vGestionarCatalogos.html')}}">Gestionar</a></li>
+                                    <li><a href="{{=URL(c='catalogo', f='vAgregarCatalogo.html')}}">Agregar</a></li>
+                                </ul>
+                            </li>
+                            <!-- Usuarios -->
+                            <!--<li class="nav-item">-->
+                                <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Usuarios</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{=URL(c='default', f='vGestionarUsuarios.html')}}">Gestionar</a></li>
+                                    <li><a href="{{=URL(c='default', f='vAgregarUsuario.html')}}">Agregar</a></li>
+                                </ul>
+                            </li>
+                            <!-- Notificaciones -->
+                            <!--<li class="nav-item">-->
+                                <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Notificaciones</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Agregar</a></li>
+                                    <li><a href="#">Modificar</a></li>
+                                    <li><a href="#">Eliminar</a></li>
+                                </ul>
+                            </li>
+                        {{ else: }}
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Actividades</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Gestionar</a></li>
+                                    <li><a href="#">Agregar</a></li>
+                                    <li><a href="#">Modificar</a></li>
+                                </ul>
+                            </li>
+                        {{ pass }}
+                    </ul>
+                </nav>
+                    <nav class="navbar navbar-default" role="navigation">
+                    <ul class="nav nav-pills nav-stacked" id="nav">
+                        <li class="nav-item">
+                            <h4> <strong> COLORES </strong> </h4>
+                        </li>
+                        <li>
+                            <form action="{{=URL(c='default', f='cambiar_colores')}}" method="post">
+                        <select class="form-control" title="cambiar_colores" name="color" onchange="this.form.submit()">
+                            <option value="0">---</option>
+                            <option value="1">SiraDex</option>
+                            <option value="2">Contraste</option>
+                            <option value="3">Rustico</option>
+                            <option value="4">Sorpresa</option>
+                        </select>
+                    </form>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+			<!-- En esta seccion va t0do el contenido de la pagina -->
+			<section class = "contenido">
+				<!-- Cuando se extienda este layout, el contenido del html
+				     entrara aqui -->
+				{{include}}
+
 
                             <!--Cierre de sesion-->    
                                 <a  class ='btn btn-xs' 

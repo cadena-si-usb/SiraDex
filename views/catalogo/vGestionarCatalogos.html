@@ -24,17 +24,17 @@
                                     {{ =catalogo.nombre}}
                                 </td>
                                 <td class="col-md-2">
-                                    <a href = "{{=URL(f='vModificarCatalogo', args=[ catalogo.nombre ])}}">
+                                    <a href = "{{=URL(f='vModificarCatalogo', args=[ catalogo.id_catalogo ])}}">
                                         {{=IMG(_src=URL('static', 'iconos/Edit.png')), }}
                                     </a>
                                 </td>
                                 <td class="col-md-2">
-                                    <a href = "{{=URL(f='vMostrarCatalogo', args=[ catalogo.nombre ])}}">
-                                        {{=IMG(_src=URL('static', 'iconos/Examine_26x26.png')), }}
+                                    <a href = "{{=URL(f='vMostrarCatalogo', args=[ catalogo.id_catalogo ])}}">
+                                        {{=IMG(_src=URL('static', 'iconos/info.png')), }}
                                     </a>
                                 </td>
                                 <td class="col-md-2">
-                                <a onClick = "if(confirm('¿Está seguro de que desea eliminar el catalogo?')) {window.location.href = '{{=URL(f='eliminarCampos',args=[ catalogo.nombre ] )}}';}">
+                                <a onClick = "if(confirm('¿Está seguro de que desea eliminar el catalogo?')) {window.location.href = '{{=URL(f='eliminarCatalogo',args=[ catalogo.id_catalogo ] )}}';}">
                                     {{=IMG(_src=URL('static', 'iconos/Delete.png')), }}
                                 </td>
                             </tr>
@@ -43,8 +43,6 @@
                 </table>
                 </div>
                 <br/>
-                
+
             </section><!-- close main -->
         </section>
-    </body>
-</html>

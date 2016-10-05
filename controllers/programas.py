@@ -8,6 +8,7 @@ Vista de Gestionar Programas tiene las opciones:
 - Por ahora, no se pueden eliminar programas.
 '''
 
+
 def agregar_programa():
 
     admin = get_tipo_usuario
@@ -78,8 +79,49 @@ def gestionar_programas():
 
     return dict(programas=programas, admin = admin, form=formulario)
 
+
 def eliminar_programa():
     admin = get_tipo_usuario()
     db(db.PROGRAMA.id==request.args(0)).delete()
     redirect(URL('gestionar_programas'))
     return locals()
+
+
+def editar_programa():
+
+    admin = get_tipo_usuario()  # Obtengo el tipo del usuario actual.
+    id = request.args[0]        # Se identifica cual programa se identificará.
+
+    # Se busca el programa en la base de datos.
+    programa = db(db.PROGRAMA.id_programa == id).select()[0]
+
+    # Se presenta el formulario donde se modificarán los valores del programa.
+    formulario = SQLFORM.factory(
+                        Field('Nombre',
+                              default = programa.nombre,
+                              requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacio.'),
+                                          IS_MATCH('([A-Za-z])([A-Za-z0-9" "])*', error_message="El nombre del programa debe comenzar con una letra.")]),
+                        Field('Descripcion', type="text",
+                              default = programa.descripcion,
+                              requires=IS_NOT_EMPTY(error_message='La descripcion del programa no puede quedar vacia.')),
+                        submit_button = 'Actualizar',
+                        labels = {'Descripcion' : 'Descripción',
+                                  'Nombre' : 'Nombre del Programa'},
+                        )
+
+    # Se verifica si los campos están llenos correctamente.
+    if formulario.accepts(request.vars, session):
+        session.form_nombre = request.vars.Nombre
+        programa.nombre = request.vars.Nombre
+        programa.descripcion = request.vars.Descripcion
+        programa.update_record()                    # Se actualiza el programa.
+        redirect(URL('gestionar_programas.html'))   # Se redirige a la vista de gestión.
+
+    # En caso de que el formulario no sea aceptado
+    elif formulario.errors:
+        session.message = 'Error en los datos del formulario, por favor intente nuevamente.'
+    # Metodo GET
+    else:
+        session.message = ''
+
+    return dict(formulario=formulario, admin = admin)

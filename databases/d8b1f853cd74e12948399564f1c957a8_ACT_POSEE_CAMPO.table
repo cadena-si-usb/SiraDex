@@ -1,0 +1,42 @@
+(dp1
+S'id_campo'
+p2
+(dp3
+S'length'
+p4
+I512
+sS'unique'
+p5
+I00
+sS'sortable'
+p6
+I2
+sS'sql'
+p7
+S'VARCHAR(512), CONSTRAINT  "FK_ACT_POSEE_CAMPO_id_campo__constraint" FOREIGN KEY (id_campo) REFERENCES CAMPO (id_campo) ON DELETE CASCADE'
+p8
+sS'notnull'
+p9
+I01
+sS'type'
+p10
+S'reference CAMPO.id_campo'
+p11
+ssS'id_tipo_act'
+p12
+(dp13
+g4
+I512
+sg5
+I00
+sg6
+I1
+sg7
+S'VARCHAR(512), CONSTRAINT  "FK_ACT_POSEE_CAMPO_id_tipo_act__constraint" FOREIGN KEY (id_tipo_act) REFERENCES TIPO_ACTIVIDAD (id_tipo) ON DELETE CASCADE'
+p14
+sg9
+I01
+sg10
+S'reference TIPO_ACTIVIDAD.id_tipo'
+p15
+ss.

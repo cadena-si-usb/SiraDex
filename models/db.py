@@ -129,7 +129,7 @@ auth.settings.reset_password_requires_verification = True
 # auth.enable_record_versioning(db)
 #raise HTTP(404)
 
-tipo_campos = ['fecha', 'participante', 'ci', 'comunidad', 'telefono', 'texto','documento', 'imagen', 'cantidad entera', 'cantidad decimal']
+tipo_campos = ['Fecha', 'Teléfono', 'Texto','Documento', 'Imagen', 'Número']
 
 #db.usuario.drop()
 db.define_table('USUARIO',
@@ -187,17 +187,17 @@ db.define_table('TIPO_ACTIVIDAD',
     migrate=False
 );
 
-db.define_table('ACTIVIDAD',
-    Field('id_actividad',  type='id'),
+db.define_table('PRODUCTO',
+    Field('id_producto',  type='id'),
     Field('id_tipo', db.TIPO_ACTIVIDAD.id_tipo),
     Field('validacion',type='string',default='En espera'),
     Field('estado',type='string'),
     Field('evaluacion_criterio',type='string',length=256),
     Field('evaluacion_valor',type='string', length=256),
-    Field('ci_usuario_modifica', db.USUARIO.ci),
-    Field('ci_usuario_elimina', db.USUARIO.ci),
-    Field('ci_usuario_crea', db.USUARIO.ci),
-    primarykey=['id_actividad'],
+    Field('modif_fecha', type='date'),
+    Field('ci_usu_modificador', db.USUARIO.ci),
+    Field('ci_usu_creador', db.USUARIO.ci),
+    primarykey=['id_producto'],
     migrate=False
 );
 
@@ -218,55 +218,27 @@ db.define_table('CATALOGO',
 );
 
 
-db.define_table('CAMPO',
-    Field('id_campo', type='id'),
-    Field('obligatorio', type='boolean'),
-    Field('nombre',type='string', length=64,
-        requires = [IS_NOT_IN_DB(db, 'CAMPO.nombre',error_message='')]),
-    Field('lista', type='string', length=64,
-        requires = [IS_IN_SET(tipo_campos)],
-        widget = SQLFORM.widgets.options.widget),
-    Field('despliega_cat',db.CATALOGO.id_catalogo),
-    primarykey=['id_campo'],
-    migrate=False
-);
-
-
 db.define_table('CAMPO_CATALOGO',
     Field('id_campo_cat',  type='id'),
-    Field('tipo_cat',type='string', length=256,
-          requires = [IS_IN_SET(tipo_campos)],
-        widget = SQLFORM.widgets.options.widget),
-    Field('nombre', type='string', length=64),
-    Field('eliminar', type='boolean'),
+    Field('id_catalogo', db.CATALOGO.id_catalogo),
+    Field('nombre', type='string', length=256),
+    Field('tipo_campo',type='string', length=64,
+           requires = [IS_IN_SET(tipo_campos, zero='Seleccione...')],
+           widget = SQLFORM.widgets.options.widget),
+    Field('obligatorio', type='boolean'),
     primarykey=['id_campo_cat'],
     migrate=False
 );
 
-
-db.define_table('LOG_SIRADEX',
-    Field('accion',type='string'),
-    Field('accion_fecha',type='date'),
-    Field('accion_ip',type='string', length=256),
-    Field('descripcion',type='string'),
-    Field('ci_usuario',db.USUARIO.ci),
-    primarykey=['accion','accion_fecha','accion_ip'],
-    migrate=False
-);
-
-
-db.define_table('PARTICIPA_ACT',
-    Field('ci_usuario',db.USUARIO.ci),
-    Field('id_actividad',db.ACTIVIDAD.id_actividad),
-    primarykey=['ci_usuario','id_actividad'],
-    migrate=False
-);
-
-db.define_table('TIENE_CAMPO',
-    Field('id_actividad',db.ACTIVIDAD.id_actividad),
-    Field('id_campo', db.CAMPO.id_campo),
-    Field('valor_campo', type='string', length=256),
-    primarykey=['id_actividad', 'id_campo'],
+db.define_table('CAMPO',
+    Field('id_campo', type='id'),
+    Field('id_catalogo', db.CATALOGO.id_catalogo),
+    Field('nombre',type='string', length=256),
+    Field('tipo_campo',type='string', length=64,
+           requires = [IS_IN_SET(tipo_campos)],
+           widget = SQLFORM.widgets.options.widget),
+    Field('obligatorio', type='boolean'),
+    primarykey=['id_campo'],
     migrate=False
 );
 
@@ -274,6 +246,23 @@ db.define_table('ACT_POSEE_CAMPO',
     Field('id_tipo_act', db.TIPO_ACTIVIDAD.id_tipo),
     Field('id_campo', db.CAMPO.id_campo),
     primarykey=['id_tipo_act', 'id_campo'],
+    migrate=False
+);
+
+db.define_table('PRODUCTO_TIENE_CAMPO',
+    Field('id_producto',db.PRODUCTO.id_producto),
+    Field('id_campo', db.CAMPO.id_campo),
+    Field('nombre',type='string', length=256),
+    Field('valor_campo', type='string', length=512),
+    primarykey=['id_producto', 'id_campo'],
+    migrate=False
+);
+
+
+db.define_table('PARTICIPA_PRODUCTO',
+    Field('ci_usuario',db.USUARIO.ci),
+    Field('id_producto',db.PRODUCTO.id_producto),
+    primarykey=['ci_usuario','id_producto'],
     migrate=False
 );
 
@@ -292,17 +281,12 @@ db.define_table('GESTIONA_CATALOGO',
     migrate=False
 );
 
-db.define_table('CATALOGO_TIENE_CAMPO',
-    Field('id_catalogo',db.CATALOGO.id_catalogo),
-    Field('id_campo_cat',db.CAMPO_CATALOGO.id_campo_cat),
-    primarykey=['id_catalogo','id_campo_cat'],
-    migrate=False
-);
-
-db.define_table('VALORES_CAMPO_CATALOGO',
-    Field('id_catalogo',db.CATALOGO.id_catalogo),
-    Field('id_campo_cat',db.CAMPO_CATALOGO.id_campo_cat),
-    Field('valor',type='string', length=256, notnull = True),
-    primarykey=['id_catalogo','id_campo_cat','valor'],
+db.define_table('LOG_SIRADEX',
+    Field('accion',type='string'),
+    Field('accion_fecha',type='date'),
+    Field('accion_ip',type='string', length=256),
+    Field('descripcion',type='string'),
+    Field('ci_usuario',db.USUARIO.ci),
+    primarykey=['accion','accion_fecha','accion_ip'],
     migrate=False
 );
