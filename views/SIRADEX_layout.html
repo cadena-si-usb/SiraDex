@@ -9,7 +9,7 @@
 		<link href="{{=URL('static', 'css/layoutStyle.css')}}" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 		<title> SIRADEX </title>
-		
+
 	</head>
 
 	<body>
@@ -18,7 +18,7 @@
 			<div id = "logo">
 				{{=IMG(_src=URL('static', 'images/banner.jpg')) }}
 			</div>
-			
+
 			<!-- Menu del headder -->
 			<nav>
 				<ul>
@@ -33,10 +33,10 @@
 				</ul>
 			</nav>
 		</header>
-			
+
 		<!-- Contenido principal de la pagina -->
 		<section class = "main">
-			
+
 			<!-- Menu de navegacion lateral -->
 			<aside>
 				<ul>
@@ -49,7 +49,7 @@
                     </li>
 					<li id="layout_aside_agregar_tipo">
                         <a href="#">
-                            Actividades
+                            Productos
                         </a>
                     </li>
 					<li id="layout_aside_validaciones">
@@ -86,19 +86,19 @@
                     </li>
 				</ul>
 			</aside>
-			
+
 			<!-- En esta seccion va todo el contenido de la pagina -->
 			<section class = "contenido">
-				
+
 				<!-- Cuando se retorne ejecute una funcion va a poner
 					 lo que esta retorne aqui -->
 				{{include}}
 
 			</section><!-- close contenido -->
-			
+
 		</section><!-- close main -->
-		
-		
+
+
 		<!-- Es un footer pues -->
 		<footer>
 			<p> Universidad Simón Bolívar </p>

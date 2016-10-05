@@ -398,7 +398,7 @@ def setVista():
     session.vista = int(request.args[0])
 
     if session.vista == 0:
-        redirect(URL(c='actividad', f='gestionar.html'))
+        redirect(URL(c='producto', f='gestionar.html'))
     elif session.vista == 1:
         redirect(URL(c='tipo_actividad', f='gestionar.html'))
     elif session.vista == 2:

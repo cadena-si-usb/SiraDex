@@ -39,7 +39,7 @@
                     {{ elif admin == 2: }}
                         <li><a href="{{=URL(c='default', f='setVista.html', args=[1])}}">DEX</a></li>
                     {{ pass }}
-                        <li><a href="{{=URL(c='default', f='setVista.html', args=[0])}}">Actividades</a></li>
+                        <li><a href="{{=URL(c='default', f='setVista.html', args=[0])}}">Productos</a></li>
                         <li><a href="{{=URL(c='default', f='vVerPerfil.html')}}">Ver Perfil</a></li>
                         <li><a href="{{=URL(c='busq_val', f='busqueda.html')}}">Búsqueda</a></li>
                         <li><a href="#">Ayuda</a></li>
@@ -64,12 +64,12 @@
                             <h4> <strong> MENÚ </strong> </h4>
                         </li>
                         {{ if session.vista == 0: }}
-			    <!--Actividades -->
+			    <!--productos -->
                             <li class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Actividades</a>
+                                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Productos</a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="{{=URL(c='actividad', f='gestionar.html')}}">Gestionar</a></li>
-                                    <li><a href="{{=URL(c='actividad', f='tipos.html')}}">Agregar</a></li>
+                                    <li><a href="{{=URL(c='producto', f='gestionar.html')}}">Gestionar</a></li>
+                                    <li><a href="{{=URL(c='producto', f='tipos.html')}}">Agregar</a></li>
                                 </ul>
                             </li>
                         {{ elif session.vista == 1: }}
@@ -85,7 +85,7 @@
                                     <li><a href="{{=URL(c='programas', f='gestionar_programas.html')}}">Modificar</a></li>
                                 </ul>
                             </li>
-                            <!-- Tipos de actividad -->
+                            <!-- Tipos de Actividad -->
                             <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tipos de Actividad</a>
                                 <ul class="dropdown-menu">
