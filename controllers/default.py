@@ -443,13 +443,9 @@ def index():
         tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa['id']).select('nombre')
         diccProgramas[programa['nombre']]=[]
         for tipo in tiposA:
-            diccProgramas[programa['nombre']].append(tipo)
+            diccProgramas[programa['nombre']].append(tipo['nombre'])
     return locals()
 
 def listaTipos():
-    print "entre"
-    print request.vars(0)
-    tipoActividades = db(db.PROGRAMA.nombre == request.vars(0)).select('nombre')
-    for tipo in tipoActividades:
-        print tipo
-    return locals()
+    print request.vars['Programa']
+    #tiposA = db(db.Programa.nombre==request.vars['nombre']).select('id')

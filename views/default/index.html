@@ -75,14 +75,14 @@
             <div id="filtros">
                 <!-- Split button -->
                 <div class="btn-group">
-                  <button type="button" class="btn" onload="ajax('{{=URL('default', 'listaProgramas')}}', [''], 'target')">Programa</button>
+                  <button type="button" class="btn" >Programa</button>
                   <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="caret"></span>
                     <span class="sr-only">Toggle Dropdown</span>
                   </button>
                   <ul class="dropdown-menu">
                       {{for x in rows:}}
-                    <li onclick="ajax('{{=URL('default', 'listaTipos')}}', [''], 'target')"><a href="#" >{{=x['nombre']}}</a></li>
+                    <li onclick="mostrarTipos('{{=diccProgramas[x['nombre']]}}')">{{=x['nombre']}}</li>
                       {{pass}}
                   </ul>
                 </div>
@@ -124,7 +124,18 @@
                 </div>                
                
             </div>
-{{end}} 
+            <form>
+                <select nombre="Programa">
+                    <option></option>
+                    {{for x in rows:}}
+                    <option value="{{=x['nombre']}}" onclick="ajax('{{=URL('default', 'listaTipos')}}', ['nombre'], '')">{{=x['nombre']}}</option>
+                    {{pass}}
+                </select>
+                <select nombre="TipoActividad" id="listaTipos">
+                </select>                
+            </form>
+</form>
+{{end}}
 
 {{block footer}}
     <div id="footer" class="container-fluid">
