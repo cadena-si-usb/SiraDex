@@ -267,3 +267,21 @@ a#disabled-dropdown:hover {
     white-space: nowrap;
     font-size: small;
 }
+
+/* Styles */
+
+.center-vertically {
+    min-height: 10em;
+    display: table-cell;
+    vertical-align: middle !important;
+}
+
+.blue {
+    color: #03A9F4;
+    font-size: 20px;
+}
+
+.red {
+    color: #F44336;
+    font-size: 20px;
+}

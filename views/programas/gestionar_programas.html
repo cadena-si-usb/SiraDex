@@ -1,15 +1,41 @@
 {{extend 'layoutSIRADEXloged.html'}}
 
 {{block titulo}}
-<h2><center> Programas Registrados en el Sistema </center></h2>
+<h2><center> Programas Registrados en el Sistema</center></h2>
 {{end}}
 
 {{block contenido}}
-    <a href="{{=URL(c='programas', f='agregar_programa.html')}}">
-        {{=IMG(_src=URL('static', 'icon/i_add.png'),_height='20'), }}
-        Agregar Programa
-    </a>
-    <br><br>
+    <br>
+    <div class="row">
+        <div class="col-sm-6">
+             <form class="navbar-form" role="search">
+                <div class="input-group col-lg-12">
+                    <!-- barra de busqueda -->
+                        <input  type="text" 
+                                class="form-control" 
+                                placeholder="Buscar Productos"
+                                id="form-busqueda">
+
+                    <!-- Lupa -->
+                    <span class="input-group-btn">
+                        <button type="submit" 
+                                class="btn btn-default glyphicon glyphicon-search"
+                                id="btn-lupa">
+                        </button>
+                    </span>
+                 </div>
+            </form>
+        </div>
+        <div class="col-sm-6 col-sm-push-4" style="margin-top:10px;">
+ <!--            <button type="button" class="btn btn-success btn">
+              <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Programa
+            </button>
+           <a href="{{=URL(c='programas', f='agregar_programa.html')}}">
+                {{=IMG(_src=URL('static', 'icon/i_add.png'),_height='30'), }}
+                </a> -->
+        </div>
+    </div>
+    <br>
     <div class="container-fluid">
     <table class="table table-striped table-condensed table-hover sortable">
         <thead>
@@ -28,8 +54,10 @@
             <tr>
                 <td> {{=programa.nombre}}</td>
                 <td> {{=programa.descripcion}}</td>
-                <td> <center> {{=IMG(_src=URL('static', 'icon/i_edit_disable.png'),_height='25'), }} </center></td>
-                <td> <center> {{=IMG(_src=URL('static', 'icon/i_delete.png'),_height='25'), }} </center> </td>
+<!---                <td> <center> {{=IMG(_src=URL('static', 'icon/i_edit_disable.png'),_height='25'), }} </center></td>
+                     <td> <center> {{=IMG(_src=URL('static', 'icon/i_delete.png'),_height='25'), }} </center> </td>      -->
+                <td class="center-vertically"> <center> <span class="glyphicon glyphicon-edit blue"></i> </span> <center></td>
+                <td class="center-vertically"><center><span class="glyphicon glyphicon-remove red" aria-hidden="true"></span><center></td>
             </tr>
             {{pass}}
          {{pass}}
