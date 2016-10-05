@@ -282,26 +282,26 @@ a#disabled-dropdown:hover {
 
 .green {
     color: #286090 !important;
-    background-color: #FAFAFA !important;
+    background-color: #FFFFFF !important;
     border: 1px solid #286090 !important;
 }
 
 .green:hover {
-    color: #FAFAFA !important;
+    color: #FFFFFF !important;
     background-color: #286090 !important;
     border: 1px solid #286090 !important;
     
 }
 
 .blue-add {
-    color: #FAFAFA !important;
+    color: #FFFFFF !important;
     background-color: #286090 !important;
     border: 1px solid #286090 !important;
 }
 
 .blue-add:hover {
     color: #286090 !important;
-    background-color: #FAFAFA !important;
+    background-color: #FFFFFF !important;
     border: 1px solid #286090 !important;
 }
 
