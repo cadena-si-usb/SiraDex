@@ -81,9 +81,6 @@
                     <span class="sr-only">Toggle Dropdown</span>
                   </button>
                   <ul class="dropdown-menu">
-                      {{for x in rows:}}
-                    <li onclick="mostrarTipos('{{=diccProgramas[x['nombre']]}}')">{{=x['nombre']}}</li>
-                      {{pass}}
                   </ul>
                 </div>
 
@@ -121,18 +118,18 @@
                   <ul class="dropdown-menu">
                     <li><a href="#">Opcion 1</a></li>
                   </ul>
-                </div>                
-               
+                </div>
+
             </div>
             <form>
-                <select nombre="Programa">
+                <select name="Programa" >
                     <option></option>
                     {{for x in rows:}}
-                    <option value="{{=x['nombre']}}" onclick="ajax('{{=URL('default', 'listaTipos')}}', ['nombre'], '')">{{=x['nombre']}}</option>
+                    <option value="{{=x['nombre']}}" onclick="ajax('{{=URL('default', 'listaTipos')}}', ['Programa'], ':eval')">{{=x['nombre']}}</option>
                     {{pass}}
                 </select>
-                <select nombre="TipoActividad" id="listaTipos">
-                </select>                
+                <select name="TipoActividad"  id="listaTipos" onclick="agregar()" >
+                </select>
             </form>
 </form>
 {{end}}
@@ -153,5 +150,12 @@
                 });
             });
 
+    function agregar(){
+        var lista = document.getElementById("listaTipos");
+        var o = document.createElement("OPTION");
+        var t = document.createTextNode("hola");
+        o.appendChild(t);
+        lista.appendChild(o);
+    };
     </script>
 {{end}}
