@@ -151,11 +151,13 @@
             });
 
     function agregar(){
-        var lista = document.getElementById("listaTipos");
-        var o = document.createElement("OPTION");
-        var t = document.createTextNode("hola");
-        o.appendChild(t);
-        lista.appendChild(o);
+
+        var lista = document.getElementById('listaTipos');
+        var o = document.createElement('option');
+        o.value="hola";
+        o.innerHTML="hola";
+        lista.appendChild(new Option("hola","hola"));
+                        alert(jQuery('#listaTipos').value());
     };
     </script>
 {{end}}
