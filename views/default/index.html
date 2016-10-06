@@ -12,7 +12,8 @@
                 <!-- EN DESARROLLO -->
                     <a 
                         class ='btn btn-xs ' 
-                        href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas'>
+                        href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas'
+                        style="border-radius:1em">
                         Iniciar Sesión
                     </a>
                 </li>
@@ -61,71 +62,27 @@
                         </span>
                     
                     <!-- Lupa -->
-                        <span class="input-group-btn">
-                            <button type="submit" 
-                                    class="btn btn-default" 
-                                    id="btn-lupa">
-                                O
-                            </button>
+                    <span class="input-group-btn">
+                        <button type="submit" 
+                                class="btn btn-default"
+                                id="btn-lupa">
+                                <span id="cable">.</span><span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
                         </span>                                        
                 </div>
             </form>
         
         <!-- Filtros -->
             <div id="filtros">
-                <!-- Split button -->
-                <div class="btn-group">
-                  <button type="button" class="btn" >Programa</button>
-                  <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="caret"></span>
-                    <span class="sr-only">Toggle Dropdown</span>
-                  </button>
-                  <ul class="dropdown-menu">
-                  </ul>
-                </div>
-
-                <!-- Split button -->
-                <div class="btn-group">
-                  <button type="button" class="btn">Tipo de Actividad</button>
-                  <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="caret"></span>
-                    <span class="sr-only">Toggle Dropdown</span>
-                  </button>
-                  <ul class="dropdown-menu" id="listaTipos">
-
-                  </ul>
-                </div>
-
-                <!-- Split button -->
-                <div class="btn-group">
-                  <button type="button" class="btn">Fecha</button>
-                  <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="caret"></span>
-                    <span class="sr-only">Toggle Dropdown</span>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li><a href="#">Opcion 1</a></li>
-                  </ul>
-                </div>                                
-                
-                <!-- Split button -->
-                <div class="btn-group">
-                  <button type="button" class="btn">Usuario</button>
-                  <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="caret"></span>
-                    <span class="sr-only">Toggle Dropdown</span>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li><a href="#">Opcion 1</a></li>
-                  </ul>
-                </div>
+                <!-- AQUI VAN LOS FILTROS -->
 
             </div>
             <form>
                 <select name="Programa" >
                     <option></option>
                     {{for x in rows:}}
-                    <option value="{{=x['nombre']}}" onclick="ajax('{{=URL('default', 'listaTipos')}}', ['Programa'], ':eval')">{{=x['nombre']}}</option>
+                    <option value="{{=x['nombre']}}" onclick="ajax('{{=URL('default', 'listaTipos')}}', ['Programa'], ':eval')">{{=nombres}}</option>
                     {{pass}}
                 </select>
                 <select name="TipoActividad"  id="listaTipos" onclick="agregar()" >

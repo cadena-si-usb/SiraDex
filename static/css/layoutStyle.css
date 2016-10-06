@@ -133,7 +133,10 @@
 		border-top-left-radius : 2em;
 		border-bottom-left-radius : 2em;	
 	}
-
+	
+	#cable{
+		color:#92D3EF;
+	}
 /**********************************/
 /*                                */
 /*          Pie de pagina         */

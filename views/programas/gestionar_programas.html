@@ -19,8 +19,9 @@
                     <!-- Lupa -->
                     <span class="input-group-btn">
                         <button type="submit" 
-                                class="btn btn-default glyphicon glyphicon-search"
+                                class="btn btn-default"
                                 id="btn-lupa">
+                                <span id="cable">.</span><span class="glyphicon glyphicon-search"></span>
                         </button>
                     </span>
                  </div>
@@ -28,7 +29,8 @@
         </div>
         <div class="col-sm-6 col-sm-push-3" style="margin-top:10px;">
             <button type="button" class="btn btn-default green btn-border" data-toggle="modal" data-target="#myModal">
-              <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Programa
+              <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> 
+              Agregar Programa
             </button>
    <!--         <a href="{{=URL(c='programas', f='agregar_programa.html')}}">
                 {{=IMG(_src=URL('static', 'icon/i_add.png'),_height='30'), }}

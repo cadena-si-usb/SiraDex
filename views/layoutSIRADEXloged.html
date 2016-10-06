@@ -82,12 +82,12 @@
                 role="button" 
                 aria-haspopup="true" 
                 aria-expanded="false"
-                style="border-radius:0.2em">
-                    {{=session.usuario['first_name']}}
+                style="border-radius:1em">
+                    {{=session.usuario['first_name'].split(' ')[0]}}
           </a>
                 <ul class="dropdown-menu" style="right:auto">
                     <li><a href="{{=URL(c='default',f='perfil')}}">Ver Perfil</a></li>
-                    <li><a href="{{=URL(c='default',f='EditarPerfil')}}">Editar Perfil</a></li>
+                    <li><a href="{{=URL(c='default',f='EditarPerfil.html')}}">Editar Perfil</a></li>
                     <li><a href="#">Mis Productos</a></li>
                     <li role="separator" class="divider"></li>
                     <li>
