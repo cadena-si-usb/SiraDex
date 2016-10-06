@@ -13,15 +13,14 @@
                     <!-- barra de busqueda -->
                         <input  type="text" 
                                 class="form-control" 
-                                placeholder="Buscar Productos"
+                                placeholder="Buscar Programa"
                                 id="form-busqueda">
 
                     <!-- Lupa -->
                     <span class="input-group-btn">
                         <button type="submit" 
-                                class="btn btn-default"
-                                id="btn-lupa">
-                                <span id="cable">.</span><span class="glyphicon glyphicon-search"></span>
+                                class="btn btn-default glyphicon glyphicon-search"
+                                id="btn-lupa" style="top:0px !important;">
                         </button>
                     </span>
                  </div>
@@ -29,8 +28,7 @@
         </div>
         <div class="col-sm-6 col-sm-push-3" style="margin-top:10px;">
             <button type="button" class="btn btn-default green btn-border" data-toggle="modal" data-target="#myModal">
-              <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> 
-              Agregar Programa
+              <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Programa
             </button>
    <!--         <a href="{{=URL(c='programas', f='agregar_programa.html')}}">
                 {{=IMG(_src=URL('static', 'icon/i_add.png'),_height='30'), }}
@@ -68,7 +66,8 @@
                 <td class="center-vertically">
                     <center>
                         <a>
-                           <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalDelete" aria-hidden="true"></span>
+                           <span data-id="{{=programa.id}}" class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalDelete"></span>
+<!-- <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalDelete" aria-hidden="true" onclick="myFunction(programa.id)"></span> -->
                         </a>
                     <center>
                 </td>
@@ -107,16 +106,18 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <center> <h4 class="modal-title">Eliminar Programa - {{=programa.nombre}}</h4> </center>
+            <center> <h4 class="modal-title">Eliminar Programa</h4> </center>
         </div>
         <div class="modal-body">
             <center> <p>Está seguro que quiere eliminar este programa.</p> </center>
-        </div>
-        <div class="modal-footer">
-          <a href="{{=URL('eliminar_programa', args=[programa.id])}}">
-              <button type="button" class="btn blue-add btn-border">Eliminar</button>
-          </a>
-          <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
+            <br>
+            <center>
+                <a href="{{=URL('eliminar_programa', args=[programa.id])}}">
+                  <button type="button" class="btn blue-add btn-border">Eliminar</button>
+                </a>
+                <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
+            </center>
+          </div>
         </div>
       </div>
     </div>

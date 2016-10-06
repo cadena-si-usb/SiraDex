@@ -6,7 +6,7 @@
 
 {{block subtitulo}}
     <!-- Nombre del usuario -->
-    Sergio Alejandro
+    {{=session.usuario['first_name'].split(' ')[0]}} {{=session.usuario['last_name'].split(' ')[0]}}
     <!-- icono editar -->
     <a id="editar" href="{{=URL(c='default',f='EditarPerfil')}}" >
     {{=IMG(_src=URL('static', 'icon', args='i_edit.png'),_style='max-height:1em') }} 
@@ -24,19 +24,46 @@
 {{end}}
 
 {{block contenido}}
+<!-- <div class="container"> -->
     <div class="row">
-        <div class="col-lg-12 center-block">
-        <ul class="list-group" id="striped-list">
+        <div class="col-md-12">
+        <!-- Nav tabs -->
+        <div class="card">
+        <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active act">
+            <a  href="#activas" 
+                aria-controls="activas" 
+                role="tab" 
+                data-toggle="tab">
+                Activas
+            </a>
+        </li>
+
+        <li role="presentation" class="esp">
+            <a  href="#espera" 
+                aria-controls="espera" 
+                role="tab" 
+                data-toggle="tab">
+                En Espera
+            </a>
+        </li>
+
+        <li role="presentation" class="rec">
+            <a  href="#rechazadas" 
+                aria-controls="rechazadas" 
+                role="tab" 
+                data-toggle="tab">
+                Rechazadas
+            </a>
+        </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
         <!-- Activas -->
-            <li class="list-group-item" id='btn-act' style="background-color: #388E3C;">
-                <h3>
-                    Activas
-                    <span class="caret"></span>
-                </h3>
-            </li>
-            <div id='dv-act'>
+        <div role="tabpanel" class="tab-pane active" id="activas">
                 {{if len(rows) == 0:}}
-                    No hay actividad que mostrar
+                    No hay programas activos
                 {{else:}}
                     <table class="table table-striped table-hover sortable">
                         <thead>
@@ -81,18 +108,60 @@
                             {{pass}}
                         </tbody>
                 {{pass}}
-            </div>
-
-        <!-- Rechazadas --> 
-            <li class="list-group-item" id='btn-rec' style="background-color: #D32F2F;">
-                <h3>
-                    Rechazadas
-                    <span class="caret"></span>
-                </h3>
-            </li>
-            <div id='dv-rec'>
+        </div>
+        <!-- Espera -->
+        <div role="tabpanel" class="tab-pane" id="espera">
                 {{if len(rows) == 0:}}
-                    No hay actividad que mostrar
+                    No hay programas en espera
+                {{else:}}
+                    <table class="table table-striped table-hover sortable">
+                        <thead>
+                            <tr>
+                                <th>Participantes</th>
+                                <th>Tipo Actividad</th>
+                                <th>Detalles</th>
+                                <th>Creación</th>
+                                <th>Modificación</th>
+                                <th>Estado</th>
+                                <th> </th>
+                            </tr>
+                        </thead>
+                        <tbody id="actividades">
+                            {{for x in rows:}}
+                            {{if x.validacion == 'En espera':}}
+                            <tr>
+                                <td> {{=x.ci_usuario_crea}}</td>
+                                <td> {{=x.id_tipo}}</td>
+                                <td>  
+                                    <div class="detalles">
+                                        {{for det in detalles[x].items():}}
+                                        {{if len(str(det[1])) > 25:}}
+                                            <b>{{=det[0]}}: </b>{{=str(det[1])[0:25]}}<br>
+                                        {{else:}}
+                                            <b>{{=det[0]}}: </b>{{=det[1]}}<br>
+                                        {{pass}}
+                                        {{pass}}
+                                    </div>
+                                </td>
+                                <td> 00/Ene/0000</td>
+                                <td> <!-- Modificacion --></td>
+                                <td>{{=IMG(_src=URL('static', 'iconos/clock.png'),_height='50',_title="En Espera") }}</td>
+                                <!-- Boton Modificar -->
+                                <td> <a href="{{=URL('modificar',args=x.id)}}">{{=IMG(_src=URL('static', 'iconos/i_edit.png'),_height='25',_title="Modificar") }}</a></td>
+                                <!-- Boton Descargar -->
+                                <td> {{=IMG(_src=URL('static', 'iconos/i_download.png'),_height='25',_title="Descargar") }}</td>
+                                <!-- Boton Eliminar -->
+                                <td> <a onClick = "if(confirm('¿Está seguro de que desea eliminar esta actividad?')) {window.location.href = '{{=URL(f='eliminar',args=[ x.id ] )}}';}">{{=IMG(_src=URL('static', 'icon/Delete.png'),_height='25',_title="Eliminar") }}</a></td>
+                            </tr>                            
+                            {{pass}}
+                            {{pass}}
+                        </tbody>
+                {{pass}}
+        </div>
+        <!-- Rechazadas -->
+        <div role="tabpanel" class="tab-pane" id="rechazadas">
+            {{if len(rows) == 0:}}
+                    No hay programas rechazados
                 {{else:}}
                     <table class="table table-striped table-hover sortable">
                         <thead>
@@ -138,71 +207,17 @@
                             {{pass}}
                         </tbody>
                 {{pass}}
-            </div>       
-
-        <!-- En Espera -->
-            <li class="list-group-item" id='btn-esp' style="background-color: #455A64;">
-                <h3>
-                    En Espera
-                    <span class="caret"></span>
-                </h3>
-            </li>
-            <div id='dv-esp'>
-                {{if len(rows) == 0:}}
-                    No hay actividad que mostrar
-                {{else:}}
-                    <table class="table table-striped table-hover sortable">
-                        <thead>
-                            <tr>
-                                <th>Participantes</th>
-                                <th>Tipo Actividad</th>
-                                <th>Detalles</th>
-                                <th>Creación</th>
-                                <th>Modificación</th>
-                                <th>Estado</th>
-                                <th> </th>
-                            </tr>
-                        </thead>
-                        <tbody id="actividades">
-                            {{for x in rows:}}
-                            {{if x.validacion == 'En espera':}}
-                            <tr>
-                                <td> {{=x.ci_usuario_crea}}</td>
-                                <td> {{=x.id_tipo}}</td>
-                                <td>  
-                                    <div class="detalles">
-                                        {{for det in detalles[x].items():}}
-                                        {{if len(str(det[1])) > 25:}}
-                                            <b>{{=det[0]}}: </b>{{=str(det[1])[0:25]}}<br>
-                                        {{else:}}
-                                            <b>{{=det[0]}}: </b>{{=det[1]}}<br>
-                                        {{pass}}
-                                        {{pass}}
-                                    </div>
-                                </td>
-                                <td> 00/Ene/0000</td>
-                                <td> <!-- Modificacion --></td>
-                                <td>{{=IMG(_src=URL('static', 'iconos/clock.png'),_height='50',_title="En Espera") }}</td>
-                                <!-- Boton Modificar -->
-                                <td> <a href="{{=URL('modificar',args=x.id)}}">{{=IMG(_src=URL('static', 'iconos/i_edit.png'),_height='25',_title="Modificar") }}</a></td>
-                                <!-- Boton Descargar -->
-                                <td> {{=IMG(_src=URL('static', 'iconos/i_download.png'),_height='25',_title="Descargar") }}</td>
-                                <!-- Boton Eliminar -->
-                                <td> <a onClick = "if(confirm('¿Está seguro de que desea eliminar esta actividad?')) {window.location.href = '{{=URL(f='eliminar',args=[ x.id ] )}}';}">{{=IMG(_src=URL('static', 'icon/Delete.png'),_height='25',_title="Eliminar") }}</a></td>
-                            </tr>                            
-                            {{pass}}
-                            {{pass}}
-                        </tbody>
-                {{pass}}            
-            </div>
-        
-        </ul>
-            
         </div>
+        </div>
+        </div>
+        </div>
+        </div>
+
+
     <a href ="{{=URL('tipos')}}" id="sombra"> 
     {{=IMG(_src=URL('static', 'icon/i_add.png'),_height='55',_alt='Agregar Producto') }}
     </a>
-    </div>
+<!-- </div> -->
 
 <!-- ESTABA AL FINAL PARA LA PAGINACION
       <div class="col-md-12 text-center">

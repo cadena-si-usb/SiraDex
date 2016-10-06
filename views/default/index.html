@@ -12,8 +12,7 @@
                 <!-- EN DESARROLLO -->
                     <a 
                         class ='btn btn-xs ' 
-                        href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas'
-                        style="border-radius:1em">
+                        href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas'>
                         Iniciar Sesión
                     </a>
                 </li>
@@ -82,7 +81,7 @@
                 <select name="Programa" >
                     <option></option>
                     {{for x in rows:}}
-                    <option value="{{=x['nombre']}}" onclick="ajax('{{=URL('default', 'listaTipos')}}', ['Programa'], ':eval')">{{=nombres}}</option>
+                    <option value="{{=x['nombre']}}" onclick="ajax('{{=URL('default', 'listaTipos')}}', ['Programa'], ':eval')">{{=x['nombre']}}</option>
                     {{pass}}
                 </select>
                 <select name="TipoActividad"  id="listaTipos" onclick="agregar()" >

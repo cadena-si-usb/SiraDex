@@ -7,7 +7,7 @@
 {{block subtitulo}}
     <!-- Nombre del usuario -->
     <!-- Sergio Alejandro -->
-    {{=session.usuario['first_name']}}
+    {{=session.usuario['first_name'].split(' ')[0]}} {{=session.usuario['last_name'].split(' ')[0]}}
     <!-- icono editar -->
     <a id="editar" href="{{=URL('EditarPerfil')}}" >
     {{=IMG(_src=URL('static', 'icon', args='i_edit.png'),_style='max-height:1em') }} 
@@ -30,67 +30,76 @@
 
 {{block contenido}}
     <div class="row">
-        <div class="col-lg-12 center-block">
-        <ul class="list-group" id="striped-list">
-        <!-- Activas -->
-            <li class="list-group-item" id='btn-act' style="background-color: #319600;">
-                <h3>
-                    Activas
-                    <span class="caret"></span>
-                </h3>
-            </li>
-            <div id='dv-act'>
-                <ul class="list-group" id="striped-sublist">
-                    <li class="list-group-item">Actividad 1</li>
-                    <li class="list-group-item">Actividad 2</li>
-                    <li class="list-group-item">Actividad 3</li>
-                    <li class="list-group-item">Actividad 4</li>
-                    <li class="list-group-item">Actividad 5</li>
-                </ul>
-            </div>
-       
-        <!-- En Espera -->
-            <li class="list-group-item" id='btn-esp' style="background-color: #02486E;">
-                <h3>
-                    En Espera
-                    <span class="caret"></span>
-                </h3>
-            </li>
-            <div id='dv-esp'>
-                <ul class="list-group" id="striped-sublist">
-                    <li class="list-group-item">Actividad 1</li>
-                    <li class="list-group-item">Actividad 2</li>
-                    <li class="list-group-item">Actividad 3</li>
-                    <li class="list-group-item">Actividad 4</li>
-                    <li class="list-group-item">Actividad 5</li>
-                </ul>
-            </div>
+        <div class="col-md-12">
+        <!-- Nav tabs -->
+        <div class="card">
+        <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active act">
+            <a  href="#activas" 
+                aria-controls="activas" 
+                role="tab" 
+                data-toggle="tab">
+                Activas
+            </a>
+        </li>
         
-        <!-- Rechazadas --> 
-            <li class="list-group-item" id='btn-rec' style="background-color: #F90031;">
-                <h3>
-                    Rechazadas
-                    <span class="caret"></span>
-                </h3>
-            </li>
-            <div id='dv-rec'>
-                <ul class="list-group" id="striped-sublist">
-                    <li class="list-group-item">Actividad 1</li>
-                    <li class="list-group-item">Actividad 2</li>
-                    <li class="list-group-item">Actividad 3</li>
-                    <li class="list-group-item">Actividad 4</li>
-                    <li class="list-group-item">Actividad 5</li>
-                </ul>
-            </div>
+        <li role="presentation" class="esp">
+            <a  href="#espera" 
+                aria-controls="espera" 
+                role="tab" 
+                data-toggle="tab">
+                En Espera
+            </a>
+        </li>
+
+        <li role="presentation" class="rec">
+            <a  href="#rechazadas" 
+                aria-controls="rechazadas" 
+                role="tab" 
+                data-toggle="tab">
+                Rechazadas
+            </a>
+        </li>
         </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+        <!-- Activas -->
+        <div role="tabpanel" class="tab-pane active" id="activas">
+        <ul>
             
-         <button type="button" class="btn btn-default center-block">
-        <a href="{{=URL(c='actividad',f='gestionar')}}">
-            Ver Todas Mis Actividades
-        </a>
-         </button>
+            <li>Actividades Activas</li>
+            <li>Actividades Activas</li>
+            <li>Actividades Activas</li>
+            <li>Actividades Activas</li>
+            <li>Actividades Activas</li>
+        </ul>
         </div>
-    </div>
+        <!-- Espera -->
+        <div role="tabpanel" class="tab-pane" id="espera">
+            <li>Actividades en espera</li>
+            <li>Actividades en espera</li>
+            <li>Actividades en espera</li>
+            <li>Actividades en espera</li>
+            <li>Actividades en espera</li>
+        </div>
+        <!-- Rechazadas -->
+        <div role="tabpanel" class="tab-pane" id="rechazadas">
+            <li>Actividades Rechazadas</li>
+            <li>Actividades Rechazadas</li>
+            <li>Actividades Rechazadas</li>
+            <li>Actividades Rechazadas</li>
+            <li>Actividades Rechazadas</li>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        <a href="{{=URL(c='actividad',f='gestionar')}}">        
+            <button type="button" class="btn btn-default green btn-border center-block" data-toggle="modal" data-target="#myModal">
+                Ver Todas Mis Actividades
+            </button>
+        </a>
 {{end}}                                    
 
 {{block script}}

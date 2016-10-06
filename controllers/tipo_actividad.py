@@ -273,10 +273,10 @@ def eliminar_campo():
     redirect(URL('agregar_tipo_campos.html'))
 
 def modificar_tipo():
-    id_tipo = int(request.args[0])
+    id_tipo = request.args[0]
 
-    tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
-
+    tipo = db(db.TIPO_ACTIVIDAD.id_tipo == int(id_tipo)).select(db.TIPO_ACTIVIDAD.ALL).first()
+    print "tipo",tipo
     db.TIPO_ACTIVIDAD.nombre.writable = False
     db.TIPO_ACTIVIDAD.id_programa.writable = False
 
