@@ -1,34 +1,38 @@
-{{#extend 'SIRADEX_tipos_Actividad_layout.html'}}
-{{extend 'SIRADEXLayout.html'}}
+{{extend 'layoutSIRADEXloged.html'}}
 
-<head>
-    {{response.files.append(URL('static','css/agregarTipo.css')) }}
-    <link href="{{=URL('static', 'css/agregarTipo.css')}}" rel="stylesheet" type="text/css" />
-</head>
+{{block titulo}}
+    Tipos de actividad
+{{end}}
 
+{{block subtitulo}}
+   Gestión de Tipos de Actividad
+{{end}}
 
-<!-- Vaina loca que hizo Diego -->
-<article>
-    <div class = "session_message">
-        {{= session.message or ''}}
-        {{ session.message = '' }}
+{{block descripcion}}
+    <div class="row"> 
+        <div class="col-lg-12">
+            <div class = "session_message">
+                {{= session.message or ''}}
+                {{ session.message = '' }}
+            </div>
+            <p class="text-justify">
+            <h4>
+                <a href="{{=URL(a='SiraDex', c='tipo_actividad', f='gestionar_archivo_historico.html')}}">
+                    <span class="glyphicon glyphicon glyphicon-file" aria-hidden="true"></span>
+                    Archivo Histórico
+                </a>
+            </h4>                          
+            </p>
+        </div>
     </div>
-    <h3 id="titulo">
-        Gestión de Tipos de Actividad
-    </h3>
-    <br/>
-    <h4>
-        <a href="{{=URL(a='SiraDex', c='tipo_actividad', f='agregar_tipo.html')}}">
-            {{=IMG(_src=URL('static', 'iconos/Add_26x26.png')) }}
-            Agregar Tipo de Actividad
-        </a>
-    </h4>
-    <h4>
-        <a href="{{=URL(a='SiraDex', c='tipo_actividad', f='gestionar_archivo_historico.html')}}">
-            {{=IMG(_src=URL('static', 'iconos/Delete.png')) }}
-            Archivo Histórico
-        </a>
-    </h4>
+{{end}}
+
+{{block contenido}}
+    <div class="row">
+        <div class="col-md-12">
+<!-- Vaina loca que hizo Diego -->
+
+<article>
 </article>
 
 <div>
@@ -37,27 +41,82 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th class="col-md-4">Nombre</td>
-                <th class="col-md-7">Descripción</td>
+                <th class="col-md-3">Nombre</td>
+                <th class="col-md-4 ">Descripción</td>
                 <th class="col-md-1"> </td>
             </tr>
         </thead>
         <tbody>
-            {{for tipo in tipos:}}
+            {{if len(tipos) == 0:}}
                 <tr>
-                    <td class="col-md-4">
-                        <a href="{{=URL(f='ver_tipo_actividad.html', args=[tipo.id_tipo])}}">
-                            {{ =tipo.nombre}}
+                <td>
+                    No hay Tipos de Actividad creados
+                </td>
+            {{else:}}        
+                {{for tipo in tipos:}}
+                    <tr>
+                        <td class="col-md-3">
+                            <a href="{{=URL(f='ver_tipo_actividad', args=[tipo.id_tipo])}}">
+                                {{ =tipo.nombre}}
+                            </a>
+                        </td>
+                        <td class="col-md-4">{{ =tipo.descripcion}}</td>
+                        
+                        <td class="center-vertically">
+                        <a href="{{=URL(c='tipo_actividad', f='modificar_tipo', args=[tipo.id_tipo])}}">
+                            <span class="glyphicon glyphicon-edit blue"></span>
                         </a>
-                    </td>
-                    <td class="col-md-7">{{ =tipo.descripcion}}</td>
-                    <td class="col-md-1">
-                        <input id="icono" type="image" src="{{=URL('static', 'iconos/Delete.png')}}"
-                               onClick="if(confirm('¿Está seguro que desea enviar al Archivo Histórico este tipo de actividad?'))
-                                        {window.location.href = '{{=URL(f='enviar_tipo_papelera.html', args=[ tipo.id_tipo ] )}}';}">
-                    </td>
-                </tr>
+                        <a>
+                           <span data-id="{{=tipo.id_tipo}}" class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalDelete"></span>
+                        </a>
+                        </td>
+                        </td>
+                    </tr>
+                {{pass}}
             {{pass}}
         </tbody>
     </table>
+
+
+    <a href ="{{=URL(a='SiraDex', c='tipo_actividad', f='agregar_tipo.html')}}" id="sombra"> 
+    {{=IMG(_src=URL('static', 'icon/i_add.png'),_height='55',_alt='Agregar Producto') }}
+    </a>
 </div>
+        
+        </div>
+    </div>
+
+
+
+
+<!-- PRUEBA MODALS PEQUENOS -->
+<div class="container">
+  <!-- Modal -->
+  <div class="modal fade" id="myModalDelete" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <center> <h4 class="modal-title">Eliminar Actividad </h4> </center>
+        </div>
+        
+        <div class="modal-body">
+            <center> <p>Está seguro que quiere eliminar este programa.</p> </center>
+        </div>
+        
+        <div class="modal-footer">
+          <a href="{{=URL(f='enviar_tipo_papelera.html', args=[tipo.id_tipo])}}">
+              <button type="button" class="btn blue-add btn-border">Eliminar</button>
+          </a>
+          <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
+
+{{end}}                                    
+
+{{block script}}
+{{end}}

@@ -273,21 +273,12 @@ def eliminar_campo():
     redirect(URL('agregar_tipo_campos.html'))
 
 def modificar_tipo():
-    id_tipo = int(request.args[0])
 
-    tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
+    tipo = db.TIPO_ACTIVIDAD(int(request.args(0)))
 
-    db.TIPO_ACTIVIDAD.nombre.writable = False
-    db.TIPO_ACTIVIDAD.id_programa.writable = False
-
-    form = SQLFORM.factory(db.TIPO_ACTIVIDAD, record=tipo,
-                   fields = ['nombre', 'tipo_p_r', 'descripcion', 'id_programa'],
-                   labels={'tipo_p_r': 'Tipo de Producto','descripcion':'Descripción'},
-                   submit_button='Relizar Cambios'
-                   )
-
-    db.TIPO_ACTIVIDAD.nombre.writable = True
-    db.TIPO_ACTIVIDAD.id_programa.writable = True
+    form = SQLFORM(db.TIPO_ACTIVIDAD, record=tipo)
+    form.element('#TIPO_ACTIVIDAD_nombre')['_readonly']=True
+    form.element('#TIPO_ACTIVIDAD_id_programa')['_readonly']=True
 
     # Metodos POST
     # En caso de que los datos del formulario sean aceptados
