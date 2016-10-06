@@ -82,10 +82,10 @@
                 <select name="Programa" >
                     <option></option>
                     {{for x in rows:}}
-                    <option value="{{=x['nombre']}}" onclick="ajax('{{=URL('default', 'listaTipos')}}', ['Programa'], ':eval')">{{=nombres}}</option>
+                    <option value="{{=x['nombre']}}" onclick="agregar('{{=x['nombre']}}')">{{=x['nombre']}}</option>
                     {{pass}}
                 </select>
-                <select name="TipoActividad"  id="listaTipos" onclick="agregar()" >
+                <select name="TipoActividad"  id="listaTipos" >
                 </select>
             </form>
 </form>
@@ -107,12 +107,14 @@
                 });
             });
 
-    function agregar(){
-        var lista = document.getElementById("listaTipos");
-        var o = document.createElement("OPTION");
-        var t = document.createTextNode("hola");
-        o.appendChild(t);
-        lista.appendChild(o);
+    function agregar(x){
+        alert(x);
+        var programa = "";
+        for(i in Object.keys(x)){programa += x;
+                                break;}
+        alert(programa);
+        alert({{=dicc['programa1']}})
+
     };
     </script>
 {{end}}

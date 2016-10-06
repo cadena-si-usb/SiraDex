@@ -460,11 +460,18 @@ def cambiar_colores():
     return dict()
 
 def index():
-    rows = db(db.PROGRAMA).select()
+    rows = db(db.PROGRAMA).select().as_list()
+    print rows
+    dicc = dict()
+    for programa in rows:
+        tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa['id_programa']).select().as_list()
+        dicc[programa['nombre']] = []
+        for tipo in tiposA:
+            dicc[programa['nombre']].append(tipo['nombre'])
     return locals()
 
 def listaTipos():
-
+    jQuery('#a').append(SPAN('hola'))
     programa = db(db.PROGRAMA.nombre==request.vars.Programa).select().first()
 
     tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa.id_programa).select('nombre')
@@ -475,7 +482,10 @@ def listaTipos():
 
     for tipo in tiposA:
         option = tipo.nombre
+        print option
+        jQuery('#listaTipos').append(OPTION(tipo.nombre, _value=tipo.nombre))
         listaOption+= option1 + option + option2 + option + option3
+
     #return "jQuery('#listaTipos').append('hola')"
 
     #print listaOption
