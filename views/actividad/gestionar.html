@@ -68,7 +68,7 @@
                 {{if cant_val == 0:}}
                     No hay programas Activos
                 {{else:}}
-                    <table class="table table-striped table-hover">
+                    <table class="table table-striped table-condensed table-hover sortable">
                         <thead>
                             <tr>
                                 <th>Participantes</th>
@@ -76,14 +76,17 @@
                                 <th>Detalles</th>
                                 <th>Creación</th>
                                 <th>Modificación</th>
+                                <th>Editar</th>
+                                <th>Descargar</th>
+                                <th>Eliminar</th>
                         </thead>                
                         <tbody id="actividades">
                             {{for x in rows:}}
                                 {{if x.validacion == 'Validada':}}
                                 <tr>
-                                    <td> {{=x.ci_usuario_crea}}</td>
-                                    <td> {{=x.id_tipo}}</td>
-                                    <td>  
+                                    <td class="center-vertically"> {{=x.ci_usuario_crea}}</td>
+                                    <td class="center-vertically"> {{=x.id_tipo}}</td>
+                                    <td class="center-vertically">  
                                         <div class="detalles">
                                         {{for det in detalles[x].items():}}
                                         {{if len(str(det[1])) > 25:}}
@@ -94,14 +97,32 @@
                                         {{pass}}
                                         </div>
                                     </td>
-                                    <td><!--   Creacion    --> 00/Ene/0000</td>
-                                    <td> <!-- Modificacion --> 00/Ene/0000</td>
+                                    <td class="center-vertically"><!--   Creacion    --> 00/Ene/0000</td>
+                                    <td class="center-vertically"> <!-- Modificacion --> 00/Ene/0000</td>
                                     <!-- Boton Modificar -->
-                                    <td> <a href="{{=URL('modificar',args=x.id)}}">{{=IMG(_src=URL('static', 'icon/i_edit.png'),_height='25',_title="Modificar") }}</a></td>
+                                    <td class="center-vertically"> 
+                                    <center>
+                                    <a href="{{=URL('modificar',args=x.id)}}">
+                                    <!-- {{=IMG(_src=URL('static', 'icon/i_edit.png'),_height='25',_title="Modificar") }} -->
+                                    <span class="glyphicon glyphicon-edit green-icn"></span>
+                                    </a>
+                                    </center>
+                                    </td>
                                     <!-- Boton Descargar -->
-                                    <td>{{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }}</td>
+                                    <td class="center-vertically">
+                                    <center>
+                                    <!-- {{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }} -->
+                                    <span class="glyphicon glyphicon-save blue"></span>
+                                    </center>
+                                    </td>
                                     <!-- Boton Eliminar -->
-                                    <td> <a onClick = "if(confirm('¿Está seguro de que desea eliminar esta actividad?')) {window.location.href = '{{=URL(f='eliminar',args=[ x.id ] )}}';}">{{=IMG(_src=URL('static', 'icon/i_delete.png'),_height='25',_title="Eliminar") }}</a>
+                                    <td class="center-vertically">
+                                    <center>
+                                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar esta actividad?')) {window.location.href = '{{=URL(f='eliminar',args=[ x.id ] )}}';}">
+                                    <!-- {{=IMG(_src=URL('static', 'icon/i_delete.png'),_height='25',_title="Eliminar") }} -->
+                                    <span class="glyphicon glyphicon-remove red"></span>
+                                    </a>
+                                    </center>
                                     </td>
                                 </tr>                            
                                 {{pass}}
@@ -124,14 +145,17 @@
                                 <th>Detalles</th>
                                 <th>Creación</th>
                                 <th>Modificación</th>
+                                <th>Editar</th>
+                                <th>Descargar</th>
+                                <th>Eliminar</th>                                
                         </thead>                
                         <tbody id="actividades">
                             {{for x in rows:}}
                                 {{if x.validacion == 'En espera':}}
                                 <tr>
-                                    <td> {{=x.ci_usuario_crea}}</td>
-                                    <td> {{=x.id_tipo}}</td>
-                                    <td>  
+                                    <td class="center-vertically"> {{=x.ci_usuario_crea}}</td>
+                                    <td class="center-vertically"> {{=x.id_tipo}}</td>
+                                    <td class="center-vertically">  
                                         <div class="detalles">
                                         {{for det in detalles[x].items():}}
                                         {{if len(str(det[1])) > 25:}}
@@ -142,16 +166,34 @@
                                         {{pass}}
                                         </div>
                                     </td>
-                                    <td><!--   Creacion    --> 00/Ene/0000</td>
-                                    <td> <!-- Modificacion --> 00/Ene/0000</td>
+                                    <td class="center-vertically"><!--   Creacion    --> 00/Ene/0000</td>
+                                    <td class="center-vertically"> <!-- Modificacion --> 00/Ene/0000</td>
                                     <!-- Boton Modificar -->
-                                    <td> <a href="{{=URL('modificar',args=x.id)}}">{{=IMG(_src=URL('static', 'icon/i_edit.png'),_height='25',_title="Modificar") }}</a></td>
-                                    <!-- Boton Descargar -->
-                                    <td>{{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }}</td>
-                                    <!-- Boton Eliminar -->
-                                    <td> <a onClick = "if(confirm('¿Está seguro de que desea eliminar esta actividad?')) {window.location.href = '{{=URL(f='eliminar',args=[ x.id ] )}}';}">{{=IMG(_src=URL('static', 'icon/i_delete.png'),_height='25',_title="Eliminar") }}</a>
+                                    <td class="center-vertically"> 
+                                    <center>
+                                    <a href="{{=URL('modificar',args=x.id)}}">
+                                    <!-- {{=IMG(_src=URL('static', 'icon/i_edit.png'),_height='25',_title="Modificar") }} -->
+                                    <span class="glyphicon glyphicon-edit green-icn"></span>
+                                    </a>
+                                    </center>
                                     </td>
-                                </tr>                            
+                                    <!-- Boton Descargar -->
+                                    <td class="center-vertically">
+                                    <center>
+                                    <!-- {{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }} -->
+                                    <span class="glyphicon glyphicon-save blue"></span>
+                                    </center>
+                                    </td>
+                                    <!-- Boton Eliminar -->
+                                    <td class="center-vertically">
+                                    <center>
+                                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar esta actividad?')) {window.location.href = '{{=URL(f='eliminar',args=[ x.id ] )}}';}">
+                                    <!-- {{=IMG(_src=URL('static', 'icon/i_delete.png'),_height='25',_title="Eliminar") }} -->
+                                    <span class="glyphicon glyphicon-remove red"></span>
+                                    </a>
+                                    </center>
+                                    </td>
+                                </tr>                             
                                 {{pass}}
                             {{pass}}
                         </tbody>
@@ -172,14 +214,17 @@
                                 <th>Detalles</th>
                                 <th>Creación</th>
                                 <th>Modificación</th>
+                                <th>Editar</th>
+                                <th>Descargar</th>
+                                <th>Eliminar</th>                                   
                         </thead>                
                         <tbody id="actividades">
                             {{for x in rows:}}
                                 {{if x.validacion == 'Rechazada':}}
                                 <tr>
-                                    <td> {{=x.ci_usuario_crea}}</td>
-                                    <td> {{=x.id_tipo}}</td>
-                                    <td>  
+                                    <td class="center-vertically"> {{=x.ci_usuario_crea}}</td>
+                                    <td class="center-vertically"> {{=x.id_tipo}}</td>
+                                    <td class="center-vertically">  
                                         <div class="detalles">
                                         {{for det in detalles[x].items():}}
                                         {{if len(str(det[1])) > 25:}}
@@ -190,16 +235,34 @@
                                         {{pass}}
                                         </div>
                                     </td>
-                                    <td><!--   Creacion    --> 00/Ene/0000</td>
-                                    <td> <!-- Modificacion --> 00/Ene/0000</td>
+                                    <td class="center-vertically"><!--   Creacion    --> 00/Ene/0000</td>
+                                    <td class="center-vertically"> <!-- Modificacion --> 00/Ene/0000</td>
                                     <!-- Boton Modificar -->
-                                    <td> <a href="{{=URL('modificar',args=x.id)}}">{{=IMG(_src=URL('static', 'icon/i_edit.png'),_height='25',_title="Modificar") }}</a></td>
-                                    <!-- Boton Descargar -->
-                                    <td>{{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }}</td>
-                                    <!-- Boton Eliminar -->
-                                    <td> <a onClick = "if(confirm('¿Está seguro de que desea eliminar esta actividad?')) {window.location.href = '{{=URL(f='eliminar',args=[ x.id ] )}}';}">{{=IMG(_src=URL('static', 'icon/i_delete.png'),_height='25',_title="Eliminar") }}</a>
+                                    <td class="center-vertically"> 
+                                    <center>
+                                    <a href="{{=URL('modificar',args=x.id)}}">
+                                    <!-- {{=IMG(_src=URL('static', 'icon/i_edit.png'),_height='25',_title="Modificar") }} -->
+                                    <span class="glyphicon glyphicon-edit green-icn"></span>
+                                    </a>
+                                    </center>
                                     </td>
-                                </tr>                            
+                                    <!-- Boton Descargar -->
+                                    <td class="center-vertically">
+                                    <center>
+                                    <!-- {{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }} -->
+                                    <span class="glyphicon glyphicon-save blue"></span>
+                                    </center>
+                                    </td>
+                                    <!-- Boton Eliminar -->
+                                    <td class="center-vertically">
+                                    <center>
+                                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar esta actividad?')) {window.location.href = '{{=URL(f='eliminar',args=[ x.id ] )}}';}">
+                                    <!-- {{=IMG(_src=URL('static', 'icon/i_delete.png'),_height='25',_title="Eliminar") }} -->
+                                    <span class="glyphicon glyphicon-remove red"></span>
+                                    </a>
+                                    </center>
+                                    </td>
+                                </tr>                           
                                 {{pass}}
                             {{pass}}
                         </tbody>

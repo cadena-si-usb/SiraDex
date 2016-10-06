@@ -167,9 +167,6 @@
     margin-left: 93%;
 	}
 	
-	.btn-act{
-		background-color: #000;
-	}
 
 /**********************************/
 /*                                */
@@ -266,6 +263,19 @@
 	    
 	}
 
+	.green-icn {
+	    color:  #7CB342 !important;
+	    background-color: #FAFAFA !important;
+	    border: 0px solid #286090 !important;
+	}
+
+	.green-icn:hover {
+	    color:  #629131 !important;
+	    background-color: none !important;
+	    border: 0px solid #286090 !important;
+	    
+	}	
+
 	.blue-add {
 	    color: #FAFAFA !important;
 	    background-color: #286090 !important;
@@ -282,6 +292,11 @@
 	    color: #03A9F4 !important;
 	    font-size: 20px;
 	}
+
+	.blue:hover{
+	    color: #3287AD !important;
+	    font-size: 20px;
+	}	
 
 	.red {
 	    color: #F44336;
