@@ -17,6 +17,9 @@ def gestionar():
 
     rows = db(db.ACTIVIDAD.ci_usuario_crea==session.usuario['cedula']).select()
     detalles = {}
+    cant_esp = 0
+    cant_val = 0
+    cant_rec = 0
 
     for row in rows:
         dict_campos = dict()
@@ -27,6 +30,13 @@ def gestionar():
             dict_campos[campo.CAMPO.nombre] = campo.TIENE_CAMPO.valor_campo
 
         detalles[row] = dict_campos
+
+        if row["validacion"] == "En espera":
+            cant_esp += 1
+        elif row["validacion"] == "Validada":
+            cant_val += 1 
+        elif row["validacion"] == "Rechazada":
+            cant_rec += 1
 
     return locals()
 
