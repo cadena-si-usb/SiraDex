@@ -30,6 +30,7 @@
         <!-- Nav tabs -->
         <div class="card">
         <ul class="nav nav-tabs" role="tablist">
+        <!-- Activas -->
         <li role="presentation" class="active act">
             <a  href="#activas" 
                 aria-controls="activas" 
@@ -38,7 +39,8 @@
                 Activas
             </a>
         </li>
-
+        
+        <!-- Espera -->
         <li role="presentation" class="esp">
             <a  href="#espera" 
                 aria-controls="espera" 
@@ -48,6 +50,7 @@
             </a>
         </li>
 
+        <!-- Rechazadas -->
         <li role="presentation" class="rec">
             <a  href="#rechazadas" 
                 aria-controls="rechazadas" 
@@ -61,7 +64,7 @@
         <!-- Tab panes -->
         <div class="tab-content">
         <!-- Activas -->
-        <div role="tabpanel" class="tab-pane active" id="activas">        
+        <div role="tabpanel" class="tab-pane active" id="activas">
                 {{if cant_val == 0:}}
                     No hay programas Activos
                 {{else:}}
@@ -91,14 +94,14 @@
                                         {{pass}}
                                         </div>
                                     </td>
-                                    <td> 00/Ene/0000</td>
-                                    <td> <!-- Modificacion --></td>
+                                    <td><!--   Creacion    --> 00/Ene/0000</td>
+                                    <td> <!-- Modificacion --> 00/Ene/0000</td>
                                     <!-- Boton Modificar -->
-                                    <td> <a href="{{=URL('modificar',args=x.id)}}">{{=IMG(_src=URL('static', 'iconos/i_edit.png'),_height='25',_title="Modificar") }}</a></td>
+                                    <td> <a href="{{=URL('modificar',args=x.id)}}">{{=IMG(_src=URL('static', 'icon/i_edit.png'),_height='25',_title="Modificar") }}</a></td>
                                     <!-- Boton Descargar -->
-                                    <td>{{=IMG(_src=URL('static', 'iconos/i_download.png'),_height='25',_title="Descargar") }}</td>
+                                    <td>{{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }}</td>
                                     <!-- Boton Eliminar -->
-                                    <td> <a onClick = "if(confirm('¿Está seguro de que desea eliminar esta actividad?')) {window.location.href = '{{=URL(f='eliminar',args=[ x.id ] )}}';}">{{=IMG(_src=URL('static', 'icon/Delete.png'),_height='25',_title="Eliminar") }}</a>
+                                    <td> <a onClick = "if(confirm('¿Está seguro de que desea eliminar esta actividad?')) {window.location.href = '{{=URL(f='eliminar',args=[ x.id ] )}}';}">{{=IMG(_src=URL('static', 'icon/i_delete.png'),_height='25',_title="Eliminar") }}</a>
                                     </td>
                                 </tr>                            
                                 {{pass}}
@@ -139,14 +142,14 @@
                                         {{pass}}
                                         </div>
                                     </td>
-                                    <td> 00/Ene/0000</td>
-                                    <td> <!-- Modificacion --></td>
+                                    <td><!--   Creacion    --> 00/Ene/0000</td>
+                                    <td> <!-- Modificacion --> 00/Ene/0000</td>
                                     <!-- Boton Modificar -->
-                                    <td> <a href="{{=URL('modificar',args=x.id)}}">{{=IMG(_src=URL('static', 'iconos/i_edit.png'),_height='25',_title="Modificar") }}</a></td>
+                                    <td> <a href="{{=URL('modificar',args=x.id)}}">{{=IMG(_src=URL('static', 'icon/i_edit.png'),_height='25',_title="Modificar") }}</a></td>
                                     <!-- Boton Descargar -->
-                                    <td>{{=IMG(_src=URL('static', 'iconos/i_download.png'),_height='25',_title="Descargar") }}</td>
+                                    <td>{{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }}</td>
                                     <!-- Boton Eliminar -->
-                                    <td> <a onClick = "if(confirm('¿Está seguro de que desea eliminar esta actividad?')) {window.location.href = '{{=URL(f='eliminar',args=[ x.id ] )}}';}">{{=IMG(_src=URL('static', 'icon/Delete.png'),_height='25',_title="Eliminar") }}</a>
+                                    <td> <a onClick = "if(confirm('¿Está seguro de que desea eliminar esta actividad?')) {window.location.href = '{{=URL(f='eliminar',args=[ x.id ] )}}';}">{{=IMG(_src=URL('static', 'icon/i_delete.png'),_height='25',_title="Eliminar") }}</a>
                                     </td>
                                 </tr>                            
                                 {{pass}}
@@ -155,6 +158,7 @@
                     </table>
                 {{pass}}
         </div>
+
         <!-- Rechazadas -->
         <div role="tabpanel" class="tab-pane" id="rechazadas">
                 {{if cant_rec == 0:}}
@@ -186,14 +190,14 @@
                                         {{pass}}
                                         </div>
                                     </td>
-                                    <td> 00/Ene/0000</td>
-                                    <td> <!-- Modificacion --></td>
+                                    <td><!--   Creacion    --> 00/Ene/0000</td>
+                                    <td> <!-- Modificacion --> 00/Ene/0000</td>
                                     <!-- Boton Modificar -->
-                                    <td> <a href="{{=URL('modificar',args=x.id)}}">{{=IMG(_src=URL('static', 'iconos/i_edit.png'),_height='25',_title="Modificar") }}</a></td>
+                                    <td> <a href="{{=URL('modificar',args=x.id)}}">{{=IMG(_src=URL('static', 'icon/i_edit.png'),_height='25',_title="Modificar") }}</a></td>
                                     <!-- Boton Descargar -->
-                                    <td>{{=IMG(_src=URL('static', 'iconos/i_download.png'),_height='25',_title="Descargar") }}</td>
+                                    <td>{{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }}</td>
                                     <!-- Boton Eliminar -->
-                                    <td> <a onClick = "if(confirm('¿Está seguro de que desea eliminar esta actividad?')) {window.location.href = '{{=URL(f='eliminar',args=[ x.id ] )}}';}">{{=IMG(_src=URL('static', 'icon/Delete.png'),_height='25',_title="Eliminar") }}</a>
+                                    <td> <a onClick = "if(confirm('¿Está seguro de que desea eliminar esta actividad?')) {window.location.href = '{{=URL(f='eliminar',args=[ x.id ] )}}';}">{{=IMG(_src=URL('static', 'icon/i_delete.png'),_height='25',_title="Eliminar") }}</a>
                                     </td>
                                 </tr>                            
                                 {{pass}}
