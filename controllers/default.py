@@ -45,56 +45,66 @@ def get_tipo_usuario():
     else:
         redirect(URL(c ="default",f="index"))
 
+# def login_cas():
+#     session.usuario = dict()
+#     session.usuario['usbid'] = "00-00000"
+#     session.usuario['tipo'] = "Administrador"
+#     session.usuario["first_name"] = "Usuario"
+#     session.usuario["last_name"] = "Parche"
+#     session.usuario['cedula'] = 00000000
+#     session.usuario["email"] = "usuarioparche@gmail.com"
+#     redirect(URL('perfil'))
+
 def login_cas():
-    if not request.vars.getfirst('ticket'):
-        #redirect(URL('error'))
-        pass
-    try:
-        import urllib2, ssl
-        ssl._create_default_https_context = ssl._create_unverified_context
-        url = "https://secure.dst.usb.ve/validate?ticket="+\
-              request.vars.getfirst('ticket') +\
-              "&service=" + URL_RETORNO
-        req = urllib2.Request(url)
-        response = urllib2.urlopen(req)
-        the_page = response.read()
+   if not request.vars.getfirst('ticket'):
+       #redirect(URL('error'))
+       pass
+   try:
+       import urllib2, ssl
+       ssl._create_default_https_context = ssl._create_unverified_context
+       url = "https://secure.dst.usb.ve/validate?ticket="+\
+             request.vars.getfirst('ticket') +\
+             "&service=" + URL_RETORNO
+       req = urllib2.Request(url)
+       response = urllib2.urlopen(req)
+       the_page = response.read()
 
-    except Exception, e:
-        print "Exception: "
-        print e
-        # redirect(URL('error'))
+   except Exception, e:
+       print "Exception: "
+       print e
+       # redirect(URL('error'))
 
-    if the_page[0:2] == "no":
-        pass
-    else:
-        # session.casticket = request.vars.getfirst('ticket')
-        data  = the_page.split()
-        usbid = data[1]
+   if the_page[0:2] == "no":
+       pass
+   else:
+       # session.casticket = request.vars.getfirst('ticket')
+       data  = the_page.split()
+       usbid = data[1]
 
-        usuario = get_ldap_data(usbid) #Se leen los datos del CAS
-        tablaUsuarios = db.USUARIO
+       usuario = get_ldap_data(usbid) #Se leen los datos del CAS
+       tablaUsuarios = db.USUARIO
 
-        session.usuario = usuario
-        print "Hola",session.usuario
-        session.usuario['usbid'] = usbid
+       session.usuario = usuario
+       print "Hola",session.usuario
+       session.usuario['usbid'] = usbid
 
-        if not db(tablaUsuarios.usbid == usbid).isempty():
-            datosUsuario = db(tablaUsuarios.usbid==usbid).select()[0]
-            session.usuario['tipo'] = datosUsuario.tipo
-            if datosUsuario.tipo == "Bloqueado":
-                response.flash = T("Usuario bloqueado")
-                redirect(URL(c = "default",f="index"))
-            else:
-                redirect(URL('perfil'))
-        else:
-            session.usuario['tipo'] = "Usuario"
-            db.USUARIO.insert(ci=session.usuario["cedula"],  # Lo insertamos en la base de datos.
-            usbid=session.usuario["usbid"],
-            nombres=session.usuario["first_name"],
-            apellidos=session.usuario["last_name"],
-            correo_inst=session.usuario["email"],
-            tipo = "Usuario")
-            redirect(URL('vRegistroUsuario'))
+       if not db(tablaUsuarios.usbid == usbid).isempty():
+           datosUsuario = db(tablaUsuarios.usbid==usbid).select()[0]
+           session.usuario['tipo'] = datosUsuario.tipo
+           if datosUsuario.tipo == "Bloqueado":
+               response.flash = T("Usuario bloqueado")
+               redirect(URL(c = "default",f="index"))
+           else:
+               redirect(URL('perfil'))
+       else:
+           session.usuario['tipo'] = "Usuario"
+           db.USUARIO.insert(ci=session.usuario["cedula"],  # Lo insertamos en la base de datos.
+           usbid=session.usuario["usbid"],
+           nombres=session.usuario["first_name"],
+           apellidos=session.usuario["last_name"],
+           correo_inst=session.usuario["email"],
+           tipo = "Usuario")
+           redirect(URL('vRegistroUsuario'))
 
 def logout_cas():
     session.usuario = None
@@ -168,7 +178,20 @@ def perfil():
     else:
         redirect(URL("index"))
 
-def perfil():
+# def perfil():
+#     if session.usuario != None:
+#         admin = 4
+#         if(session.usuario["tipo"] == "DEX"):
+#             admin = 2
+#         elif(session.usuario["tipo"] == "Administrador"):
+#             admin = 1
+#         else:
+#             admin = 0
+#         return dict(admin = admin)
+#     else:
+#         redirect(URL("index"))
+
+def vMenuPrincipal():
     if session.usuario != None:
         admin = 4
         if(session.usuario["tipo"] == "DEX"):
@@ -437,11 +460,18 @@ def cambiar_colores():
     return dict()
 
 def index():
-    rows = db(db.PROGRAMA).select()
+    rows = db(db.PROGRAMA).select().as_list()
+    print rows
+    dicc = dict()
+    for programa in rows:
+        tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa['id_programa']).select().as_list()
+        dicc[programa['nombre']] = []
+        for tipo in tiposA:
+            dicc[programa['nombre']].append(tipo['nombre'])
     return locals()
 
 def listaTipos():
-
+    jQuery('#a').append(SPAN('hola'))
     programa = db(db.PROGRAMA.nombre==request.vars.Programa).select().first()
 
     tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa.id_programa).select('nombre')
@@ -452,7 +482,10 @@ def listaTipos():
 
     for tipo in tiposA:
         option = tipo.nombre
+        print option
+        jQuery('#listaTipos').append(OPTION(tipo.nombre, _value=tipo.nombre))
         listaOption+= option1 + option + option2 + option + option3
+
     #return "jQuery('#listaTipos').append('hola')"
 
     #print listaOption

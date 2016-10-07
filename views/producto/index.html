@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+{{include 'SIRADEXLayout.html'}}
+
+<html>
+	<head>
+		<meta charset = "UTF-8">
+		{{include 'web2py_ajax.html'}}
+		<!-- hago el link con el CSS de esta pagina -->
+		<link href="{{=URL('static', 'css/logIn.css')}}" rel="stylesheet" type="text/css" />
+		<title> SIRADEX </title>
+        {{block script}}
+        {{end}}
+	</head>
+
+	<body>
+		<header>
+			<!-- Banner de SIRADEX -->
+			<div id = "logo">
+				{{=IMG(_src=URL('static', 'images/banner.jpg')) }}
+			</div>
+
+			<!-- Menu del headder -->
+			<nav>
+				<ul>
+                    <li><a class ='btn btn-primary btn-xs' href='logout_cas'>
+                    <span class="glyphicon glyphicon-user"></span>
+                     Cerrar Sesion
+                    </a></li>
+                    <li> | </li>
+					<li><a href = "#">Ayuda</a></li>
+					<li> | </li>
+					<li><a href = "#">Contáctenos</a></li>
+					<li> | </li>
+					<li><a href = "#">Busqueda</a></li>
+					<li> | </li>
+					<li><a href = "{{=URL(c='default',f='vVerPerfil')}}">Ver Perfil</a></li>
+                    {{ if admin == 1: }}
+                    <li> | </li>
+					<li><a href = "{{=URL(c='default',f='vMenuAdmin')}}">Administrador</a></li>
+					<li> | </li>
+                    <li><a href = "{{=URL(c='default',f='vMenuDex')}}">DEX</a></li>
+                    {{ elif admin == 2: }}
+                    <li> | </li>
+                    <li><a href = "{{=URL(c='default',f='vMenuDex')}}">DEX</a></li>
+                    {{else:}}
+                    {{pass}}
+                    <li> | </li>
+                    <li><a href = "{{=URL(c='producto',f='gestionar')}}">Inicio</a></li>
+				</ul>
+			</nav>
+		</header>
+
+		<!-- Contenido principal de la pagina -->
+		<section class = "main">
+			<h1>
+				<div id ="titulo">
+					{{block titulo}}
+					{{end}}
+				</div>
+			</h1>
+			<!-- En esta seccion va todo el contenido de la pagina -->
+			<section class = "contenido" style="width:100%">
+				{{block contenido}}
+				{{end}}
+
+			</section><!-- close contenido -->
+
+		</section><!-- close main -->
+
+
+		<!-- Es un footer pues -->
+		<footer>
+			<nav>
+				<ul>
+					<li><a href = "#">Buscador</a></li>
+					<li> | </li>
+					<li><a href = "#">Webmail</a></li>
+					<li> | </li>
+					<li><a href = "#">Aula Virtual USB</a></li>
+					<li> | </li>
+					<li><a href = "#">Directorio USB</a></li>
+					<li> | </li>
+					<li><a href = "#">Calendario</a></li>
+					<li> | </li>
+				</ul>
+			</nav>
+		</footer>
+	</body>
+</html>
