@@ -1,52 +1,70 @@
 {{ extend 'SIRADEXLayout.html' }}
 <link href="{{=URL('static', 'css/camposFormStyle.css')}}" rel="stylesheet" type="text/css" />
+<h2>{{= nombre_catalogo}}</h2>
 <div class = "session_message">
     {{ =session.message}}
 </div>
-Agregue la cantidad de campos que desee
-<br/>
-<br/>
 <div id = 'campos' >
     <table class="table table-bordered">
         <thead>
             <tr>
-                <td class="col-md-6">Nombre</td>
+                <td class="col-md-6">Nombre del Campo</td>
                 <td class="col-md-3">Tipo</td>
+                <td class="col-md-2">Obligatorio</td>
+                <td class="col-md-1">Editar</td>
                 <td class="col-md-2">Eliminar</td>
             </tr>
         </thead>
         <tbody>
-            {{for campo in campos_guardados:}}
+            {{if len(campos_guardados) > 0 :}}
+                {{for campo in campos_guardados:}}
+                    <tr>
+                        <td class="col-md-6">{{=campo.nombre}}</td>
+                        <td class="col-md-3">{{=campo.tipo_campo}}</td>
+                        {{if campo.obligatorio:}}
+                            <td class="col-md-2">Si</td>
+                        {{else:}}
+                             <td class="col-md-2">No</td>
+                        {{pass}}
+                        <td class="col-md-1">
+                          <a href = "{{=URL(f='vModificarCampo', args=[campo.id_campo_cat, campo.id_catalogo])}}">
+                              {{=IMG(_src=URL('static', 'iconos/Edit.png')), }}
+                          </a>
+                        </td>
+                        <td class="col-md-2">
+                            <a onClick = "if(confirm('¿Está seguro de que desea eliminar el campo?')) {window.location.href = '{{=URL(f='eliminarCampos',args=[campo.id_campo_cat, campo.id_catalogo])}}';}">
+                                        {{=IMG(_src=URL('static', 'iconos/Delete.png')), }}
+                                        </a>
+                        </td>
+                     </tr>
+                {{pass}}
+              {{else:}}
                 <tr>
-                    <td class="col-md-6">{{=campo.CAMPO_CATALOGO.nombre}}</td>
-                    <td class="col-md-3">{{=campo.CAMPO_CATALOGO.tipo_cat}}</td>
-                    <td class="col-md-2">
-                        <a onClick = "if(confirm('¿Está seguro de que desea eliminar el campo?')) {window.location.href = '{{=URL(f='eliminarCampos2',args=[ campo.CATALOGO.nombre, campo.CAMPO_CATALOGO.id_campo_cat ] )}}';}">
-                                    {{=IMG(_src=URL('static', 'iconos/Delete.png')), }}
-                                    </a></td>
-            </tr>
-            {{pass}}
+                  <h4>Este catalogo aun no tiene campos agregados</h4>
+                </tr>
+              {{pass}}
         </tbody>
     </table>
 </div>
 <br/>
+<h4> Agregar Campo </h4>
 <div id = 'formulario'>
-    {{= form.custom.begin}}
+    {{= formulario.custom.begin}}
     <table class="table table-condensed">
         <tr>
-        <td class="col-md-1">Nombre</td>     <td class="col-md-3">{{= form.custom.widget.nombre}}</td>
-        <td class="col-md-1">Tipo</td>       <td class="col-md-2">{{= form.custom.widget.tipo_cat}}</td>
-        <td class="col-md-2">{{= form.custom.submit}}</td>
+        <td class="col-md-1">Nombre</td>     <td class="col-md-4">{{= formulario.custom.widget.nombre}}</td>
+        <td class="col-md-1">Tipo</td>       <td class="col-md-3">{{= formulario.custom.widget.tipo_campo}}</td>
+        <td class="col-md-2">Obligatorio</td><td class="col-md-1">{{= formulario.custom.widget.obligatorio}}</td>
+        <td class="col-md-1">{{= formulario.custom.submit}}</td>
         </tr>
     </table>
-    {{= form.custom.end}}
-
+    {{= formulario.custom.end}}
 </div>
 <br/><br/><br/>
 <div id="buttons" class="container-fluid">
     <row>
         <div class="col-md-2">
-        <input type=button class="btn btn-primary" onClick="parent.location='{{=URL('catalogo', 'agregarTipoAux2')}}'" value='Finalizar'>
+        <input type=button class="btn btn-primary" onClick="parent.location='{{=URL('catalogo', 'agregarTipoAux')}}'" value='Finalizar'>
         </div>
     </row>
 </div>

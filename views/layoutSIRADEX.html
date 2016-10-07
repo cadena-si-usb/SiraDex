@@ -5,8 +5,7 @@
     <!--*********************************************
     **********************************************-->
     <meta charset = "UTF-8">
-    <title> SIRADEX </title>
-    
+    <title> SIRADEX - {{block titulo}}{{end}}</title>
     <!--*********************************************
         Extend e include
     **********************************************-->
@@ -16,20 +15,27 @@
     <!--*********************************************
         Link con bootstrap, CSS y JavaScript
     **********************************************-->
+    <!--
         <link   rel="stylesheet" 
                 href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" 
                 integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" 
-                crossorigin="anonymous">
-        
-        <link   href="{{=URL('static', 'css/layoutStyle.css')}}" 
-                rel="stylesheet" 
+                crossorigin="anonymous"> -->
+
+        <link   href="{{=URL('static', 'css/layoutStyle.css')}}"
+                rel="stylesheet"
                 type="text/css" />
-        
+
         <link   href="{{=URL('static', 'js/web2py.js')}}" />
-        
-        <link   rel="shortcut icon" 
-                href="{{=URL('static','iconos/favicon.ico')}}" 
+
+        <link   rel="shortcut icon"
+                href="{{=URL('static','iconos/favicon.ico')}}"
                 type="image/x-icon">
+
+        <link   href="{{=URL('static', 'css/bootstrap.css')}}"
+                rel="stylesheet"
+                type="text/css" />
+
+        <link href="{{=URL('static','css/font-awesome.css')}}" rel="stylesheet">
 </head>
 
 <body style="position: relative;min-height: 100%;top: 0px;">
@@ -37,7 +43,7 @@
         MAIN
     *********************************************-->
         <div class="container">
-            <div clas=="row">        
+            <div clas="row">        
             <div id="degradado" class="col-md-10 col-md-offset-1">    
                 <!--*********************************************
                     HEADER
@@ -48,14 +54,13 @@
                         **********************************************--> 
                             <!---->
                             {{=IMG(_src=URL('static', 'images', args='banner.jpg')) }} 
-                        
+
                         <!--*********************************************
                             Navegacion
                         **********************************************-->
-                            {{block navegacion}}
-                            {{end}}
-                    </header>
-
+                        {{block navegacion}}
+                        {{end}}
+                    <header>
                 <!--*********************************************
                     CONTENIDO PAGINA
                 **********************************************-->
@@ -71,7 +76,7 @@
                                 {{block subtitulo}}
                                 {{end}}
                             </h2>
-                        
+
                         <!--*********************************************
                             Descripcion pagina
                         **********************************************-->

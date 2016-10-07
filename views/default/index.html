@@ -4,7 +4,7 @@
     <nav class="navbar navbar-default" style="border-color:#FFF">
         <div class="container-fluid">
             <ul class="nav navbar-nav navbar-right" >
-               <li class="activo">           
+               <li class="activo">
                 <!-- EN SERVIDOR -->
                    <!-- <a  id = login 
                             class ='btn btn-xs' 
@@ -61,64 +61,20 @@
                         </span>
                     
                     <!-- Lupa -->
-                        <span class="input-group-btn">
-                            <button type="submit" 
-                                    class="btn btn-default" 
-                                    id="btn-lupa">
-                                O
-                            </button>
+                    <span class="input-group-btn">
+                        <button type="submit" 
+                                class="btn btn-default"
+                                id="btn-lupa">
+                                <span id="cable">.</span><span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
                         </span>                                        
                 </div>
             </form>
         
         <!-- Filtros -->
             <div id="filtros">
-                <!-- Split button -->
-                <div class="btn-group">
-                  <button type="button" class="btn" >Programa</button>
-                  <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="caret"></span>
-                    <span class="sr-only">Toggle Dropdown</span>
-                  </button>
-                  <ul class="dropdown-menu">
-                  </ul>
-                </div>
-
-                <!-- Split button -->
-                <div class="btn-group">
-                  <button type="button" class="btn">Tipo de Actividad</button>
-                  <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="caret"></span>
-                    <span class="sr-only">Toggle Dropdown</span>
-                  </button>
-                  <ul class="dropdown-menu" id="listaTipos">
-
-                  </ul>
-                </div>
-
-                <!-- Split button -->
-                <div class="btn-group">
-                  <button type="button" class="btn">Fecha</button>
-                  <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="caret"></span>
-                    <span class="sr-only">Toggle Dropdown</span>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li><a href="#">Opcion 1</a></li>
-                  </ul>
-                </div>                                
-                
-                <!-- Split button -->
-                <div class="btn-group">
-                  <button type="button" class="btn">Usuario</button>
-                  <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="caret"></span>
-                    <span class="sr-only">Toggle Dropdown</span>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li><a href="#">Opcion 1</a></li>
-                  </ul>
-                </div>
+                <!-- AQUI VAN LOS FILTROS -->
 
             </div>
             <form>
@@ -135,7 +91,6 @@
 
 
                 <select name="TipoActividad" id="lista_tipos" >
-                    <option id="firstTipos"></option>
                 </select>
                 <span id="SlistaTipos"></span>
             </form>
@@ -160,12 +115,5 @@
                 });
             });
 
-    function agregar(){
-        var lista = document.getElementById("listaTipos");
-        var o = document.createElement("OPTION");
-        var t = document.createTextNode("hola");
-        o.appendChild(t);
-        lista.appendChild(o);
-    };
     </script>
 {{end}}
