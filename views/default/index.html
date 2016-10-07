@@ -122,14 +122,22 @@
 
             </div>
             <form>
-                <select name="Programa" >
+                <!--Programas-->
+                <select name="Programa" onchange="ajax('obtener_actividades', ['Programa'], ':eval')">
                     <option></option>
                     {{for x in rows:}}
-                    <option value="{{=x['nombre']}}" onclick="ajax('{{=URL('default', 'listaTipos')}}', ['Programa'], ':eval')">{{=x['nombre']}}</option>
+                    <option value="{{=x['nombre']}}" onclick="agregar('{{=x['nombre']}}')">{{=x['nombre']}}</option>
+
                     {{pass}}
                 </select>
-                <select name="TipoActividad"  id="listaTipos" onclick="agregar()" >
+
+                <!--Actividades-->
+
+
+                <select name="TipoActividad" id="lista_tipos" >
+                    <option id="firstTipos"></option>
                 </select>
+                <span id="SlistaTipos"></span>
             </form>
 </form>
 {{end}}
@@ -143,6 +151,8 @@
 {{block script}}
     <script>
         $(document).ready(function(){
+                       
+
             $("#filtros").hide();
 
             $("#btn-filtro").click(function(){

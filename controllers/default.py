@@ -47,7 +47,7 @@ def get_tipo_usuario():
 
 def login_cas():
     if not request.vars.getfirst('ticket'):
-        #redirect(URL('error'))
+        redirect(URL('error'))
         pass
     try:
         import urllib2, ssl
@@ -440,19 +440,13 @@ def index():
     rows = db(db.PROGRAMA).select()
     return locals()
 
-def listaTipos():
-
+def obtener_actividades():
     programa = db(db.PROGRAMA.nombre==request.vars.Programa).select().first()
-
     tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa.id_programa).select('nombre')
-    option1 = '<option value="'
-    option2 = '">'
-    option3 = "</option>"
-    listaOption = ""
+    concat = "<option></option>"
 
     for tipo in tiposA:
         option = tipo.nombre
-        listaOption+= option1 + option + option2 + option + option3
-    #return "jQuery('#listaTipos').append('hola')"
+        concat += "<option>"+option+"</option>"
 
-    #print listaOption
+    return 'jQuery("#lista_tipos").empty().append("%s")'% repr(concat)
