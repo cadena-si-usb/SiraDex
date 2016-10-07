@@ -110,11 +110,6 @@ def logout_cas():
     session.usuario = None
     return response.render()
 
-#Funcion del inicio
-def index():
-    datosComp = ["","","","","","","",""]
-    return response.render()
-
 # Controlador para el registro del usuario
 def vRegistroUsuario():
     if session.usuario != None:
@@ -461,7 +456,6 @@ def cambiar_colores():
 
 def index():
     rows = db(db.PROGRAMA).select().as_list()
-    print rows
     dicc = dict()
     for programa in rows:
         tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa['id_programa']).select().as_list()

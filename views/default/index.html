@@ -81,7 +81,7 @@
                 <select name="Programa" >
                     <option></option>
                     {{for x in rows:}}
-                    <option value="{{=x['nombre']}}" onclick="agregar('{{=x['nombre']}}')">{{=x['nombre']}}</option>
+                    <option value="{{=x['nombre']}}" onclick="getTiposA(this.value)">{{=x['nombre']}}</option>
 
                     {{pass}}
                 </select>
@@ -89,6 +89,7 @@
                 </select>
             </form>
 </form>
+<div id="a">asdasd</div>
 {{end}}
 
 {{block footer}}
@@ -107,5 +108,29 @@
                 });
             });
 
+        function getTiposA(str) {
+
+            if (str == "") {
+                document.getElementById("listaTipos").innerHTML = "";
+                return;
+            } else {
+
+                if (window.XMLHttpRequest) {
+                    // code for IE7+, Firefox, Chrome, Opera, Safari
+                    xmlhttp = new XMLHttpRequest();
+                } else {
+                    // code for IE6, IE5
+                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("a").innerHTML = this.responseText;
+                    }
+                };
+
+                xmlhttp.open("GET","static/js/getTipos.php?q="+str,true);
+                xmlhttp.send();
+            }
+        }
     </script>
 {{end}}
