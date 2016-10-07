@@ -1,17 +1,16 @@
-{{ extend 'layoutSIRADEXloged.html' }}
+{{#extend 'producto/index.html'}}
+{{extend 'SIRADEXLayout.html'}}
 
 
-{{block titulo}}
-    Registrar Producto
-{{end}}
+{{block titulo}}Registro de Productos{{end}}
 
 {{block contenido}}
-<h4>Seleccione el Tipo de Producto que desea agregar.</h4>
+<h4>Seleccione el Tipo de Actividad que desea agregar.</h4>
 <table class="table">
     <tr>
     {{
     if len(rows) == 0:}}
-    No hay actividad que mostrar
+    No hay Productos que mostrar
     {{else:}}
     {{for x in rows:}}
         <td>

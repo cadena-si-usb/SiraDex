@@ -1,36 +1,179 @@
 {{extend 'layoutSIRADEXloged.html'}}
 
 {{block titulo}}
-    Modificar Programas
+    <h2> <center> Registros de Programas en el Sistema </center> </h2>
 {{end}}
 
+
 {{block contenido}}
+    <br>
+    <div class="row">
+        <div class="col-sm-6">
+             <form class="navbar-form" role="search">
+                <div class="input-group col-lg-12">
+                    <!-- barra de busqueda -->
+                        <input  type="text" 
+                                class="form-control" 
+                                placeholder="Buscar Programa"
+                                id="form-busqueda">
 
-<h3>Programas Registrados en el Sistema</h3>
-<h4>Por ahora solo estamos mostrando los tipos de programas.</h4>
-<br>
-<table class="table table-striped table-hover sortable">
-    <thead>
-        <tr>
-            <th>Titulo</th>
-            <th>Descripcion</th>
-        </tr>
-    </thead>
-    <tbody id="actividades">
-    {{if len(programas) == 0:}}
-        No hay programas que mostrar.
-    {{else:}}
-        {{for programa in programas:}}
-        <tr>
-            <td> {{=programa.nombre}}</td>
-            <td> {{=programa.descripcion}}</td>
-        </tr>
-        {{pass}}
-     {{pass}}
-    </tbody>
-</table>
-      <div class="col-md-12 text-center">
-      <ul class="pagination pagination-lg pager" id="myPager"></ul>
+                    <!-- Lupa -->
+                    <span class="input-group-btn">
+                        <button type="submit" 
+                                class="btn btn-default glyphicon glyphicon-search"
+                                id="btn-lupa" style="top:0px !important;">
+                        </button>
+                    </span>
+                 </div>
+            </form>
+        </div>
+        <div class="col-sm-5 col-sm-push-3" style="margin-top:10px; ; margin-left:30px">
+            <button type="button" class="btn btn-default green btn-border" data-toggle="modal" data-target="#myModal">
+              <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Programa
+            </button>
+        </div>
+    </div>
+    <br>
+    <div class="container-fluid card">
+    <table class="table table-striped table-condensed table-hover sortable">
+        <thead>
+            <tr>
+                <th>Titulo</th>
+                <th><center>Editar</center></th>
+                <th><center>Eliminar</center></th>
+            </tr>
+        </thead>
+        <tbody id="actividades">
+            <tr>
+                <td><a class="a-table" href="{{=URL(c='tipo_actividad', f='gestionar.html')}}"> < Programa Nombre 1 ></a></td>
+                <td class="center-vertically">
+                    <center>
+                        <a>
+                            <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#myModalEditar"></span>
+                        </a>
+                    <center>
+                 </td>
+                <td class="center-vertically">
+                    <center>
+                        <a>
+                           <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalDelete"></span>
+                        </a>
+                    <center>
+                </td>
+            </tr>
+            <tr>
+                <td><a class="a-table" href="{{=URL(c='tipo_actividad', f='gestionar.html')}}"> < Programa Nombre 2 ></a></td>
+                <td class="center-vertically">
+                    <center>
+                        <a>
+                            <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#myModalEditar"></span>
+                        </a>
+                    <center>
+                 </td>
+                <td class="center-vertically">
+                    <center>
+                        <a>
+                           <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalDelete"></span>
+                        </a>
+                    <center>
+                </td>
+            </tr>
+            <tr>
+                <td><a class="a-table" href="{{=URL(c='tipo_actividad', f='gestionar.html')}}">< Programa Nombre 3 ></a></td>
+                <td class="center-vertically">
+                    <center>
+                        <a>
+                            <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#myModalEditar"></span>
+                        </a>
+                    <center>
+                 </td>
+                <td class="center-vertically">
+                    <center>
+                        <a>
+                           <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalDelete"></span>
+                        </a>
+                    <center>
+                </td>
+            </tr>
+            <tr>
+                <td><a class="a-table" href="{{=URL(c='tipo_actividad', f='gestionar.html')}}"> < Programa Nombre 4 ></a></td>
+                <td class="center-vertically">
+                    <center>
+                        <a>
+                            <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#myModalEditar"></span>
+                        </a>
+                    <center>
+                 </td>
+                <td class="center-vertically">
+                    <center>
+                        <a>
+                           <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalDelete"></span>
+                        </a>
+                    <center>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    </div>
+
+<!-- Modal Agregar-->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <center><h4 class="modal-title">Agregar Programa</h4><center>
       </div>
+      <div class="modal-body">
+          <p><center> {{=formulario}} </center> </p>
+      </div>
+    </div>
+  </div>
+</div>
 
+<!-- Modal Editar-->
+<div id="myModalEditar" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <center><h4 class="modal-title">Editar Programa</h4><center>
+      </div>
+      <div class="modal-body">
+          <p> <center> {{=formulario_editar}} </center> </p>
+      </div>
+    </div>
+  </div>
+</div>
+      
+<!-- Modal Eliminar-->
+<div class="container">
+  <!-- Modal -->
+  <div class="modal fade" id="myModalDelete" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <center> <h4 class="modal-title">Eliminar Programa</h4> </center>
+        </div>
+        <div class="modal-body">
+            <center> <p>Está seguro que quiere eliminar este programa.</p> </center>
+            <br>
+            <center>
+                <a>
+                  <button type="button" class="btn blue-add btn-border">Eliminar</button>
+                </a>
+                <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
+            </center>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {{end}}

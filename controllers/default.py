@@ -178,20 +178,7 @@ def perfil():
     else:
         redirect(URL("index"))
 
-# def perfil():
-#     if session.usuario != None:
-#         admin = 4
-#         if(session.usuario["tipo"] == "DEX"):
-#             admin = 2
-#         elif(session.usuario["tipo"] == "Administrador"):
-#             admin = 1
-#         else:
-#             admin = 0
-#         return dict(admin = admin)
-#     else:
-#         redirect(URL("index"))
-
-def vMenuPrincipal():
+def perfil():
     if session.usuario != None:
         admin = 4
         if(session.usuario["tipo"] == "DEX"):
@@ -238,16 +225,21 @@ def EditarPerfil():
             Field('Apellidos', default=session.usuario["last_name"],writable=False),
             readonly=True)
         usuarios = db(db.USUARIO).select()
+
+
         # Modificar datos del perfil.
         for raw in usuarios:
             if raw.ci == session.usuario["cedula"]:
                 forma=SQLFORM(
                     db.USUARIO,
                     record=raw,
-                    button=['Actualizar'],
+                    
                     fields=['telefono','correo_alter'],
-                    submit_button='Actualizar',
+
+                    
                     labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'})
+            forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+            forma.element(_type='submit')['_value']="Actualizar"
         if len(request.vars)!=0:
             nuevoTelefono = request.vars.telefono
             nuevoCorreoAlter = request.vars.correo_alter
@@ -424,7 +416,7 @@ def setVista():
     session.vista = int(request.args[0])
 
     if session.vista == 0:
-        redirect(URL(c='actividad', f='gestionar.html'))
+        redirect(URL(c='producto', f='gestionar.html'))
     elif session.vista == 1:
         redirect(URL(c='tipo_actividad', f='gestionar.html'))
     elif session.vista == 2:
@@ -458,34 +450,3 @@ def cambiar_colores():
         redirect(request.env.http_referer)
 
     return dict()
-
-def index():
-    rows = db(db.PROGRAMA).select().as_list()
-    print rows
-    dicc = dict()
-    for programa in rows:
-        tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa['id_programa']).select().as_list()
-        dicc[programa['nombre']] = []
-        for tipo in tiposA:
-            dicc[programa['nombre']].append(tipo['nombre'])
-    return locals()
-
-def listaTipos():
-    jQuery('#a').append(SPAN('hola'))
-    programa = db(db.PROGRAMA.nombre==request.vars.Programa).select().first()
-
-    tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa.id_programa).select('nombre')
-    option1 = '<option value="'
-    option2 = '">'
-    option3 = "</option>"
-    listaOption = ""
-
-    for tipo in tiposA:
-        option = tipo.nombre
-        print option
-        jQuery('#listaTipos').append(OPTION(tipo.nombre, _value=tipo.nombre))
-        listaOption+= option1 + option + option2 + option + option3
-
-    #return "jQuery('#listaTipos').append('hola')"
-
-    #print listaOption

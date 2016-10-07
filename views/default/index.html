@@ -75,19 +75,10 @@
         <!-- Filtros -->
             <div id="filtros">
                 <!-- AQUI VAN LOS FILTROS -->
+                filtros
 
             </div>
-            <form>
-                <select name="Programa" >
-                    <option></option>
-                    {{for x in rows:}}
-                    <option value="{{=x['nombre']}}" onclick="agregar('{{=x['nombre']}}')">{{=x['nombre']}}</option>
 
-                    {{pass}}
-                </select>
-                <select name="TipoActividad"  id="listaTipos" >
-                </select>
-            </form>
 </form>
 {{end}}
 
