@@ -1,12 +1,16 @@
 {{extend 'SIRADEXLayout.html'}}
+<script src="{{=URL('static','js/global.js')}}"></script>
+<script src="{{=URL('static','js/tipo_actividad.js')}}"></script>
 
 <h3 id="titulo">
     Agregar Tipo de Actividad
 </h3>
 <p>
-    Todos los campos son obligatorios.
+    {{=mensaje}}
 </p>
 <br/>
-<article>
-    {{=formulario}}
-</article>
+<div class="formularioTipo" data-hayPrograma={{=hayPrograma}}>
+  <article>
+      {{=formulario}}
+  </article>
+</div>

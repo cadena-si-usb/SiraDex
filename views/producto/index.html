@@ -18,7 +18,7 @@
 			<div id = "logo">
 				{{=IMG(_src=URL('static', 'images/banner.jpg')) }}
 			</div>
-			
+
 			<!-- Menu del headder -->
 			<nav>
 				<ul>
@@ -45,15 +45,15 @@
                     {{else:}}
                     {{pass}}
                     <li> | </li>
-                    <li><a href = "{{=URL(c='actividad',f='gestionar')}}">Inicio</a></li>
+                    <li><a href = "{{=URL(c='producto',f='gestionar')}}">Inicio</a></li>
 				</ul>
 			</nav>
 		</header>
-			
+
 		<!-- Contenido principal de la pagina -->
 		<section class = "main">
-			<h1> 
-				<div id ="titulo"> 
+			<h1>
+				<div id ="titulo">
 					{{block titulo}}
 					{{end}}
 				</div>
@@ -64,10 +64,10 @@
 				{{end}}
 
 			</section><!-- close contenido -->
-			
+
 		</section><!-- close main -->
-		
-		
+
+
 		<!-- Es un footer pues -->
 		<footer>
 			<nav>

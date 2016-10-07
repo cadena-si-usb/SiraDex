@@ -4,7 +4,6 @@
 '''
 from gluon import *
 
-
 def get_tipo_usuario():
 
     # Session Actual

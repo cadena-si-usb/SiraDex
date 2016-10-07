@@ -15,18 +15,28 @@ def gestionar():
     else:
         redirect(URL(c ="default",f="index"))
 
-    rows = db(db.ACTIVIDAD.ci_usuario_crea==session.usuario['cedula']).select()
+    rows = db(db.PRODUCTO.ci_usu_creador==session.usuario['cedula']).select()
     detalles = {}
+    cant_esp = 0
+    cant_val = 0
+    cant_rec = 0
 
     for row in rows:
         dict_campos = dict()
         campos = db((db.TIENE_CAMPO.id_campo == db.CAMPO.id_campo)
-                    & (db.TIENE_CAMPO.id_actividad == row.id_actividad)).select()
+                    & (db.TIENE_CAMPO.id_producto == row.id_producto)).select()
 
         for campo in campos:
             dict_campos[campo.CAMPO.nombre] = campo.TIENE_CAMPO.valor_campo
 
         detalles[row] = dict_campos
+
+        if row["validacion"] == "En espera":
+            cant_esp += 1
+        elif row["validacion"] == "Validada":
+            cant_val += 1 
+        elif row["validacion"] == "Rechazada":
+            cant_rec += 1
 
     return locals()
 
@@ -94,13 +104,13 @@ def agregar():
     form=SQLFORM.factory(*fields)
 
     if form.process().accepted:
-        dicc_act = db.ACTIVIDAD.insert(id_tipo = tipo,ci_usuario_crea= session.usuario['cedula'])
-        id_act = dicc_act['id_actividad']
+        dicc_act = db.PRODUCTO.insert(id_tipo = tipo,ci_usu_creador= session.usuario['cedula'])
+        id_act = dicc_act['id_producto']
         for var in form.vars:
             campo = var.replace("_"," ")
             id_cam = db(db.CAMPO.nombre==campo).select().first().id_campo
             valor = getattr(form.vars ,var)
-            db.TIENE_CAMPO.insert(id_actividad=id_act,id_campo=id_cam,valor_campo= valor)
+            db.TIENE_CAMPO.insert(id_producto=id_act,id_campo=id_cam,valor_campo= valor)
         redirect(URL('gestionar'))
     elif form.errors:
         response.flash = 'el formulario tiene errores'
@@ -119,7 +129,7 @@ def modificar():
         redirect(URL(c ="default",f="index"))
 
     id_act = int(request.args(0))
-    rows = db(db.TIENE_CAMPO.id_actividad == id_act).select()
+    rows = db(db.TIENE_CAMPO.id_producto == id_act).select()
     fields = []
     valores = []
     for row in rows:
@@ -165,11 +175,11 @@ def modificar():
             valor = getattr(form.vars ,var)
 
             sql = "UPDATE TIENE_CAMPO SET valor_campo = '" + str(valor)
-            sql = sql + "' WHERE id_actividad = '" + str(id_act) + "' AND id_campo = '" + str(id_cam) + "';"
+            sql = sql + "' WHERE id_producto = '" + str(id_act) + "' AND id_campo = '" + str(id_cam) + "';"
             db.executesql(sql)
 
-            update_act = "UPDATE ACTIVIDAD SET ci_usuario_modifica = '" + str(session.usuario['cedula'])
-            update_act = update_act + "' WHERE id_actividad = '" + str(id_act) + "';"
+            update_act = "UPDATE PRODUCTO SET ci_usuario_modifica = '" + str(session.usuario['cedula'])
+            update_act = update_act + "' WHERE id_producto = '" + str(id_act) + "';"
             db.executesql(update_act)
 
         redirect(URL('gestionar'))
@@ -180,12 +190,12 @@ def modificar():
 def eliminar():
     id_act = int(request.args(0))
 
-    set_tiene_campo = db(db.TIENE_CAMPO.id_actividad == id_act)
+    set_tiene_campo = db(db.TIENE_CAMPO.id_producto == id_act)
     set_tiene_campo.delete()
-    actividad = db(db.ACTIVIDAD.id_actividad == id_act)
-    actividad.delete()
+    producto = db(db.PRODUCTO.id_producto == id_act)
+    producto.delete()
 
     redirect(URL('gestionar'))
 
-    #return "Actividad {} eliminada".format(actividad)
+    #return "producto {} eliminada".format(producto)
     return locals()
