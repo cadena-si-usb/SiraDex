@@ -290,7 +290,18 @@ a#disabled-dropdown:hover {
     color: #FFFFFF !important;
     background-color: #286090 !important;
     border: 1px solid #286090 !important;
-    
+}
+
+.red-trash {
+    color: #D32F2F !important;
+    background-color: #FFFFFF !important;
+    border: 1px solid #D32F2F !important;
+}
+
+.red-trash:hover {
+    color: #FFFFFF !important;
+    background-color: #D32F2F !important;
+    border: 1px solid #D32F2F !important;
 }
 
 .blue-add {
@@ -314,3 +325,23 @@ a#disabled-dropdown:hover {
     color: #F44336;
     font-size: 20px;
 }
+
+a {
+    color: #337ab7;
+}
+
+a: hover {
+    color: #286090 !important;
+    text-decoration: none !important;
+}
+
+.restaurar {
+    color: #43A047 !important;
+}
+
+/* Tabla */
+
+.tabla-border {
+    border: 0px solid #FFF !important;
+}
+style=""

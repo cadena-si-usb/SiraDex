@@ -7,23 +7,13 @@ Vista de Gestionar Tipo Actividad, tiene las opciones:
 - Eliminar Tipo
 - Papelera (No funcional)
 '''
+
+#. --------------------------------------------------------------------------- 
+'''
+    Gestionar Tipo de Actividad
+'''
 def gestionar():
-    # Obtengo datos de los tipo_actividades en base de datos para generar
-    # tabla que los muestre
-    query = reduce(lambda a, b: (a&b),[db.TIPO_ACTIVIDAD.id_tipo != None, db.TIPO_ACTIVIDAD.papelera == False])
-
-    ids = db(query).select(db.TIPO_ACTIVIDAD.id_tipo)
-    nombres = db(query).select(db.TIPO_ACTIVIDAD.nombre)
-    descripcion = db(query).select(db.TIPO_ACTIVIDAD.descripcion)
-    programas = db(query).select(db.TIPO_ACTIVIDAD.id_programa)
-
-    tipos = db(query).select(db.TIPO_ACTIVIDAD.nombre, db.TIPO_ACTIVIDAD.descripcion, db.TIPO_ACTIVIDAD.id_tipo)
-
-    # Decido que mensaje se va a mostrar
-    if(session.message not in ['Tipo Eliminado', 'Tipo agregado exitosamente']):
-        session.message = ''
-
-    return dict(ids=ids,nombres=nombres,descripcion=descripcion, programas = programas, tipos=tipos, admin = get_tipo_usuario())
+    return dict(admin = get_tipo_usuario())
 
 #. --------------------------------------------------------------------------- .
 '''
@@ -267,11 +257,7 @@ def enviar_tipo_papelera():
  Vista de gestion de la papelera
 '''
 def gestionar_archivo_historico():
-    aux = db(db.TIPO_ACTIVIDAD.papelera == True).select(db.TIPO_ACTIVIDAD.nombre,
-                                                        db.TIPO_ACTIVIDAD.descripcion,
-                                                        db.TIPO_ACTIVIDAD.id_tipo)
-
-    return dict(tipos_papelera = aux,admin=get_tipo_usuario())
+    return dict(admin=get_tipo_usuario())
 
 #. --------------------------------------------------------------------------- .
 '''
@@ -315,18 +301,7 @@ def restaurar_tipo():
 
 #. --------------------------------------------------------------------------- .
 def ver_tipo_actividad():
-    id_tipo = int(request.args[0])
-
-    query = reduce(lambda a, b: (a & b), [db.TIPO_ACTIVIDAD.id_tipo == id_tipo,
-                                          db.TIPO_ACTIVIDAD.id_tipo == db.ACT_POSEE_CAMPO.id_tipo_act,
-                                          db.ACT_POSEE_CAMPO.id_campo == db.CAMPO.id_campo])
-
-    campos_guardados = db(query).select(db.CAMPO.ALL)
-
-    tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
-    programa = db(db.PROGRAMA.id_programa == tipo.id_programa).select(db.PROGRAMA.ALL).first()
-
-    return dict(campos = campos_guardados, tipo = tipo, admin = get_tipo_usuario(), tipo_nombre = tipo.nombre, programa_nombre = programa.nombre)
+    return dict(admin = get_tipo_usuario())
 
 #. --------------------------------------------------------------------------- .
 def eliminar_campo():
