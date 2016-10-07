@@ -450,3 +450,25 @@ def cambiar_colores():
         redirect(request.env.http_referer)
 
     return dict()
+
+def index():
+    rows = db(db.PROGRAMA).select().as_list()
+    print rows
+    dicc = dict()
+    for programa in rows:
+        tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa['id_programa']).select().as_list()
+        dicc[programa['nombre']] = []
+        for tipo in tiposA:
+            dicc[programa['nombre']].append(tipo['nombre'])
+    return locals()
+
+def obtener_actividades():
+    programa = db(db.PROGRAMA.nombre==request.vars.Programa).select().first()
+    tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa.id_programa).select('nombre')
+    concat = "<option></option>"
+
+    for tipo in tiposA:
+        option = tipo.nombre
+        concat += "<option>"+option+"</option>"
+
+    return 'jQuery("#lista_tipos").empty().append("%s")'% repr(concat)

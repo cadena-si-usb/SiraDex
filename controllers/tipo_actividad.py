@@ -323,44 +323,13 @@ def eliminar_campo():
 
     redirect(URL('agregar_tipo_campos.html'))
 
-#. --------------------------------------------------------------------------- .
 def editar_tipo():
 
-    admin = get_tipo_usuario()  # Obtengo el tipo del usuario actual.
-    id = request.args[0]        # Se identifica cual tipo de actividad se identificará.
+    tipo = db.TIPO_ACTIVIDAD(int(request.args(0)))
 
-    # Se busca el tipo de actividad en la base de datos.
-    tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id).select()[0]
-
-    # Se obtienen todos los programas almacenados en la base de datos.
-    lista_programas = db().select(db.PROGRAMA.ALL)
-    programas = {}
-
-    # Se crea un diccionario para almacenar unicamente los nombres de los programas almacenados.
-    for programa in lista_programas:
-        programas[programa.id_programa] = programa.nombre
-
-    # Para modificar un tipo de actividad se debe tener al menos un programa.
-    formulario = SQLFORM.factory(
-                        Field('Nombre',
-                              default = tipo.nombre,
-                              requires = [IS_NOT_EMPTY(error_message='El nombre del tipo de actividad no puede quedar vacío.'),
-                                           IS_MATCH('([A-zÀ-ÿŸ])([A-zÀ-ÿŸ0-9" "])*', error_message="El nombre del tipo de actividad debe comenzar con una letra."),
-                                           IS_LENGTH(128)]),
-                        Field('Tipo', default = tipo.tipo_p_r,
-                              requires = IS_IN_SET({'P':'Evaluables por pares académicos', 'R':'No evaluables por pares académicos'},
-                                                    zero=T('Seleccione...'),
-                                                    error_message = 'Debes elegir entre "Evaluables por pares académicos" o "No evaluables por pares académicos"')),
-                        Field('Descripcion', type="text",
-                              default = tipo.descripcion,
-                              requires = [IS_NOT_EMPTY(error_message='La descripción del tipo de actividad no puede quedar vacía.'),
-                                          IS_LENGTH(2048)]),
-                        Field('Programa', default = tipo.id_programa,
-                              requires = IS_IN_SET(programas, zero="Seleccione...",
-                                                   error_message = 'Debes elegir uno de los programas listados.')),
-                        submit_button = 'Actualizar',
-                        labels = {'Descripcion' : 'Descripción'},
-                )
+    form = SQLFORM(db.TIPO_ACTIVIDAD, record=tipo)
+    form.element('#TIPO_ACTIVIDAD_nombre')['_readonly']=True
+    form.element('#TIPO_ACTIVIDAD_id_programa')['_readonly']=True
 
     # Metodos POST
     # En caso de que los datos del formulario sean aceptados

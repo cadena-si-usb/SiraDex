@@ -1,12 +1,27 @@
-{{#extend 'actividad/index.html'}}
-{{extend 'SIRADEXLayout.html'}}
+{{extend 'layoutSIRADEX.html'}}
 
-{{block titulo}}{{=nombre_tipo}}{{end}}
+{{block titulo}}
+	Agregar Producto
+{{end}}
+{{block subtitulo}}
+	{{=nombre_tipo}}
+{{end}}
+
+{{block descripcion}}
+<div class="col-lg-12">
+    <p class="text-justify">
+		Los campos con asteriscos <span style="color:red">*</span> son obligatorios
+		<br>
+			Los campos con el nombre en negrita sirven para ingresar a los participantes de la actividad. El usuario que esta registrando la Actividad debe ser seleccionado en al menos uno de estos campos.  
+    </p>
+</div>
+{{end}}
+
 {{block contenido}}
-<h2>Los campos con asteriscos <span style="color:red">*</span> son obligatorios</h2>
+
 <br>
 <p>
-	Los campos con el nombre en negrita sirven para ingresar a los participantes de la actividad. El usuario que esta registrando la Actividad debe ser seleccionado en al menos uno de estos campos.
+
 </p>
 <br>
 {{=form}}
