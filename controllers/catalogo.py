@@ -9,13 +9,8 @@ Funcion que se encarga de obtener los datos para mostrar los catalogos
 que existen en el sistema.
 '''
 def vGestionarCatalogos():
-    # Obtengo el tipo del usuario para permitir el acceso a la visa
-    # Limpio el Session del sistema.
     admin = get_tipo_usuario()
-    message = ""
-    # Se obtienen los nombres de todos los catalogos y se pasan al html.
-    catalogos = db(db.CATALOGO).select(db.CATALOGO.nombre, db.CATALOGO.id_catalogo)
-    return dict(admin = admin, catalogos = catalogos, message = message)
+    return dict(admin = admin)
 
 '''
 Funcion que se encarga de agregar un catalogo a la
