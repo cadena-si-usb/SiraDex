@@ -11,6 +11,8 @@ que existen en el sistema.
 def vGestionarCatalogos():
     admin = get_tipo_usuario()
 
+    #Si hay que agregar un campo a un catalogo
+
     #Obtenemos todos los catalogos.
     listaCatalogos = db().select(db.CATALOGO.ALL)
     catalogos = []
@@ -18,33 +20,50 @@ def vGestionarCatalogos():
     #Para cada catalogo, obtenemos sus campos.
     for catalogo in listaCatalogos:
         campos_guardados = db(db.CAMPO_CATALOGO.id_catalogo == catalogo.id).select()
-        print catalogo.id
-        print campos_guardados
         catalogos.append([catalogo, campos_guardados])
 
+    #Formulario para agregar un catalogo.
+    formulario_agregar_catalogo = AgregarCatalogo()
+    formulario_agregar_campo    = AgregarCampo()
 
-    print "CATALOGOS:"
-    for catalogo in catalogos:
-        print "CATALOGO " + catalogo[0].nombre
-        print "Numero de Campos "+ str(len(catalogo[1]))
-        print catalogo[0]
-        print catalogo[1]
-
-    #Formulario para agregar un cataloglo.
-    formulario_agregar = AgregarCatalogo()
-
-    if formulario_agregar.accepts(request.vars, session):
+    if formulario_agregar_catalogo.process(formname = "formulario_agregar_catalogo").accepted:
         # Creamos el catalogo y obtenemos su id, para pasarlo al controlador de agregar campo.
         id_catalogo = db.CATALOGO.insert(nombre = request.vars.nombre)['id_catalogo']
-        redirect(URL('vGestionarCatalogos',args=[id_catalogo]))
+        redirect(URL('vGestionarCatalogos'))
     # En caso de que el formulario no sea aceptado
-    elif formulario_agregar.errors:
-        session.message = 'Error en el Formulario.'
     else:
-        session.message = ''
+        message = 'Error en el Formulario.'
+
+    #Formulario para agregar un campo a un catalogo
+    if formulario_agregar_campo.process(formname = "formulario_agregar_campo").accepted:
+
+        nombre_campo_nuevo = request.vars.nombre
+        id_catalogo        = request.vars.id_catalogo
+        nombre_repetido    = False
+        campos_guardados = db(db.CAMPO_CATALOGO.id_catalogo == id_catalogo).select()
+        for campo in campos_guardados:
+            if campo.nombre == nombre_campo_nuevo:
+                nombre_repetido = True
+                break
+                
+        # Si el nombre no esta repetido, lo eliminamos.
+        if nombre_repetido:
+            message = 'Ya existe el campo'
+        else:
+            db.CAMPO_CATALOGO.insert(id_catalogo = id_catalogo,
+                                     nombre =  nombre_campo_nuevo,
+                                     tipo_campo = request.vars.tipo_campo,
+                                     obligatorio = request.vars.obligatorio)
+            message = ""
+        # Redirijo a la misma pagina para seguir agregando campos
+        redirect(URL('vGestionarCatalogos'))
+    # En caso de que el formulario no sea aceptado
+    else:
+        message = 'Error en el Formulario.'
 
     return dict(catalogos          = catalogos,
-                formulario_agregar =  formulario_agregar,
+                formulario_agregar_catalogo =  formulario_agregar_catalogo,
+                formulario_agregar_campo = formulario_agregar_campo,
                 admin = admin)
 
 '''
@@ -78,21 +97,8 @@ def AgregarCatalogo():
 Funcion que se encarga de mostrar los campos del catalogo,
 permite crear y elminiar campos relacionados con el catalogo indicado.
 '''
-def vModificarCatalogo():
+def AgregarCampo():
 
-    admin = get_tipo_usuario()
-
-    # Obtengo el id del catalogo
-    id_catalogo = request.args[0]
-
-    # Creo query para realizar busqueda de los campos que ya han sido agregados
-    # a ese catalogo
-    campos_guardados = db(db.CAMPO_CATALOGO.id_catalogo == id_catalogo).select()
-
-    #Como los catalogos son unicos, tomamos siempre el primer elemento del query.
-    nombre_catalogo  = db.CATALOGO[id_catalogo].nombre
-
-    # Busco el id del catalogo
     # Genero formulario para los campos
     formulario = SQLFORM.factory(
                     Field('nombre',
@@ -102,45 +108,14 @@ def vModificarCatalogo():
                            requires = [IS_IN_SET(tipo_campos, zero='Seleccione...', error_message="Debe seleccionar un tipo para el campo.")],
                            widget = SQLFORM.widgets.options.widget),
                     Field('obligatorio', type='boolean', default = False),
+                    Field('id_catalogo', type='string', readable=False),
                     labels = {'nombre'      : 'Nombre',
                               'tipo_campo'  : 'Tipo',
                               'obligatorio' : 'Obligatorio'},
                     submit_button='Agregar'
                    )
-    # En caso de que los datos del formulario sean aceptados
-    if formulario.accepts(request.vars, session):
 
-        nombre_campo_nuevo = request.vars.nombre
-        nombre_repetido    = False
-
-        for campo in campos_guardados:
-            if campo.nombre == nombre_campo_nuevo:
-                nombre_repetido = True
-                break
-
-        # Si el nombre no esta repetido, lo eliminamos.
-        if nombre_repetido:
-            session.msgErr = 1
-            session.message = 'Ya existe el campo'
-        else:
-            db.CAMPO_CATALOGO.insert(id_catalogo = id_catalogo,
-                                     nombre =  nombre_campo_nuevo,
-                                     tipo_campo = request.vars.tipo_campo,
-                                     obligatorio = request.vars.obligatorio)
-            session.msgErr = 0
-        # Redirijo a la misma pagina para seguir agregando campos
-        redirect(URL('vModificarCatalogo', args=[id_catalogo]))
-    # En caso de que el formulario no sea aceptado
-    elif formulario.errors:
-        session.message = 'Datos invalidos para el campo.'
-    else:
-        if(not(session.msgErr)):
-            session.message = ''
-
-    return dict(formulario = formulario,
-                campos_guardados = campos_guardados,
-                nombre_catalogo = nombre_catalogo,
-                admin      = admin)
+    return formulario
 
 '''
 Funcion auxiliar que se encarga de colocar
