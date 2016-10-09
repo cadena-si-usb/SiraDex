@@ -45,7 +45,7 @@ def vGestionarCatalogos():
             if campo.nombre == nombre_campo_nuevo:
                 nombre_repetido = True
                 break
-                
+
         # Si el nombre no esta repetido, lo eliminamos.
         if nombre_repetido:
             message = 'Ya existe el campo'
@@ -303,10 +303,9 @@ def eliminarCampos():
 
     # Obtengo el id del campo que se eliminara
     id_campo_cat = request.args[0]
-    id_catalogo  = request.args[1]
 
     # Elimino el campo del catalogo. Esto no afecta los tipos de actividades
     # Que estan definidas ya, ni los productos ya listos.
     del db.CAMPO_CATALOGO[id_campo_cat]
 
-    redirect(URL('vModificarCatalogo.html', args=[id_catalogo]))
+    redirect(URL('vGestionarCatalogos.html'))

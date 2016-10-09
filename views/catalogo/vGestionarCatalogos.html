@@ -73,7 +73,7 @@
                                   <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#elemModificar"></span>
                               </div>
                               <div class="col-sm-1">
-                                  <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#elemEliminar"></span>
+                                  <span class="glyphicon glyphicon-remove red" data-link-eliminar="{{=URL(f='eliminarCampos', args=[campo.id_campo_cat])}}" data-toggle="modal" data-target="#elemEliminar"></span>
                               </div>
                           </div>
                       </li>
@@ -127,11 +127,11 @@
       <div class="modal-body">
         <center>
         {{=formulario_agregar_campo.custom.begin}}
-          Nombre del Campo: <div>{{=formulario_agregar_campo.custom.widget.nombre}}</div>
-          Tipo:             <div>{{=formulario_agregar_campo.custom.widget.tipo_campo}}</div>
-          Obligatorio:      <div>{{=formulario_agregar_campo.custom.widget.obligatorio}}</div>
-          <div  style="display:none;">{{=formulario_agregar_campo.custom.widget.id_catalogo}}</div>
-          {{=formulario_agregar_campo.custom.submit}}
+            Nombre del Campo: <div>{{=formulario_agregar_campo.custom.widget.nombre}}</div>
+            Tipo:             <div>{{=formulario_agregar_campo.custom.widget.tipo_campo}}</div>
+            Obligatorio:      <div>{{=formulario_agregar_campo.custom.widget.obligatorio}}</div>
+            <div  style="display:none;">{{=formulario_agregar_campo.custom.widget.id_catalogo}}</div>
+            {{=formulario_agregar_campo.custom.submit}}
         {{=formulario_agregar_campo.custom.end}}
         </center>
       </div>
@@ -202,13 +202,13 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <center> <h4 class="modal-title">Eliminar Elemento del Catálogo</h4> </center>
+            <center> <h4 class="modal-title">Eliminar Campo del Catálogo</h4> </center>
         </div>
         <div class="modal-body">
-            <center> <p>Está seguro que quiere eliminar este Elemento del Catálogo.</p> </center>
+            <center> <p>Está seguro que quiere eliminar este campo del Catálogo.</p> </center>
             <br>
             <center>
-                <a>
+                <a id="botonEliminarCampo">
                   <button type="button" class="btn blue-add btn-border">Eliminar</button>
                 </a>
                 <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
@@ -226,6 +226,14 @@
       var id_catalogo = $(e.relatedTarget).data('id-catalogo');``
       //populate the textbox
       $(e.currentTarget).find('input[name="id_catalogo"]').val(id_catalogo);
+  });
+
+  //triggered when modal is about to be shown
+  $('#elemEliminar').on('show.bs.modal', function(e){
+      //get data-id attribute of the clicked element
+      var linkEliminar = $(e.relatedTarget).data('link-eliminar');
+      //populate the textbox
+      $("#botonEliminarCampo").attr("href", linkEliminar);
   });
 </script>
 
