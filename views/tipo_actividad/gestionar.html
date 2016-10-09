@@ -58,13 +58,14 @@
                 </tr>
             </thead>
             <tbody>
+                    {{for actividad in listaActividades: }}
                     <tr>
                         <td class="col-md-4">
                             <a href="{{=URL(c='tipo_actividad', f='ver_tipo_actividad.html')}}">
-                                < Nombre Tipo de Actividad 1>
+                                {{=actividad.nombre}} 
                             </a>
                         </td>
-                        <td class="col-md-6">< Descripcion Tipo de Actividad 1></td>
+                        <td class="col-md-6"> {{=actividad.descripcion}}</td>
                         <td class="center-vertically">
                             <center>
                                 <a href="#">
@@ -80,50 +81,7 @@
                             <center>
                         </td>
                     </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <a href="{{=URL(c='tipo_actividad', f='ver_tipo_actividad.html')}}">
-                                < Nombre Tipo de Actividad 2>
-                            </a>
-                        </td>
-                        <td class="col-md-6">< Descripcion Tipo de Actividad 2></td>
-                        <td class="center-vertically">
-                            <center>
-                                <a href="#">
-                                    <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#myModalEditar"></span>
-                                </a>
-                            <center>
-                        </td>
-                        <td class="center-vertically">
-                            <center>
-                                <a>
-                                   <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalDelete"></span>
-                                </a>
-                            <center>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <a href="{{=URL(c='tipo_actividad', f='ver_tipo_actividad.html')}}">
-                                < Nombre Tipo de Actividad 3>
-                            </a>
-                        </td>
-                        <td class="col-md-6">< Descripcion Tipo de Actividad 3></td>
-                        <td class="center-vertically">
-                            <center>
-                                <a href="#">
-                                    <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#myModalEditar"></span>
-                                </a>
-                            <center>
-                        </td>
-                        <td class="center-vertically">
-                            <center>
-                                <a>
-                                   <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalDelete"></span>
-                                </a>
-                            <center>
-                        </td>
-                    </tr>
+                    {{pass}}
             </tbody>
         </table>
     </div>
