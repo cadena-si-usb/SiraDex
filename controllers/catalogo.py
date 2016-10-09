@@ -10,7 +10,42 @@ que existen en el sistema.
 '''
 def vGestionarCatalogos():
     admin = get_tipo_usuario()
-    return dict(admin = admin)
+
+    #Obtenemos todos los catalogos.
+    listaCatalogos = db().select(db.CATALOGO.ALL)
+    catalogos = []
+
+    #Para cada catalogo, obtenemos sus campos.
+    for catalogo in listaCatalogos:
+        campos_guardados = db(db.CAMPO_CATALOGO.id_catalogo == catalogo.id).select()
+        print catalogo.id
+        print campos_guardados
+        catalogos.append([catalogo, campos_guardados])
+
+
+    print "CATALOGOS:"
+    for catalogo in catalogos:
+        print "CATALOGO " + catalogo[0].nombre
+        print "Numero de Campos "+ str(len(catalogo[1]))
+        print catalogo[0]
+        print catalogo[1]
+
+    #Formulario para agregar un cataloglo.
+    formulario_agregar = AgregarCatalogo()
+
+    if formulario_agregar.accepts(request.vars, session):
+        # Creamos el catalogo y obtenemos su id, para pasarlo al controlador de agregar campo.
+        id_catalogo = db.CATALOGO.insert(nombre = request.vars.nombre)['id_catalogo']
+        redirect(URL('vGestionarCatalogos',args=[id_catalogo]))
+    # En caso de que el formulario no sea aceptado
+    elif formulario_agregar.errors:
+        session.message = 'Error en el Formulario.'
+    else:
+        session.message = ''
+
+    return dict(catalogos          = catalogos,
+                formulario_agregar =  formulario_agregar,
+                admin = admin)
 
 '''
 Funcion que se encarga de agregar un catalogo a la
@@ -18,10 +53,7 @@ lista de catalogos existentes, en caso de que no exista
 uno con el mismo nombre, se encarga de crearlo y almacenarlo
 en la base de datos.
 '''
-def vAgregarCatalogo():
-    # Se obtiene el tipo de usuario.
-    admin = get_tipo_usuario()
-    # Se crea un formulario para introducir un nombre
+def AgregarCatalogo():
     formulario = SQLFORM.factory(
                         Field('nombre',
                               requires = [IS_NOT_EMPTY(error_message='El nombre del catalogo no puede quedar vacio.'),
@@ -30,17 +62,17 @@ def vAgregarCatalogo():
                               submit_button='Agregar',
                               labels={'nombre':'Nombre'})
 
-    if formulario.accepts(request.vars, session):
-        # Creamos el catalogo y obtenemos su id, para pasarlo al controlador de agregar campo.
-        id_catalogo = db.CATALOGO.insert(nombre = request.vars.nombre)['id_catalogo']
-        redirect(URL('vModificarCatalogo.html',args=[id_catalogo]))
-    # En caso de que el formulario no sea aceptado
-    elif formulario.errors:
-        session.message = 'Error en el Formulario.'
-    else:
-        session.message = ''
+    # if formulario.accepts(request.vars, session):
+    #     # Creamos el catalogo y obtenemos su id, para pasarlo al controlador de agregar campo.
+    #     id_catalogo = db.CATALOGO.insert(nombre = request.vars.nombre)['id_catalogo']
+    #     redirect(URL('vModificarCatalogo.html',args=[id_catalogo]))
+    # # En caso de que el formulario no sea aceptado
+    # elif formulario.errors:
+    #     session.message = 'Error en el Formulario.'
+    # else:
+    #     session.message = ''
 
-    return(dict(formulario = formulario, admin = admin))
+    return formulario
 
 '''
 Funcion que se encarga de mostrar los campos del catalogo,
@@ -143,65 +175,6 @@ def eliminarCatalogo():
     del db.CATALOGO[id_catalogo]
 
     redirect(URL('vGestionarCatalogos.html'))
-
-# '''
-# Funcion que se encarga de agregar valores a los
-# campos de un catalogo, en caso de que no exista
-# otra instancia con el mismo valor.
-# '''
-# def vAgregarElementoCampo():
-#     # Obtengo el tipo del usuario y el id del catalogo.
-#     admin = get_tipo_usuario()
-#     id_catalogo = request.args[0]
-#
-#     # Busco los campos asociados al catalogo.
-#     query = reduce(lambda a, b: (a&b),[db.CATALOGO.id_catalogo == id_catalogo,
-#                                       db.CATALOGO.id_catalogo == db.CATALOGO_TIENE_CAMPO.id_catalogo,
-#                                       db.CATALOGO_TIENE_CAMPO.id_campo_cat == db.CAMPO_CATALOGO.id_campo_cat])
-#     aux = db(query).select(db.CAMPO_CATALOGO.nombre)
-#     # Creo 2 arreglos para almacenar los campos y los id de cada campo.
-#     campos = []
-#     idsCampos = []
-#     # Nombres de los campos
-#     for row in aux:
-#         campos.append(row['nombre'])
-#
-#     arrId = db(query).select(db.CAMPO_CATALOGO.id_campo_cat)
-#     cantidadCampos = len(campos)
-#     # Obtengo los ids de los campos
-#     for row in arrId:
-#         idsCampos.append(row['id_campo_cat'])
-#     # Creo un arreglo con todos los campos del formulario.
-#     arreglo = []
-#     for i in range (0,len(campos)):
-#         arreglo += [ Field("pr"+str(i),'string', label=T(str(campos[i]))) ]
-#     if(len(arreglo) > 0):
-#         forma = SQLFORM.factory(
-#             *arreglo)
-#     else:
-#         session.message = "El catalogo no posee campos"
-#         redirect(URL('vGestionarCatalogos.html'))
-#
-#     if len(request.vars)>0:
-#         for i in range(0, cantidadCampos):
-#             valor = request.vars["pr"+str(i)]
-#
-#             # Genero un query para revisar si el valor existe en alguna instancia del campo.
-#             query2 = reduce(lambda a, b: (a&b), [db.VALORES_CAMPO_CATALOGO.valor == valor, db.VALORES_CAMPO_CATALOGO.id_catalogo == id_catalogo,
-#                                                  db.VALORES_CAMPO_CATALOGO.id_campo_cat == idsCampos[i]])
-#             if(len(db(query2).select()) > 0):
-#                 session.nombreMostrar = id_catalogo
-#                 session.message = "El valor de un campo esta duplicado"
-#                 redirect(URL('vMostrarCatalogo.html'))
-#
-#         # Almaceno los valores en cada uno de los campos
-#         for i in range(0, cantidadCampos):
-#             valor = request.vars["pr"+str(i)]
-#             db.VALORES_CAMPO_CATALOGO.insert(id_campo_cat = idsCampos[i], id_catalogo = id_catalogo, valor = valor)
-#         session.nombreMostrar = id_catalogo
-#         redirect(URL('vMostrarCatalogo.html'))
-#
-#     return (dict(forma = forma, admin = admin))
 
 '''
 Funcion encargada de mostrar todas las instancias
