@@ -45,7 +45,10 @@ def agregar_programa():
 # del sistema Siradex.
 def gestionar_programas():
     admin = get_tipo_usuario()
-    
+
+    # Obtengo todos los programas almacenados en la base de datos.
+    programas = db().select(db.PROGRAMA.ALL)
+
     formulario = SQLFORM.factory(
         Field('Nombre',
               requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacio.'),
@@ -72,7 +75,7 @@ def gestionar_programas():
     formulario_editar.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
     formulario_editar.element(_type='submit')['_value']="Editar"
 
-    return dict(admin=admin, formulario=formulario, formulario_editar=formulario_editar)
+    return dict(admin=admin, programas=programas, formulario=formulario, formulario_editar=formulario_editar)
 
 
 def eliminar_programa():
