@@ -13,7 +13,7 @@
 
 <div class="row">
     <div class="col-sm-5 col-sm-push-9" style="margin-top:10px; ; margin-left:30px">
-        <button type="button" class="btn btn-default green btn-border" data-toggle="modal" data-target="#myModalAgregar">
+        <button type="button" class="btn btn-default green btn-border" data-toggle="modal" data-target="#modalAgregarCatalogo">
             <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Catálogo
         </button>
     </div>
@@ -36,7 +36,7 @@
                 <li class="list-group-item">
                   <div class="row">
                       <div class="col-sm-4">
-                        <p>Este catalogo aun no tiene capos.</p>
+                        <p>Este catalogo aun no tiene campos.</p>
                       </div>
                   </div>
                 </li>
@@ -70,10 +70,10 @@
                                   {{= 'Si' if campo.obligatorio else 'No'}}
                               </div>
                               <div class="col-sm-1">
-                                  <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#elemModificar"></span>
+                                  <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#modalEditarCampo"></span>
                               </div>
                               <div class="col-sm-1">
-                                  <span class="glyphicon glyphicon-remove red" data-link-eliminar="{{=URL(f='eliminarCampos', args=[campo.id_campo_cat])}}" data-toggle="modal" data-target="#elemEliminar"></span>
+                                  <span class="glyphicon glyphicon-remove red" data-link-eliminar-campo="{{=URL(f='eliminarCampos', args=[campo.id_campo_cat])}}" data-toggle="modal" data-target="#modalEliminarCampo"></span>
                               </div>
                           </div>
                       </li>
@@ -84,13 +84,15 @@
                   <center>
                     <div class="col-sm-2 col-sm-offset-4">
                         <button type="button" class="btn btn-default btn-block green btn-border"
-                                data-toggle="modal" data-target="#myModalEditar"
+                                data-toggle="modal" data-target="#modalEditarCatalogo"
                                 data-id-catalogo="{{=catalogo[0].id}}">
                             <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar
                         </button>
                     </div>
                     <div class="col-sm-2">
-                      <button type="button" class="btn btn-default btn-block red-trash btn-border" data-toggle="modal" data-target="#myModalDelete">
+                      <button type="button" class="btn btn-default btn-block red-trash btn-border"
+                              data-toggle="modal" data-target="#modalEliminarCatalogo"
+                              data-link-eliminar-catalogo = "{{=URL(f='eliminarCatalogo', args=[catalogo[0].id])}}">
                           <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Eliminar
                       </button>
                     </div>
@@ -102,7 +104,7 @@
 </div>
 
 <!-- Modal Agregar Catalogo-->
-<div id="myModalAgregar" class="modal fade" role="dialog">
+<div id="modalAgregarCatalogo" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -117,7 +119,7 @@
 </div>
 
 <!-- Modal Agregar Campo-->
-<div id="myModalEditar" class="modal fade" role="dialog">
+<div id="modalEditarCatalogo" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -139,7 +141,7 @@
   </div>
 </div>
 
-<div id="elemModificar" class="modal fade" role="dialog">
+<div id="modalEditarCampo" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -173,7 +175,7 @@
 
 <!-- Modal Eliminar-->
 <div class="container">
-  <div class="modal fade" id="myModalDelete" role="dialog">
+  <div class="modal fade" id="modalEliminarCatalogo" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -184,7 +186,7 @@
             <center> <p>Está seguro que quiere eliminar este Catálogo.</p> </center>
             <br>
             <center>
-                <a>
+                <a id="botonEliminarCatalogo">
                   <button type="button" class="btn blue-add btn-border">Eliminar</button>
                 </a>
                 <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
@@ -197,7 +199,7 @@
 
 <!-- Modal Eliminar Elementos-->
 <div class="container">
-  <div class="modal fade" id="elemEliminar" role="dialog">
+  <div class="modal fade" id="modalEliminarCampo" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -221,7 +223,7 @@
 
 <script type"text/javascript">
   //triggered when modal is about to be shown
-  $('#myModalEditar').on('show.bs.modal', function(e){
+  $('#modalEditarCatalogo').on('show.bs.modal', function(e){
       //get data-id attribute of the clicked element
       var id_catalogo = $(e.relatedTarget).data('id-catalogo');``
       //populate the textbox
@@ -229,11 +231,19 @@
   });
 
   //triggered when modal is about to be shown
-  $('#elemEliminar').on('show.bs.modal', function(e){
+  $('#modalEliminarCampo').on('show.bs.modal', function(e){
       //get data-id attribute of the clicked element
-      var linkEliminar = $(e.relatedTarget).data('link-eliminar');
+      var linkEliminar = $(e.relatedTarget).data('link-eliminar-campo');
       //populate the textbox
       $("#botonEliminarCampo").attr("href", linkEliminar);
+  });
+
+  //triggered when modal is about to be shown
+  $('#modalEliminarCatalogo').on('show.bs.modal', function(e){
+      //get data-id attribute of the clicked element
+      var linkEliminar = $(e.relatedTarget).data('link-eliminar-catalogo');
+      //populate the textbox
+      $("#botonEliminarCatalogo").attr("href", linkEliminar);
   });
 </script>
 

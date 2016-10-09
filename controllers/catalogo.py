@@ -249,51 +249,6 @@ def vModificarCampo():
 
     return(dict(formulario=formulario, admin=admin))
 
-# '''
-# Funcion que se encarga de eliminar una instancia
-# de los campos de un catalogo.
-# '''
-# def eliminarValorCampo():
-#     # Obtengo el tipo del usuario y el nombre del campo a eliminar.
-#     admin = get_tipo_usuario()
-#     id_campo = request.args[0]
-#     valor = request.args[1]
-#     print("id_campo: ", id_campo, " valor: ", valor)
-#     for dic in session.filas:
-#         for i in dic:
-#             if (str(i['id_campo_cat'])==id_campo) and (str(i['valor']) == valor):
-#                 diccionario = i
-#                 dcc = dic
-#                 print("request.args: ", request.args)
-#                 print("session.filas: ", session.filas)
-#
-#     # Genero un query para buscar los campos que tiene el catalogo.
-#     query = reduce(lambda a, b: (a&b),[db.CATALOGO.id_catalogo == diccionario['id_catalogo'],
-#                                        db.CATALOGO.id_catalogo == db.CATALOGO_TIENE_CAMPO.id_catalogo,
-#                                       db.CATALOGO_TIENE_CAMPO.id_campo_cat == db.CAMPO_CATALOGO.id_campo_cat])
-#     aux = db(query).select(db.CAMPO_CATALOGO.nombre)
-#     # Arreglos auxiliares para guardar los campos y los ids respectivamente.
-#     cmpo = []
-#     ids = []
-#     # Nombres de los campos
-#     for row in aux:
-#         cmpo.append(row['nombre'])
-#
-#     arrId = db(query).select(db.CAMPO_CATALOGO.id_campo_cat)
-#
-#     # Ids de los campos
-#     for row in arrId:
-#         ids.append(row['id_campo_cat'])
-#     # Voy eliminando el valor de cada campo de la fila seleccionada
-#     for i in range(0,len(cmpo)):
-#         for f in dcc:
-#             if(f['id_campo_cat'] == ids[i]):
-#                 df = f['valor']
-#
-#         db(db.VALORES_CAMPO_CATALOGO.valor == df).delete()
-#     session.nombreMostrar = db(db.CATALOGO.id_catalogo == diccionario['id_catalogo']).select(db.CATALOGO.id_catalogo)[0].id_catalogo
-#     redirect(URL('vMostrarCatalogo.html'))
-
 '''
 Funcion que se encarga de eliminar un campo del catalogo,
 eliminando todas las relaciones existentes e instancias
