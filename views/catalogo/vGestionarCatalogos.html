@@ -70,7 +70,14 @@
                                   {{= 'Si' if campo.obligatorio else 'No'}}
                               </div>
                               <div class="col-sm-1">
-                                  <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#modalEditarCampo"></span>
+                                  <span class="glyphicon glyphicon-edit blue"
+                                        data-toggle="modal" data-target="#modalEditarCampo"
+                                        data-id-campo-cat="{{=campo.id_campo_cat}}"
+                                        data-id-catalogo="{{=campo.id_catalogo}}"
+                                        data-nombre="{{=campo.nombre}}"
+                                        data-tipo-campo="{{=campo.tipo_campo}}"
+                                        data-obligatorio="{{=campo.obligatorio}}">
+                                  </span>
                               </div>
                               <div class="col-sm-1">
                                   <span class="glyphicon glyphicon-remove red" data-link-eliminar-campo="{{=URL(f='eliminarCampos', args=[campo.id_campo_cat])}}" data-toggle="modal" data-target="#modalEliminarCampo"></span>
@@ -84,7 +91,7 @@
                   <center>
                     <div class="col-sm-2 col-sm-offset-4">
                         <button type="button" class="btn btn-default btn-block green btn-border"
-                                data-toggle="modal" data-target="#modalEditarCatalogo"
+                                data-toggle="modal" data-target="#modalAgregarCampo"
                                 data-id-catalogo="{{=catalogo[0].id}}">
                             <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar
                         </button>
@@ -119,7 +126,7 @@
 </div>
 
 <!-- Modal Agregar Campo-->
-<div id="modalEditarCatalogo" class="modal fade" role="dialog">
+<div id="modalAgregarCampo" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -129,11 +136,23 @@
       <div class="modal-body">
         <center>
         {{=formulario_agregar_campo.custom.begin}}
-            Nombre del Campo: <div>{{=formulario_agregar_campo.custom.widget.nombre}}</div>
-            Tipo:             <div>{{=formulario_agregar_campo.custom.widget.tipo_campo}}</div>
-            Obligatorio:      <div>{{=formulario_agregar_campo.custom.widget.obligatorio}}</div>
-            <div  style="display:none;">{{=formulario_agregar_campo.custom.widget.id_catalogo}}</div>
-            {{=formulario_agregar_campo.custom.submit}}
+          <div class=row>
+            <div class="col-md-4"><b>Nombre del Campo</b></div>
+            <div class="col-md-6">{{=formulario_agregar_campo.custom.widget.nombre}}</div>
+          </div>
+          <br>
+          <div class=row>
+            <div class="col-md-4"><b>Tipo</b></div>
+            <div class="col-md-6">{{=formulario_agregar_campo.custom.widget.tipo_campo}}</div>
+          </div>
+          <br>
+          <div class=row>
+            <div class="col-md-4"><b>Obligatorio</b></div>
+            <div class="col-md-6">{{=formulario_agregar_campo.custom.widget.obligatorio}}</div>
+          </div>
+          <br>
+          <div  style="display:none;">{{=formulario_agregar_campo.custom.widget.id_catalogo}}</div>
+          {{=formulario_agregar_campo.custom.submit}}
         {{=formulario_agregar_campo.custom.end}}
         </center>
       </div>
@@ -146,28 +165,31 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <center><h4 class="modal-title"> Editar Elemento </h4><center>
+        <center><h4 class="modal-title"> Editar Campo </h4><center>
       </div>
       <div class="modal-body">
-          <form class="form-horizontal">
-              <div class="form-group">
-                <label class="control-label col-sm-3" for="email"> < campo 1> </label>
-                <div class="col-sm-9">
-                  <input class="form-control">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-sm-3" for="pwd"> < campo 2 > </label>
-                <div class="col-sm-9">
-                  <input class="form-control">
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="col-sm-offset-3 col-sm-9">
-                  <button type="submit" class="btn blue-add btn-block btn-border">Editar</button>
-                </div>
-              </div>
-            </form>
+        <center>
+        {{=formulario_editar_campo.custom.begin}}
+          <div class=row>
+            <div class="col-md-4"><b>Nombre del Campo</b></div>
+            <div class="col-md-6">{{=formulario_editar_campo.custom.widget.nombre}}</div>
+          </div>
+          <br>
+          <div class=row>
+            <div class="col-md-4"><b>Tipo</b></div>
+            <div class="col-md-6">{{=formulario_editar_campo.custom.widget.tipo_campo}}</div>
+          </div>
+          <br>
+          <div class=row>
+            <div class="col-md-4"><b>Obligatorio</b></div>
+            <div class="col-md-6">{{=formulario_editar_campo.custom.widget.obligatorio}}</div>
+          </div>
+          <br>
+          <div style="display: none;">{{=formulario_editar_campo.custom.widget.id_catalogo}}</div>
+          <div style="display: none;">{{=formulario_editar_campo.custom.widget.id_campo_cat}}</div>
+          {{=formulario_editar_campo.custom.submit}}
+        {{=formulario_editar_campo.custom.end}}
+        </center>
       </div>
     </div>
   </div>
@@ -222,27 +244,36 @@
 </div>
 
 <script type"text/javascript">
-  //triggered when modal is about to be shown
-  $('#modalEditarCatalogo').on('show.bs.modal', function(e){
-      //get data-id attribute of the clicked element
-      var id_catalogo = $(e.relatedTarget).data('id-catalogo');``
-      //populate the textbox
+
+  // Pasamos los argumentos para editar el catalogo.
+  $('#modalAgregarCampo').on('show.bs.modal', function(e){
+      var id_catalogo = $(e.relatedTarget).data('id-catalogo');
       $(e.currentTarget).find('input[name="id_catalogo"]').val(id_catalogo);
   });
 
-  //triggered when modal is about to be shown
+  // Pasamos los argumentos para editar el campo.
+  $('#modalEditarCampo').on('show.bs.modal', function(e){
+      var id_catalogo  = $(e.relatedTarget).data('id-catalogo');
+      var id_campo_cat = $(e.relatedTarget).data('id-campo-cat');
+      var nombre       = $(e.relatedTarget).data('nombre');
+      var tipo_campo   = $(e.relatedTarget).data('tipo-campo');
+      var obligatorio  = $(e.relatedTarget).data('obligatorio');
+      $(e.currentTarget).find('input[name="id_catalogo"]').val(id_catalogo);
+      $(e.currentTarget).find('input[name="id_campo_cat"]').val(id_campo_cat);
+      $(e.currentTarget).find('input[name="nombre"]').val(nombre);
+      $(e.currentTarget).find('input[name="tipo_campo"]').val(tipo_campo);
+      $(e.currentTarget).find('input[name="obligatorio"]').val(obligatorio);
+  });
+
+  // Pasamos los argumentos para eliminar campo
   $('#modalEliminarCampo').on('show.bs.modal', function(e){
-      //get data-id attribute of the clicked element
       var linkEliminar = $(e.relatedTarget).data('link-eliminar-campo');
-      //populate the textbox
       $("#botonEliminarCampo").attr("href", linkEliminar);
   });
 
-  //triggered when modal is about to be shown
+  // Pasamos los argumentos para eliminar catalogo.
   $('#modalEliminarCatalogo').on('show.bs.modal', function(e){
-      //get data-id attribute of the clicked element
       var linkEliminar = $(e.relatedTarget).data('link-eliminar-catalogo');
-      //populate the textbox
       $("#botonEliminarCatalogo").attr("href", linkEliminar);
   });
 </script>
