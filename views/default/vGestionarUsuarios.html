@@ -75,34 +75,33 @@
                     </tr>
                 </thead>    
                 <tbody>
-                {{for usuario in usuarios:}}
-                    {{if usuario.tipo == 'Administrador':}}
+                {{for admin in usuarios:}}
+                    {{if admin.tipo == 'Administrador':}}
                     <tr>
-                    <td class="center-vertically">{{ =usuario.usbid}}</td>
-                    <td class="center-vertically">{{ =usuario.nombres}}</td>
-                    <td class="center-vertically">{{ =usuario.apellidos}}</td>
-                    
+                    <td class="center-vertically">{{ =admin.usbid}}</td>
+                    <td class="center-vertically">{{ =admin.nombres}}</td>
+                    <td class="center-vertically">{{ =admin.apellidos}}</td>                    
                     <!-- Boton Modificar -->
                     <td class="center-vertically"> 
                     <center>
-                    <a href="{{=URL(f='vModificarRol', args=[ usuario.usbid ] )}}">
+                    <a href="{{=URL(f='vModificarRol', args=[ admin.usbid ] )}}">
                     <span class="glyphicon glyphicon-edit green-icn"></span>
                     </a>
                     </center>
-                    </td>
-
+                    </td> 
+                    <!-- Boton Eliminar -->                    
                     <td class="center-vertically">
                     <center>
-                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar a {{=usuario.nombres}}?')) {window.location.href = '{{=URL(f='vEliminarUsuario',args=[ usuario.usbid ] )}}';}">
+                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar este admin?')) {window.location.href = '{{=URL(f='vEliminarUsuario',args=[ admin.usbid ] )}}';}">
                     <span class="glyphicon glyphicon-remove red"></span>
                     </a>
                     </center>
-                    </td>                         
+                    </td>                                            
                     </tr>
                     {{pass}}        
                 {{pass}}
                 </tbody>
-            </table>
+            </table>   
         </div>
         <!-- Usuarios -->
         <div role="tabpanel" class="tab-pane" id="user">
@@ -122,8 +121,7 @@
                     <tr>
                     <td class="center-vertically">{{ =usuario.usbid}}</td>
                     <td class="center-vertically">{{ =usuario.nombres}}</td>
-                    <td class="center-vertically">{{ =usuario.apellidos}}</td>
-                    
+                    <td class="center-vertically">{{ =usuario.apellidos}}</td>                    
                     <!-- Boton Modificar -->
                     <td class="center-vertically"> 
                     <center>
@@ -131,15 +129,15 @@
                     <span class="glyphicon glyphicon-edit green-icn"></span>
                     </a>
                     </center>
-                    </td>
-
+                    </td> 
+                    <!-- Boton Eliminar -->                    
                     <td class="center-vertically">
                     <center>
-                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar a {{=usuario.nombres}}?')) {window.location.href = '{{=URL(f='vEliminarUsuario',args=[ usuario.usbid ] )}}';}">
+                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar este usuario?')) {window.location.href = '{{=URL(f='vEliminarUsuario',args=[ usuario.usbid ] )}}';}">
                     <span class="glyphicon glyphicon-remove red"></span>
                     </a>
                     </center>
-                    </td>                         
+                    </td>                                            
                     </tr>
                     {{pass}}        
                 {{pass}}
@@ -177,7 +175,7 @@
 
                     <td class="center-vertically">
                     <center>
-                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar a {{=usuario.nombres}}?')) {window.location.href = '{{=URL(f='vEliminarUsuario',args=[ usuario.usbid ] )}}';}">
+                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar a este usuario?')) {window.location.href = '{{=URL(f='vEliminarUsuario',args=[ usuario.usbid ] )}}';}">
                     <span class="glyphicon glyphicon-remove red"></span>
                     </a>
                     </center>
@@ -219,7 +217,7 @@
 
                     <td class="center-vertically">
                     <center>
-                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar a {{=usuario.nombres}}?')) {window.location.href = '{{=URL(f='vEliminarUsuario',args=[ usuario.usbid ] )}}';}">
+                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar a este usuario?')) {window.location.href = '{{=URL(f='vEliminarUsuario',args=[ usuario.usbid ] )}}';}">
                     <span class="glyphicon glyphicon-remove red"></span>
                     </a>
                     </center>
@@ -261,7 +259,7 @@
 
                     <td class="center-vertically">
                     <center>
-                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar a {{=usuario.nombres}}?')) {window.location.href = '{{=URL(f='vEliminarUsuario',args=[ usuario.usbid ] )}}';}">
+                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar a este usuario?')) {window.location.href = '{{=URL(f='vEliminarUsuario',args=[ usuario.usbid ] )}}';}">
                     <span class="glyphicon glyphicon-remove red"></span>
                     </a>
                     </center>
@@ -277,4 +275,5 @@
     </div>
         <a href ="{{=URL('vAgregarUsuario')}}" id="sombra"> 
         {{=IMG(_src=URL('static', 'icon/i_add.png'),_height='55',_alt='Agregar Producto') }}
+        </a>
 {{end}}
