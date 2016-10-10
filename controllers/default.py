@@ -293,6 +293,8 @@ def vAgregarUsuario():
                 fields=['usbid','tipo','telefono','correo_alter'],
                 submit_button='Agregar',
                 labels={'usbid':'USBID','telefono':'Teléfono', 'correo_alter':'Correo alternativo','tipo':'Tipo'})
+            forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+            forma.element(_type='submit')['_value']="Agregar"
             # Si el largo de request.vars es mayor a cero, quiere decir que de introdujo informacion en el formulario.
             if len(request.vars)!=0:
                 # En usbidAux almacenamos el usbid proporcionado por el administrador
