@@ -13,7 +13,11 @@ Vista de Gestionar Tipo Actividad, tiene las opciones:
     Gestionar Tipo de Actividad
 '''
 def gestionar():
-    return dict(admin = get_tipo_usuario())
+    
+    listaActividades = db(db.TIPO_ACTIVIDAD).select(db.TIPO_ACTIVIDAD.nombre
+                                                   ,db.TIPO_ACTIVIDAD.descripcion)
+    
+    return dict(admin = get_tipo_usuario(), listaActividades = listaActividades)
 
 #. --------------------------------------------------------------------------- .
 '''
