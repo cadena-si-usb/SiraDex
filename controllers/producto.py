@@ -102,7 +102,8 @@ def agregar():
     #fields.append(Field(nombre,requires=IS_IN_SET([(1,'Method1'), (2,'Method2'), (3,'Method3')], zero='Select')))
 
     form=SQLFORM.factory(*fields)
-
+    form.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    form.element(_type='submit')['_value']="Agregar"
     if form.process().accepted:
         dicc_act = db.PRODUCTO.insert(id_tipo = tipo,ci_usu_creador= session.usuario['cedula'])
         id_act = dicc_act['id_producto']
@@ -163,7 +164,8 @@ def modificar():
         valores.append([nombre,row.valor_campo])
 
     form=SQLFORM.factory(*fields)
-
+    form.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    form.element(_type='submit')['_value']="Modificar"
     for i in range(len(valores)):
         setattr(form.vars, valores[i][0], valores[i][1])
 

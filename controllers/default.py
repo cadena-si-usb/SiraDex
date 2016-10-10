@@ -367,8 +367,9 @@ def vModificarRol():
                     db.USUARIO,
                     button=['Actualizar'],
                     fields=['tipo'],
-                    submit_button='Actualizar',
                     labels={'tipo':'TIPO'})
+            forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+            forma.element(_type='submit')['_value']="Actualizar"
             if len(request.vars)!=0:
                 if (not db(db.USUARIO.usbid == request.args[0]).isempty()):
                     if(request.args[0] != session.usuario["usbid"]):
