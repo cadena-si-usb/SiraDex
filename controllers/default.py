@@ -8,6 +8,7 @@
 # - download is for downloading files uploaded in the db (does streaming)
 # -------------------------------------------------------------------------
 import os
+import datetime
 import re
 from usbutils import get_ldap_data, random_key
 import urllib2
@@ -45,66 +46,56 @@ def get_tipo_usuario():
     else:
         redirect(URL(c ="default",f="index"))
 
-# def login_cas():
-#     session.usuario = dict()
-#     session.usuario['usbid'] = "00-00000"
-#     session.usuario['tipo'] = "Administrador"
-#     session.usuario["first_name"] = "Usuario"
-#     session.usuario["last_name"] = "Parche"
-#     session.usuario['cedula'] = 00000000
-#     session.usuario["email"] = "usuarioparche@gmail.com"
-#     redirect(URL('perfil'))
-
 def login_cas():
-   if not request.vars.getfirst('ticket'):
-       #redirect(URL('error'))
-       pass
-   try:
-       import urllib2, ssl
-       ssl._create_default_https_context = ssl._create_unverified_context
-       url = "https://secure.dst.usb.ve/validate?ticket="+\
-             request.vars.getfirst('ticket') +\
-             "&service=" + URL_RETORNO
-       req = urllib2.Request(url)
-       response = urllib2.urlopen(req)
-       the_page = response.read()
+    if not request.vars.getfirst('ticket'):
+        #redirect(URL('error'))
+        pass
+    try:
+        import urllib2, ssl
+        ssl._create_default_https_context = ssl._create_unverified_context
+        url = "https://secure.dst.usb.ve/validate?ticket="+\
+        request.vars.getfirst('ticket') +\
+        "&service=" + URL_RETORNO
+        req = urllib2.Request(url)
+        response = urllib2.urlopen(req)
+        the_page = response.read()
 
-   except Exception, e:
-       print "Exception: "
-       print e
-       # redirect(URL('error'))
+    except Exception, e:
+        print "Exception: "
+        print e
+        # redirect(URL('error'))
 
-   if the_page[0:2] == "no":
-       pass
-   else:
-       # session.casticket = request.vars.getfirst('ticket')
-       data  = the_page.split()
-       usbid = data[1]
+    if the_page[0:2] == "no":
+        pass
+    else:
+        # session.casticket = request.vars.getfirst('ticket')
+        data  = the_page.split()
+        usbid = data[1]
 
-       usuario = get_ldap_data(usbid) #Se leen los datos del CAS
-       tablaUsuarios = db.USUARIO
+        usuario = get_ldap_data(usbid) #Se leen los datos del CAS
+        tablaUsuarios = db.USUARIO
 
-       session.usuario = usuario
-       print "Hola",session.usuario
-       session.usuario['usbid'] = usbid
+        session.usuario = usuario
+        print "Hola",session.usuario
+        session.usuario['usbid'] = usbid
 
-       if not db(tablaUsuarios.usbid == usbid).isempty():
-           datosUsuario = db(tablaUsuarios.usbid==usbid).select()[0]
-           session.usuario['tipo'] = datosUsuario.tipo
-           if datosUsuario.tipo == "Bloqueado":
-               response.flash = T("Usuario bloqueado")
-               redirect(URL(c = "default",f="index"))
-           else:
-               redirect(URL('perfil'))
-       else:
-           session.usuario['tipo'] = "Usuario"
-           db.USUARIO.insert(ci=session.usuario["cedula"],  # Lo insertamos en la base de datos.
-           usbid=session.usuario["usbid"],
-           nombres=session.usuario["first_name"],
-           apellidos=session.usuario["last_name"],
-           correo_inst=session.usuario["email"],
-           tipo = "Usuario")
-           redirect(URL('vRegistroUsuario'))
+        if not db(tablaUsuarios.usbid == usbid).isempty():
+            datosUsuario = db(tablaUsuarios.usbid==usbid).select()[0]
+            session.usuario['tipo'] = datosUsuario.tipo
+            if datosUsuario.tipo == "Bloqueado":
+                response.flash = T("Usuario bloqueado")
+                redirect(URL(c = "default",f="index"))
+            else:
+                redirect(URL('perfil'))
+        else:
+            session.usuario['tipo'] = "Usuario"
+            db.USUARIO.insert(ci=session.usuario["cedula"],  # Lo insertamos en la base de datos.
+            usbid=session.usuario["usbid"],
+            nombres=session.usuario["first_name"],
+            apellidos=session.usuario["last_name"],
+            correo_inst=session.usuario["email"],
+            tipo = "Usuario")
+            redirect(URL('vRegistroUsuario'))
 
 def logout_cas():
     session.usuario = None
@@ -170,19 +161,6 @@ def perfil():
             Field('Correo_Alternativo', default=correo_a,writable=False),
             readonly=True)
         return dict(form1 = form,admin = admin)
-    else:
-        redirect(URL("index"))
-
-def perfil():
-    if session.usuario != None:
-        admin = 4
-        if(session.usuario["tipo"] == "DEX"):
-            admin = 2
-        elif(session.usuario["tipo"] == "Administrador"):
-            admin = 1
-        else:
-            admin = 0
-        return dict(admin = admin)
     else:
         redirect(URL("index"))
 
@@ -438,7 +416,6 @@ def get_tipo_usuario():
     return admin
 
 def cambiar_colores():
-
     session.template = int(request.vars['color'])
     print(session.template)
     if request.env.http_referer:
@@ -447,22 +424,43 @@ def cambiar_colores():
     return dict()
 
 def index():
+    now = datetime.datetime.now()
+    if now.month < 10 :
+        mes = "-0" +  str(now.month)
+    else:
+        mes = "-" +  str(now.month)
+    if now.day < 10 :
+        dia = "-0" +  str(now.day)
+    else:
+        dia = "-" +  str(now.month)
+    fecha = str(now.year) + mes + dia
     rows = db(db.PROGRAMA).select().as_list()
-    dicc = dict()
-    for programa in rows:
-        tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa['id_programa']).select().as_list()
-        dicc[programa['nombre']] = []
-        for tipo in tiposA:
-            dicc[programa['nombre']].append(tipo['nombre'])
+    rowsT = db(db.TIPO_ACTIVIDAD).select().as_list()
     return locals()
 
 def obtener_actividades():
+    print request.vars.Programa
     programa = db(db.PROGRAMA.nombre==request.vars.Programa).select().first()
+
     tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa.id_programa).select('nombre')
     concat = "<option></option>"
 
     for tipo in tiposA:
         option = tipo.nombre
-        concat += "<option>"+option+"</option>"
+        concat += "<option value="+option+">"+option+"</option>"
 
     return 'jQuery("#lista_tipos").empty().append("%s")'% repr(concat)
+
+def obtener_autores():
+    tipoA = db(db.TIPO_ACTIVIDAD.nombre==request.vars.TipoActividad).select().first()
+    sql = "select nombres from usuario where ci in (select ci_usu_creador from producto where id_tipo=="+str(tipoA.id_tipo)+");"
+    autores = db.executesql(sql)
+
+    concat = "<option></option>"
+
+    for autor in autores:
+        option = autor.nombre
+        print option
+        concat += "<option value="+option+">"+option+"</option>"
+
+    return 'jQuery("#lista_autores").empty().append("%s")'% repr(concat)
