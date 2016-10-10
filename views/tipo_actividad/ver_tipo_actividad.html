@@ -1,44 +1,50 @@
-{{#extend 'SIRADEX_tipos_Actividad_layout.html'}}
-{{extend 'SIRADEXLayout.html'}}
+{{extend 'layoutSIRADEXloged.html'}}
 
-<h3 id="titulo"> Consulta de Tipo de Actividad</h3>
-<br/>
-<!-- Boton para volver, se elimino porque se pensaba no tenia mucha utilidad
-<button class="btn btn-default">
-    <a href="{{=request.env.http_referer}}">Volver</a>
-</button>
--->
-<!-- <button class="btn btn-default" onClick="{{=URL(c='tipo_actividad', f='modificar_tipo.html', args=[tipo.id_tipo])}}"> -->
-<!-- <button class="btn btn-link"> -->
-    <a href="{{=URL(c='tipo_actividad', f='modificar_tipo.html', args=[tipo.id_tipo])}}">Modificar</a>
-<!-- </button> -->
-<br/>
-<br/>
+{{block titulo}}
+    <h2> <center> < Nombre Tipo de Actividad > </center> </h2>
+{{end}}
 
-<table class="table table-bordered">
-    <tr> <th class="col-md-2">Nombre</td>           <td class="col-md-6">{{=tipo.nombre}}</td> </tr>
-    <tr> <th class="col-md-2">Descripción</td>      <td class="col-md-6">{{=tipo.descripcion}}</td> </tr>
-    <tr> <th class="col-md-2">Tipo de Programa</td> <td class="col-md-6">{{=tipo.tipo_p_r}}</td> </tr>
-    <tr> <th class="col-md-2">Programa</td>         <td class="col-md-6">{{=tipo.id_programa}}</td> </tr>
-    <!--<tr> <th class="col-md-2">Producto</td>         <td class="col-md-6">{{=tipo.producto}}</td> </tr>-->
-</table>
+{{block contenido}}
+<div class="container-fluid">
+    <table class="table table-bordered tabla-border" >
+        <tbody class="tabla-border">
+            <tr> <th class="col-md-2 tabla-border">Nombre:</td>           <td class="col-md-6 tabla-border"> < Nombre > </td> </tr>
+            <tr> <th class="col-md-2 tabla-border">Descripción:</td>      <td class="col-md-6 tabla-border"> < Descripcion > </td> </tr>
+            <tr> <th class="col-md-2 tabla-border">Tipo de Programa:</td> <td class="col-md-6 tabla-border"> < Tipo de Programa > </td></tr>
+            <tr> <th class="col-md-2 tabla-border">Programa:</td>         <td class="col-md-6 tabla-border"> < Programa > </td> </tr>
+            <!--<tr> <th class="col-md-2">Producto</td>         <td class="col-md-6"> < Producto > </td> </tr>-->
+        </tbody>
+    </table>
 
-<h4> Campos </h4>
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th class="col-md-4">Nombre</td>
-            <th class="col-md-3">Tipo</td>
-            <th class="col-md-2">Obligatorio</td>
-        </tr>
-    </thead>
-    <tbody>
-        {{for campo in campos:}}
-            <tr>
-                <td class="col-md-4">{{=campo.nombre}}</td>
-                <td class="col-md-3">{{=campo.lista}}</td>
-                <td class="col-md-2">{{=campo.obligatorio}}</td>
-            </tr>
-        {{pass}}
-    </tbody>
-</table>
+    <h3> < Campos > </h3>
+    <br>
+    <table class="table table-striped table-condensed table-hover sortable">
+            <thead>
+                <tr>
+                    <th> <center> Nombre </center> </td>
+                    <th> <center> Tipo </center> </td>
+                    <th> <center> Obligatorio </center> </td>
+                </tr>
+            </thead>
+            <tbody>
+                    <tr>
+                        <td> <center> < Campo 1 > </center></td>
+                        <td> <center> < Tipo 1 > </center></td>
+                        <td> <center> < False / True > </center></td>
+                    </tr>
+                    <tr>
+                        <td> <center> < Campo 2 > </center></td>
+                        <td> <center> < Tipo 2 > </center></td>
+                        <td> <center> < False / True > </center></td>
+                        
+                    </tr>
+                    <tr>
+                       <td> <center> < Campo 3 > </center></td>
+                       <td> <center> < Tipo 3 > </center></td>
+                       <td> <center> < False / True > </center></td>
+                    </tr>
+            </tbody>
+        </table>
+</div>
+
+{{end}}

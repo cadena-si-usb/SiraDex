@@ -1,0 +1,126 @@
+{{extend 'layoutSIRADEXloged.html'}}
+
+{{block titulo}}
+    Bienvenido al SIRADEX
+{{end}}
+
+{{block subtitulo}}
+    <!-- Nombre del usuario -->
+    <!-- Sergio Alejandro -->
+    {{=session.usuario['first_name'].split(' ')[0]}} {{=session.usuario['last_name'].split(' ')[0]}}
+    <!-- icono editar -->
+    <a id="editar" href="{{=URL('EditarPerfil')}}" >
+    {{=IMG(_src=URL('static', 'icon', args='i_edit.png'),_style='max-height:1em') }} 
+    </a>
+{{end}}
+
+{{block descripcion}}
+    <div class="row"> 
+        <div class="col-lg-6">
+        <!-- Datos del usuario -->
+            <p class="text-justify">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt sed corporis dolores totam excepturi commodi nobis expedita quo officiis sint facere id dicta rerum dolor amet, obcaecati aliquam fugit perspiciatis                           
+            </p>
+        </div>
+    <div class="col-lg-6">
+        AQUI VA LA GRAFICA
+    </div>
+    </div>
+{{end}}
+
+{{block contenido}}
+    <div class="row">
+        <div class="col-md-12">
+        <!-- Nav tabs -->
+        <div class="card">
+        <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active act">
+            <a  href="#activas" 
+                aria-controls="activas" 
+                role="tab" 
+                data-toggle="tab">
+                Activas
+            </a>
+        </li>
+        
+        <li role="presentation" class="esp">
+            <a  href="#espera" 
+                aria-controls="espera" 
+                role="tab" 
+                data-toggle="tab">
+                En Espera
+            </a>
+        </li>
+
+        <li role="presentation" class="rec">
+            <a  href="#rechazadas" 
+                aria-controls="rechazadas" 
+                role="tab" 
+                data-toggle="tab">
+                Rechazadas
+            </a>
+        </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+        <!-- Activas -->
+        <div role="tabpanel" class="tab-pane active" id="activas">
+        <ul>
+            
+            <li>Actividades Activas</li>
+            <li>Actividades Activas</li>
+            <li>Actividades Activas</li>
+            <li>Actividades Activas</li>
+            <li>Actividades Activas</li>
+        </ul>
+        </div>
+        <!-- Espera -->
+        <div role="tabpanel" class="tab-pane" id="espera">
+            <li>Actividades en espera</li>
+            <li>Actividades en espera</li>
+            <li>Actividades en espera</li>
+            <li>Actividades en espera</li>
+            <li>Actividades en espera</li>
+        </div>
+        <!-- Rechazadas -->
+        <div role="tabpanel" class="tab-pane" id="rechazadas">
+            <li>Actividades Rechazadas</li>
+            <li>Actividades Rechazadas</li>
+            <li>Actividades Rechazadas</li>
+            <li>Actividades Rechazadas</li>
+            <li>Actividades Rechazadas</li>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        <a href="{{=URL(c='producto',f='gestionar')}}">        
+            <button type="button" class="btn btn-default green btn-border center-block" data-toggle="modal" data-target="#myModal">
+                Ver Todas Mis Actividades
+            </button>
+        </a>
+{{end}}                                    
+
+{{block script}}
+
+    <script>
+        $(document).ready(function(){
+            $("#dv-act").hide();
+            $("#dv-rec").hide();
+            $("#dv-esp").hide();
+
+            $("#btn-act").click(function(){
+            $("#dv-act").toggle(300);
+                });
+
+            $("#btn-rec").click(function(){
+            $("#dv-rec").toggle(300);
+                });
+
+            $("#btn-esp").click(function(){
+            $("#dv-esp").toggle(300);
+                });                            
+            });
+    </script>
+{{end}}

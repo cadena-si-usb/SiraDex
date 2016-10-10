@@ -8,7 +8,7 @@
 <h1 id="banner_h1">
 
 <body>
-    <h4> Validación de Actividades </h4>
+    <h4> Validación de Productos </h4>
     <div class = "session_message">
         {{= session.message or ''}}
         {{ session.message = '' }}
@@ -18,37 +18,33 @@
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th class="col-md-4">ID Actividad</td>
-            <th class="col-md-4">Nombre Actividad</td>
+            <th class="col-md-4">ID Producto</td>
+            <th class="col-md-4">Nombre Producto</td>
             <th class="col-md-1">Validar</td>
             <th class="col-md-1">Rechazar</td>
         </tr>
         </thead>
         <tbody>
-            {{for actividad in actividades:}}
+            {{for producto in productos:}}
                 <tr>
                     <td class="col-md-4">
-                        {{=actividad.id_actividad}}
+                        {{=producto.id_producto}}
                     </td>
-                    
+
                     {{for tipo in tipos:}}
-                        {{if tipo.id_tipo == actividad.id_tipo:}}
+                        {{if tipo.id_tipo == producto.id_tipo:}}
                             <td class="col-md-6">
                                 {{=tipo.nombre}}
                             </td>
                             {{break}}
                         {{pass}}
-                    
-                        
-                       
-           
                     <td class="col-md-1">
-                        <a href="{{=URL(f='validar.html', args=[actividad.id_actividad])}}">
+                        <a href="{{=URL(f='validar.html', args=[producto.id_producto])}}">
                             {{=IMG(_src=URL('static','iconos/Add_26x26.png'))}}
                         </a>
                     </td>
                     <td class="col-md-1">
-                        <a href="{{=URL(f='rechazar.html', args=[actividad.id_actividad])}}">
+                        <a href="{{=URL(f='rechazar.html', args=[producto.id_producto])}}">
                             {{=IMG(_src=URL('static','iconos/Delete_26x26.png'))}}
                         </a>
                     </td>

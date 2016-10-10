@@ -1,0 +1,24 @@
+{{ extend 'producto/index.html'}}
+{{ extend 'layoutSIRADEXloged.html' }}
+
+{{block titulo}}
+    Registro de Productos
+{{end}}
+
+{{block contenido}}
+<h4>Seleccione el Tipo de Producto que desea agregar.</h4>
+<table class="table">
+    <tr>
+    {{if len(rows) == 0:}}
+        No hay Productos que mostrar
+    {{else:}}
+    {{for x in rows:}}
+        <td>
+        <a href="{{=URL('agregar',args=x.id)}}"> {{=x.nombre}} </a>
+        </td>
+    </tr>
+     {{pass}}
+     {{pass}}
+
+</table>
+{{end}}

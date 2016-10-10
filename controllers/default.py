@@ -41,66 +41,70 @@ def get_tipo_usuario():
             else:
                 admin = 0
         else:
-            redirect(URL(c ="default",f="vMenuPrincipal"))
+            redirect(URL(c ="default",f="perfil"))
     else:
         redirect(URL(c ="default",f="index"))
 
+# def login_cas():
+#     session.usuario = dict()
+#     session.usuario['usbid'] = "00-00000"
+#     session.usuario['tipo'] = "Administrador"
+#     session.usuario["first_name"] = "Usuario"
+#     session.usuario["last_name"] = "Parche"
+#     session.usuario['cedula'] = 00000000
+#     session.usuario["email"] = "usuarioparche@gmail.com"
+#     redirect(URL('perfil'))
+
 def login_cas():
-    session.usuario = dict()
-    session.usuario['usbid'] = "00-00000"
-    session.usuario['tipo'] = "Administrador"
-    session.usuario["first_name"] = "Usuario"
-    session.usuario["last_name"] = "Parche"
-    session.usuario['cedula'] = 00000000
-    session.usuario["email"] = "usuarioparche@gmail.com"
-    redirect(URL('vMenuPrincipal'))
+   if not request.vars.getfirst('ticket'):
+       #redirect(URL('error'))
+       pass
+   try:
+       import urllib2, ssl
+       ssl._create_default_https_context = ssl._create_unverified_context
+       url = "https://secure.dst.usb.ve/validate?ticket="+\
+             request.vars.getfirst('ticket') +\
+             "&service=" + URL_RETORNO
+       req = urllib2.Request(url)
+       response = urllib2.urlopen(req)
+       the_page = response.read()
 
-'''if not request.vars.getfirst('ticket'):
-        #redirect(URL('error'))
-        pass
-    try:
-        import urllib2, ssl
-        ssl._create_default_https_context = ssl._create_unverified_context
-        url = "https://secure.dst.usb.ve/validate?ticket="+\
-              request.vars.getfirst('ticket') +\
-              "&service=" + URL_RETORNO
-        req = urllib2.Request(url)
-        response = urllib2.urlopen(req)
-        the_page = response.read()
+   except Exception, e:
+       print "Exception: "
+       print e
+       # redirect(URL('error'))
 
-    except Exception, e:
-        print "Exception: "
-        print e
-        # redirect(URL('error'))
+   if the_page[0:2] == "no":
+       pass
+   else:
+       # session.casticket = request.vars.getfirst('ticket')
+       data  = the_page.split()
+       usbid = data[1]
 
-    if the_page[0:2] == "no":
-        pass
-    else:
-        # session.casticket = request.vars.getfirst('ticket')
-        data  = the_page.split()
-        usbid = data[1]
+       usuario = get_ldap_data(usbid) #Se leen los datos del CAS
+       tablaUsuarios = db.USUARIO
 
-        usuario = get_ldap_data(usbid) #Se leen los datos del CAS
-        tablaUsuarios = db.USUARIO
+       session.usuario = usuario
+       print "Hola",session.usuario
+       session.usuario['usbid'] = usbid
 
-        session.usuario = usuario
-        print "Hola",session.usuario
-        session.usuario['usbid'] = usbid
-
-        if not db(tablaUsuarios.usbid == usbid).isempty():
-            datosUsuario = db(tablaUsuarios.usbid==usbid).select()[0]
-            session.usuario['tipo'] = datosUsuario.tipo
-            redirect(URL('vMenuPrincipal'))
-        else:
-            session.usuario['tipo'] = "Administrador"
-            db.USUARIO.insert(ci=session.usuario["cedula"],  # Lo insertamos en la base de datos.
-            usbid=session.usuario["usbid"],
-            nombres=session.usuario["first_name"],
-            apellidos=session.usuario["last_name"],
-            correo_inst=session.usuario["email"],
-            tipo = "Administrador")
-            redirect(URL('vRegistroUsuario'))
-'''
+       if not db(tablaUsuarios.usbid == usbid).isempty():
+           datosUsuario = db(tablaUsuarios.usbid==usbid).select()[0]
+           session.usuario['tipo'] = datosUsuario.tipo
+           if datosUsuario.tipo == "Bloqueado":
+               response.flash = T("Usuario bloqueado")
+               redirect(URL(c = "default",f="index"))
+           else:
+               redirect(URL('perfil'))
+       else:
+           session.usuario['tipo'] = "Usuario"
+           db.USUARIO.insert(ci=session.usuario["cedula"],  # Lo insertamos en la base de datos.
+           usbid=session.usuario["usbid"],
+           nombres=session.usuario["first_name"],
+           apellidos=session.usuario["last_name"],
+           correo_inst=session.usuario["email"],
+           tipo = "Usuario")
+           redirect(URL('vRegistroUsuario'))
 
 def logout_cas():
     session.usuario = None
@@ -125,7 +129,6 @@ def vRegistroUsuario():
         usuarios = db(db.USUARIO).select()
         for raw in usuarios:
             if raw.ci == session.usuario["cedula"]:
-                print("SE metio")
                 forma=SQLFORM(
                     db.USUARIO,
                     raw,
@@ -138,12 +141,12 @@ def vRegistroUsuario():
             nuevoTelefono = request.vars.telefono
             nuevoCorreoAlter = request.vars.correo_alter
             db(db.USUARIO.ci == session.usuario["cedula"]).update(telefono=nuevoTelefono, correo_alter=nuevoCorreoAlter)
-            redirect(URL('vMenuPrincipal'))        # Redirige al usuario al menu principal.
+            redirect(URL('perfil'))        # Redirige al usuario al menu principal.
         return dict(form1 = form, form = forma, admin=get_tipo_usuario())
     else:
         redirect(URL("index"))
 
-def vVerPerfil():
+def perfil():
     if session.usuario != None:
 	if session.usuario["tipo"] == "Bloqueado":
 	    redirect(URL("index"))
@@ -175,7 +178,7 @@ def vVerPerfil():
     else:
         redirect(URL("index"))
 
-def vMenuPrincipal():
+def perfil():
     if session.usuario != None:
         admin = 4
         if(session.usuario["tipo"] == "DEX"):
@@ -202,11 +205,11 @@ def vMenuDex():
                 admin = 0
             return dict(admin = admin)
         else:
-            redirect(URL("vMenuPrincipal"))
+            redirect(URL("perfil"))
     else:
         redirect(URL("index"))
 
-def vEditarPerfil():
+def EditarPerfil():
     if session.usuario != None:
         if session.usuario["tipo"] == "Bloqueado":
             redirect(URL("index"))
@@ -222,21 +225,26 @@ def vEditarPerfil():
             Field('Apellidos', default=session.usuario["last_name"],writable=False),
             readonly=True)
         usuarios = db(db.USUARIO).select()
+
+
         # Modificar datos del perfil.
         for raw in usuarios:
             if raw.ci == session.usuario["cedula"]:
                 forma=SQLFORM(
                     db.USUARIO,
                     record=raw,
-                    button=['Actualizar'],
+                    
                     fields=['telefono','correo_alter'],
-                    submit_button='Actualizar',
+
+                    
                     labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'})
+            forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+            forma.element(_type='submit')['_value']="Actualizar"
         if len(request.vars)!=0:
             nuevoTelefono = request.vars.telefono
             nuevoCorreoAlter = request.vars.correo_alter
             db(db.USUARIO.ci == session.usuario["cedula"]).update(telefono=nuevoTelefono, correo_alter=nuevoCorreoAlter)
-            redirect(URL('vVerPerfil'))
+            redirect(URL('perfil'))
 
         return dict(form1 = form, form = forma, admin = admin)
     else:
@@ -254,7 +262,7 @@ def vMenuAdmin():
             session.message = ""
             return response.render(admin = get_tipo_usuario())
         else:
-            redirect(URL("vMenuPrincipal"))
+            redirect(URL("perfil"))
     else:
         redirect(URL("index"))
 
@@ -268,7 +276,7 @@ def vGestionarUsuarios():
             aux = db(db.USUARIO).select(db.USUARIO.usbid,db.USUARIO.nombres,db.USUARIO.apellidos,db.USUARIO.tipo)
             return dict(usuarios = aux,message = message, admin=get_tipo_usuario())
         else:
-            redirect(URL("vMenuPrincipal"))
+            redirect(URL("perfil"))
     else:
         redirect(URL("index"))
 
@@ -350,7 +358,7 @@ def vAgregarUsuario():
                         #return dict(message = response.flash)
             return dict(form = forma,message = message, admin=get_tipo_usuario())
         else:
-            redirect(URL("vMenuPrincipal"))
+            redirect(URL("perfil"))
     else:
         redirect(URL("index"))
 
@@ -369,7 +377,7 @@ def vEliminarUsuario():
                     session.message = T("Para eliminar su cuenta, por favor comuníquese con un administrador")
                     redirect(URL('vGestionarUsuarios'))
         else:
-            redirect(URL("vMenuPrincipal"))
+            redirect(URL("perfil"))
     else:
         redirect(URL("index"))
 
@@ -400,7 +408,7 @@ def vModificarRol():
 
             return dict(forma = form, form = forma, message = message, admin=get_tipo_usuario())
         else:
-            redirect(URL("vMenuPrincipal"))
+            redirect(URL("perfil"))
     else:
         redirect(URL("index"))
 
@@ -408,7 +416,7 @@ def setVista():
     session.vista = int(request.args[0])
 
     if session.vista == 0:
-        redirect(URL(c='actividad', f='gestionar.html'))
+        redirect(URL(c='producto', f='gestionar.html'))
     elif session.vista == 1:
         redirect(URL(c='tipo_actividad', f='gestionar.html'))
     elif session.vista == 2:
@@ -428,7 +436,7 @@ def get_tipo_usuario():
             else:
                 admin = 0
         else:
-            redirect(URL(c ="default",f="vMenuPrincipal"))
+            redirect(URL(c ="default",f="perfil"))
     else:
         redirect(URL(c ="default",f="index"))
 
@@ -442,3 +450,25 @@ def cambiar_colores():
         redirect(request.env.http_referer)
 
     return dict()
+
+def index():
+    rows = db(db.PROGRAMA).select().as_list()
+    print rows
+    dicc = dict()
+    for programa in rows:
+        tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa['id_programa']).select().as_list()
+        dicc[programa['nombre']] = []
+        for tipo in tiposA:
+            dicc[programa['nombre']].append(tipo['nombre'])
+    return locals()
+
+def obtener_actividades():
+    programa = db(db.PROGRAMA.nombre==request.vars.Programa).select().first()
+    tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa.id_programa).select('nombre')
+    concat = "<option></option>"
+
+    for tipo in tiposA:
+        option = tipo.nombre
+        concat += "<option>"+option+"</option>"
+
+    return 'jQuery("#lista_tipos").empty().append("%s")'% repr(concat)
