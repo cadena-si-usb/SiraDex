@@ -1,11 +1,10 @@
-<<<<<<< HEAD
+
 .*
 *.orig
 !.gitignore
 *.orig
 *.pyc
 *.pyo
-=======
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -64,7 +63,7 @@ coverage.xml
 *.pot
 
 # Django stuff:
->>>>>>> desarrollo
+
 *.log
 *~
 *.1

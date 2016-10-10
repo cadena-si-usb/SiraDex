@@ -50,7 +50,7 @@
                             <li><a href="#">Crear Backup</a></li>
                         </ul>
                     </li>
-                    <li><a href="#">Catálogos</a></li>
+                    <li><a href="{{=URL(c='catalogo', f='vGestionarCatalogos.html')}}">Catálogos</a></li>
                     <li><a href="#">Usuarios</a></li>
                     <li><a href="#">Notificaciones</a></li>
                 </ul>
@@ -73,25 +73,27 @@
             {{ pass }}
 
             <!--Opciones basicas-->
+
                 <!--Cierre de sesion-->
-
-<li class="dropdown activo">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{=session.usuario['first_name'].split(' ')[0]}} </a>
-          <ul class="dropdown-menu">
-                    <li><a href="{{=URL(c='default',f='perfil')}}">Ver Perfil</a></li>
-                    <li><a href="{{=URL(c='default',f='EditarPerfil')}}">Editar Perfil</a></li>
-                    <li><a href="{{=URL(c='producto',f='gestionar')}}">Mis Productos</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li>
-                    <!--Cierre de sesion-->
-                    <a href="{{=URL(c='default', f='logout_cas.html')}}">
-                            Cerrar Sesión
+                <li class="dropdown activo">
+                    <a  class="dropdown-toggle" 
+                        data-toggle="dropdown" 
+                        href="{{=URL(c='default', f='perfil', args=[2])}}"> {{=session.usuario['first_name'].split(' ',1)[0]}}
                     </a>
-                    </li>
-          </ul>
-        </li>
-
-        </ul>
+                    <ul class="dropdown-menu" style="right:auto">
+                        <li><a href="{{=URL(c='default',f='perfil')}}">Ver Perfil</a></li>
+                        <li><a href="{{=URL(c='default',f='EditarPerfil')}}">Editar Perfil</a></li>
+                        <li><a href="{{=URL(c='producto',f='gestionar')}}">Mis Productos</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li>
+                        <!--Cierre de sesion-->
+                        <a href="{{=URL(c='default', f='logout_cas.html')}}">
+                                Cerrar Sesión
+                        </a>
+                        </li>
+                    </ul>
+            </li>
+      </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>

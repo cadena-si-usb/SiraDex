@@ -61,39 +61,77 @@
                         </span>
                     
                     <!-- Lupa -->
-                    <span class="input-group-btn">
-                        <button type="submit" 
-                                class="btn btn-default"
-                                id="btn-lupa">
-                                <span id="cable">.</span><span class="glyphicon glyphicon-search"></span>
-                        </button>
-                    </span>
+                        <span class="input-group-btn">
+                            <button type="submit" 
+                                    class="btn btn-default" 
+                                    id="btn-lupa">
+                                O
+                            </button>
                         </span>                                        
                 </div>
             </form>
         
         <!-- Filtros -->
             <div id="filtros">
-                <!-- AQUI VAN LOS FILTROS -->
+                <!-- Split button -->
+                <div class="btn-group">
+                  <button type="button" class="btn" >Programa</button>
+                  <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                  </button>
+                  <ul class="dropdown-menu">
+                  </ul>
+                </div>
 
+                <!-- Split button -->
+                <div class="btn-group">
+                  <button type="button" class="btn">Tipo de Actividad</button>
+                  <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                  </button>
+                  <ul class="dropdown-menu" id="listaTipos">
+
+                  </ul>
+                </div>
+
+                <!-- Split button -->
+                <div class="btn-group">
+                  <button type="button" class="btn">Fecha</button>
+                  <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a href="#">Opcion 1</a></li>
+                  </ul>
+                </div>                                
+                
+                <!-- Split button -->
+                <div class="btn-group">
+                  <button type="button" class="btn">Usuario</button>
+                  <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a href="#">Opcion 1</a></li>
+                  </ul>
+                </div>
+
+            </div>
             <form>
-                <!--Programas-->
-                <select name="Programa" onchange="ajax('obtener_actividades', ['Programa'], ':eval')">
+                <select name="Programa" >
                     <option></option>
                     {{for x in rows:}}
-                    <option value="{{=x['nombre']}}">{{=x['nombre']}}</option>
-
+                    <option value="{{=x['nombre']}}" onclick="ajax('{{=URL('default', 'listaTipos')}}', ['Programa'], ':eval')">{{=x['nombre']}}</option>
                     {{pass}}
                 </select>
-
-                <!--Actividades-->
-
-                <select name="TipoActividad" id="lista_tipos" >
+                <select name="TipoActividad"  id="listaTipos" onclick="agregar()" >
                 </select>
-                <span id="SlistaTipos"></span>
             </form>
 </form>
-
 {{end}}
 
 {{block footer}}
@@ -105,8 +143,6 @@
 {{block script}}
     <script>
         $(document).ready(function(){
-                       
-
             $("#filtros").hide();
 
             $("#btn-filtro").click(function(){
@@ -114,5 +150,12 @@
                 });
             });
 
+    function agregar(){
+        var lista = document.getElementById("listaTipos");
+        var o = document.createElement("OPTION");
+        var t = document.createTextNode("hola");
+        o.appendChild(t);
+        lista.appendChild(o);
+    };
     </script>
 {{end}}

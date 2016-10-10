@@ -75,25 +75,11 @@
         <!-- Filtros -->
             <div id="filtros">
                 <!-- AQUI VAN LOS FILTROS -->
+                filtros
 
-            <form>
-                <!--Programas-->
-                <select name="Programa" onchange="ajax('obtener_actividades', ['Programa'], ':eval')">
-                    <option></option>
-                    {{for x in rows:}}
-                    <option value="{{=x['nombre']}}">{{=x['nombre']}}</option>
+            </div>
 
-                    {{pass}}
-                </select>
-
-                <!--Actividades-->
-
-                <select name="TipoActividad" id="lista_tipos" >
-                </select>
-                <span id="SlistaTipos"></span>
-            </form>
 </form>
-
 {{end}}
 
 {{block footer}}
@@ -105,8 +91,6 @@
 {{block script}}
     <script>
         $(document).ready(function(){
-                       
-
             $("#filtros").hide();
 
             $("#btn-filtro").click(function(){

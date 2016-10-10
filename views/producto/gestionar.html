@@ -84,7 +84,7 @@
                             {{for x in rows:}}
                                 {{if x.validacion == 'Validada':}}
                                 <tr>
-                                    <td class="center-vertically"> {{=x.ci_usuario_crea}}</td>
+                                    <td class="center-vertically"> {{=x.ci_usu_creador}}</td>
                                     <td class="center-vertically"> {{=x.id_tipo}}</td>
                                     <td class="center-vertically">  
                                         <div class="detalles">
@@ -97,8 +97,8 @@
                                         {{pass}}
                                         </div>
                                     </td>
-                                    <td class="center-vertically"><!--   Creacion    --> 00/Ene/0000</td>
-                                    <td class="center-vertically"> <!-- Modificacion --> 00/Ene/0000</td>
+                                    <td class="center-vertically"><!--   Creacion    --> {{x.modif_fecha}}</td>
+                                    <td class="center-vertically"> <!-- Modificacion --> {{x.modif_fecha}}</td>
                                     <!-- Boton Modificar -->
                                     <td class="center-vertically"> 
                                     <center>
@@ -153,7 +153,7 @@
                             {{for x in rows:}}
                                 {{if x.validacion == 'En espera':}}
                                 <tr>
-                                    <td class="center-vertically"> {{=x.ci_usuario_crea}}</td>
+                                    <td class="center-vertically"> {{=x.ci_usu_creador}}</td>
                                     <td class="center-vertically"> {{=x.id_tipo}}</td>
                                     <td class="center-vertically">  
                                         <div class="detalles">
@@ -166,8 +166,8 @@
                                         {{pass}}
                                         </div>
                                     </td>
-                                    <td class="center-vertically"><!--   Creacion    --> 00/Ene/0000</td>
-                                    <td class="center-vertically"> <!-- Modificacion --> 00/Ene/0000</td>
+                                    <td class="center-vertically"><!--   Creacion    --> {{x.modif_fecha}}</td>
+                                    <td class="center-vertically"> <!-- Modificacion --> {{x.modif_fecha}}</td>
                                     <!-- Boton Modificar -->
                                     <td class="center-vertically"> 
                                     <center>
@@ -222,7 +222,7 @@
                             {{for x in rows:}}
                                 {{if x.validacion == 'Rechazada':}}
                                 <tr>
-                                    <td class="center-vertically"> {{=x.ci_usuario_crea}}</td>
+                                    <td class="center-vertically"> {{=x.ci_usu_creador}}</td>
                                     <td class="center-vertically"> {{=x.id_tipo}}</td>
                                     <td class="center-vertically">  
                                         <div class="detalles">
@@ -235,8 +235,8 @@
                                         {{pass}}
                                         </div>
                                     </td>
-                                    <td class="center-vertically"><!--   Creacion    --> 00/Ene/0000</td>
-                                    <td class="center-vertically"> <!-- Modificacion --> 00/Ene/0000</td>
+                                    <td class="center-vertically"><!--   Creacion    --> {{x.modif_fecha}}</td>
+                                    <td class="center-vertically"> <!-- Modificacion --> {{x.modif_fecha}}</td>
                                     <!-- Boton Modificar -->
                                     <td class="center-vertically"> 
                                     <center>

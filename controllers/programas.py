@@ -8,6 +8,7 @@ Vista de Gestionar Programas tiene las opciones:
 - Por ahora, no se pueden eliminar programas.
 '''
 
+
 def agregar_programa():
 
     admin = get_tipo_usuario
@@ -39,9 +40,48 @@ def agregar_programa():
 
     return dict(formulario=formulario, admin = admin)
 
-'''
-    Permite editar todos los campos que corresponden a un programa dado.
-'''
+
+# Permitiria Modificar o Desactivar Programas
+# del sistema Siradex.
+def gestionar_programas():
+    admin = get_tipo_usuario()
+    
+    formulario = SQLFORM.factory(
+        Field('Nombre',
+              requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacio.'),
+                          IS_MATCH('([A-Za-z])([A-Za-z0-9" "])*', error_message="El nombre del programa no puede iniciar con numeros.")]),
+        Field('Descripcion', type="text",
+              requires=IS_NOT_EMPTY(error_message='La descripcion del programa no puede quedar vacia.')),
+        submit_button = 'Agregar',
+        labels = {'Descripcion' : 'Descripción',
+                  'Nombre' : 'Nombre del Programa'},
+        )
+    formulario.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    formulario.element(_type='submit')['_value']="Agregar"
+
+    formulario_editar  = SQLFORM.factory(
+        Field('Nombre',
+              requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacio.'),
+                          IS_MATCH('([A-Za-z])([A-Za-z0-9" "])*', error_message="El nombre del programa no puede iniciar con numeros.")]),
+        Field('Descripcion', type="text",
+              requires=IS_NOT_EMPTY(error_message='La descripcion del programa no puede quedar vacia.')),
+        submit_button = 'Agregar',
+        labels = {'Descripcion' : 'Descripción',
+                  'Nombre' : 'Nombre del Programa'},
+        )
+    formulario_editar.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    formulario_editar.element(_type='submit')['_value']="Editar"
+
+    return dict(admin=admin, formulario=formulario, formulario_editar=formulario_editar)
+
+
+def eliminar_programa():
+    admin = get_tipo_usuario()
+    db(db.PROGRAMA.id==request.args(0)).delete()
+    redirect(URL('gestionar_programas'))
+    return locals()
+
+
 def editar_programa():
 
     admin = get_tipo_usuario()  # Obtengo el tipo del usuario actual.
@@ -80,9 +120,3 @@ def editar_programa():
         session.message = ''
 
     return dict(formulario=formulario, admin = admin)
-
-def eliminar_programa():
-    admin = get_tipo_usuario()
-    db(db.PROGRAMA.id==request.args(0)).delete()
-    redirect(URL('gestionar_programas'))
-    return locals()

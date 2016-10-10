@@ -75,25 +75,33 @@
         <!-- Filtros -->
             <div id="filtros">
                 <!-- AQUI VAN LOS FILTROS -->
+<<<<<<< HEAD
+                filtros
 
+            </div>
+
+=======
+
+            </div>
             <form>
                 <!--Programas-->
                 <select name="Programa" onchange="ajax('obtener_actividades', ['Programa'], ':eval')">
                     <option></option>
                     {{for x in rows:}}
-                    <option value="{{=x['nombre']}}">{{=x['nombre']}}</option>
+                    <option value="{{=x['nombre']}}" onclick="agregar('{{=x['nombre']}}')">{{=x['nombre']}}</option>
 
                     {{pass}}
                 </select>
 
                 <!--Actividades-->
 
+
                 <select name="TipoActividad" id="lista_tipos" >
                 </select>
                 <span id="SlistaTipos"></span>
             </form>
+>>>>>>> 20a081fa7c4ae3fa8a99a64192babe3616ff06e1
 </form>
-
 {{end}}
 
 {{block footer}}
