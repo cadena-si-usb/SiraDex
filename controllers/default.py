@@ -174,7 +174,21 @@ def perfil():
             Field('Telefono',label = "Teléfono", default=tlf,writable=False),
             Field('Correo_Alternativo', default=correo_a,writable=False),
             readonly=True)
-        return dict(form1 = form,admin = admin)
+
+        rows = db(db.PRODUCTO.ci_usu_creador==session.usuario['cedula']).select()
+        detalles = {}
+
+        for row in rows:
+            dict_campos = dict()
+            campos = db((db.PRODUCTO_TIENE_CAMPO.id_campo == db.CAMPO.id_campo)
+                        & (db.PRODUCTO_TIENE_CAMPO.id_producto == row.id_producto)).select()
+
+            for campo in campos:
+                dict_campos[campo.CAMPO.nombre] = campo.PRODUCTO_TIENE_CAMPO.valor_campo
+
+            detalles[row] = dict_campos
+
+        return locals()
     else:
         redirect(URL("index"))
 
