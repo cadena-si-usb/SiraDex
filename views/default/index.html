@@ -18,7 +18,7 @@
                 </li>
             </ul>
         </div>
-    </nav>                                   
+    </nav>
 {{end}}
 
 {{block titulo}}
@@ -33,10 +33,10 @@
     <br>
     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt sed corporis dolores totam excepturi commodi nobis expedita quo officiis sint facere id dicta rerum dolor amet, obcaecati aliquam fugit perspiciatis
     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt sed corporis dolores totam excepturi commodi nobis expedita quo officiis sint facere id dicta rerum dolor amet, obcaecati aliquam fugit perspiciatis
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt sed corporis dolores totam excepturi commodi nobis expedita quo officiis sint facere id dicta rerum dolor amet, obcaecati aliquam fugit perspiciatis                            
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt sed corporis dolores totam excepturi commodi nobis expedita quo officiis sint facere id dicta rerum dolor amet, obcaecati aliquam fugit perspiciatis
     <br>
     <br>
-    Puedes buscar productos en el buscador que sirve para buscar productos:                          
+    Puedes buscar productos en el buscador que sirve para buscar productos:
     </p>
 </div>
 {{end}}
@@ -69,15 +69,13 @@
                         </button>
                     </span>
                         </span>                                        
-                </div>
-            </form>
-        
+                </div>        
         <!-- Filtros -->
             <div id="filtros">
                 <!-- AQUI VAN LOS FILTROS -->
 
-            <form>
                 <!--Programas-->
+                <span>Programas:</span>
                 <select name="Programa" onchange="ajax('obtener_actividades', ['Programa'], ':eval')">
                     <option></option>
                     {{for x in rows:}}
@@ -87,12 +85,21 @@
                 </select>
 
                 <!--Actividades-->
+                <span>Tipo Actividad:</span>
+                <select name="TipoActividad" id="lista_tipos" onchange="ajax('obtener_autores', ['TipoActividad'], ':eval')">
+                    <option></option>
+                    {{for x in rowsT:}}
+                    <option value="{{=x['nombre']}}">{{=x['nombre']}}</option>
 
-                <select name="TipoActividad" id="lista_tipos" >
+                    {{pass}}
                 </select>
-                <span id="SlistaTipos"></span>
-            </form>
-</form>
+                <span>Fecha:</span>
+                <input type="date" name="fecha" max='{{=fecha}}'/>
+                <span>Autor:</span>
+                <select name="Autor" id="list_autores">
+                </select>
+    </form>
+
 
 {{end}}
 
@@ -105,10 +112,7 @@
 {{block script}}
     <script>
         $(document).ready(function(){
-                       
-
             $("#filtros").hide();
-
             $("#btn-filtro").click(function(){
             $("#filtros").toggle(300);
                 });
