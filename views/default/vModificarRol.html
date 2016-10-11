@@ -1,7 +1,7 @@
 {{ extend 'layoutSIRADEXloged.html' }}
 
 {{block titulo}}
-    Modificar Rol
+    Modificar Rol del Usuario
 {{end}}			
 
 {{block descripcion}}
@@ -12,25 +12,17 @@
 
 {{block contenido}}
 <!-- Contenido principal de la pagina -->
-<section class = "main">
 	<!-- En esta seccion va todo el contenido de la pagina -->
-	<section class = "contenido">
-		
-		<!-- Cuando se retorne ejecute una funcion va a poner
-			 lo que esta retorne aqui -->
-
-        <div>
-            <div class="container-fluid col-md-4">
-            </div>
-            <div class=" container-fluid col-xs-6">
+<div class="row">
+    <div class="card">
+    <div class="container-fluid">
+        <div class="tab-pane">
              {{=forma}}
-             {{=form}}
-            </div>
-            <div class="container-fluid col-md-4">
-            </div>
+             {{=form}}        
         </div>
+    </div>
+    </div>
+</div>
 
-	</section><!-- close contenido -->
 	
-</section><!-- close main -->
 {{end}}

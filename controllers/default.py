@@ -225,8 +225,8 @@ def EditarPerfil():
 
                     
                     labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'})
-            forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
-            forma.element(_type='submit')['_value']="Actualizar"
+                forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+                forma.element(_type='submit')['_value']="Actualizar"
         if len(request.vars)!=0:
             nuevoTelefono = request.vars.telefono
             nuevoCorreoAlter = request.vars.correo_alter
