@@ -309,6 +309,8 @@ def vAgregarUsuario():
                 # En usbidAux almacenamos el usbid proporcionado por el administrador
                 # En imprimir1 almacenamos la informacion del LDAP con grep
                 usbidAux = request.vars.usbid
+                imprimirPrueba = os.popen("ldapsearch -x -h ldap.usb.ve -b \"dc=usb,dc=ve\" uid="+ usbidAux +" | grep '^givenName\|^personalId\|^sn\|^uid:\|^mail\|^studentId\|^career\|^gidNumber'")
+                print imprimirPrueba
                 user = get_ldap_data(usbidAux)
                 telefonoAux = request.vars.telefono
                 correo_alterAux = request.vars.correo_alter
