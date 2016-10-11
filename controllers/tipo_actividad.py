@@ -343,7 +343,26 @@ def restaurar_tipo():
 
 #. --------------------------------------------------------------------------- .
 def ver_tipo_actividad():
-    return dict(admin = get_tipo_usuario())
+    id_tipo = int(request.args[0])
+    
+    query = reduce(lambda a, b: (a & b), [db.TIPO_ACTIVIDAD.id_tipo == id_tipo,
+                                          db.TIPO_ACTIVIDAD.id_tipo == db.ACT_POSEE_CAMPO.id_tipo_act,
+                                          db.ACT_POSEE_CAMPO.id_campo == db.CAMPO.id_campo])
+    
+    campos_guardados = db(query).select(db.CAMPO.ALL)
+    
+    tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
+    programa = db(db.PROGRAMA.id_programa == tipo.id_programa).select(db.PROGRAMA.ALL).first()
+    
+    if request.vars and (request.vars["_formname"] == "formulario_editar_campo") :
+        
+        campo = db(db.CAMPO.id_campo == session.editar_campo_id_campo).select(db.CAMPO.ALL).first()
+        campo.update_record(nombre = request.vars.Nombre,
+                            tipo_campo = request.vars.Tipo,
+                            obligatorio = request.vars.obligatorio)
+        redirect(URL("ver_tipo_actividad", args=[id_tipo]))
+    
+    return dict(campos = campos_guardados, tipo = tipo, admin = get_tipo_usuario(), tipo_nombre = tipo.nombre, programa_nombre = programa.nombre)
 
 #. --------------------------------------------------------------------------- .
 def eliminar_campo():
@@ -404,7 +423,7 @@ def editar_tipo():
         tipo.descripcion = request.vars.Descripcion
         tipo.id_programa = request.vars.Programa
         tipo.update_record()                                 # Se actualiza el tipo de actividad.
-        print("TESTif")
+        
         tipo_nombre = 'Evaluables por pares académicos' if tipo.tipo_p_r == 'P' else 'No evaluables por pares académicos'
         programa_nombre = programas[int(request.vars.Programa)]
         
@@ -425,44 +444,45 @@ def editar_tipo():
 #   Método que permite editar un campo cuyo id es request.args[0]
 #"""
 def editar_campo():
-
+    
     admin = get_tipo_usuario()  # Obtengo el tipo del usuario actual.
-
+    
     id_campo = request.args[0]
-
+    session.editar_campo_id_campo = id_campo
+    
     # Los atributos del campo son puestos por defecto en el formulario
     campo = db(db.CAMPO.id_campo == id_campo).select(db.CAMPO.ALL).first()
-
+    
     tipo_campos = ['fecha', 'participante', 'ci', 'comunidad', 'telefono', 'texto','documento', 'imagen', 'cantidad entera', 'cantidad decimal']
-
-    formulario = SQLFORM.factory(
+    
+    formulario_editar_campo = SQLFORM.factory(
                     Field('Nombre', requires=IS_NOT_EMPTY(), default=campo.nombre),
                     Field('Tipo', requires=IS_IN_SET(tipo_campos), default=campo.tipo_campo),
                     Field('Obligatorio', widget=SQLFORM.widgets.boolean.widget, default=campo.obligatorio),
                     submit_button = 'Editar'
                     )
-
-    if formulario.accepts(request.vars, session):
-
+    
+    if formulario_editar_campo.accepts(request.vars, session,formname="formulario_editar_campo"):
+        
         campo.update_record(nombre = request.vars.Nombre,
                             tipo_campo = request.vars.Tipo,
                             obligatorio = request.vars.obligatorio)
-
-
+        
+        
         # Se obtiene el id del tipo de actividad asociado al campo para
         # hacer un redirect
-
+        
         relacionActividadCampo = db(db.ACT_POSEE_CAMPO.id_campo == id_campo).select(db.ACT_POSEE_CAMPO.id_tipo_act).first()
         redirect(URL("ver_tipo_actividad.html", args=[relacionActividadCampo.id_tipo_act]))
-
-    elif formulario.errors :
-
+        
+    elif formulario_editar_campo.errors :
+        
         mensaje = "Ocurrió un error con el formulario."
-
+        
     else :
         mensaje = ""
-
-    return dict(formulario = formulario, mensaje=mensaje, admin=admin)
+        
+    return dict(formulario = formulario_editar_campo, mensaje=mensaje, admin=admin)
 
 #. --------------------------------------------------------------------------- .
 def get_tipo_usuario():
