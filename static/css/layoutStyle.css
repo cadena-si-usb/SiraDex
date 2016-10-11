@@ -449,7 +449,6 @@ style=""
 		margin-left: 0 !important;
 		margin-top: -1px !important;
 		min-width: 630px !important;
-		padding: 6px 20px !important;
 		right: 55px !important;
 		width:630px;
 
@@ -464,4 +463,13 @@ style=""
 
 	.filtros > .form-group > .form-control{
 		width: 100% !important;
+	}
+
+/**********************************/
+/*                                */
+/*        Form horizontal         */
+/*                                */
+/**********************************/
+	.form-horizontal{
+		padding: 6px 20px !important;
 	}
