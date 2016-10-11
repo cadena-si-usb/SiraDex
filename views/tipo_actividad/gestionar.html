@@ -83,8 +83,7 @@
                                 <a>
                                    <span class="glyphicon glyphicon-remove red" 
                                          data-toggle="modal" 
-                                         data-target="#myModalDelete"
-                                         onclick="ajax('{{=URL('eliminar_tipo')}}/{{=tipoActividad.id_tipo}}',[],'editar_tipo_actividad');">
+                                         data-target="#myModalDelete">
                                        
                                    </span>
                                 </a>
@@ -143,7 +142,11 @@
             <br>
             <center>
                 <a>
-                  <button type="button" class="btn blue-add btn-border">Eliminar</button>
+                  <button type="button" 
+                          class="btn blue-add btn-border"
+                          data-dismiss="modal"
+                          onclick="ajax('{{=URL('enviar_tipo_papelera')}}/{{=tipoActividad.id_tipo}}',[],'editar_tipo_actividad');location.reload();">
+                      Eliminar</button>
                 </a>
                 <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
             </center>

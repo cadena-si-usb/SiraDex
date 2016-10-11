@@ -23,8 +23,9 @@ def gestionar():
         tipo.descripcion = request.vars.Descripcion
         tipo.id_programa = request.vars.Programa
         tipo.update_record()                                 # Se actualiza el tipo de actividad.
+        redirect("gestionar.html")
     
-    listaTipoActividades = db(db.TIPO_ACTIVIDAD).select(db.TIPO_ACTIVIDAD.nombre
+    listaTipoActividades = db(db.TIPO_ACTIVIDAD.papelera == False).select(db.TIPO_ACTIVIDAD.nombre
                                                    ,db.TIPO_ACTIVIDAD.descripcion
                                                    ,db.TIPO_ACTIVIDAD.id_tipo)
     
