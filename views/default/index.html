@@ -90,12 +90,8 @@
                                 <!-- Filtro de Tipo de Actividad -->
                                 <div class="form-group">
                                     <label for="TipoActividad"> Tipo Actividad:</label>
-                                    <select class="form-control" name="TipoActividad" id="lista_tipos" onchange="ajax('obtener_autores', ['TipoActividad'], ':eval')">
-                                        <option value="all" selected="">--cualquiera--</option>
-                                        {{for x in rowsT:}}
-                                        <option value="{{=x['nombre']}}">{{=x['nombre']}}</option>
-
-                                        {{pass}}
+                                    <select class="form-control" name="TipoActividad" id="lista_tipos" >
+                                        <!--Opciones del ajax-->
                                     </select>
                                 </div>
 
@@ -135,7 +131,7 @@
 
                 <!--Actividades-->
                 <span>Tipo Actividad:</span>
-                <select name="TipoActividad" id="lista_tipos" onchange="ajax('obtener_autores', ['TipoActividad'], ':eval')">
+                <select name="TipoActividad" id="lista_tipos2" onchange="ajax('obtener_autores', ['TipoActividad'], ':eval')">
                     <option></option>
                     {{for x in rowsT:}}
                     <option value="{{=x['nombre']}}">{{=x['nombre']}}</option>

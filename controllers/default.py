@@ -468,17 +468,17 @@ def index():
     return locals()
 
 def obtener_actividades():
-    print request.vars.Programa
-    programa = db(db.PROGRAMA.nombre==request.vars.Programa).select().first()
+    programa = db(db.PROGRAMA.nombre==request.vars.Programa[0]).select().first()
 
     tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa.id_programa).select('nombre')
-    concat = "<option></option>"
+
+    concat = '<option value="all" selected="">--cualquiera--</option>'
 
     for tipo in tiposA:
         option = tipo.nombre
-        concat += "<option value="+option+">"+option+"</option>"
+        concat += '<option value="'+option+'">'+option+'</option>'
 
-    return 'jQuery("#lista_tipos").empty().append("%s")'% repr(concat)
+    return "jQuery('#lista_tipos').empty().append('"+concat+"')"
 
 def obtener_autores():
     tipoA = db(db.TIPO_ACTIVIDAD.nombre==request.vars.TipoActividad).select().first()
