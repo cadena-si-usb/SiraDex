@@ -34,8 +34,13 @@
             </form>
         </div>
         <div class="col-sm-5 col-sm-push-1" style="margin-top:10px;margin-left:50px">
-            <button type="button" class="btn btn-default green btn-border" data-toggle="modal" data-target="#myModal">
-              <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Actividad
+            <button type="button" 
+                    class="btn btn-default green btn-border" 
+                    data-toggle="modal" 
+                    data-target="#myModal"
+                    onclick="ajax('{{=URL('agregar_tipo')}}',[],'agregar_tipo_actividad');">
+              <span class="glyphicon glyphicon-plus-sign" 
+                    aria-hidden="true"></span> Agregar Actividad
             </button>
             <a href="{{=URL(c='tipo_actividad', f='gestionar_archivo_historico.html')}}" >
             <button type="button" class="btn btn-default red-trash btn-border">
@@ -104,7 +109,7 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <center><h4 class="modal-title">Agregar Tipo de Actividad</h4><center>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" id="agregar_tipo_actividad">
           <p><center> Formulario para agregar Tipo de Actividad </center> </p>
       </div>
     </div>
@@ -145,7 +150,7 @@
                   <button type="button" 
                           class="btn blue-add btn-border"
                           data-dismiss="modal"
-                          onclick="ajax('{{=URL('enviar_tipo_papelera')}}/{{=tipoActividad.id_tipo}}',[],'editar_tipo_actividad');location.reload();">
+                          onclick="ajax('{{=URL('enviar_tipo_papelera')}}/{{=tipoActividad.id_tipo}}',[]);location.reload();">
                       Eliminar</button>
                 </a>
                 <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>

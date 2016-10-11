@@ -25,6 +25,15 @@ def gestionar():
         tipo.update_record()                                 # Se actualiza el tipo de actividad.
         redirect("gestionar.html")
     
+    if request.vars and (request.vars["_formname"]=="formulario_agregar_tipo"):
+        programa = db(db.PROGRAMA.nombre == request.vars.Programa).select()
+        id_programa = programa[0].id_programa
+        db.TIPO_ACTIVIDAD.insert(nombre = request.vars.Nombre,
+                                 tipo_p_r = request.vars.Tipo,
+                                 descripcion = request.vars.Descripcion,
+                                 id_programa = id_programa)
+        redirect("gestionar.html")
+    
     listaTipoActividades = db(db.TIPO_ACTIVIDAD.papelera == False).select(db.TIPO_ACTIVIDAD.nombre
                                                    ,db.TIPO_ACTIVIDAD.descripcion
                                                    ,db.TIPO_ACTIVIDAD.id_tipo)
@@ -57,7 +66,7 @@ def agregar_tipo():
 
     # AQUI VA UN CONDICIONAL.
     # Para agregar un tipo de actividad se debe tener al menos un programa.
-    formulario = SQLFORM.factory(
+    formulario_agregar_tipo = SQLFORM.factory(
                         Field('Nombre',
                                requires = [IS_NOT_EMPTY(error_message='El nombre del tipo de actividad no puede quedar vacío.'),
                                            IS_MATCH('([A-zÀ-ÿŸ])([A-zÀ-ÿŸ0-9" "])*', error_message="El nombre del tipo de actividad debe comenzar con una letra."),
@@ -80,7 +89,7 @@ def agregar_tipo():
 
     # Metodos POST
     # En caso de que los datos del formulario sean aceptados
-    if hayPrograma and formulario.accepts(request.vars, session):
+    if hayPrograma and formulario_agregar_tipo.accepts(request.vars, session,formname="formulario_agregar_tipo"):
         session.form_nombre = request.vars.Nombre
         programa = db(db.PROGRAMA.nombre == request.vars.Programa).select()
         id_programa = programa[0].id_programa
@@ -94,13 +103,13 @@ def agregar_tipo():
     elif not hayPrograma :
         session.message = 'Lo sentimos, no existen programas.'
     # En caso de que el formulario no sea aceptado
-    elif formulario.errors:
+    elif formulario_agregar_tipo.errors:
         session.message = 'Lo sentimos, todos los campos son obligatorios.'
     # Metodo GET
     else:
         session.message = ''
 
-    return dict(formulario=formulario, admin = get_tipo_usuario(), mensaje=session.message, hayPrograma = hayPrograma)
+    return dict(formulario=formulario_agregar_tipo, admin = get_tipo_usuario(), mensaje=session.message, hayPrograma = hayPrograma)
 
 #. --------------------------------------------------------------------------- .
 '''
@@ -277,8 +286,11 @@ def eliminar_campos():
  el tipo es especificado por un parametr de URL
 '''
 def enviar_tipo_papelera():
-    id_tipo = int(request.args[0])
-    db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).update(papelera=True)
+    
+    id_tipo = request.args[0]
+    tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
+    tipo.update(papelera=True)
+    tipo.update_record()
     session.message = 'Tipo Enviado a la Papelera'
     redirect(URL('gestionar.html'))
 
