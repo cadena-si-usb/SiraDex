@@ -221,29 +221,36 @@ def EditarPerfil():
             Field('Nombres',default=session.usuario["first_name"],writable = False),
             Field('Apellidos', default=session.usuario["last_name"],writable=False),
             readonly=True)
-        usuarios = db(db.USUARIO).select()
 
+        # Modificar datos del perfil
+        usuario = db(db.USUARIO.ci==session.usuario['cedula']).select().first()
 
-        # Modificar datos del perfil.
-        for raw in usuarios:
-            if raw.ci == session.usuario["cedula"]:
-                forma=SQLFORM(
-                    db.USUARIO,
-                    record=raw,
-                    
-                    fields=['telefono','correo_alter'],
+        forma=SQLFORM(
+            db.USUARIO,
+            record=usuario,
+            
+            fields=['telefono','correo_alter'],
 
-                    
-                    labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'})
-            forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
-            forma.element(_type='submit')['_value']="Actualizar"
-        if len(request.vars)!=0:
+            
+            labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'})
+        forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+        forma.element(_type='submit')['_value']="Actualizar"
+
+        
+        if request.vars:
             nuevoTelefono = request.vars.telefono
             nuevoCorreoAlter = request.vars.correo_alter
-            db(db.USUARIO.ci == session.usuario["cedula"]).update(telefono=nuevoTelefono, correo_alter=nuevoCorreoAlter)
+            
+            valor_telefono = None if ((nuevoTelefono == "") | (nuevoTelefono== None)) else nuevoTelefono
+            session.usuario["phone"] = valor_telefono
 
-            session.usuario["alternativo"] = nuevoCorreoAlter
-            session.usuario["phone"] = nuevoTelefono
+            valor_correo = None if ((nuevoCorreoAlter == "") | (nuevoCorreoAlter== None)) else nuevoCorreoAlter
+            session.usuario["alternativo"] = valor_correo
+            
+            db(db.USUARIO.ci == session.usuario["cedula"]).update(telefono=valor_telefono, correo_alter=valor_correo)
+            
+            print "\n\nEl nuevo usuario quedo: "
+            print session.usuario
             redirect(URL('perfil'))
 
         return dict(form1 = form, form = forma, admin = admin)

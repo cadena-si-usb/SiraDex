@@ -33,10 +33,10 @@
                 <br>
                 {{ if session.usuario['alternativo'] != None:}}
                 <b>Correo alternativo:</b> {{=session.usuario['alternativo']}}
-                {{pass}}
                 <br>
+                {{pass}}
                 {{if session.usuario['phone'] != None:}}
-                <b>Telefono:</b> {{session.usuario['phone']}}
+                <b>Telefono:</b> {{=session.usuario['phone']}}
                 {{pass}}
                 <br>
 
@@ -98,7 +98,7 @@
         <!-- Validadas -->
         <div role="tabpanel" class="tab-pane active" id="activas">
             {{if productos["Validados"]==[]:}}
-            <li>-- No tiene productos validadas --</li>
+            No tiene productos validados
             {{else:}}
                 {{for x in productos["Validados"]:}}
                 <li>Aqui deberia estar el nombre si lo tuviera {{=x.id_producto}}</li>
@@ -108,7 +108,7 @@
         <!-- Espera -->
         <div role="tabpanel" class="tab-pane" id="espera">
             {{if productos["En espera"]==[]:}}
-            <li>-- No tiene productos en espera --</li>
+            No tiene productos en espera
             {{else:}}
                 {{for x in productos["En espera"]:}}
                 <li>Aqui deberia estar el nombre si lo tuviera {{=x.id_producto}}</li>
@@ -118,7 +118,7 @@
         <!-- Rechazadas -->
         <div role="tabpanel" class="tab-pane" id="rechazadas">
             {{if productos["Rechazados"]==[]:}}
-            <li>-- No tiene productos rechazados --</li>
+            No tiene productos rechazados
             {{else:}}
                 {{for x in productos["Rechazados"]:}}
                 <li>Aqui deberia estar el nombre si lo tuviera {{=x.id_producto}}</li>
