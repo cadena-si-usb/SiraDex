@@ -145,6 +145,7 @@ db.define_table('USUARIO',
     migrate=False,
 );
 
+############# QUITARIA ESTO
 db.define_table('USBID',
     Field('ci_usuario',db.USUARIO.ci),
     Field('usbid',type='string',length=20, notnull=True, unique=True),
@@ -152,6 +153,7 @@ db.define_table('USBID',
     migrate=False
 );
 
+############# QUITARIA ESTO Y PONER CAMPO JEFE EN USUARIO SOLO SI ES NECESARIO
 db.define_table('JEFE_DEPENDENCIA',
     Field('id_jefe', type='id'),
     Field('ci_usuario',db.USUARIO.ci),
@@ -190,8 +192,10 @@ db.define_table('TIPO_ACTIVIDAD',
 db.define_table('PRODUCTO',
     Field('id_producto',  type='id'),
     Field('id_tipo', db.TIPO_ACTIVIDAD.id_tipo),
-    Field('validacion',type='string',default='En espera'),
-    Field('estado',type='string'),
+    Field('nombre',type='string',length=128, notnull=True,unique=True,
+           requires=[IS_LENGTH(128,error_message='Tamaño máximo de 128 caracteres')]),
+    Field('descripcion', type='string',length=256),
+    Field('estado',type='string', default='En espera', requires=IS_IN_SET(['Validado', 'En espera', 'Rechazado'])),
     Field('evaluacion_criterio',type='string',length=256),
     Field('evaluacion_valor',type='string', length=256),
     Field('modif_fecha', type='date'),

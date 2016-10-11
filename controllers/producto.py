@@ -31,13 +31,16 @@ def gestionar():
 
         detalles[row] = dict_campos
 
-        if row["validacion"] == "En espera":
+        if row["estado"] == "En espera":
             cant_esp += 1
-        elif row["validacion"] == "Validada":
+        elif row["estado"] == "Validada":
             cant_val += 1 
-        elif row["validacion"] == "Rechazada":
+        elif row["estado"] == "Rechazada":
             cant_rec += 1
 
+
+    # Para el modal de Agregar actividad
+    programas = db(db.PROGRAMA).select('nombre')
     return locals()
 
 def tipos():
@@ -102,7 +105,8 @@ def agregar():
     #fields.append(Field(nombre,requires=IS_IN_SET([(1,'Method1'), (2,'Method2'), (3,'Method3')], zero='Select')))
 
     form=SQLFORM.factory(*fields)
-
+    form.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    form.element(_type='submit')['_value']="Agregar"
     if form.process().accepted:
         dicc_act = db.PRODUCTO.insert(id_tipo = tipo,ci_usu_creador= session.usuario['cedula'])
         id_act = dicc_act['id_producto']
@@ -163,7 +167,8 @@ def modificar():
         valores.append([nombre,row.valor_campo])
 
     form=SQLFORM.factory(*fields)
-
+    form.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    form.element(_type='submit')['_value']="Modificar"
     for i in range(len(valores)):
         setattr(form.vars, valores[i][0], valores[i][1])
 
@@ -199,3 +204,20 @@ def eliminar():
 
     #return "producto {} eliminada".format(producto)
     return locals()
+
+
+# Funcion utilizada para el ajax en el agregar
+def obtener_actividades():
+    programa = db(db.PROGRAMA.nombre==request.vars.Programa[0]).select().first()
+    tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa.id_programa).select('nombre')
+    
+    concat = '<option></option>'
+    print tiposA
+
+    for tipo in tiposA:
+        option = tipo.nombre
+        concat += '<option value="'+option+'">'+option+'</option>'
+
+    
+
+    return "jQuery('#lista_tipos').empty().append('"+concat+"')"

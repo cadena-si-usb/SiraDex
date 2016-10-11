@@ -1,8 +1,22 @@
-{{#extend 'producto/index.html'}}
-{{extend 'SIRADEXLayout.html'}}
+{{extend 'layoutSIRADEXloged.html'}}
 
-{{block titulo}}Modificar Producto{{end}}
+{{block titulo}}
+	Modificar Producto
+{{end}}
+
 
 {{block contenido}}
-{{=form}}
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			
+			<div class="tab-content">
+			<center>
+				
+				{{=form}}
+			</center>
+			</div>
+		</div>
+	</div>
+</div>
 {{end}}

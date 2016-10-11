@@ -32,7 +32,7 @@ Asegurarse de tener python 2.7 y la version de pip para python 2.7
 
 Ir al directorio SiraDex e instalar las librerias con
 
-    $ sudo pip install -r requirements.txt
+    $ sudo pip install -r requirements.txt.sls
 
 3. BASE DE DATOS
 ################################################################################

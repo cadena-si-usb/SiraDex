@@ -73,8 +73,9 @@ CREATE TABLE TIPO_ACTIVIDAD(
 CREATE TABLE PRODUCTO(
   id_producto         SERIAL NOT NULL,
   id_tipo             INT,
-  validacion          VARCHAR DEFAULT 'En Espera',
-  estado              VARCHAR,
+  nombre              VARCHAR(128),
+  descripcion         VARCHAR(256),
+  estado          VARCHAR DEFAULT 'En Espera',
   evaluacion_criterio VARCHAR(256),
   evaluacion_valor    VARCHAR(256),
   modif_fecha         DATE,
