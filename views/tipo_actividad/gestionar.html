@@ -1,5 +1,6 @@
 {{extend 'layoutSIRADEXloged.html'}}
 
+
 {{block titulo}}
     <h2> Programa: < Nombre Programa > </h2>
 {{end}}
@@ -58,25 +59,34 @@
                 </tr>
             </thead>
             <tbody>
-                    {{for actividad in listaActividades: }}
+                    {{for tipoActividad in listaTipoActividades: }}
                     <tr>
                         <td class="col-md-4">
-                            <a href="{{=URL(c='tipo_actividad', f='ver_tipo_actividad.html')}}">
-                                {{=actividad.nombre}} 
+                            <a href="{{=URL(c='tipo_actividad', f='ver_tipo_actividad.html',args=[tipoActividad.id_tipo])}}">
+                                {{=tipoActividad.nombre}} 
                             </a>
                         </td>
-                        <td class="col-md-6"> {{=actividad.descripcion}}</td>
+                        <td class="col-md-6"> {{=tipoActividad.descripcion}}</td>
                         <td class="center-vertically">
                             <center>
                                 <a href="#">
-                                    <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#myModalEditar"></span>
+                                    <span class="glyphicon glyphicon-edit blue" 
+                                          data-toggle="modal" 
+                                          data-target="#myModalEditar"
+                                          onclick="ajax('{{=URL('editar_tipo')}}/{{=tipoActividad.id_tipo}}',[],'editar_tipo_actividad');">
+                                    </span>
                                 </a>
                             <center>
                         </td>
                         <td class="center-vertically">
                             <center>
                                 <a>
-                                   <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalDelete"></span>
+                                   <span class="glyphicon glyphicon-remove red" 
+                                         data-toggle="modal" 
+                                         data-target="#myModalDelete"
+                                         onclick="ajax('{{=URL('eliminar_tipo')}}/{{=tipoActividad.id_tipo}}',[],'editar_tipo_actividad');">
+                                       
+                                   </span>
                                 </a>
                             <center>
                         </td>
@@ -111,7 +121,9 @@
         <center><h4 class="modal-title">Editar Tipo de Actividad</h4><center>
       </div>
       <div class="modal-body">
-          <p><center> Formulario para editar Tipo de Actividad </center> </p>
+          <p><center id="editar_tipo_actividad"> Formulario para editar Tipo de Actividad 
+              
+          </center> </p>
       </div>
     </div>
   </div>
@@ -141,4 +153,6 @@
     </div>
   </div>
 </div>
+
+
 {{end}}

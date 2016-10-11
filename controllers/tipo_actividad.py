@@ -8,16 +8,30 @@ Vista de Gestionar Tipo Actividad, tiene las opciones:
 - Papelera (No funcional)
 '''
 
+
 #. --------------------------------------------------------------------------- 
 '''
     Gestionar Tipo de Actividad
 '''
 def gestionar():
     
-    listaActividades = db(db.TIPO_ACTIVIDAD).select(db.TIPO_ACTIVIDAD.nombre
-                                                   ,db.TIPO_ACTIVIDAD.descripcion)
+    # Vista básica
+    if request.vars and (request.vars["_formname"]=="formulario_editar_tipo"):
+        tipo = db(db.TIPO_ACTIVIDAD.id_tipo == session.tipo_id_editar).select()[0]
+        tipo.nombre = request.vars.Nombre
+        tipo.tipo_p_r = request.vars.Tipo
+        tipo.descripcion = request.vars.Descripcion
+        tipo.id_programa = request.vars.Programa
+        tipo.update_record()                                 # Se actualiza el tipo de actividad.
     
-    return dict(admin = get_tipo_usuario(), listaActividades = listaActividades)
+    listaTipoActividades = db(db.TIPO_ACTIVIDAD).select(db.TIPO_ACTIVIDAD.nombre
+                                                   ,db.TIPO_ACTIVIDAD.descripcion
+                                                   ,db.TIPO_ACTIVIDAD.id_tipo)
+    
+    
+    
+    return dict(admin = get_tipo_usuario()
+            , listaTipoActividades = listaTipoActividades)
 
 #. --------------------------------------------------------------------------- .
 '''
@@ -58,7 +72,7 @@ def agregar_tipo():
                               requires = IS_IN_SET(programas, zero="Seleccione...",
                                                    error_message = 'Debes elegir uno de los programas listados.')),
                         submit_button = 'Agregar',
-                        labels = {'Descripcion' : 'Descripción'},
+                        labels = {'Descripcion' : 'Descripción'}
                 )
 
     hayPrograma = len(programas) != 0
@@ -328,36 +342,70 @@ def eliminar_campo():
     redirect(URL('agregar_tipo_campos.html'))
 
 def editar_tipo():
-
-    tipo = db.TIPO_ACTIVIDAD(int(request.args(0)))
-
-    form = SQLFORM(db.TIPO_ACTIVIDAD, record=tipo)
-    form.element('#TIPO_ACTIVIDAD_nombre')['_readonly']=True
-    form.element('#TIPO_ACTIVIDAD_id_programa')['_readonly']=True
-
+    
+    admin = get_tipo_usuario()  # Obtengo el tipo del usuario actual.
+    id = request.args[0]        # Se identifica cual tipo de actividad se identificará.
+    
+    session.tipo_id_editar = id
+    
+    # Se busca el tipo de actividad en la base de datos.
+    tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id).select()[0]
+    
+    # Se obtienen todos los programas almacenados en la base de datos.
+    lista_programas = db().select(db.PROGRAMA.ALL)
+    programas = {}
+    
+    # Se crea un diccionario para almacenar unicamente los nombres de los programas almacenados.
+    for programa in lista_programas:
+        programas[programa.id_programa] = programa.nombre
+    
+    # Para modificar un tipo de actividad se debe tener al menos un programa.
+    formulario_editar_tipo = SQLFORM.factory(
+                        Field('Nombre',
+                              default = tipo.nombre,
+                              requires = [IS_NOT_EMPTY(error_message='El nombre del tipo de actividad no puede quedar vacío.'),
+                                           IS_MATCH('([A-zÀ-ÿŸ])([A-zÀ-ÿŸ0-9" "])*', error_message="El nombre del tipo de actividad debe comenzar con una letra."),
+                                           IS_LENGTH(128)]),
+                        Field('Tipo', default = tipo.tipo_p_r,
+                              requires = IS_IN_SET({'P':'Evaluables por pares académicos', 'R':'No evaluables por pares académicos'},
+                                                    zero=T('Seleccione...'),
+                                                    error_message = 'Debes elegir entre "Evaluables por pares académicos" o "No evaluables por pares académicos"')),
+                        Field('Descripcion', type="text",
+                              default = tipo.descripcion,
+                              requires = [IS_NOT_EMPTY(error_message='La descripción del tipo de actividad no puede quedar vacía.'),
+                                          IS_LENGTH(2048)]),
+                        Field('Programa', default = tipo.id_programa,
+                              requires = IS_IN_SET(programas, zero="Seleccione...",
+                                                   error_message = 'Debes elegir uno de los programas listados.')),
+                        submit_button = 'Actualizar',
+                        labels = {'Descripcion' : 'Descripción'}
+                )
+    
     # Metodos POST
     # En caso de que los datos del formulario sean aceptados
-    if formulario.accepts(request.vars, session):
+    
+    if formulario_editar_tipo.accepts(request.vars, session,formname="formulario_editar_tipo"):
         session.form_nombre = request.vars.Nombre
         tipo.nombre = request.vars.Nombre
         tipo.tipo_p_r = request.vars.Tipo
         tipo.descripcion = request.vars.Descripcion
         tipo.id_programa = request.vars.Programa
         tipo.update_record()                                 # Se actualiza el tipo de actividad.
-
+        print("TESTif")
         tipo_nombre = 'Evaluables por pares académicos' if tipo.tipo_p_r == 'P' else 'No evaluables por pares académicos'
         programa_nombre = programas[int(request.vars.Programa)]
-
-        redirect(URL('ver_tipo_actividad.html', args=[id, tipo_nombre, programa_nombre]))  # Se redirige a la vista del preview del T.A. modificado.
-
+        
+        #redirect(URL('ver_tipo_actividad.html', args=[id, tipo_nombre, programa_nombre]))  # Se redirige a la vista del preview del T.A. modificado.
+        
     # En caso de que el formulario no sea aceptado
-    elif formulario.errors:
+    elif formulario_editar_tipo.errors:
         session.message = 'Error en el formulario'
     # Metodo GET
     else:
         session.message = ''
-
-    return dict(tipo=tipo, formulario=formulario, admin=get_tipo_usuario())
+        
+        
+    return dict(tipo=tipo, formulario=formulario_editar_tipo, admin=get_tipo_usuario())
 
 #. --------------------------------------------------------------------------- .
 #"""
