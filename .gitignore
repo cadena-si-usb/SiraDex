@@ -22,6 +22,8 @@ errors/
 # Distribution / packaging
 .Python
 env/
+errors/
+databases/
 build/
 develop-eggs/
 dist/
