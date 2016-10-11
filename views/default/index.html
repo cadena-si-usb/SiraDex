@@ -91,7 +91,11 @@
                                 <div class="form-group">
                                     <label for="TipoActividad"> Tipo Actividad:</label>
                                     <select class="form-control" name="TipoActividad" id="lista_tipos" >
-                                        <!--Opciones del ajax-->
+                                        <option value="all" selected="">--cualquiera--</option>
+                                        {{for x in rowsT:}}
+                                        <option value="{{=x['nombre']}}">{{=x['nombre']}}</option>
+
+                                        {{pass}}
                                     </select>
                                 </div>
 
