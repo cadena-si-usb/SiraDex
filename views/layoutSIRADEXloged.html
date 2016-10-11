@@ -78,7 +78,7 @@
                 <li class="dropdown activo">
                     <a  class="dropdown-toggle" 
                         data-toggle="dropdown" 
-                        href="{{=URL(c='default', f='perfil', args=[2])}}"> {{=session.usuario['first_name'].split(' ',1)[0]}}
+                        href="{{=URL(c='default', f='perfil', args=[2])}}"> {{=session.usuario['first_name'].split(' ',1)[0]}} {{=session.usuario['last_name'].split(' ',1)[0]}}
                     </a>
                     <ul class="dropdown-menu" style="right:auto">
                         <li><a href="{{=URL(c='default',f='perfil')}}">Ver Perfil</a></li>
