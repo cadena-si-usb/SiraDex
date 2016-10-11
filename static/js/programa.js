@@ -32,18 +32,24 @@ $(document).ready(function(){
       $(".error_wrapper").css('color','red');
   }
 
-  // $("#agregarBtn").click(function(){
-  //     var contenidoNombre = $("#no_table_Nombre").html();
-  //     var contenidoDescripcion = $("#no_table_Descripcion").html();
-  //     var hayErrores = $("#modalAgregar").attr("data-hayErrores");
-  //
-  //     console.log("+ Contenido en nombre: " + contenidoNombre);
-  //     console.log("+ Contenido en descripcion: " + contenidoDescripcion);
-  //     console.log("hayErrores: " + hayErrores);
-  //
-  //
-  //     return false;
-  //});
+  // Pasamos los argumentos para editar el catalogo.
+  $('#ModalEditarPrograma').on('show.bs.modal', function(e){
+      var id_programa = $(e.relatedTarget).data('id-programa');
+      var nombre      = $(e.relatedTarget).data('nombre');
+      var descripcion = $(e.relatedTarget).data('descripcion');
+      console.log($(e.currentTarget).find('input[name="Descripcion"]'));
+      $(e.currentTarget).find('input[name="id_programa"]').val(id_programa);
+      $(e.currentTarget).find('input[name="Nombre"]').val(nombre);
+      $(e.currentTarget).find("#no_table_Descripcion").text(descripcion);
+  });
+
+  $("#no_table_id_programa__row").hide();
+
+  // Pasamos los argumentos para eliminar catalogo.
+  $('#modalEliminarPrograma').on('show.bs.modal', function(e){
+      var linkEliminar = $(e.relatedTarget).data('link-eliminar-programa');
+      $("#BotonEliminar").attr("href", linkEliminar);
+  });
 
   function prueba(id){
     programaEliminar = id;

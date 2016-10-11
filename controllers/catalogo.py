@@ -82,7 +82,6 @@ def vGestionarCatalogos():
 
         # Si el nombre no esta repetido, modificamos el campo
         if nombre_repetido:
-            session.msgErr = 1
             session.message = 'Ya existe un campo llamado "' + nombre_nuevo + '" en el catalogo.'
         else:
             #Actualizamos el campo

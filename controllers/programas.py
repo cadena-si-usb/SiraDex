@@ -70,9 +70,11 @@ def gestionar_programas():
     formulario_editar  = SQLFORM.factory(
         Field('Nombre',
               requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacio.'),
-                          IS_MATCH('([A-Za-z])([A-Za-z0-9" "])*', error_message="El nombre del programa no puede iniciar con numeros.")]),
+                          IS_MATCH('([A-zÀ-ÿŸ])([A-zÀ-ÿŸ0-9" "])*', error_message="El nombre del programa no puede iniciar con numeros."),
+                          IS_LENGTH(256)]),
         Field('Descripcion', type="text",
               requires=IS_NOT_EMPTY(error_message='La descripcion del programa no puede quedar vacia.')),
+        Field('id_programa', type="string"),
         submit_button = 'Agregar',
         labels = {'Descripcion' : 'Descripción',
                   'Nombre' : 'Nombre del Programa'},
@@ -96,6 +98,34 @@ def gestionar_programas():
         print formulario.errors
         session.message = "Los datos del programa son inválidos. Intentelo nuevamente."
 
+    # Se verifica si los campos están llenos correctamente.
+    if formulario_editar.accepts(request.vars, session, formname="formulario_editar"):
+        programa = db(db.PROGRAMA.id_programa == request.vars.id_programa).select()[0]
+
+        nombre_repetido    = False
+
+        todos_programas = db().select(db.PROGRAMA.ALL)
+
+        for programa in todos_programas:
+            if (programa.nombre == request.vars.Nombre and
+                programa.id_programa != request.vars.id_programa):
+                nombre_repetido = True
+                break
+
+        # Si el nombre no esta repetido, modificamos el campo
+        if nombre_repetido:
+            session.message = 'Ya existe un programa llamado "' + request.vars.Nombre + '".'
+        else:
+            programa.nombre = request.vars.Nombre
+            programa.descripcion = request.vars.Descripcion
+            programa.update_record()                    # Se actualiza el programa.
+
+        redirect(URL('gestionar_programas.html'))   # Se redirige a la vista de gestión.
+
+    # En caso de que el formulario no sea aceptado
+    elif formulario_editar.errors:
+        session.message = 'Error en los datos del formulario, por favor intente nuevamente.'
+
     # MÉTODO POST FORMULARIO EDITAR:
 
     return dict(admin=admin, programas=programas, hayErroresAgregar=formulario.errors,
@@ -105,7 +135,7 @@ def gestionar_programas():
 def eliminar_programa():
     admin = get_tipo_usuario()
     db(db.PROGRAMA.id==request.args(0)).delete()
-    redirect(URL('gestionar_programas'))
+    redirect(URL('gestionar_programas.html'))
     return locals()
 
 

@@ -6,6 +6,7 @@
 
 
 {{block contenido}}
+
     <script src="{{=URL('static','js/global.js')}}"></script>
     <script src="{{=URL('static','js/programa.js')}}"></script>
 
@@ -58,14 +59,19 @@
                         <td class="center-vertically">
                             <center>
                                 <a>
-                                    <span class="glyphicon glyphicon-edit blue" id="editarProgBtn" data-toggle="modal" data-target="#myModalEditar"></span>
+                                    <span class="glyphicon glyphicon-edit blue" id="editarProgBtn" data-toggle="modal"
+                                          data-id-programa={{=programa.id_programa}}
+                                          data-nombre="{{=programa.nombre}}"
+                                          data-descripcion="{{=programa.descripcion}}"
+                                          data-target="#ModalEditarPrograma"></span>
                                 </a>
                             <center>
                          </td>
                         <td class="center-vertically">
                             <center>
                                 <a>
-                                   <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalDelete" data-id={{=programa.id_programa}}></span>
+                                   <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#modalEliminarPrograma"
+                                          data-link-eliminar-programa="{{=URL(f='eliminar_programa', args=[programa.id_programa])}}"></span>
                                 </a>
                             <center>
                         </td>
@@ -94,7 +100,7 @@
 </div>
 
 <!-- Modal Editar-->
-<div id="myModalEditar" class="modal fade" role="dialog">
+<div id="ModalEditarPrograma" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
     <!-- Modal content-->
@@ -113,7 +119,7 @@
 <!-- Modal Eliminar-->
 <div class="container">
   <!-- Modal -->
-  <div class="modal fade" id="myModalDelete" role="dialog">
+  <div class="modal fade" id="modalEliminarPrograma" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -124,9 +130,8 @@
             <center> <p>Está seguro que quiere eliminar este programa.</p> </center>
             <br>
             <center>
-                <a>
-                  <button type="button" class="btn blue-add btn-border"
-                          onclick="ajax('{{=URL('eliminar_programa')}}/data',[]);">
+                <a id="BotonEliminar">
+                  <button type="button" class="btn blue-add btn-border">
                           Eliminar
                   </button>
                 </a>
