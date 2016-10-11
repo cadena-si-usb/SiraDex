@@ -1,29 +1,28 @@
-{{#include 'layout.html'}}
-{{ extend 'SIRADEXLayout.html' }}
-			
-		<!-- Contenido principal de la pagina -->
-		<section class = "main">
-			<h4 id = titulo> Modificar Rol </h4>
-            <div id = error>
-                {{=message}}
-            </div>
-			<!-- En esta seccion va todo el contenido de la pagina -->
-			<section class = "contenido">
-				
-				<!-- Cuando se retorne ejecute una funcion va a poner
-					 lo que esta retorne aqui -->
+{{ extend 'layoutSIRADEXloged.html' }}
 
-                <div>
-                    <div class="container-fluid col-md-4">
-                    </div>
-                    <div class=" container-fluid col-xs-6">
-                     {{=forma}}
-                     {{=form}}
-                    </div>
-                    <div class="container-fluid col-md-4">
-                    </div>
-                </div>
+{{block titulo}}
+    Modificar Rol del Usuario
+{{end}}			
 
-			</section><!-- close contenido -->
-			
-		</section><!-- close main -->
+{{block descripcion}}
+    <div id = error>
+        {{=message}}
+    </div>
+{{end}}
+
+{{block contenido}}
+<!-- Contenido principal de la pagina -->
+	<!-- En esta seccion va todo el contenido de la pagina -->
+<div class="row">
+    <div class="card">
+    <div class="container-fluid">
+        <div class="tab-pane">
+             {{=forma}}
+             {{=form}}        
+        </div>
+    </div>
+    </div>
+</div>
+
+	
+{{end}}

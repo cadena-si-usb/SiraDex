@@ -1,48 +1,279 @@
-{{#include 'layout.html'}}
-{{ extend 'SIRADEXLayout.html' }}
+{{ extend 'layoutSIRADEXloged.html' }}
 
-                <h3 id = "titulo"> Gestión de Usuarios </h4>
-                <h4>
-                    <a href = "{{=URL('vAgregarUsuario')}}">
-                        {{=IMG(_src=URL('static', 'iconos/Add_26x26.png')) }}
-                        Agregar Usuario
+{{block titulo}}
+    Gestión de Usuarios
+{{end}}
+
+{{block contenido}}
+    <div id = "error">
+        {{=message}}
+    </div>
+    <div class="row">
+    <div class="col-md-12">
+        <div class="card">
+                <!-- Nav tabs -->
+        <div class="card">
+        <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active">
+            <a  href="#admin" 
+                aria-controls="admin" 
+                role="tab" 
+                data-toggle="tab">
+                Administrador
+            </a>
+        </li>
+        
+        <li role="presentation">
+            <a  href="#user" 
+                aria-controls="user" 
+                role="tab" 
+                data-toggle="tab">
+                Usuario
+            </a>
+        </li>
+
+        <li role="presentation">
+            <a  href="#dex" 
+                aria-controls="dex" 
+                role="tab" 
+                data-toggle="tab">
+                DEX
+            </a>
+        </li>
+
+        <li role="presentation" class='rec'>
+            <a  href="#bloq" 
+                aria-controls="bloq" 
+                role="tab" 
+                data-toggle="tab">
+                Bloqueado
+            </a>
+        </li>
+
+        <li role="presentation" class='rec'>
+            <a  href="#indef" 
+                aria-controls="indef" 
+                role="tab" 
+                data-toggle="tab">
+                Indefinido
+            </a>
+        </li>        
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+        <!-- Administradores -->
+        <div role="tabpanel" class="tab-pane active" id="admin">
+            <table class="table table-striped table-condensed table-hover sortable">
+                <thead>
+                    <tr>
+                    <th>Usbid</th>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Modificar</th>
+                    <th>Eliminar</th>
+                    </tr>
+                </thead>    
+                <tbody>
+                {{for admin in usuarios:}}
+                    {{if admin.tipo == 'Administrador':}}
+                    <tr>
+                    <td class="center-vertically">{{ =admin.usbid}}</td>
+                    <td class="center-vertically">{{ =admin.nombres}}</td>
+                    <td class="center-vertically">{{ =admin.apellidos}}</td>                    
+                    <!-- Boton Modificar -->
+                    <td class="center-vertically"> 
+                    <center>
+                    <a href="{{=URL(f='vModificarRol', args=[ admin.usbid ] )}}">
+                    <span class="glyphicon glyphicon-edit green-icn"></span>
                     </a>
-                </h4>
-                <div id = "error">
-                    {{=message}}
-                </div>
-                <br/>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <td class="col-md-4"><b>Usbid</b></td>
-                            <td class="col-md-5"><b>Nombres</b></td>
-                            <td class="col-md-6"><b>Apellidos</b></td>
-                            <td class="col-md-7"><b>Tipo</b></td>
-                            <td class="col-md-1"> </td>
-                            <td class="col-md-1"> </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{for usuario in usuarios:}}
-                            <tr>
-                                <td class="col-md-4">
-                                    {{ =usuario.usbid}}
-                                </td>
-                                <td class="col-md-5">{{ =usuario.nombres}}</td>
-                                <td class="col-md-6">{{ =usuario.apellidos}}</td>
-                                <td class="col-md-7">{{ =usuario.tipo}}</td>
-                                <td class="col-md-1">
-                                    <a href = "{{=URL(f='vModificarRol', args=[ usuario.usbid ] )}}">
-                                        {{=IMG(_src=URL('static', 'iconos/Edit.png')), }}
-                                    </a>
-                                </td>
-                                <td class="col-md-1">
-                                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar al usuario?')) {window.location.href = '{{=URL(f='vEliminarUsuario',args=[ usuario.usbid ] )}}';}">
-                                        {{=IMG(_src=URL('static', 'iconos/Delete.png')), }}
-                                    </a>
-                                </td>
-                            </tr>
-                        {{pass}}
-                    </tbody>
-                </table>
+                    </center>
+                    </td> 
+                    <!-- Boton Eliminar -->                    
+                    <td class="center-vertically">
+                    <center>
+                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar este admin?')) {window.location.href = '{{=URL(f='vEliminarUsuario',args=[ admin.usbid ] )}}';}">
+                    <span class="glyphicon glyphicon-remove red"></span>
+                    </a>
+                    </center>
+                    </td>                                            
+                    </tr>
+                    {{pass}}        
+                {{pass}}
+                </tbody>
+            </table>   
+        </div>
+        <!-- Usuarios -->
+        <div role="tabpanel" class="tab-pane" id="user">
+            <table class="table table-striped table-condensed table-hover sortable">
+                <thead>
+                    <tr>
+                    <th>Usbid</th>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Modificar</th>
+                    <th>Eliminar</th>
+                    </tr>
+                </thead>    
+                <tbody>
+                {{for usuario in usuarios:}}
+                    {{if usuario.tipo == 'Usuario':}}
+                    <tr>
+                    <td class="center-vertically">{{ =usuario.usbid}}</td>
+                    <td class="center-vertically">{{ =usuario.nombres}}</td>
+                    <td class="center-vertically">{{ =usuario.apellidos}}</td>                    
+                    <!-- Boton Modificar -->
+                    <td class="center-vertically"> 
+                    <center>
+                    <a href="{{=URL(f='vModificarRol', args=[ usuario.usbid ] )}}">
+                    <span class="glyphicon glyphicon-edit green-icn"></span>
+                    </a>
+                    </center>
+                    </td> 
+                    <!-- Boton Eliminar -->                    
+                    <td class="center-vertically">
+                    <center>
+                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar este usuario?')) {window.location.href = '{{=URL(f='vEliminarUsuario',args=[ usuario.usbid ] )}}';}">
+                    <span class="glyphicon glyphicon-remove red"></span>
+                    </a>
+                    </center>
+                    </td>                                            
+                    </tr>
+                    {{pass}}        
+                {{pass}}
+                </tbody>
+            </table>   
+        </div>
+        <!--  DEX -->
+        <div role="tabpanel" class="tab-pane" id="dex">
+            <table class="table table-striped table-condensed table-hover sortable">
+                <thead>
+                    <tr>
+                    <th>Usbid</th>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Modificar</th>
+                    <th>Eliminar</th>
+                    </tr>
+                </thead>    
+                <tbody>
+                {{for usuario in usuarios:}}
+                    {{if usuario.tipo == 'DEX':}}
+                    <tr>
+                    <td class="center-vertically">{{ =usuario.usbid}}</td>
+                    <td class="center-vertically">{{ =usuario.nombres}}</td>
+                    <td class="center-vertically">{{ =usuario.apellidos}}</td>
+                    
+                    <!-- Boton Modificar -->
+                    <td class="center-vertically"> 
+                    <center>
+                    <a href="{{=URL(f='vModificarRol', args=[ usuario.usbid ] )}}">
+                    <span class="glyphicon glyphicon-edit green-icn"></span>
+                    </a>
+                    </center>
+                    </td>
+
+                    <td class="center-vertically">
+                    <center>
+                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar a este usuario?')) {window.location.href = '{{=URL(f='vEliminarUsuario',args=[ usuario.usbid ] )}}';}">
+                    <span class="glyphicon glyphicon-remove red"></span>
+                    </a>
+                    </center>
+                    </td>                         
+                    </tr>
+                    {{pass}}        
+                {{pass}}
+                </tbody>
+            </table> 
+        </div>
+        <!-- Bloqueados -->
+        <div role="tabpanel" class="tab-pane" id="bloq">
+            <table class="table table-striped table-condensed table-hover sortable">
+                <thead>
+                    <tr>
+                    <th>Usbid</th>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Modificar</th>
+                    <th>Eliminar</th>
+                    </tr>
+                </thead>    
+                <tbody>
+                {{for usuario in usuarios:}}
+                    {{if usuario.tipo == 'Bloqueado':}}
+                    <tr>
+                    <td class="center-vertically">{{ =usuario.usbid}}</td>
+                    <td class="center-vertically">{{ =usuario.nombres}}</td>
+                    <td class="center-vertically">{{ =usuario.apellidos}}</td>
+                    
+                    <!-- Boton Modificar -->
+                    <td class="center-vertically"> 
+                    <center>
+                    <a href="{{=URL(f='vModificarRol', args=[ usuario.usbid ] )}}">
+                    <span class="glyphicon glyphicon-edit green-icn"></span>
+                    </a>
+                    </center>
+                    </td>
+
+                    <td class="center-vertically">
+                    <center>
+                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar a este usuario?')) {window.location.href = '{{=URL(f='vEliminarUsuario',args=[ usuario.usbid ] )}}';}">
+                    <span class="glyphicon glyphicon-remove red"></span>
+                    </a>
+                    </center>
+                    </td>                         
+                    </tr>
+                    {{pass}}        
+                {{pass}}
+                </tbody>
+            </table>
+        </div> 
+        <!-- Indefinido -->
+        <div role="tabpanel" class="tab-pane" id="indef">
+            <table class="table table-striped table-condensed table-hover sortable">
+                <thead>
+                    <tr>
+                    <th>Usbid</th>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Modificar</th>
+                    <th>Eliminar</th>
+                    </tr>
+                </thead>    
+                <tbody>
+                {{for usuario in usuarios:}}
+                    {{if usuario.tipo not in ['Bloqueado','Administrador','Usuario','DEX']:}}
+                    <tr>
+                    <td class="center-vertically">{{ =usuario.usbid}}</td>
+                    <td class="center-vertically">{{ =usuario.nombres}}</td>
+                    <td class="center-vertically">{{ =usuario.apellidos}}</td>
+                    
+                    <!-- Boton Modificar -->
+                    <td class="center-vertically"> 
+                    <center>
+                    <a href="{{=URL(f='vModificarRol', args=[ usuario.usbid ] )}}">
+                    <span class="glyphicon glyphicon-edit green-icn"></span>
+                    </a>
+                    </center>
+                    </td>
+
+                    <td class="center-vertically">
+                    <center>
+                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar a este usuario?')) {window.location.href = '{{=URL(f='vEliminarUsuario',args=[ usuario.usbid ] )}}';}">
+                    <span class="glyphicon glyphicon-remove red"></span>
+                    </a>
+                    </center>
+                    </td>                         
+                    </tr>
+                    {{pass}}        
+                {{pass}}
+                </tbody>
+            </table>
+        </div>                        
+        </div>
+    </div>
+    </div>
+        <a href ="{{=URL('vAgregarUsuario')}}" id="sombra"> 
+        {{=IMG(_src=URL('static', 'icon/i_add.png'),_height='55',_alt='Agregar Producto') }}
+        </a>
+{{end}}

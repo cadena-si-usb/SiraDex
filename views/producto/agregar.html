@@ -1,10 +1,7 @@
-{{extend 'layoutSIRADEX.html'}}
+{{extend 'layoutSIRADEXloged.html'}}
 
 {{block titulo}}
 	Agregar Producto
-{{end}}
-{{block subtitulo}}
-	{{=nombre_tipo}}
 {{end}}
 
 {{block descripcion}}
@@ -18,11 +15,15 @@
 {{end}}
 
 {{block contenido}}
-
-<br>
-<p>
-
-</p>
-<br>
-{{=form}}
+	
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="tab-pane">
+				
+			{{=form}}
+			</div>
+		</div>
+	</div>
+</div>
 {{end}}
