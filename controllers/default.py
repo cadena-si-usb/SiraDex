@@ -85,6 +85,7 @@ def login_cas():
             datosUsuario = db(tablaUsuarios.usbid==usbid).select()[0]
             session.usuario['tipo'] = datosUsuario.tipo
             session.usuario['alternativo'] = datosUsuario.correo_alter
+            print session.usuario['alternativo']
             session.usuario['phone'] = datosUsuario.telefono
 
             print "\nguardado sesion : ", session.usuario
@@ -145,8 +146,11 @@ def vRegistroUsuario():
 
 def perfil():
     if session.usuario != None:
-	if session.usuario["tipo"] == "Bloqueado":
-	    redirect(URL("index"))
+
+    	if session.usuario["tipo"] == "Bloqueado":
+    	    redirect(URL("index"))
+
+        print session.usuario
         admin = 4
         if(session.usuario["tipo"] == "DEX"):
             admin = 2
@@ -154,36 +158,31 @@ def perfil():
             admin = 1
         else:
             admin = 0
-        tlf = None
-        correo_a = None
-        correo_i = None
-        usuarios = db(db.USUARIO).select()
-        for raw in usuarios:
-            if raw.ci == session.usuario["cedula"]:
-                tlf = raw.telefono
-                correo_a = raw.correo_alter
-                correo_i = raw.correo_inst
+
+        correo_i = session.usuario["usbid"]+"@usb.ve"
+
         form = SQLFORM.factory(
             Field("USBID", default=session.usuario["usbid"],writable = False),
             Field('Nombres',default=session.usuario["first_name"],writable = False),
             Field('Apellidos', default=session.usuario["last_name"],writable=False),
             Field('Correo_Institucional', default=correo_i,writable=False),
-            Field('Telefono',label = "Teléfono", default=tlf,writable=False),
-            Field('Correo_Alternativo', default=correo_a,writable=False),
+            Field('Telefono',label = "Teléfono", default=session.usuario["phone"],writable=False),
+            Field('Correo_Alternativo', default=session.usuario["alternativo"],writable=False),
             readonly=True)
 
         rows = db(db.PRODUCTO.ci_usu_creador==session.usuario['cedula']).select()
-        detalles = {}
-
+        productos = {
+                    "Validados":[],
+                    "Rechazados":[],
+                    "En espera":[]
+                    }
         for row in rows:
-            dict_campos = dict()
-            campos = db((db.PRODUCTO_TIENE_CAMPO.id_campo == db.CAMPO.id_campo)
-                        & (db.PRODUCTO_TIENE_CAMPO.id_producto == row.id_producto)).select()
-
-            for campo in campos:
-                dict_campos[campo.CAMPO.nombre] = campo.PRODUCTO_TIENE_CAMPO.valor_campo
-
-            detalles[row] = dict_campos
+            if row.estado == "Validado":
+                productos["Validados"] += [row]
+            elif row.estado == "Rechazado":
+                productos["Rechazados"]+= [row]
+            else:
+                productos["En espera"] += [row]
 
         return locals()
     else:
@@ -242,6 +241,9 @@ def EditarPerfil():
             nuevoTelefono = request.vars.telefono
             nuevoCorreoAlter = request.vars.correo_alter
             db(db.USUARIO.ci == session.usuario["cedula"]).update(telefono=nuevoTelefono, correo_alter=nuevoCorreoAlter)
+
+            session.usuario["alternativo"] = nuevoCorreoAlter
+            session.usuario["phone"] = nuevoTelefono
             redirect(URL('perfil'))
 
         return dict(form1 = form, form = forma, admin = admin)

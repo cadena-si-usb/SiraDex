@@ -29,12 +29,14 @@
                 <br>
                 <b>Cedula:</b> {{=session.usuario['cedula']}}
                 <br>
-                <b>Correo:</b>
+                <b>Correo:</b> {{=session.usuario['usbid']+"@usb.ve"}}
                 <br>
-                <b>Correo alternativo:</b>
+                {{ if session.usuario['alternativo'] != None:}}
+                <b>Correo alternativo:</b> {{=session.usuario['alternativo']}}
+                {{pass}}
                 <br>
                 {{if session.usuario['phone'] != None:}}
-                <b>Telefono:</b>
+                <b>Telefono:</b> {{session.usuario['phone']}}
                 {{pass}}
                 <br>
 
@@ -95,27 +97,33 @@
         <div class="tab-content">
         <!-- Validadas -->
         <div role="tabpanel" class="tab-pane active" id="activas">
-            <li>Actividades Validadas</li>
-            <li>Actividades Validadas</li>
-            <li>Actividades Validadas</li>
-            <li>Actividades Validadas</li>
-            <li>Actividades Validadas</li>
+            {{if productos["Validados"]==[]:}}
+            <li>-- No tiene productos validadas --</li>
+            {{else:}}
+                {{for x in productos["Validados"]:}}
+                <li>Aqui deberia estar el nombre si lo tuviera {{=x.id_producto}}</li>
+                {{pass}}
+            {{pass}}
         </div>
         <!-- Espera -->
         <div role="tabpanel" class="tab-pane" id="espera">
-            <li>Actividades en espera</li>
-            <li>Actividades en espera</li>
-            <li>Actividades en espera</li>
-            <li>Actividades en espera</li>
-            <li>Actividades en espera</li>
+            {{if productos["En espera"]==[]:}}
+            <li>-- No tiene productos en espera --</li>
+            {{else:}}
+                {{for x in productos["En espera"]:}}
+                <li>Aqui deberia estar el nombre si lo tuviera {{=x.id_producto}}</li>
+                {{pass}}
+            {{pass}}
         </div>
         <!-- Rechazadas -->
         <div role="tabpanel" class="tab-pane" id="rechazadas">
-            <li>Actividades Rechazadas</li>
-            <li>Actividades Rechazadas</li>
-            <li>Actividades Rechazadas</li>
-            <li>Actividades Rechazadas</li>
-            <li>Actividades Rechazadas</li>
+            {{if productos["Rechazados"]==[]:}}
+            <li>-- No tiene productos rechazados --</li>
+            {{else:}}
+                {{for x in productos["Rechazados"]:}}
+                <li>Aqui deberia estar el nombre si lo tuviera {{=x.id_producto}}</li>
+                {{pass}}
+            {{pass}}
         </div>
 
         </div>
