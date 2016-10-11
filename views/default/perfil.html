@@ -6,11 +6,13 @@
 
 {{block subtitulo}}
     <!-- Nombre del usuario -->
-    <!-- Sergio Alejandro -->
     {{=session.usuario['first_name'].split(' ')[0]}} {{=session.usuario['last_name'].split(' ')[0]}}
+
     <!-- icono editar -->
+        
     <a id="editar" href="{{=URL('EditarPerfil')}}" >
-    {{=IMG(_src=URL('static', 'icon', args='i_edit.png'),_style='max-height:1em') }} 
+    <!-- {{=IMG(_src=URL('static', 'icon', args='i_edit.png'),_style='max-height:1em') }}-->
+    <span class="glyphicon glyphicon-edit green-icn"></span>
     </a>
 {{end}}
 
@@ -19,16 +21,43 @@
         <div class="col-lg-6">
         <!-- Datos del usuario -->
             <p class="text-justify">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt sed corporis dolores totam excepturi commodi nobis expedita quo officiis sint facere id dicta rerum dolor amet, obcaecati aliquam fugit perspiciatis                           
+                <b>Nombre completo:</b> {{=session.usuario['first_name']}} {{=session.usuario['last_name']}}
+                <br>
+                <b>Carrera:</b>{{=session.usuario['carrera']}}
+                <br>
+                <b>Usbid:</b> {{=session.usuario['usbid']}}
+                <br>
+                <b>Cedula:</b> {{=session.usuario['cedula']}}
+                <br>
+                <b>Correo:</b>
+                <br>
+                <b>Correo alternativo:</b>
+                <br>
+                {{if session.usuario['phone'] != None:}}
+                <b>Telefono:</b>
+                {{pass}}
+                <br>
+
             </p>
         </div>
     <div class="col-lg-6">
-        AQUI VA LA GRAFICA
+        {{=IMG(_src=URL('static', 'images/cake_chart.png'),_height='250',_alt='Agregar Producto') }}
     </div>
     </div>
 {{end}}
 
 {{block contenido}}
+        <div class="row">
+            <div class="col-md-4 col-md-offset-8">
+                
+        <a href="{{=URL(c='producto',f='gestionar')}}">        
+            <button type="button" class="btn btn-default green btn-border center-block" data-toggle="modal" data-target="#myModal">
+                Ver Todas Mis Actividades
+            </button>
+        </a>
+            </div>
+        </div>
+        <br>
     <div class="row">
         <div class="col-md-12">
         <!-- Nav tabs -->
@@ -39,7 +68,7 @@
                 aria-controls="activas" 
                 role="tab" 
                 data-toggle="tab">
-                Activas
+                Validadas
             </a>
         </li>
         
@@ -64,16 +93,13 @@
 
         <!-- Tab panes -->
         <div class="tab-content">
-        <!-- Activas -->
+        <!-- Validadas -->
         <div role="tabpanel" class="tab-pane active" id="activas">
-        <ul>
-            
-            <li>Actividades Activas</li>
-            <li>Actividades Activas</li>
-            <li>Actividades Activas</li>
-            <li>Actividades Activas</li>
-            <li>Actividades Activas</li>
-        </ul>
+            <li>Actividades Validadas</li>
+            <li>Actividades Validadas</li>
+            <li>Actividades Validadas</li>
+            <li>Actividades Validadas</li>
+            <li>Actividades Validadas</li>
         </div>
         <!-- Espera -->
         <div role="tabpanel" class="tab-pane" id="espera">
@@ -91,15 +117,12 @@
             <li>Actividades Rechazadas</li>
             <li>Actividades Rechazadas</li>
         </div>
+
         </div>
         </div>
         </div>
         </div>
-        <a href="{{=URL(c='producto',f='gestionar')}}">        
-            <button type="button" class="btn btn-default green btn-border center-block" data-toggle="modal" data-target="#myModal">
-                Ver Todas Mis Actividades
-            </button>
-        </a>
+
 {{end}}                                    
 
 {{block script}}

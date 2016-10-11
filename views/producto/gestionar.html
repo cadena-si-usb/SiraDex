@@ -9,7 +9,8 @@
     {{=session.usuario['first_name'].split(' ')[0]}} {{=session.usuario['last_name'].split(' ')[0]}}
     <!-- icono editar -->
     <a id="editar" href="{{=URL(c='default',f='EditarPerfil')}}" >
-    {{=IMG(_src=URL('static', 'icon', args='i_edit.png'),_style='max-height:1em') }} 
+    <span class="glyphicon glyphicon-edit green-icn"></span>
+    <!-- {{=IMG(_src=URL('static', 'icon', args='i_edit.png'),_style='max-height:1em') }} --> 
     </a>
 {{end}}
 
@@ -36,7 +37,7 @@
                 aria-controls="activas" 
                 role="tab" 
                 data-toggle="tab">
-                Activas
+                Validadas
             </a>
         </li>
         
@@ -66,7 +67,7 @@
         <!-- Activas -->
         <div role="tabpanel" class="tab-pane active" id="activas">
                 {{if cant_val == 0:}}
-                    No hay programas Activos
+                    No hay productos validados
                 {{else:}}
                     <table class="table table-striped table-condensed table-hover sortable">
                         <thead>

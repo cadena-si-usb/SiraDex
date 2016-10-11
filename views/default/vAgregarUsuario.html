@@ -1,24 +1,28 @@
-{{ extend 'SIRADEXLayout.html' }}
-			<h3 id = titulo> Agregar Usuario </h3>
+{{ extend 'layoutSIRADEXloged.html' }}
+
+{{block titulo}}
+    Agregar Usuario
+{{end}}
+
+{{block descripcion}}
             <br/>
             <div id = error>
                 {{=message}}
             </div>
+{{end}}
 
 				<!-- Cuando se retorne ejecute una funcion va a poner
 					 lo que esta retorne aqui -->
+{{block contenido}}
+         {{=form}}
 
-                <div>
-                    <div class=" container-fluid col-xs-4 col-md-offset-4">
-                     {{=form}}
-                     {{ if bool == 1: }}
-                        <li><a class ='btn btn-primary btn-xs' href='vGestionarUsuarios'>
-                        <span class="glyphicon glyphicon-user"></span>
-                         Continuar
-                        </a></li>
-                    {{ else: }}
-                    {{ pass }}
-                    </div>
-                    <div class="container-fluid col-md-4">
-                    </div>
-                </div>
+         <div class="col-md-6 col-md-offset-3">
+         <center>
+         {{ if bool == 1: }}
+            <li><a class ='btn blue-add btn-block btn-border' href='vGestionarUsuarios'>
+             Continuar
+            </a></li>
+            </center>
+         </div>
+        {{ pass }}
+{{end}}

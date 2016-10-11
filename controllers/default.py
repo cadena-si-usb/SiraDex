@@ -8,6 +8,7 @@
 # - download is for downloading files uploaded in the db (does streaming)
 # -------------------------------------------------------------------------
 import os
+import datetime
 import re
 from usbutils import get_ldap_data, random_key
 import urllib2
@@ -46,16 +47,6 @@ def get_tipo_usuario():
         redirect(URL(c ="default",f="index"))
 
 def login_cas():
-    session.usuario = dict()
-    session.usuario['usbid'] = "00-00000"
-    session.usuario['tipo'] = "Administrador"
-    session.usuario["first_name"] = "Usuario"
-    session.usuario["last_name"] = "Parche"
-    session.usuario['cedula'] = 00000000
-    session.usuario["email"] = "usuarioparche@gmail.com"
-    redirect(URL('perfil'))
-
-'''def login_cas():
     if not request.vars.getfirst('ticket'):
         #redirect(URL('error'))
         pass
@@ -88,7 +79,6 @@ def login_cas():
 
         session.usuario = usuario
         print "Hola",session.usuario
-        print "\ncas",usuario
         session.usuario['usbid'] = usbid
 
         if not db(tablaUsuarios.usbid == usbid).isempty():
@@ -114,17 +104,13 @@ def login_cas():
             correo_inst=session.usuario["email"],
             telefono=session.usuario["phone"],
             tipo = "Usuario")
-
             redirect(URL('vRegistroUsuario'))
-'''
+    
+
 def logout_cas():
     session.usuario = None
     return response.render()
-
-#Funcion del inicio
-def index():
-    datosComp = ["","","","","","","",""]
-    return response.render()
+    
 
 # Controlador para el registro del usuario
 def vRegistroUsuario():
@@ -185,20 +171,21 @@ def perfil():
             Field('Telefono',label = "Teléfono", default=tlf,writable=False),
             Field('Correo_Alternativo', default=correo_a,writable=False),
             readonly=True)
-        return dict(form1 = form,admin = admin)
-    else:
-        redirect(URL("index"))
 
-def perfil():
-    if session.usuario != None:
-        admin = 4
-        if(session.usuario["tipo"] == "DEX"):
-            admin = 2
-        elif(session.usuario["tipo"] == "Administrador"):
-            admin = 1
-        else:
-            admin = 0
-        return dict(admin = admin)
+        rows = db(db.PRODUCTO.ci_usu_creador==session.usuario['cedula']).select()
+        detalles = {}
+
+        for row in rows:
+            dict_campos = dict()
+            campos = db((db.PRODUCTO_TIENE_CAMPO.id_campo == db.CAMPO.id_campo)
+                        & (db.PRODUCTO_TIENE_CAMPO.id_producto == row.id_producto)).select()
+
+            for campo in campos:
+                dict_campos[campo.CAMPO.nombre] = campo.PRODUCTO_TIENE_CAMPO.valor_campo
+
+            detalles[row] = dict_campos
+
+        return locals()
     else:
         redirect(URL("index"))
 
@@ -304,6 +291,8 @@ def vAgregarUsuario():
                 fields=['usbid','tipo','telefono','correo_alter'],
                 submit_button='Agregar',
                 labels={'usbid':'USBID','telefono':'Teléfono', 'correo_alter':'Correo alternativo','tipo':'Tipo'})
+            forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+            forma.element(_type='submit')['_value']="Agregar"
             # Si el largo de request.vars es mayor a cero, quiere decir que de introdujo informacion en el formulario.
             if len(request.vars)!=0:
                 # En usbidAux almacenamos el usbid proporcionado por el administrador
@@ -405,8 +394,9 @@ def vModificarRol():
                     db.USUARIO,
                     button=['Actualizar'],
                     fields=['tipo'],
-                    submit_button='Actualizar',
                     labels={'tipo':'TIPO'})
+            forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+            forma.element(_type='submit')['_value']="Actualizar"
             if len(request.vars)!=0:
                 if (not db(db.USUARIO.usbid == request.args[0]).isempty()):
                     if(request.args[0] != session.usuario["usbid"]):
@@ -463,23 +453,43 @@ def cambiar_colores():
     return dict()
 
 def index():
+    now = datetime.datetime.now()
+    if now.month < 10 :
+        mes = "-0" +  str(now.month)
+    else:
+        mes = "-" +  str(now.month)
+    if now.day < 10 :
+        dia = "-0" +  str(now.day)
+    else:
+        dia = "-" +  str(now.month)
+    fecha = str(now.year) + mes + dia
     rows = db(db.PROGRAMA).select().as_list()
-    print rows
-    dicc = dict()
-    for programa in rows:
-        tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa['id_programa']).select().as_list()
-        dicc[programa['nombre']] = []
-        for tipo in tiposA:
-            dicc[programa['nombre']].append(tipo['nombre'])
+    rowsT = db(db.TIPO_ACTIVIDAD).select().as_list()
     return locals()
 
 def obtener_actividades():
+    print request.vars.Programa
     programa = db(db.PROGRAMA.nombre==request.vars.Programa).select().first()
+
     tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa.id_programa).select('nombre')
     concat = "<option></option>"
 
     for tipo in tiposA:
         option = tipo.nombre
-        concat += "<option>"+option+"</option>"
+        concat += "<option value="+option+">"+option+"</option>"
 
     return 'jQuery("#lista_tipos").empty().append("%s")'% repr(concat)
+
+def obtener_autores():
+    tipoA = db(db.TIPO_ACTIVIDAD.nombre==request.vars.TipoActividad).select().first()
+    sql = "select nombres from usuario where ci in (select ci_usu_creador from producto where id_tipo=="+str(tipoA.id_tipo)+");"
+    autores = db.executesql(sql)
+
+    concat = "<option></option>"
+
+    for autor in autores:
+        option = autor.nombre
+        print option
+        concat += "<option value="+option+">"+option+"</option>"
+
+    return 'jQuery("#lista_autores").empty().append("%s")'% repr(concat)

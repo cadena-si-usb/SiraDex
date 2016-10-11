@@ -1,29 +1,36 @@
-{{#include 'layout.html'}}
-{{ extend 'SIRADEXLayout.html' }}
-			
-		<!-- Contenido principal de la pagina -->
-		<section class = "main">
-			<h4 id = titulo> Modificar Rol </h4>
-            <div id = error>
-                {{=message}}
+{{ extend 'layoutSIRADEXloged.html' }}
+
+{{block titulo}}
+    Modificar Rol
+{{end}}			
+
+{{block descripcion}}
+    <div id = error>
+        {{=message}}
+    </div>
+{{end}}
+
+{{block contenido}}
+<!-- Contenido principal de la pagina -->
+<section class = "main">
+	<!-- En esta seccion va todo el contenido de la pagina -->
+	<section class = "contenido">
+		
+		<!-- Cuando se retorne ejecute una funcion va a poner
+			 lo que esta retorne aqui -->
+
+        <div>
+            <div class="container-fluid col-md-4">
             </div>
-			<!-- En esta seccion va todo el contenido de la pagina -->
-			<section class = "contenido">
-				
-				<!-- Cuando se retorne ejecute una funcion va a poner
-					 lo que esta retorne aqui -->
+            <div class=" container-fluid col-xs-6">
+             {{=forma}}
+             {{=form}}
+            </div>
+            <div class="container-fluid col-md-4">
+            </div>
+        </div>
 
-                <div>
-                    <div class="container-fluid col-md-4">
-                    </div>
-                    <div class=" container-fluid col-xs-6">
-                     {{=forma}}
-                     {{=form}}
-                    </div>
-                    <div class="container-fluid col-md-4">
-                    </div>
-                </div>
-
-			</section><!-- close contenido -->
-			
-		</section><!-- close main -->
+	</section><!-- close contenido -->
+	
+</section><!-- close main -->
+{{end}}
