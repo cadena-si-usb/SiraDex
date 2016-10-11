@@ -1,5 +1,6 @@
 {{extend 'layoutSIRADEXloged.html'}}
 
+
 {{block titulo}}
     <h2> Programa: < Nombre Programa > </h2>
 {{end}}
@@ -33,8 +34,13 @@
             </form>
         </div>
         <div class="col-sm-5 col-sm-push-1" style="margin-top:10px;margin-left:50px">
-            <button type="button" class="btn btn-default green btn-border" data-toggle="modal" data-target="#myModal">
-              <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Actividad
+            <button type="button" 
+                    class="btn btn-default green btn-border" 
+                    data-toggle="modal" 
+                    data-target="#myModal"
+                    onclick="ajax('{{=URL('agregar_tipo')}}',[],'agregar_tipo_actividad');">
+              <span class="glyphicon glyphicon-plus-sign" 
+                    aria-hidden="true"></span> Agregar Actividad
             </button>
             <a href="{{=URL(c='tipo_actividad', f='gestionar_archivo_historico.html')}}" >
             <button type="button" class="btn btn-default red-trash btn-border">
@@ -58,72 +64,38 @@
                 </tr>
             </thead>
             <tbody>
+                    {{for tipoActividad in listaTipoActividades: }}
                     <tr>
                         <td class="col-md-4">
-                            <a href="{{=URL(c='tipo_actividad', f='ver_tipo_actividad.html')}}">
-                                < Nombre Tipo de Actividad 1>
+                            <a href="{{=URL(c='tipo_actividad', f='ver_tipo_actividad.html',args=[tipoActividad.id_tipo])}}">
+                                {{=tipoActividad.nombre}} 
                             </a>
                         </td>
-                        <td class="col-md-6">< Descripcion Tipo de Actividad 1></td>
+                        <td class="col-md-6"> {{=tipoActividad.descripcion}}</td>
                         <td class="center-vertically">
                             <center>
                                 <a href="#">
-                                    <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#myModalEditar"></span>
+                                    <span class="glyphicon glyphicon-edit blue" 
+                                          data-toggle="modal" 
+                                          data-target="#myModalEditar"
+                                          onclick="ajax('{{=URL('editar_tipo')}}/{{=tipoActividad.id_tipo}}',[],'editar_tipo_actividad');">
+                                    </span>
                                 </a>
                             <center>
                         </td>
                         <td class="center-vertically">
                             <center>
                                 <a>
-                                   <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalDelete"></span>
+                                   <span class="glyphicon glyphicon-remove red" 
+                                         data-toggle="modal" 
+                                         data-target="#myModalDelete">
+                                       
+                                   </span>
                                 </a>
                             <center>
                         </td>
                     </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <a href="{{=URL(c='tipo_actividad', f='ver_tipo_actividad.html')}}">
-                                < Nombre Tipo de Actividad 2>
-                            </a>
-                        </td>
-                        <td class="col-md-6">< Descripcion Tipo de Actividad 2></td>
-                        <td class="center-vertically">
-                            <center>
-                                <a href="#">
-                                    <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#myModalEditar"></span>
-                                </a>
-                            <center>
-                        </td>
-                        <td class="center-vertically">
-                            <center>
-                                <a>
-                                   <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalDelete"></span>
-                                </a>
-                            <center>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <a href="{{=URL(c='tipo_actividad', f='ver_tipo_actividad.html')}}">
-                                < Nombre Tipo de Actividad 3>
-                            </a>
-                        </td>
-                        <td class="col-md-6">< Descripcion Tipo de Actividad 3></td>
-                        <td class="center-vertically">
-                            <center>
-                                <a href="#">
-                                    <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#myModalEditar"></span>
-                                </a>
-                            <center>
-                        </td>
-                        <td class="center-vertically">
-                            <center>
-                                <a>
-                                   <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalDelete"></span>
-                                </a>
-                            <center>
-                        </td>
-                    </tr>
+                    {{pass}}
             </tbody>
         </table>
     </div>
@@ -137,7 +109,7 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <center><h4 class="modal-title">Agregar Tipo de Actividad</h4><center>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" id="agregar_tipo_actividad">
           <p><center> Formulario para agregar Tipo de Actividad </center> </p>
       </div>
     </div>
@@ -153,7 +125,9 @@
         <center><h4 class="modal-title">Editar Tipo de Actividad</h4><center>
       </div>
       <div class="modal-body">
-          <p><center> Formulario para editar Tipo de Actividad </center> </p>
+          <p><center id="editar_tipo_actividad"> Formulario para editar Tipo de Actividad 
+              
+          </center> </p>
       </div>
     </div>
   </div>
@@ -173,7 +147,11 @@
             <br>
             <center>
                 <a>
-                  <button type="button" class="btn blue-add btn-border">Eliminar</button>
+                  <button type="button" 
+                          class="btn blue-add btn-border"
+                          data-dismiss="modal"
+                          onclick="ajax('{{=URL('enviar_tipo_papelera')}}/{{=tipoActividad.id_tipo}}',[]);location.reload();">
+                      Eliminar</button>
                 </a>
                 <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
             </center>
@@ -183,4 +161,6 @@
     </div>
   </div>
 </div>
+
+
 {{end}}

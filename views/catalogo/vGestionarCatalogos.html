@@ -1,8 +1,11 @@
 {{extend 'layoutSIRADEXloged.html'}}
 
+
 {{block titulo}}
-    <h2> <center> Gestión de Catálogos </center> </h2>
+<h2> <center> Gestión de Catálogos </center> </h2>
 {{end}}
+
+
 
 
 {{block contenido}}
@@ -10,7 +13,7 @@
 
 <div class="row">
     <div class="col-sm-5 col-sm-push-9" style="margin-top:10px; ; margin-left:30px">
-        <button type="button" class="btn btn-default green btn-border" data-toggle="modal" data-target="#myModalAgregar">
+        <button type="button" class="btn btn-default green btn-border" data-toggle="modal" data-target="#modalAgregarCatalogo">
             <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Catálogo
         </button>
     </div>
@@ -18,359 +21,97 @@
 <br>
 <div class="card">
   <ul class="nav nav-tabs" role="tablist">
-  <li class="nav-item">
-    <a class="nav-link active" data-toggle="tab" href="#Cat1" role="tab" id="Catalogo1">Catalogo 1</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#Cat2" role="tab">Catalogo 2</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#Cat3" role="tab">Catalogo 3</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#Cat4" role="tab">Catalogo 4</a>
-  </li>
-</ul>
+  {{for catalogo in catalogos:}}
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#{{ = catalogo[0].id}}" role="tab" id="Cat{{= catalogo[0].id}}">{{= catalogo[0].nombre}}</a>
+    </li>
+   {{pass}}
+  </ul>
 
-<div class="tab-content">
-  <div class="tab-pane active" id="Cat1" role="tabpanel">
-        <ul class="list-group">
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="col-sm-10">
-                        Elemento 1 del Catalogo 1
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#elemModificar"></span>
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#elemEliminar"></span>
-                    </div>
-                </div>
-            </li>
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="col-sm-10">
-                        Elemento 2 del Catalogo 1
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#elemModificar"></span>
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#elemEliminar"></span>
-                    </div>
-                </div>
-           </li>
-          <li class="list-group-item">
-              <div class="row">
-                    <div class="col-sm-10">
-                        Elemento 3 del Catalogo 1
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#elemModificar"></span>
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#elemEliminar"></span>
-                    </div>
-                </div>
-          </li>
-          <li class="list-group-item">
-              <div class="row">
-                  <div class="col-sm-10">
-                      Elemento 4 del Catalogo 1
+  <div class="tab-content">
+    {{for catalogo in catalogos:}}
+      <div class="tab-pane {{='active' if catalogo == catalogos[0] else ''}}" id="{{= catalogo[0].id}}" role="tabpanel">
+            <ul class="list-group">
+                {{if len(catalogo[1]) == 0:}}
+                <li class="list-group-item">
+                  <div class="row">
+                      <div class="col-sm-4">
+                        <p>Este catalogo aun no tiene campos.</p>
+                      </div>
                   </div>
-                  <div class="col-sm-1">
-                      <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#elemModificar"></span>
-                  </div>
-                  <div class="col-sm-1">
-                      <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#elemEliminar"></span>
-                  </div>
-              </div>
-          </li>
-          <li class="list-group-item">
+                </li>
+                {{else:}}
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <b>Nombre del Campo</b>
+                            </div>
+                            <div class="col-sm-4">
+                                <b>Tipo</b>
+                            </div>
+                            <div class="col-sm-2">
+                                <b>Obligatorio</b>
+                            </div>
+                            <div class="col-sm-2">
+                                <b>Acciones</b>
+                            </div>
+                        </div>
+                     </li>
+                    {{for campo in catalogo[1]:}}
+                      <li class="list-group-item">
+                          <div class="row">
+                              <div class="col-sm-4">
+                                  {{= campo.nombre}}
+                              </div>
+                              <div class="col-sm-4">
+                                  {{= campo.tipo_campo}}
+                              </div>
+                              <div class="col-sm-2">
+                                  {{= 'Si' if campo.obligatorio else 'No'}}
+                              </div>
+                              <div class="col-sm-1">
+                                  <span class="glyphicon glyphicon-edit blue"
+                                        data-toggle="modal" data-target="#modalEditarCampo"
+                                        data-id-campo-cat="{{=campo.id_campo_cat}}"
+                                        data-id-catalogo="{{=campo.id_catalogo}}"
+                                        data-nombre="{{=campo.nombre}}"
+                                        data-tipo-campo="{{=campo.tipo_campo}}"
+                                        data-obligatorio="{{=campo.obligatorio}}">
+                                  </span>
+                              </div>
+                              <div class="col-sm-1">
+                                  <span class="glyphicon glyphicon-remove red" data-link-eliminar-campo="{{=URL(f='eliminarCampos', args=[campo.id_campo_cat])}}" data-toggle="modal" data-target="#modalEliminarCampo"></span>
+                              </div>
+                          </div>
+                      </li>
+                    {{pass}}
+                  {{pass}}
+              </ul>
               <div class="row">
-                    <div class="col-sm-10">
-                        Elemento 5 del Catalogo 1
+                  <center>
+                    <div class="col-sm-2 col-sm-offset-4">
+                        <button type="button" class="btn btn-default btn-block green btn-border"
+                                data-toggle="modal" data-target="#modalAgregarCampo"
+                                data-id-catalogo="{{=catalogo[0].id}}">
+                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar
+                        </button>
                     </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#elemModificar"></span>
+                    <div class="col-sm-2">
+                      <button type="button" class="btn btn-default btn-block red-trash btn-border"
+                              data-toggle="modal" data-target="#modalEliminarCatalogo"
+                              data-link-eliminar-catalogo = "{{=URL(f='eliminarCatalogo', args=[catalogo[0].id])}}">
+                          <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Eliminar
+                      </button>
                     </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#elemEliminar"></span>
-                    </div>
-                </div>
-          </li>
-        </ul>
-        <div class="row">
-            <center>  
-              <div class="col-sm-2 col-sm-offset-4">
-                  <button type="button" class="btn btn-default btn-block green btn-border" data-toggle="modal" data-target="#myModalEditar">
-                      <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Editar
-                  </button>
+                  </center>
               </div>
-              <div class="col-sm-2">
-                <button type="button" class="btn btn-default btn-block red-trash btn-border" data-toggle="modal" data-target="#myModalDelete">
-                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Eliminar
-                </button>
-              </div>
-            </center>
         </div>
-  </div>
-  <div class="tab-pane" id="Cat2" role="tabpanel">
-        <ul class="list-group">
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="col-sm-10">
-                        Elemento 1 del Catalogo 2
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#elemModificar"></span>
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#elemEliminar"></span>
-                    </div>
-                </div>
-            </li>
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="col-sm-10">
-                        Elemento 2 del Catalogo 2
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#elemModificar"></span>
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#elemEliminar"></span>
-                    </div>
-                </div>
-           </li>
-          <li class="list-group-item">
-              <div class="row">
-                    <div class="col-sm-10">
-                        Elemento 3 del Catalogo 2
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#elemModificar"></span>
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#elemEliminar"></span>
-                    </div>
-                </div>
-          </li>
-          <li class="list-group-item">
-              <div class="row">
-                  <div class="col-sm-10">
-                      Elemento 4 del Catalogo 2
-                  </div>
-                  <div class="col-sm-1">
-                      <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#elemModificar"></span>
-                  </div>
-                  <div class="col-sm-1">
-                      <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#elemEliminar"></span>
-                  </div>
-              </div>
-          </li>
-          <li class="list-group-item">
-              <div class="row">
-                    <div class="col-sm-10">
-                        Elemento 5 del Catalogo 2
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#elemModificar"></span>
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#elemEliminar"></span>
-                    </div>
-                </div>
-          </li>
-        </ul>
-        <div class="row">
-            <center>  
-              <div class="col-sm-2 col-sm-offset-4">
-                  <button type="button" class="btn btn-default btn-block green btn-border" data-toggle="modal" data-target="#myModalEditar">
-                      <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Editar
-                  </button>
-              </div>
-              <div class="col-sm-2">
-                <button type="button" class="btn btn-default btn-block red-trash btn-border" data-toggle="modal" data-target="#myModalDelete">
-                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Eliminar
-                </button>
-              </div>
-            </center>
-        </div>
-  </div>
-  <div class="tab-pane" id="Cat3" role="tabpanel">
-         <ul class="list-group">
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="col-sm-10">
-                        Elemento 1 del Catalogo 3
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#elemModificar"></span>
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#elemEliminar"></span>
-                    </div>
-                </div>
-            </li>
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="col-sm-10">
-                        Elemento 2 del Catalogo 3
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#elemModificar"></span>
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#elemEliminar"></span>
-                    </div>
-                </div>
-           </li>
-          <li class="list-group-item">
-              <div class="row">
-                    <div class="col-sm-10">
-                        Elemento 3 del Catalogo 3
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#elemModificar"></span>
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#elemEliminar"></span>
-                    </div>
-                </div>
-          </li>
-          <li class="list-group-item">
-              <div class="row">
-                  <div class="col-sm-10">
-                      Elemento 4 del Catalogo 3
-                  </div>
-                  <div class="col-sm-1">
-                      <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#elemModificar"></span>
-                  </div>
-                  <div class="col-sm-1">
-                      <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#elemEliminar"></span>
-                  </div>
-              </div>
-          </li>
-          <li class="list-group-item">
-              <div class="row">
-                    <div class="col-sm-10">
-                        Elemento 5 del Catalogo 3
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#elemModificar"></span>
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#elemEliminar"></span>
-                    </div>
-                </div>
-          </li>
-        </ul>
-        <div class="row">
-            <center>  
-              <div class="col-sm-2 col-sm-offset-4">
-                  <button type="button" class="btn btn-default btn-block green btn-border" data-toggle="modal" data-target="#myModalEditar">
-                      <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Editar
-                  </button>
-              </div>
-              <div class="col-sm-2">
-                <button type="button" class="btn btn-default btn-block red-trash btn-border" data-toggle="modal" data-target="#myModalDelete">
-                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Eliminar
-                </button>
-              </div>
-            </center>
-        </div>
-  </div>
-  <div class="tab-pane" id="Cat4" role="tabpanel">
-       <ul class="list-group">
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="col-sm-10">
-                        Elemento 1 del Catalogo 4
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#elemModificar"></span>
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#elemEliminar"></span>
-                    </div>
-                </div>
-            </li>
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="col-sm-10">
-                        Elemento 2 del Catalogo 4
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#elemModificar"></span>
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#elemEliminar"></span>
-                    </div>
-                </div>
-           </li>
-          <li class="list-group-item">
-              <div class="row">
-                    <div class="col-sm-10">
-                        Elemento 3 del Catalogo 4
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#elemModificar"></span>
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#elemEliminar"></span>
-                    </div>
-                </div>
-          </li>
-          <li class="list-group-item">
-              <div class="row">
-                  <div class="col-sm-10">
-                      Elemento 4 del Catalogo 4
-                  </div>
-                  <div class="col-sm-1">
-                      <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#elemModificar"></span>
-                  </div>
-                  <div class="col-sm-1">
-                      <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#elemEliminar"></span>
-                  </div>
-              </div>
-          </li>
-          <li class="list-group-item">
-              <div class="row">
-                    <div class="col-sm-10">
-                        Elemento 5 del Catalogo 4
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-edit blue" data-toggle="modal" data-target="#elemModificar"></span>
-                    </div>
-                    <div class="col-sm-1">
-                        <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#elemEliminar"></span>
-                    </div>
-                </div>
-          </li>
-        </ul>
-
-        <div class="row">
-            <center>  
-              <div class="col-sm-2 col-sm-offset-4">
-                  <button type="button" class="btn btn-default btn-block green btn-border" data-toggle="modal" data-target="#myModalEditar">
-                      <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Editar
-                  </button>
-              </div>
-              <div class="col-sm-2">
-                <button type="button" class="btn btn-default btn-block red-trash btn-border" data-toggle="modal" data-target="#myModalDelete">
-                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Eliminar
-                </button>
-              </div>
-            </center>
-        </div>
+      {{pass}}
   </div>
 </div>
-</div>
 
-<!-- Modal Agregar-->
-<div id="myModalAgregar" class="modal fade" role="dialog">
+<!-- Modal Agregar Catalogo-->
+<div id="modalAgregarCatalogo" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -378,62 +119,85 @@
         <center><h4 class="modal-title"> Agregar Catálogo </h4><center>
       </div>
       <div class="modal-body">
-          <p><center> Formulario para agregar Catálogo </center> </p>
+          <p><center>{{ = formulario_agregar_catalogo}} </center> </p>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Modal Editar-->
-<div id="myModalEditar" class="modal fade" role="dialog">
+<!-- Modal Agregar Campo-->
+<div id="modalAgregarCampo" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <center><h4 class="modal-title"> < Nombre del Catalogo > </h4><center>
+        <center><h4 class="modal-title"> Agregar Campo </h4><center>
       </div>
       <div class="modal-body">
-          <p><center> Formulario para editar Catálogo </center> </p>
+        <center>
+        {{=formulario_agregar_campo.custom.begin}}
+          <div class=row>
+            <div class="col-md-4"><b>Nombre del Campo</b></div>
+            <div class="col-md-6">{{=formulario_agregar_campo.custom.widget.nombre}}</div>
+          </div>
+          <br>
+          <div class=row>
+            <div class="col-md-4"><b>Tipo</b></div>
+            <div class="col-md-6">{{=formulario_agregar_campo.custom.widget.tipo_campo}}</div>
+          </div>
+          <br>
+          <div class=row>
+            <div class="col-md-4"><b>Obligatorio</b></div>
+            <div class="col-md-6">{{=formulario_agregar_campo.custom.widget.obligatorio}}</div>
+          </div>
+          <br>
+          <div  style="display:none;">{{=formulario_agregar_campo.custom.widget.id_catalogo}}</div>
+          {{=formulario_agregar_campo.custom.submit}}
+        {{=formulario_agregar_campo.custom.end}}
+        </center>
       </div>
     </div>
   </div>
 </div>
 
-<div id="elemModificar" class="modal fade" role="dialog">
+<div id="modalEditarCampo" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <center><h4 class="modal-title"> Editar Elemento </h4><center>
+        <center><h4 class="modal-title"> Editar Campo </h4><center>
       </div>
       <div class="modal-body">
-          <form class="form-horizontal">
-              <div class="form-group">
-                <label class="control-label col-sm-3" for="email"> < campo 1> </label>
-                <div class="col-sm-9">
-                  <input class="form-control">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-sm-3" for="pwd"> < campo 2 > </label>
-                <div class="col-sm-9">
-                  <input class="form-control">
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="col-sm-offset-3 col-sm-9">
-                  <button type="submit" class="btn blue-add btn-block btn-border">Editar</button>
-                </div>
-              </div>
-            </form>
+        <center>
+        {{=formulario_editar_campo.custom.begin}}
+          <div class=row>
+            <div class="col-md-4"><b>Nombre del Campo</b></div>
+            <div class="col-md-6">{{=formulario_editar_campo.custom.widget.nombre}}</div>
+          </div>
+          <br>
+          <div class=row>
+            <div class="col-md-4"><b>Tipo</b></div>
+            <div class="col-md-6">{{=formulario_editar_campo.custom.widget.tipo_campo}}</div>
+          </div>
+          <br>
+          <div class=row>
+            <div class="col-md-4"><b>Obligatorio</b></div>
+            <div class="col-md-6">{{=formulario_editar_campo.custom.widget.obligatorio}}</div>
+          </div>
+          <br>
+          <div style="display: none;">{{=formulario_editar_campo.custom.widget.id_catalogo}}</div>
+          <div style="display: none;">{{=formulario_editar_campo.custom.widget.id_campo_cat}}</div>
+          {{=formulario_editar_campo.custom.submit}}
+        {{=formulario_editar_campo.custom.end}}
+        </center>
       </div>
     </div>
   </div>
 </div>
-      
+
 <!-- Modal Eliminar-->
 <div class="container">
-  <div class="modal fade" id="myModalDelete" role="dialog">
+  <div class="modal fade" id="modalEliminarCatalogo" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -444,7 +208,7 @@
             <center> <p>Está seguro que quiere eliminar este Catálogo.</p> </center>
             <br>
             <center>
-                <a>
+                <a id="botonEliminarCatalogo">
                   <button type="button" class="btn blue-add btn-border">Eliminar</button>
                 </a>
                 <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
@@ -453,23 +217,22 @@
         </div>
       </div>
     </div>
-  </div>
 </div>
 
 <!-- Modal Eliminar Elementos-->
 <div class="container">
-  <div class="modal fade" id="elemEliminar" role="dialog">
+  <div class="modal fade" id="modalEliminarCampo" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <center> <h4 class="modal-title">Eliminar Elemento del Catálogo</h4> </center>
+            <center> <h4 class="modal-title">Eliminar Campo del Catálogo</h4> </center>
         </div>
         <div class="modal-body">
-            <center> <p>Está seguro que quiere eliminar este Elemento del Catálogo.</p> </center>
+            <center> <p>Está seguro que quiere eliminar este campo del Catálogo.</p> </center>
             <br>
             <center>
-                <a>
+                <a id="botonEliminarCampo">
                   <button type="button" class="btn blue-add btn-border">Eliminar</button>
                 </a>
                 <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
@@ -478,13 +241,41 @@
         </div>
       </div>
     </div>
-  </div>
 </div>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        document.getElementById("Catalogo1").click();
-    });
+<script type"text/javascript">
+
+  // Pasamos los argumentos para editar el catalogo.
+  $('#modalAgregarCampo').on('show.bs.modal', function(e){
+      var id_catalogo = $(e.relatedTarget).data('id-catalogo');
+      $(e.currentTarget).find('input[name="id_catalogo"]').val(id_catalogo);
+  });
+
+  // Pasamos los argumentos para editar el campo.
+  $('#modalEditarCampo').on('show.bs.modal', function(e){
+      var id_catalogo  = $(e.relatedTarget).data('id-catalogo');
+      var id_campo_cat = $(e.relatedTarget).data('id-campo-cat');
+      var nombre       = $(e.relatedTarget).data('nombre');
+      var tipo_campo   = $(e.relatedTarget).data('tipo-campo');
+      var obligatorio  = $(e.relatedTarget).data('obligatorio');
+      $(e.currentTarget).find('input[name="id_catalogo"]').val(id_catalogo);
+      $(e.currentTarget).find('input[name="id_campo_cat"]').val(id_campo_cat);
+      $(e.currentTarget).find('input[name="nombre"]').val(nombre);
+      $(e.currentTarget).find('input[name="tipo_campo"]').val(tipo_campo);
+      $(e.currentTarget).find('input[name="obligatorio"]').val(obligatorio);
+  });
+
+  // Pasamos los argumentos para eliminar campo
+  $('#modalEliminarCampo').on('show.bs.modal', function(e){
+      var linkEliminar = $(e.relatedTarget).data('link-eliminar-campo');
+      $("#botonEliminarCampo").attr("href", linkEliminar);
+  });
+
+  // Pasamos los argumentos para eliminar catalogo.
+  $('#modalEliminarCatalogo').on('show.bs.modal', function(e){
+      var linkEliminar = $(e.relatedTarget).data('link-eliminar-catalogo');
+      $("#botonEliminarCatalogo").attr("href", linkEliminar);
+  });
 </script>
 
 

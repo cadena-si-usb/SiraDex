@@ -8,10 +8,10 @@
 <div class="container-fluid">
     <table class="table table-bordered tabla-border" >
         <tbody class="tabla-border">
-            <tr> <th class="col-md-2 tabla-border">Nombre:</td>           <td class="col-md-6 tabla-border"> < Nombre > </td> </tr>
-            <tr> <th class="col-md-2 tabla-border">Descripción:</td>      <td class="col-md-6 tabla-border"> < Descripcion > </td> </tr>
-            <tr> <th class="col-md-2 tabla-border">Tipo de Programa:</td> <td class="col-md-6 tabla-border"> < Tipo de Programa > </td></tr>
-            <tr> <th class="col-md-2 tabla-border">Programa:</td>         <td class="col-md-6 tabla-border"> < Programa > </td> </tr>
+            <tr> <th class="col-md-2 tabla-border">Nombre:</td>           <td class="col-md-6 tabla-border"> {{=tipo.nombre}} </td> </tr>
+            <tr> <th class="col-md-2 tabla-border">Descripción:</td>      <td class="col-md-6 tabla-border"> {{=tipo.descripcion}} </td> </tr>
+            <tr> <th class="col-md-2 tabla-border">Tipo de Programa:</td> <td class="col-md-6 tabla-border"> {{=tipo.tipo_p_r}} </td></tr>
+            <tr> <th class="col-md-2 tabla-border">Programa:</td>         <td class="col-md-6 tabla-border"> {{=programa_nombre}} </td> </tr>
             <!--<tr> <th class="col-md-2">Producto</td>         <td class="col-md-6"> < Producto > </td> </tr>-->
         </tbody>
     </table>
@@ -27,24 +27,44 @@
                 </tr>
             </thead>
             <tbody>
+                {{for campo in campos:}}
                     <tr>
-                        <td> <center> < Campo 1 > </center></td>
-                        <td> <center> < Tipo 1 > </center></td>
-                        <td> <center> < False / True > </center></td>
+                        <td> <center> {{=campo.nombre}} </center></td>
+                        <td> <center> {{=campo.tipo_campo}} </center></td>
+                        <td> <center> {{=campo.obligatorio}} </center></td>
+                        <td> 
+                            <center> 
+                                <a href="#">
+                                    <span class="glyphicon glyphicon-edit blue"
+                                          onclick="ajax('{{=URL('editar_campo')}}/{{=campo.id_campo}}',[],'editar_campo_tipo');"
+                                          data-target="#myModalEditar"
+                                          data-toggle="modal"
+                                          ></span>
+                                </a>
+                            </center>
+                        </td>
                     </tr>
-                    <tr>
-                        <td> <center> < Campo 2 > </center></td>
-                        <td> <center> < Tipo 2 > </center></td>
-                        <td> <center> < False / True > </center></td>
-                        
-                    </tr>
-                    <tr>
-                       <td> <center> < Campo 3 > </center></td>
-                       <td> <center> < Tipo 3 > </center></td>
-                       <td> <center> < False / True > </center></td>
-                    </tr>
+                {{pass}}
             </tbody>
         </table>
+</div>
+
+
+<!-- Modal Editar-->
+<div id="myModalEditar" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <center><h4 class="modal-title">Editar Campo de Tipo</h4><center>
+      </div>
+      <div class="modal-body">
+          <p><center id="editar_campo_tipo"> Formulario para editar Campo de Tipo
+              
+          </center> </p>
+      </div>
+    </div>
+  </div>
 </div>
 
 {{end}}
