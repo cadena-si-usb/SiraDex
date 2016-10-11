@@ -49,12 +49,15 @@ def gestionar_programas():
     # Obtengo todos los programas almacenados en la base de datos.
     programas = db().select(db.PROGRAMA.ALL)
 
+    # Para agregar un programa.
     formulario = SQLFORM.factory(
         Field('Nombre',
               requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacio.'),
-                          IS_MATCH('([A-Za-z])([A-Za-z0-9" "])*', error_message="El nombre del programa no puede iniciar con numeros.")]),
+                          IS_MATCH('([A-zÀ-ÿŸ])([A-zÀ-ÿŸ0-9" "])*', error_message="El nombre del tipo de actividad debe comenzar con una letra."),
+                          IS_LENGTH(256)]),
         Field('Descripcion', type="text",
-              requires=IS_NOT_EMPTY(error_message='La descripcion del programa no puede quedar vacia.')),
+              requires=[IS_NOT_EMPTY(error_message='La descripcion del programa no puede quedar vacia.'),
+                        IS_LENGTH(2048)]),
         submit_button = 'Agregar',
         labels = {'Descripcion' : 'Descripción',
                   'Nombre' : 'Nombre del Programa'},
@@ -62,6 +65,7 @@ def gestionar_programas():
     formulario.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
     formulario.element(_type='submit')['_value']="Agregar"
 
+    # Para editar un programa.
     formulario_editar  = SQLFORM.factory(
         Field('Nombre',
               requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacio.'),
@@ -75,7 +79,26 @@ def gestionar_programas():
     formulario_editar.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
     formulario_editar.element(_type='submit')['_value']="Editar"
 
-    return dict(admin=admin, programas=programas, formulario=formulario, formulario_editar=formulario_editar)
+    # MÉTODO POST FORMULARIO AGREGAR:
+    # En caso de que los datos del formulario agregar estén correctos:
+    if formulario.accepts(request.vars, session, formname="formulario"):
+        print "Pase"
+        # Se agrega el programa deseado a la base de datos.
+        db.PROGRAMA.insert(nombre = request.vars.Nombre,
+                           descripcion = request.vars.Descripcion
+                           )
+        # Se redirige a la vista de getión de programas.
+        redirect(URL('gestionar_programas.html'))
+    # En caso de que el formulario no sea aceptado:
+    elif (formulario.errors):
+        print "No pase"
+        print formulario.errors
+        session.message = "Los datos del programa son inválidos. Intentelo nuevamente."
+
+    # MÉTODO POST FORMULARIO EDITAR:
+
+    return dict(admin=admin, programas=programas, hayErroresAgregar=formulario.errors,
+                formulario=formulario, formulario_editar=formulario_editar)
 
 
 def eliminar_programa():
