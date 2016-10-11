@@ -31,13 +31,16 @@ def gestionar():
 
         detalles[row] = dict_campos
 
-        if row["validacion"] == "En espera":
+        if row["estado"] == "En espera":
             cant_esp += 1
-        elif row["validacion"] == "Validada":
+        elif row["estado"] == "Validada":
             cant_val += 1 
-        elif row["validacion"] == "Rechazada":
+        elif row["estado"] == "Rechazada":
             cant_rec += 1
 
+
+    # Para el modal de Agregar actividad
+    programas = db(db.PROGRAMA).select('nombre')
     return locals()
 
 def tipos():
@@ -201,3 +204,20 @@ def eliminar():
 
     #return "producto {} eliminada".format(producto)
     return locals()
+
+
+# Funcion utilizada para el ajax en el agregar
+def obtener_actividades():
+    programa = db(db.PROGRAMA.nombre==request.vars.Programa[0]).select().first()
+    tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa.id_programa).select('nombre')
+    
+    concat = '<option></option>'
+    print tiposA
+
+    for tipo in tiposA:
+        option = tipo.nombre
+        concat += '<option value="'+option+'">'+option+'</option>'
+
+    
+
+    return "jQuery('#lista_tipos').empty().append('"+concat+"')"

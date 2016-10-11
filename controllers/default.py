@@ -53,9 +53,11 @@ def login_cas():
     try:
         import urllib2, ssl
         ssl._create_default_https_context = ssl._create_unverified_context
+
         url = "https://secure.dst.usb.ve/validate?ticket="+\
         request.vars.getfirst('ticket') +\
         "&service=" + URL_RETORNO
+
         req = urllib2.Request(url)
         response = urllib2.urlopen(req)
         the_page = response.read()
@@ -82,6 +84,12 @@ def login_cas():
         if not db(tablaUsuarios.usbid == usbid).isempty():
             datosUsuario = db(tablaUsuarios.usbid==usbid).select()[0]
             session.usuario['tipo'] = datosUsuario.tipo
+            session.usuario['alternativo'] = datosUsuario.correo_alter
+            print session.usuario['alternativo']
+            session.usuario['phone'] = datosUsuario.telefono
+
+            print "\nguardado sesion : ", session.usuario
+
             if datosUsuario.tipo == "Bloqueado":
                 response.flash = T("Usuario bloqueado")
                 redirect(URL(c = "default",f="index"))
@@ -89,17 +97,21 @@ def login_cas():
                 redirect(URL('perfil'))
         else:
             session.usuario['tipo'] = "Usuario"
+
             db.USUARIO.insert(ci=session.usuario["cedula"],  # Lo insertamos en la base de datos.
             usbid=session.usuario["usbid"],
             nombres=session.usuario["first_name"],
             apellidos=session.usuario["last_name"],
             correo_inst=session.usuario["email"],
+            telefono=session.usuario["phone"],
             tipo = "Usuario")
             redirect(URL('vRegistroUsuario'))
+    
 
 def logout_cas():
     session.usuario = None
     return response.render()
+    
 
 # Controlador para el registro del usuario
 def vRegistroUsuario():
@@ -134,8 +146,11 @@ def vRegistroUsuario():
 
 def perfil():
     if session.usuario != None:
-	if session.usuario["tipo"] == "Bloqueado":
-	    redirect(URL("index"))
+
+    	if session.usuario["tipo"] == "Bloqueado":
+    	    redirect(URL("index"))
+
+        print session.usuario
         admin = 4
         if(session.usuario["tipo"] == "DEX"):
             admin = 2
@@ -143,36 +158,32 @@ def perfil():
             admin = 1
         else:
             admin = 0
-        tlf = None
-        correo_a = None
-        correo_i = None
-        usuarios = db(db.USUARIO).select()
-        for raw in usuarios:
-            if raw.ci == session.usuario["cedula"]:
-                tlf = raw.telefono
-                correo_a = raw.correo_alter
-                correo_i = raw.correo_inst
+
+        correo_i = session.usuario["usbid"]+"@usb.ve"
+
         form = SQLFORM.factory(
             Field("USBID", default=session.usuario["usbid"],writable = False),
             Field('Nombres',default=session.usuario["first_name"],writable = False),
             Field('Apellidos', default=session.usuario["last_name"],writable=False),
             Field('Correo_Institucional', default=correo_i,writable=False),
-            Field('Telefono',label = "Teléfono", default=tlf,writable=False),
-            Field('Correo_Alternativo', default=correo_a,writable=False),
+            Field('Telefono',label = "Teléfono", default=session.usuario["phone"],writable=False),
+            Field('Correo_Alternativo', default=session.usuario["alternativo"],writable=False),
             readonly=True)
 
         rows = db(db.PRODUCTO.ci_usu_creador==session.usuario['cedula']).select()
-        detalles = {}
-
+        productos = {
+                    "Validados":[],
+                    "Rechazados":[],
+                    "En espera":[]
+                    }
+    
         for row in rows:
-            dict_campos = dict()
-            campos = db((db.PRODUCTO_TIENE_CAMPO.id_campo == db.CAMPO.id_campo)
-                        & (db.PRODUCTO_TIENE_CAMPO.id_producto == row.id_producto)).select()
-
-            for campo in campos:
-                dict_campos[campo.CAMPO.nombre] = campo.PRODUCTO_TIENE_CAMPO.valor_campo
-
-            detalles[row] = dict_campos
+            if row.estado == "Validada":
+                productos["Validados"] += [row]
+            elif row.estado == "Rechazada":
+                productos["Rechazados"]+= [row]
+            else:
+                productos["En espera"] += [row]
 
         return locals()
     else:
@@ -211,26 +222,37 @@ def EditarPerfil():
             Field('Nombres',default=session.usuario["first_name"],writable = False),
             Field('Apellidos', default=session.usuario["last_name"],writable=False),
             readonly=True)
-        usuarios = db(db.USUARIO).select()
+        
 
+        # Modificar datos del perfil
+        usuario = db(db.USUARIO.ci==session.usuario['cedula']).select().first()
 
-        # Modificar datos del perfil.
-        for raw in usuarios:
-            if raw.ci == session.usuario["cedula"]:
-                forma=SQLFORM(
-                    db.USUARIO,
-                    record=raw,
-                    
-                    fields=['telefono','correo_alter'],
+        forma=SQLFORM(
+            db.USUARIO,
+            record=usuario,
+            
+            fields=['telefono','correo_alter'],
 
-                    
-                    labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'})
-                forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
-                forma.element(_type='submit')['_value']="Actualizar"
-        if len(request.vars)!=0:
+            
+            labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'})
+        forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+        forma.element(_type='submit')['_value']="Actualizar"
+
+        
+        if request.vars:
             nuevoTelefono = request.vars.telefono
             nuevoCorreoAlter = request.vars.correo_alter
-            db(db.USUARIO.ci == session.usuario["cedula"]).update(telefono=nuevoTelefono, correo_alter=nuevoCorreoAlter)
+            
+            valor_telefono = None if ((nuevoTelefono == "") | (nuevoTelefono== None)) else nuevoTelefono
+            session.usuario["phone"] = valor_telefono
+
+            valor_correo = None if ((nuevoCorreoAlter == "") | (nuevoCorreoAlter== None)) else nuevoCorreoAlter
+            session.usuario["alternativo"] = valor_correo
+            
+            db(db.USUARIO.ci == session.usuario["cedula"]).update(telefono=valor_telefono, correo_alter=valor_correo)
+            
+            print "\n\nEl nuevo usuario quedo: "
+            print session.usuario
             redirect(URL('perfil'))
 
         return dict(form1 = form, form = forma, admin = admin)
@@ -433,6 +455,7 @@ def get_tipo_usuario():
     return admin
 
 def cambiar_colores():
+
     session.template = int(request.vars['color'])
     print(session.template)
     if request.env.http_referer:
@@ -456,17 +479,20 @@ def index():
     return locals()
 
 def obtener_actividades():
-    print request.vars.Programa
-    programa = db(db.PROGRAMA.nombre==request.vars.Programa).select().first()
-
-    tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa.id_programa).select('nombre')
-    concat = "<option></option>"
+    if request.vars.Programa[0]=="all":
+        tiposA = db(db.TIPO_ACTIVIDAD).select('nombre')
+    else:
+        programa = db(db.PROGRAMA.nombre==request.vars.Programa[0]).select().first()
+        tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa.id_programa).select('nombre')
+    
+    concat = '<option value="all" selected="">--cualquiera--</option>'
+    print tiposA
 
     for tipo in tiposA:
         option = tipo.nombre
-        concat += "<option value="+option+">"+option+"</option>"
+        concat += '<option value="'+option+'">'+option+'</option>'
 
-    return 'jQuery("#lista_tipos").empty().append("%s")'% repr(concat)
+    return "jQuery('#lista_tipos').empty().append('"+concat+"')"
 
 def obtener_autores():
     tipoA = db(db.TIPO_ACTIVIDAD.nombre==request.vars.TipoActividad).select().first()
