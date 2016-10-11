@@ -244,7 +244,7 @@ al agregar un tipo actividad, solo guarda el mensaje y redirige a
 la pagina de gestionar
 '''
 def agregar_tipo_aux():
-
+    
     session.message = 'Tipo agregado exitosamente'
     redirect(URL('gestionar.html'))
 
@@ -258,7 +258,7 @@ encuentra en la base)
 def eliminar_campos():
     # Obtengo el nombre del tipo_actividad
     nombre_tipo = session.form_nombre
-
+    
     # Construyo query para obtener la relacion entre los campos y el tipo
     # actividad que quiero eliminar
     query = reduce(lambda a, b: (a&b),[db.TIPO_ACTIVIDAD.nombre == nombre_tipo,
@@ -266,18 +266,18 @@ def eliminar_campos():
                                       db.ACT_POSEE_CAMPO.id_campo == db.CAMPO.id_campo])
     # Guardo los resultados en 'aux'
     aux = db(query).select(db.ACT_POSEE_CAMPO.ALL)
-
+    
     # Borro las relaciones (en caso de que hayan)
     if(len(aux) > 0):
         db(db.ACT_POSEE_CAMPO.id_tipo_act == aux[0].id_tipo_act).delete()
-
+    
     # Borro los campos asociados a estas relaciones
     for row in aux:
         db(db.CAMPO.id_campo == row.id_campo).delete()
-
+        
     # Borro el tipo actiidad
     db(db.TIPO_ACTIVIDAD.nombre == nombre_tipo).delete()
-
+    
     redirect(URL('gestionar.html'))
 
 #. --------------------------------------------------------------------------- .
@@ -287,7 +287,7 @@ def eliminar_campos():
 '''
 def enviar_tipo_papelera():
     
-    id_tipo = request.args[0]
+    id_tipo = int(request.args[0])
     tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
     tipo.update(papelera=True)
     tipo.update_record()
@@ -299,7 +299,14 @@ def enviar_tipo_papelera():
  Vista de gestion de la papelera
 '''
 def gestionar_archivo_historico():
-    return dict(admin=get_tipo_usuario())
+    
+    listaTipoActividades = db(db.TIPO_ACTIVIDAD.papelera == True).select(db.TIPO_ACTIVIDAD.nombre
+                                                   ,db.TIPO_ACTIVIDAD.descripcion
+                                                   ,db.TIPO_ACTIVIDAD.id_tipo
+                                                   ,db.TIPO_ACTIVIDAD.tipo_p_r)
+    
+    return dict(admin=get_tipo_usuario()
+                , listaTipoActividades=listaTipoActividades)
 
 #. --------------------------------------------------------------------------- .
 '''
@@ -308,6 +315,7 @@ def gestionar_archivo_historico():
 '''
 def eliminar_tipo_papelera():
     id_tipo = int(request.args[0])
+    print("eliminar_def",id_tipo)
     query = reduce(lambda a, b: (a & b), [db.TIPO_ACTIVIDAD.papelera == True,
                                           db.TIPO_ACTIVIDAD.id_tipo == id_tipo,
                                           db.TIPO_ACTIVIDAD.id_tipo == db.ACT_POSEE_CAMPO.id_tipo_act,
@@ -315,18 +323,18 @@ def eliminar_tipo_papelera():
                    )
     # Guardo los reusltados en 'aux'
     aux = db(query).select(db.ACT_POSEE_CAMPO.ALL)
-
+    
     # Borro las relaciones
     if (len(aux) > 0):
         db(db.ACT_POSEE_CAMPO.id_tipo_act == aux[0].id_tipo_act).delete()
-
+    
     # Borro los campos
     for row in aux:
         db(db.CAMPO.id_campo == row.id_campo).delete()
-
+    
     # Borro el tipo_activdad
     db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).delete()
-
+    
     # Guardo mensaje de exito
     session.message = 'Tipo Eliminado'
     redirect(URL('gestionar_archivo_historico.html'))
@@ -336,10 +344,16 @@ def eliminar_tipo_papelera():
  Metodo que restaura un tipo actividad de la papelera
 '''
 def restaurar_tipo():
-    id_tipo = int(request.args[0])
-    db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).update(papelera=False)
+    
+    id_tipo = request.args[0]
+    print(id_tipo)
+    tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
+    print(tipo_actividad.nombre)
+    tipo_actividad.update(papelera=False)
+    tipo_actividad.update_record()
+    print(tipo_actividad.papelera)
     session.message = 'Tipo Restaurado'
-    redirect(URL('gestionar.html'))
+    redirect(URL('gestionar_archivo_historico.html'))
 
 #. --------------------------------------------------------------------------- .
 def ver_tipo_actividad():

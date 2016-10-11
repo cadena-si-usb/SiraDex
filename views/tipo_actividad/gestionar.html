@@ -85,10 +85,11 @@
                         </td>
                         <td class="center-vertically">
                             <center>
-                                <a>
+                                <a href="#">
                                    <span class="glyphicon glyphicon-remove red" 
                                          data-toggle="modal" 
-                                         data-target="#myModalDelete">
+                                         data-target="#myModalDelete"
+                                         data-id-tipo="{{=tipoActividad.id_tipo}}">
                                        
                                    </span>
                                 </a>
@@ -150,7 +151,7 @@
                   <button type="button" 
                           class="btn blue-add btn-border"
                           data-dismiss="modal"
-                          onclick="ajax('{{=URL('enviar_tipo_papelera')}}/{{=tipoActividad.id_tipo}}',[]);location.reload();">
+                          id="botonDelete">
                       Eliminar</button>
                 </a>
                 <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
@@ -161,6 +162,30 @@
     </div>
   </div>
 </div>
+
+
+<script type="text/javascript">
+    
+    // Eliminar definitivamente
+    
+    $('#myModalDelete').on('show.bs.modal', function (event) {
+        if (event.relatedTarget != null){
+            $("#botonDelete").attr("data-id-tipo", event.relatedTarget.getAttribute("data-id-tipo"));
+        }
+    });
+    
+    $("#botonDelete").click(function (event){
+        
+        var id_tipo = $("#botonDelete").attr("data-id-tipo");
+        ajax("{{=URL('enviar_tipo_papelera')}}/"+id_tipo,[]);
+        location.reload();
+    });
+    
+    $(document).ready(function () {
+        document.getElementById("botonEliminar");
+    });
+    
+</script>
 
 
 {{end}}
