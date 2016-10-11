@@ -497,6 +497,7 @@
 'Welcome to web2py!': '¡Bienvenido a web2py!',
 'Which called the function %s located in the file %s': 'La cual llamó la función %s localizada en el archivo %s',
 'Working...': 'Trabajando...',
+'Ya existe un programa con ese nombre.': 'Ya existe un programa con ese nombre.',
 'YES': 'SÍ',
 'You are successfully running web2py': 'Usted está ejecutando web2py exitosamente',
 'You can modify this application and adapt it to your needs': 'Usted puede modificar esta aplicación y adaptarla a sus necesidades',

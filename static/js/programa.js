@@ -1,3 +1,5 @@
+var programaEliminar = undefined;
+
 $(document).ready(function(){
   var maxLongNombre  = 256;    // Longitud máxima que tendrá el campo nombre.
   var maxLongDescrip = 2048;   // Longitud máxima que tendrá el campo descripción.
@@ -6,17 +8,29 @@ $(document).ready(function(){
   var mensajeErrorAgregar = $("#modalAgregar").attr("data-hayErroresAgregar");
   mensajeErrorAgregar = mensajeErrorAgregar.replace(/<Storage |>/gi, "").replace(/'/g, '"')
 
-  // Hay errores en el formulario agregar.
+  // Definición del comportamiento del botón agregar programa cuando se hace click.
+  $("#agregarProgBtn").click(function(){
+    // Muestra la cantidad de caracteres disponible en el textfield de nombre.
+    textoRestante(maxLongNombre,  "#no_table_Nombre");
+
+    // Muestra la cantidad de caracteres disponible en el textarea de descripción.
+    textoRestante(maxLongDescrip, "#no_table_Descripcion");
+  });
+
+
+  $('[id="editarProgBtn"]').click(function(){
+    // Muestra la cantidad de caracteres disponible en el textfield de nombre.
+    textoRestante(maxLongNombre,  "#no_table_Nombre");
+
+    // Muestra la cantidad de caracteres disponible en el textarea de descripción.
+    textoRestante(maxLongDescrip, "#no_table_Descripcion");
+  });
+
+  // Si hay errores en el formulario agregar...
   if (mensajeErrorAgregar != '{}'){
       $("#agregarProgBtn").click();
       $(".error_wrapper").css('color','red');
   }
-
-  // Muestra la cantidad de caracteres disponible en el textfield de nombre.
-  textoRestante(maxLongNombre,  "#no_table_Nombre");
-
-  // Muestra la cantidad de caracteres disponible en el textarea de descripción.
-  textoRestante(maxLongDescrip, "#no_table_Descripcion");
 
   // $("#agregarBtn").click(function(){
   //     var contenidoNombre = $("#no_table_Nombre").html();
@@ -31,4 +45,11 @@ $(document).ready(function(){
   //     return false;
   //});
 
+  function prueba(id){
+    programaEliminar = id;
+    console.log(id);
+    var toAjax = "'{{=URL('eliminar_programa')}}/" + programaEliminar +"'"
+    console.log(toAjax)
+    ajax(toAjax,[]);
+  }
 });
