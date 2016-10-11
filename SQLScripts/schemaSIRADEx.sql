@@ -1,3 +1,4 @@
+
 CREATE TABLE USUARIO(
   ci             VARCHAR(10)   NOT NULL,
   usbid          VARCHAR(20)   NOT NULL,
@@ -35,12 +36,18 @@ CREATE TABLE JEFE_DEPENDENCIA(
 );
 
 CREATE TABLE PROGRAMA(
-  id_programa  SERIAL        NOT NULL,
-  nombre       VARCHAR(256)  NOT NULL,
-  descripcion  Varchar(2048) NOT NULL,
+  id_programa         SERIAL        NOT NULL,
+  nombre              VARCHAR(256)  NOT NULL,
+  descripcion         Varchar(2048) NOT NULL,
+  papelera            BOOLEAN       NOT NULL DEFAULT FALSE,
+  modif_fecha         DATE,
+  ci_usu_modificador  VARCHAR(10),
 
   CONSTRAINT PK_PROGRAMA
-             PRIMARY KEY (id_programa)
+             PRIMARY KEY (id_programa),
+  CONSTRAINT FK_PROGRAMA_CI_USU_MODIFICADOR
+             FOREIGN KEY (ci_usu_modificador)
+             REFERENCES USUARIO(ci)
 
 );
 
