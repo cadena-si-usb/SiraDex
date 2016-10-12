@@ -78,17 +78,14 @@ def login_cas():
         tablaUsuarios = db.USUARIO
 
         session.usuario = usuario
-        print "Hola",session.usuario
         session.usuario['usbid'] = usbid
 
         if not db(tablaUsuarios.usbid == usbid).isempty():
             datosUsuario = db(tablaUsuarios.usbid==usbid).select()[0]
             session.usuario['tipo'] = datosUsuario.tipo
             session.usuario['alternativo'] = datosUsuario.correo_alter
-            print session.usuario['alternativo']
-            session.usuario['phone'] = datosUsuario.telefono
 
-            print "\nguardado sesion : ", session.usuario
+            session.usuario['phone'] = datosUsuario.telefono
 
             if datosUsuario.tipo == "Bloqueado":
                 response.flash = T("Usuario bloqueado")
@@ -104,8 +101,8 @@ def login_cas():
             nombres=session.usuario["first_name"],
             apellidos=session.usuario["last_name"],
             correo_inst=session.usuario["email"],
+            correo_alter= None,
             telefono=session.usuario["phone"],
-            correo_alter=None,
             tipo = "Usuario")
             redirect(URL('vRegistroUsuario'))
     
@@ -493,17 +490,3 @@ def obtener_actividades():
         concat += '<option value="'+option+'">'+option+'</option>'
 
     return "jQuery('#lista_tipos').empty().append('"+concat+"')"
-
-def obtener_autores():
-    tipoA = db(db.TIPO_ACTIVIDAD.nombre==request.vars.TipoActividad).select().first()
-    sql = "select nombres from usuario where ci in (select ci_usu_creador from producto where id_tipo=="+str(tipoA.id_tipo)+");"
-    autores = db.executesql(sql)
-
-    concat = "<option></option>"
-
-    for autor in autores:
-        option = autor.nombre
-        print option
-        concat += "<option value="+option+">"+option+"</option>"
-
-    return 'jQuery("#lista_autores").empty().append("%s")'% repr(concat)
