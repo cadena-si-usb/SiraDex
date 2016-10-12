@@ -85,7 +85,7 @@ def agregar_tipo():
                         submit_button = 'Agregar',
                         labels = {'Descripcion' : 'Descripción'}
                 )
-    
+
     formulario_agregar_tipo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
     formulario_agregar_tipo.element(_type='submit')['_value']="Agregar"
 
@@ -306,10 +306,12 @@ def enviar_tipo_papelera():
  Vista de gestion de la papelera
 '''
 def gestionar_archivo_historico():
+
     listaTipoActividad = db(db.TIPO_ACTIVIDAD.papelera == True).select(db.TIPO_ACTIVIDAD.nombre,
                                                                        db.TIPO_ACTIVIDAD.descripcion,
                                                                        db.TIPO_ACTIVIDAD.modif_fecha,
-                                                                       db.TIPO_ACTIVIDAD.id_tipo)
+                                                                       db.TIPO_ACTIVIDAD.id_tipo,
+                                                                       db.TIPO_ACTIVIDAD.id_programa)
     
     listaPrograma = db(db.PROGRAMA.papelera == True).select(db.PROGRAMA.nombre,
                                                             db.PROGRAMA.descripcion,
@@ -354,8 +356,17 @@ def eliminar_tipo_papelera():
 def restaurar_tipo():
     id_tipo = int(request.args[0])
     db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).update(papelera=False)
-    session.message = 'Tipo Restaurado'
-    redirect(URL('gestionar.html'))
+    programa_id = request.args[1]
+    redirect(URL('gestionar',args=[programa_id]))
+
+#. --------------------------------------------------------------------------- .
+'''
+ Metodo que restaura un Programa
+'''
+def restaurar_programa():
+    id_programa = int(request.args[0])
+    db(db.PROGRAMA.id_programa == id_programa).update(papelera=False)
+    redirect(URL(c='programas', f='gestionar_programas.html'))
 
 #. --------------------------------------------------------------------------- .
 def ver_tipo_actividad():

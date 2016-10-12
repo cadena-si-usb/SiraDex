@@ -5,6 +5,8 @@
 {{end}}
 
 {{block contenido}}
+    <script src="{{=URL('static','js/global.js')}}"></script>
+    <script src="{{=URL('static','js/archivos_historicos.js')}}"></script>
 <!-- Nav tabs -->
 <br>
 <div class="card"> 
@@ -44,7 +46,11 @@
                             <td class="center-vertically">
                                 <center>
                                     <a>
-                                        <span class="glyphicon glyphicon-refresh restaurar" data-toggle="modal" data-target="#myModalRestaurar"></span>
+                                        <span class="glyphicon glyphicon-refresh restaurar" 
+                                              data-toggle="modal" 
+                                              data-target="#myModalRestaurar"
+                                              data-link-restaurar="{{=URL(f='restaurar_tipo', args=[tipoActividad.id_tipo, tipoActividad.id_programa])}}"
+                                              ></span>
                                     </a>
                                 <center>
                             </td>
@@ -89,7 +95,11 @@
                             <td class="center-vertically">
                                 <center>
                                     <a>
-                                        <span class="glyphicon glyphicon-refresh restaurar" data-toggle="modal" data-target="#myModalRestaurar"></span>
+                                        <span class="glyphicon glyphicon-refresh restaurar" 
+                                              data-toggle="modal" 
+                                              data-target="#myModalRestaurar"
+                                              data-link-restaurar="{{=URL(f='restaurar_programa', args=[programa.id_programa])}}"
+                                              ></span>
                                     </a>
                                 <center>
                             </td>
@@ -124,7 +134,7 @@
             <center> <p>¿Está seguro que quiere restaurar este elemento?</p> </center>
             <br>
             <center>
-                <a>
+                <a id="BotonRestaurar">
                   <button type="button" class="btn blue-add btn-border">Restaurar</button>
                 </a>
                 <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>

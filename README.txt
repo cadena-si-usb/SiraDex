@@ -77,8 +77,8 @@ Cargar los scrips de la base de datos:
 
     #Si se esta actualizando/reinicializando por errores etc:
 
-    $ \i dropSIRADEX.sql
-    $ \i schemaSIRADEX.sql
+    $ \i dropSIRADEx.sql
+    $ \i schemaSIRADEx.sql
 
 Verificar que todas las tablas se han creado:
 
