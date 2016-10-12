@@ -40,7 +40,7 @@
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="{{=URL(c='default', f='setVista.html', args=[2])}}"> Sistema</a>
                 <ul class="dropdown-menu" style="right:auto">
-
+                    {{if admin == 1:}}
                     <li><a href="#">Consultar Log</a></li>
 
                     <li class="dropdown-submenu">
@@ -50,9 +50,12 @@
                             <li><a href="#">Crear Backup</a></li>
                         </ul>
                     </li>
-                    <li><a href="{{=URL(c='catalogo', f='vGestionarCatalogos')}}">Catálogos</a></li>
                     <li><a href="{{=URL(c='usuarios', f='gestionar')}}">Usuarios</a></li>
                     <li><a href="#">Notificaciones</a></li>
+                    <li role="separator" class="divider"></li>
+                    {{pass}}
+                    <li><a href="{{=URL(c='catalogo', f='vGestionarCatalogos')}}">Catálogos</a></li>
+                    <li><a href="#">Papelera</a></li>
                 </ul>
             </li>
             <li><a href="{{=URL(c='busq_val', f='gestionar_validacion.html')}}">
