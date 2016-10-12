@@ -1,10 +1,11 @@
 {{extend 'layoutSIRADEXloged.html'}}
 
 {{block titulo}}
-    <h2> <center> < Nombre Tipo de Actividad > </center> </h2>
+    Tipo de Actividad: {{=tipo.nombre}}
 {{end}}
 
 {{block contenido}}
+<br>
 <div class="container-fluid">
     <table class="table table-bordered tabla-border" >
         <tbody class="tabla-border">
@@ -16,7 +17,7 @@
         </tbody>
     </table>
 
-    <h3> < Campos > </h3>
+    <h3> Campos </h3>
     <br>
     <table class="table table-striped table-condensed table-hover sortable">
             <thead>
@@ -27,23 +28,29 @@
                 </tr>
             </thead>
             <tbody>
-                {{for campo in campos:}}
+                {{if len(campos) == 0:}}
                     <tr>
-                        <td> <center> {{=campo.nombre}} </center></td>
-                        <td> <center> {{=campo.tipo_campo}} </center></td>
-                        <td> <center> {{=campo.obligatorio}} </center></td>
-                        <td> 
-                            <center> 
-                                <a href="#">
-                                    <span class="glyphicon glyphicon-edit blue"
-                                          onclick="ajax('{{=URL('editar_campo')}}/{{=campo.id_campo}}',[],'editar_campo_tipo');"
-                                          data-target="#myModalEditar"
-                                          data-toggle="modal"
-                                          ></span>
-                                </a>
-                            </center>
-                        </td>
+                        <td colspan="3"> <center> No hay Campos que mostrar. <center> </td>
                     </tr>
+                {{else:}}
+                    {{for campo in campos:}}
+                        <tr>
+                            <td> <center> {{=campo.nombre}} </center></td>
+                            <td> <center> {{=campo.tipo_campo}} </center></td>
+                            <td> <center> {{=campo.obligatorio}} </center></td>
+                            <td> 
+                                <center> 
+                                    <a href="#">
+                                        <span class="glyphicon glyphicon-edit blue"
+                                              onclick="ajax('{{=URL('editar_campo')}}/{{=campo.id_campo}}',[],'editar_campo_tipo');"
+                                              data-target="#myModalEditar"
+                                              data-toggle="modal"
+                                              ></span>
+                                    </a>
+                                </center>
+                            </td>
+                        </tr>
+                    {{pass}}
                 {{pass}}
             </tbody>
         </table>
