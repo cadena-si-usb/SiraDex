@@ -172,6 +172,7 @@ def modificar():
 def eliminar():
     id_act = int(request.args(0))
 
+
     set_tiene_campo = db(db.PRODUCTO_TIENE_CAMPO.id_producto == id_act)
     set_tiene_campo.delete()
     producto = db(db.PRODUCTO.id_producto == id_act)
@@ -185,6 +186,14 @@ def eliminar():
 
 # Funcion utilizada para el ajax en el agregar
 def obtener_actividades():
+    if request.vars.Programa=="":
+        respuesta = "jQuery('#nombre_actividad').empty();"
+        respuesta += "jQuery('#descripcion_actividad').empty();"
+        respuesta += "jQuery('#campos_actividad').empty();"
+        respuesta += "jQuery('#lista_tipos').empty()"
+
+        return respuesta
+    
     programa = db(db.PROGRAMA.nombre==request.vars.Programa).select().first()
     tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa.id_programa).select(db.TIPO_ACTIVIDAD.nombre,
         db.TIPO_ACTIVIDAD.id_tipo).as_list()
@@ -200,6 +209,11 @@ def obtener_actividades():
 
 # Funcion utilizada para el ajax cuando se elige la actividad para que aparezcan los campos
 def seleccion_actividad():
+    if request.vars.id_tipo=="":
+        respuesta = "jQuery('#nombre_actividad').empty();"
+        respuesta += "jQuery('#descripcion_actividad').empty();"
+        respuesta += "jQuery('#campos_actividad').empty()"
+        return respuesta
 
     tipo =  request.vars.id_tipo
     posibles_campos = {'Fecha':'date', 'Telefono':'string', 'Texto Corto':'string','Documento':'upload', 'Numero Entero':'integer', 'Texto Largo':'text'}
@@ -222,8 +236,6 @@ def seleccion_actividad():
         if obligatorio_campo:
             nombre_campo += " (*)"
 
-        print 'aqui'
-        print posibles_campos[tipo_campo]
 
         html_input = '<div class="form-group">'+\
                         '<label for="'+nombre_campo_input+'" class = "control-label col-sm-3">'+nombre_campo+'</label>'+\
