@@ -59,6 +59,7 @@ CREATE TABLE TIPO_ACTIVIDAD(
   id_jefe_creador     INT,
   ci_usuario_propone  VARCHAR(10),
   papelera            BOOLEAN NOT NULL DEFAULT FALSE,
+  modif_fecha         DATE,
 
   CONSTRAINT PK_TIPO_ACTIVIDAD
              PRIMARY KEY (id_tipo),

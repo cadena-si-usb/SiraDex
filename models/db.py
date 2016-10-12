@@ -78,6 +78,7 @@ response.form_label_separator = myconf.get('forms.separator') or ''
 # -------------------------------------------------------------------------
 
 from gluon.tools import Auth, Service, PluginManager
+import datetime
 
 # host names must be a list of allowed host names (glob syntax allowed)
 auth = Auth(db, host_names=myconf.get('host.names'))
@@ -188,6 +189,7 @@ db.define_table('TIPO_ACTIVIDAD',
     Field('id_jefe_creador',db.JEFE_DEPENDENCIA.id_jefe),
     Field('ci_usuario_propone',db.USUARIO.ci),
     Field('papelera', type='boolean', notnull = True, default=False),
+    Field('modif_fecha', type='date'),
     primarykey=['id_tipo'],
     migrate=False
 );

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-#. --------------------------------------------------------------------------- .
+#. --------------------------------------------------------------------------- 
+
 '''
 Vista de Gestionar Tipo Actividad, tiene las opciones:
 - Agregar Tipo
@@ -58,7 +59,7 @@ def agregar_tipo():
     db.TIPO_ACTIVIDAD.tipo_p_r.widget = horizontal_radio
 
     # Se obtienen todos los programas almacenados en la base de datos.
-    lista_programas = db().select(db.PROGRAMA.ALL)
+    lista_programas = db(db.PROGRAMA.papelera == False).select(db.PROGRAMA.ALL)
     programas = []
 
     # Se crea un diccionario para almacenar unicamente los nombres de los programas almacenados.
@@ -84,6 +85,9 @@ def agregar_tipo():
                         submit_button = 'Agregar',
                         labels = {'Descripcion' : 'Descripción'}
                 )
+    
+    formulario_agregar_tipo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    formulario_agregar_tipo.element(_type='submit')['_value']="Agregar"
 
     hayPrograma = len(programas) != 0
 
@@ -292,6 +296,7 @@ def enviar_tipo_papelera():
     id_tipo = request.args[0]
     tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
     tipo.update(papelera=True)
+    tipo.update(modif_fecha = datetime.date.today())
     #tipo.update(ci_usuario_propone="21467704");
     tipo.update_record()
     redirect(URL('gestionar',args=[programa_id]))
@@ -301,10 +306,16 @@ def enviar_tipo_papelera():
  Vista de gestion de la papelera
 '''
 def gestionar_archivo_historico():
-    listaPapelera = db(db.TIPO_ACTIVIDAD.papelera == True).select(db.TIPO_ACTIVIDAD.nombre,
-                                                        db.TIPO_ACTIVIDAD.descripcion,
-                                                        db.TIPO_ACTIVIDAD.id_tipo)
-    return dict(admin=get_tipo_usuario(), listaPapelera=listaPapelera)
+    listaTipoActividad = db(db.TIPO_ACTIVIDAD.papelera == True).select(db.TIPO_ACTIVIDAD.nombre,
+                                                                       db.TIPO_ACTIVIDAD.descripcion,
+                                                                       db.TIPO_ACTIVIDAD.modif_fecha,
+                                                                       db.TIPO_ACTIVIDAD.id_tipo)
+    
+    listaPrograma = db(db.PROGRAMA.papelera == True).select(db.PROGRAMA.nombre,
+                                                            db.PROGRAMA.descripcion,
+                                                            db.PROGRAMA.modif_fecha,
+                                                            db.PROGRAMA.id_programa)
+    return dict(admin=get_tipo_usuario(), listaTipoActividad=listaTipoActividad, listaPrograma=listaPrograma)
 
 #. --------------------------------------------------------------------------- .
 '''

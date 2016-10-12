@@ -136,6 +136,7 @@ def eliminar_programa():
     id_programa = request.args[0]
     programa = db(db.PROGRAMA.id_programa == id_programa).select(db.PROGRAMA.ALL).first()
     programa.update(papelera=True)
+    programa.update(modif_fecha = datetime.date.today())
     #tipo.update(ci_usuario_propone="21467704");
     programa.update_record()
     redirect(URL('gestionar_programas.html'))

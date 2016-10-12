@@ -32,15 +32,15 @@
             </thead>
             <tbody>
                     <tr>
-                        {{if len(listaPapelera) == 0:}}
+                        {{if len(listaTipoActividad) == 0:}}
                         <tr>
-                            <td> No hay programas que mostrar.</td>
+                            <td> No hay Tipos de Actividades que mostrar.</td>
                         </tr>
                         {{else:}}
-                        {{for papelera in listaPapelera:}}
-                            <td> <center> {{=papelera.nombre}}</center> </td>
+                        {{for tipoActividad in listaTipoActividad:}}
+                            <td> <center> {{=tipoActividad.nombre}}</center> </td>
                             <td> <center> < Usuario Eliminó 2 > </center> </td>
-                            <td> <center> < Fecha de Eliminación 2 > </center> </td>
+                            <td> <center> {{=tipoActividad.modif_fecha}} </center> </td>
                             <td class="center-vertically">
                                 <center>
                                     <a>
@@ -77,62 +77,32 @@
             </thead>
             <tbody>
                     <tr>
-                        <td> <center> < Programa Eliminado 1 > </center> </td>
-                        <td> <center> < Usuario Eliminó 1 > </center> </td>
-                        <td> <center> < Fecha de Eliminación 1 > </center> </td>
-                        <td class="center-vertically">
-                            <center>
-                                <a>
-                                    <span class="glyphicon glyphicon-refresh restaurar" data-toggle="modal" data-target="#myModalRestaurar"></span>
-                                </a>
-                            <center>
-                        </td>
-                        <td class="center-vertically">
-                            <center>
-                                <a>
-                                    <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalEliminar"></span>
-                                </a>
-                            <center>
-                         </td>
-                    </tr>
-                    <tr>
-                        <td> <center> < Programa Eliminado 2 > </center> </td>
-                        <td> <center> < Usuario Eliminó 2 > </center> </td>
-                        <td> <center> < Fecha de Eliminación 2 > </center> </td>
-                        <td class="center-vertically">
-                            <center>
-                                <a>
-                                    <span class="glyphicon glyphicon-refresh restaurar" data-toggle="modal" data-target="#myModalRestaurar"></span>
-                                </a>
-                            <center>
-                        </td>
-                        <td class="center-vertically">
-                            <center>
-                                <a>
-                                    <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalEliminar"></span>
-                                </a>
-                            <center>
-                         </td>
-                    </tr>
-                    <tr>
-                        <td> <center> < Programa Eliminado 3 > </center> </td>
-                        <td> <center> < Usuario Eliminó 3 > </center> </td>
-                        <td> <center> < Fecha de Eliminación 3 > </center> </td>
-                        <td class="center-vertically">
-                            <center>
-                                <a>
-                                    <span class="glyphicon glyphicon-refresh restaurar" data-toggle="modal" data-target="#myModalRestaurar"></span>
-                                </a>
-                            <center>
-                        </td>
-                        <td class="center-vertically">
-                            <center>
-                                <a>
-                                    <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalEliminar"></span>
-                                </a>
-                            <center>
-                         </td>
-                    </tr>
+                        {{if len(listaPrograma) == 0:}}
+                        <tr>
+                            <td> No hay Programas que mostrar.</td>
+                        </tr>
+                        {{else:}}
+                        {{for programa in listaPrograma:}}
+                            <td> <center> {{=programa.nombre}}</center> </td>
+                            <td> <center> < Usuario Eliminó 2 > </center> </td>
+                            <td> <center> {{=programa.modif_fecha}} </center> </td>
+                            <td class="center-vertically">
+                                <center>
+                                    <a>
+                                        <span class="glyphicon glyphicon-refresh restaurar" data-toggle="modal" data-target="#myModalRestaurar"></span>
+                                    </a>
+                                <center>
+                            </td>
+                            <td class="center-vertically">
+                                <center>
+                                    <a>
+                                        <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalEliminar"></span>
+                                    </a>
+                                <center>
+                             </td>
+                        </tr>
+                   {{pass}}
+                {{pass}}
             </tbody>
         </table>
     </div>
