@@ -1,12 +1,15 @@
 $(document).ready(function(){
   var maxLongNombre  = 256;    // Longitud máxima que tendrá el campo nombre.
   var maxLongDescrip = 2048;   // Longitud máxima que tendrá el campo descripción.
-  var programaEditar = undefined;
 
   // Obtengo la lista de errores generados por el formulario de agregar.
   var mensajeErrorAgregar = $("#modalAgregar").attr("data-hayErroresAgregar");
   mensajeErrorAgregar = mensajeErrorAgregar.replace(/<Storage |>/gi, "").replace(/'/g, '"')
 
+  // Obtengo la lista de errores generados por el formulario de editar.
+  var mensajeErrorEditar = $("#modalEditar").attr("data-hayErroresEditar");
+  mensajeErrorEditar = mensajeErrorEditar.replace(/<Storage |>/gi, "").replace(/'/g, '"')
+  console.log(mensajeErrorEditar);
   // Definición del comportamiento del botón agregar programa cuando se hace click.
   $("#agregarProgBtn").click(function(){
     // Muestra la cantidad de caracteres disponible en el textfield de nombre.
@@ -29,9 +32,8 @@ $(document).ready(function(){
       var descripcion = $(e.relatedTarget).data('descripcion');
       $(e.currentTarget).find('input[name="id_programa"]').val(id_programa);
       $(e.currentTarget).find('input[name="Nombre"]').val(nombre);
-      $(e.currentTarget).find("#no_table_Descripcion").text(descripcion);
-
-      $(e.currentTarget).find("#no_table_Descripcion").siblings(".help-block").html(" caracteres.");
+      console.log(descripcion);
+      $(e.currentTarget).find("#no_table_Descripcion").val(descripcion);
 
       // Muestra la cantidad de caracteres disponible en el textfield de nombre.
       textoRestante(maxLongNombre,  $(e.currentTarget).find("#no_table_Nombre"));
@@ -39,6 +41,13 @@ $(document).ready(function(){
       // Muestra la cantidad de caracteres disponible en el textarea de descripción.
       textoRestante(maxLongDescrip, $(e.currentTarget).find("#no_table_Descripcion"));
   });
+
+  // Si hay errores en el formulario editar...
+  if (mensajeErrorEditar != '{}'){
+      var programaEditar = localStorage.getItem("programaEditar");
+      $('span[data-id-programa="' + programaEditar + '"]').click();
+      $(".error_wrapper").css('color','red');
+  }
 
   // Se tuvo que añadir el id al formulario para poder editarlo o eliminarlo en
   // un futuro. Por eso se oculta.

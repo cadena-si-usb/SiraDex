@@ -115,7 +115,7 @@ def gestionar_programas():
 
         # Si el nombre no esta repetido, modificamos el campo
         if nombre_repetido:
-            session.message = 'Ya existe un programa llamado "' + request.vars.Nombre + '".'
+            formulario_editar.errors.Nombre = 'Ya existe un programa llamado "' + request.vars.Nombre + '".'
         else:
             programa.nombre = request.vars.Nombre
             programa.descripcion = request.vars.Descripcion
@@ -128,9 +128,10 @@ def gestionar_programas():
         session.message = 'Error en los datos del formulario, por favor intente nuevamente.'
 
     # MÉTODO POST FORMULARIO EDITAR:
-
+    print formulario_editar.errors
     return dict(admin=admin, programas=programas, hayErroresAgregar=formulario.errors,
-                formulario=formulario, formulario_editar=formulario_editar)
+                hayErroresEditar=formulario_editar.errors, formulario=formulario,
+                formulario_editar=formulario_editar)
 
 
 def eliminar_programa():
