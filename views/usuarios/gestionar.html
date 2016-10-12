@@ -75,28 +75,29 @@
                     </tr>
                 </thead>    
                 <tbody>
-                {{for admin in usuarios:}}
-                    {{if admin.tipo == 'Administrador':}}
+                {{for usuario in usuarios:}}
+                    {{if usuario.tipo == 'Administrador':}}
                     <tr>
-                    <td class="center-vertically">{{ =admin.usbid}}</td>
-                    <td class="center-vertically">{{ =admin.nombres}}</td>
-                    <td class="center-vertically">{{ =admin.apellidos}}</td>                    
+                    <td class="center-vertically">{{ =usuario.usbid}}</td>
+                    <td class="center-vertically">{{ =usuario.nombres}}</td>
+                    <td class="center-vertically">{{ =usuario.apellidos}}</td>                    
                     <!-- Boton Modificar -->
                     <td class="center-vertically"> 
                     <center>
-                    <a href="{{=URL(c='usuarios',f='modificar', args=[ admin.usbid ] )}}">
+                    <a href="{{=URL(c='usuarios',f='modificar', args=[ usuario.usbid ] )}}">
                     <span class="glyphicon glyphicon-edit green-icn"></span>
                     </a>
                     </center>
                     </td> 
                     <!-- Boton Eliminar -->                    
                     <td class="center-vertically">
-                    <center>
-                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar este admin?')) {window.location.href = '{{=URL(c='usuarios',f='eliminar',args=[ admin.usbid ] )}}';}">
-                    <span class="glyphicon glyphicon-remove red"></span>
-                    </a>
-                    </center>
-                    </td>                                            
+                        <center>
+                            <a>
+                               <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#modalEliminarUsuario"
+                                      data-link-eliminar="{{=URL(c='usuarios',f='eliminar', args=[usuario.usbid])}}"></span>
+                            </a>
+                        <center>
+                    </td>                                                                
                     </tr>
                     {{pass}}        
                 {{pass}}
@@ -132,11 +133,12 @@
                     </td> 
                     <!-- Boton Eliminar -->                    
                     <td class="center-vertically">
-                    <center>
-                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar este usuario?')) {window.location.href = '{{=URL(c='usuarios',f='eliminar',args=[ usuario.usbid ] )}}';}">
-                    <span class="glyphicon glyphicon-remove red"></span>
-                    </a>
-                    </center>
+                        <center>
+                            <a>
+                               <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#modalEliminarUsuario"
+                                      data-link-eliminar="{{=URL(c='usuarios',f='eliminar', args=[usuario.usbid])}}"></span>
+                            </a>
+                        <center>
                     </td>                                            
                     </tr>
                     {{pass}}        
@@ -174,11 +176,12 @@
                     </td>
 
                     <td class="center-vertically">
-                    <center>
-                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar a este usuario?')) {window.location.href = '{{=URL(c='usuarios',f='eliminar',args=[ usuario.usbid ] )}}';}">
-                    <span class="glyphicon glyphicon-remove red"></span>
-                    </a>
-                    </center>
+                        <center>
+                            <a>
+                               <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#modalEliminarUsuario"
+                                      data-link-eliminar="{{=URL(c='usuarios',f='eliminar', args=[usuario.usbid])}}"></span>
+                            </a>
+                        <center>
                     </td>                         
                     </tr>
                     {{pass}}        
@@ -216,12 +219,13 @@
                     </td>
 
                     <td class="center-vertically">
-                    <center>
-                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar a este usuario?')) {window.location.href = '{{=URL(c='usuarios',f='eliminar',args=[ usuario.usbid ] )}}';}">
-                    <span class="glyphicon glyphicon-remove red"></span>
-                    </a>
-                    </center>
-                    </td>                         
+                        <center>
+                            <a>
+                               <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#modalEliminarUsuario"
+                                      data-link-eliminar="{{=URL(c='usuarios',f='eliminar', args=[usuario.usbid])}}"></span>
+                            </a>
+                        <center>
+                    </td>                        
                     </tr>
                     {{pass}}        
                 {{pass}}
@@ -258,12 +262,13 @@
                     </td>
 
                     <td class="center-vertically">
-                    <center>
-                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar a este usuario?')) {window.location.href = '{{=URL(c='usuarios',f='eliminar',args=[ usuario.usbid ] )}}';}">
-                    <span class="glyphicon glyphicon-remove red"></span>
-                    </a>
-                    </center>
-                    </td>                         
+                        <center>
+                            <a>
+                               <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#modalEliminarUsuario"
+                                      data-link-eliminar="{{=URL(c='usuarios',f='eliminar', args=[usuario.usbid])}}"></span>
+                            </a>
+                        <center>
+                    </td>                        
                     </tr>
                     {{pass}}        
                 {{pass}}
@@ -277,27 +282,33 @@
         {{=IMG(_src=URL('static', 'icon/i_add.png'),_height='55',_alt='Agregar Producto') }}
         </a>
 
-<!-- Boton Modal Agregar -->
-<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#ModalAgregar" id="AddUserBtn">
-{{=IMG(_src=URL('static', 'icon/i_add.png'),_height='55',_alt='Agregar Producto') }}
-</button>
-
-<!-- Modal Agregar -->
-<div id="ModalAgregar" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+<!-- Modal Eliminar-->
+  <div id="modalEliminarUsuario" class="modal fade" role="dialog">
+    <div class="modal-dialog">
 
     <!-- Contenido Modal -->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"><center>Agregar Usuario</center></h4>
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <center> <h4 class="modal-title">Eliminar Usuario</h4> </center>
+        </div>
+        <div class="modal-body">
+            <center> <p>Está seguro que quiere eliminar este usuario.</p> </center>
+            <br>
+            <center>
+                <a id="BotonEliminar">
+                  <button type="button" class="btn blue-add btn-border">
+                          Eliminar
+                  </button>
+                </a>
+                <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
+            </center>
+          </div>
+        </div>
       </div>
-      <div class="modal-body" id="ModalAgregar">
-        <p>=forma</p>
-      </div>
-
     </div>
+{{end}}
 
-  </div>
-</div>
+{{block script}}
+    <script src="{{=URL('static','js/usuarios.js')}}"></script>
 {{end}}

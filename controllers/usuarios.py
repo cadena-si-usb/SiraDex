@@ -121,6 +121,7 @@ def eliminar():
             if len(request.args)!=0 :
                 if request.args[0] != session.usuario["usbid"]:
                     session.message = ""
+                    print request.args[0]
                     if (not db(db.USUARIO.usbid == request.args[0]).isempty()):
                         db(db.USUARIO.usbid == request.args[0]).delete()
                         redirect(URL('gestionar'))
