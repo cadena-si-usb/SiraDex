@@ -94,23 +94,24 @@ def gestionar_programas():
         redirect(URL('gestionar_programas.html'))
     # En caso de que el formulario no sea aceptado:
     elif (formulario.errors):
-        print "No pase"
-        print formulario.errors
         session.message = "Los datos del programa son inválidos. Intentelo nuevamente."
 
     # Se verifica si los campos están llenos correctamente.
     if formulario_editar.accepts(request.vars, session, formname="formulario_editar"):
-        programa = db(db.PROGRAMA.id_programa == request.vars.id_programa).select()[0]
+        id_programa  = int(request.vars.id_programa)
+        programa = db(db.PROGRAMA.id_programa == id_programa).select()[0]
 
-        nombre_repetido    = False
+        nombre_repetido = False
 
         todos_programas = db().select(db.PROGRAMA.ALL)
 
         for programa in todos_programas:
             if (programa.nombre == request.vars.Nombre and
-                programa.id_programa != request.vars.id_programa):
+                programa.id_programa != request.id_programa):
                 nombre_repetido = True
                 break
+
+        print nombre_repetido
 
         # Si el nombre no esta repetido, modificamos el campo
         if nombre_repetido:
