@@ -477,16 +477,14 @@ def index():
 
 def obtener_actividades():
     if request.vars.Programa[0]=="all":
-        tiposA = db(db.TIPO_ACTIVIDAD).select('nombre')
+        tiposA = db(db.TIPO_ACTIVIDAD).select()
     else:
-        programa = db(db.PROGRAMA.nombre==request.vars.Programa[0]).select().first()
-        tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa.id_programa).select('nombre')
+        tiposA = db(db.TIPO_ACTIVIDAD.id_programa==int(request.vars.Programa[0])).select()
     
     concat = '<option value="all" selected="">--cualquiera--</option>'
-    print tiposA
 
     for tipo in tiposA:
         option = tipo.nombre
-        concat += '<option value="'+tipo.id_tipo+'">'+option+'</option>'
+        concat += '<option value="'+str(tipo.id_tipo)+'">'+option+'</option>'
 
     return "jQuery('#lista_tipos').empty().append('"+concat+"')"
