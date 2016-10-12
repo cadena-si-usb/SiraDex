@@ -7,12 +7,15 @@
 <div id = 'formulario'>
     <!-- Formulario para agregar un único campo. -->
     {{= formSimple.custom.begin}}
-    <table class="table table-condensed">
-        <tr>
-        <td class="col-md-2">Nombre</td>     <td class="col-md-3">{{= formSimple.custom.widget.Nombre}}</td>
-        <td class="col-md-1">Tipo</td>       <td class="col-md-2">{{= formSimple.custom.widget.Tipo}}</td>
-        <td class="col-md-2">Obligatorio</td><td class="col-md-1">{{= formSimple.custom.widget.Obligatorio}}</td>
-        <td class="col-md-2">{{= formSimple.custom.submit}}</td>
+    <table class="table table-condensed tabla-border">
+        <tr class="tabla-border">
+            <td class="col-md-2 tabla-border">Nombre</td>     
+            <td class="col-md-3 tabla-border">{{= formSimple.custom.widget.Nombre}}</td>
+            <td class="col-md-1 tabla-border">Tipo</td>       
+            <td class="col-md-2 tabla-border">{{= formSimple.custom.widget.Tipo}}</td>
+            <td class="col-md-2 tabla-border">Obligatorio</td>
+            <td class="col-md-1 tabla-border">{{= formSimple.custom.widget.Obligatorio}}</td>
+            <td class="col-md-2 tabla-border">{{= formSimple.custom.submit}}</td>
         </tr>
     </table>
     {{= formSimple.custom.end}}
@@ -21,8 +24,9 @@
     {{= formMultiple.custom.begin}}
     <table class="table table-condensed">
         <tr>
-          <td class="col-md-2">Catalogo</td>   <td class="col-md-3">{{= formMultiple.custom.widget.Catalogo}}</td>
-          <td class="col-md-2">{{= formMultiple.custom.submit}}</td>
+          <td class="col-md-2 tabla-border">Catalogo</td>   
+          <td class="col-md-3 tabla-border">{{= formMultiple.custom.widget.Catalogo}}</td>
+          <td class="col-md-2 tabla-border">{{= formMultiple.custom.submit}}</td>
         </tr>
     </table>
     {{= formMultiple.custom.end}}
