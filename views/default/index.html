@@ -108,8 +108,7 @@
                                 <!-- Filtro de Autor -->
                                 <div class="form-group">
                                     <label for="Autor">Autor:</label>
-                                    <select class="form-control" name="Autor" id="list_autores">
-                                    </select>
+                                    <input type="text" name="Autor"/>
                                 </div>
                             </form>
                         </div>  
@@ -118,34 +117,6 @@
                 </div>
                                                                 
             </div>        
-        <!-- Filtros -->
-            <div class="hidden">
-                <!-- AQUI VAN LOS FILTROS -->
-
-                <!--Programas-->
-                <span>Programas:</span>
-                <select name="Programa" onchange="ajax('obtener_actividades', ['Programa'], ':eval')">
-                    <option></option>
-                    {{for x in rows:}}
-                    <option value="{{=x['nombre']}}">{{=x['nombre']}}</option>
-
-                    {{pass}}
-                </select>
-
-                <!--Actividades-->
-                <span>Tipo Actividad:</span>
-                <select name="TipoActividad" id="lista_tipos2">
-                    <option></option>
-                    {{for x in rowsT:}}
-                    <option value="{{=x['nombre']}}">{{=x['nombre']}}</option>
-
-                    {{pass}}
-                </select>
-                <span>Fecha:</span> 
-                <input type="date" name="fecha" max='{{=fecha}}'/>
-                <span>Autor:</span>
-                <input type="text" name="Autor"/>
-        </form>
 
 {{end}}
 
