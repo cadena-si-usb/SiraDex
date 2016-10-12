@@ -2,12 +2,22 @@
 
 
 {{block titulo}}
-    <h2> Programa: < Nombre Programa > </h2>
+    <h2>          {{if programa_nombre != None:}} 
+                       Programa: {{=programa_nombre}}
+                   {{else:}}
+                       Tipos de Actividades del Sistema 
+                   {{pass}}
+    </h2>
 {{end}}
 
 {{block descripcion}}
     <div class="col-sm-8">
-        <h4><p>< Descripcion Programa > </p></h4>
+        <h4><p> {{if programa_descripcion != None:}} 
+                       Descripción: {{=programa_descripcion}}
+                {{else:}}
+                        
+                {{pass}}
+             </p></h4>
         <br>
     </div>
 {{end}}

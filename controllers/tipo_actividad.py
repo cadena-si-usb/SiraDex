@@ -33,15 +33,31 @@ def gestionar():
                                  descripcion = request.vars.Descripcion,
                                  id_programa = id_programa)
         redirect("gestionar.html")
-
-    listaTipoActividades = db(db.TIPO_ACTIVIDAD.papelera == False).select(db.TIPO_ACTIVIDAD.nombre
+    
+    
+    if len(request.args) == 0:
+        
+        listaTipoActividades = db(db.TIPO_ACTIVIDAD.papelera == False).select(db.TIPO_ACTIVIDAD.nombre
                                                    ,db.TIPO_ACTIVIDAD.descripcion
                                                    ,db.TIPO_ACTIVIDAD.id_tipo)
-
-
-
+        programa = dict()
+        programa["nombre"] = None
+        programa["descripcion"] = None
+        
+    else :
+        
+        id_programa = request.args[0]
+        
+        listaTipoActividades =   db((db.TIPO_ACTIVIDAD.papelera == False) 
+                                 and (db.TIPO_ACTIVIDAD.id_programa == id_programa)).select(db.TIPO_ACTIVIDAD.nombre
+                                                   ,db.TIPO_ACTIVIDAD.descripcion
+                                                   ,db.TIPO_ACTIVIDAD.id_tipo)
+        programa = db(db.PROGRAMA.id_programa == id_programa).select(db.PROGRAMA.ALL).first()
+        programa = {"nombre":programa.nombre,"descripcion":programa.descripcion}
+        
     return dict(admin = get_tipo_usuario()
-            , listaTipoActividades = listaTipoActividades)
+            , listaTipoActividades = listaTipoActividades
+            , programa_nombre = programa["nombre"], programa_descripcion = programa["descripcion"])
 
 #. --------------------------------------------------------------------------- .
 '''
