@@ -16,18 +16,6 @@ def call(): return service()
 ## PARA DESSARROLLO. Cambiar el puerto 8000 si es necesario.
 URL_RETORNO = "http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas"
 
-def vMenuAdmin():
-    if session.usuario != None:
-        if session.usuario["tipo"] == "Bloqueado":
-            redirect(URL("index"))
-        if session.usuario["tipo"] == "Administrador":
-            session.message = ""
-            return response.render(admin = get_tipo_usuario())
-        else:
-            redirect(URL("perfil"))
-    else:
-        redirect(URL("index"))
-
 def gestionar():
     if session.usuario != None:
         if session.usuario["tipo"] == "Bloqueado":
@@ -176,20 +164,6 @@ def modificar():
             redirect(URL("perfil"))
     else:
         redirect(URL("index"))
-
-def setVista():
-    session.vista = int(request.args[0])
-
-    if session.vista == 0:
-        redirect(URL(c='producto', f='gestionar'))
-    elif session.vista == 1:
-        redirect(URL(c='tipo_actividad', f='gestionar'))
-    elif session.vista == 2:
-        redirect(URL(c='default', f='gestionar'))
-    else:
-        print('NO JUEGUES CON MI SISTEMA')
-
-    return dict(admin = get_tipo_usuario())
 
 def get_tipo_usuario():
     if session.usuario != None:
