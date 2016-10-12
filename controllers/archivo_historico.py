@@ -75,5 +75,6 @@ def restaurar_programa():
     programa = db(db.PROGRAMA.id_programa == id_programa).select().first()
 
     programa.papelera = False
+    programa.update_record()
     session.message = 'Programa Restaurado.'
     redirect(URL('gestionar.html'))
