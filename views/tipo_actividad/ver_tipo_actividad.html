@@ -52,6 +52,15 @@
                                 </a>
                             </center>
                         </td>
+                        <td> 
+                            <center> 
+                                <a href="javascript:location.reload();">
+                                    <span class="glyphicon glyphicon-remove red"
+                                          onclick="ajax('{{=URL('eliminar_campo')}}/{{=tipo.id_tipo}}/{{=campo.id_campo}}',[]);"
+                                          ></span>
+                                </a>
+                            </center>
+                        </td>
                     </tr>
                 {{pass}}
             </tbody>

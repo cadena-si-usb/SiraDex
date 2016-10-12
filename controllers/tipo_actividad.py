@@ -382,12 +382,13 @@ def ver_tipo_actividad():
 
 #. --------------------------------------------------------------------------- .
 def eliminar_campo():
-    id_campo = int(request.args[0])
-
+    id_tipo = int(request.args[0])
+    id_campo = int(request.args[1])
+    
     db(db.ACT_POSEE_CAMPO.id_campo == id_campo).delete()
     db(db.CAMPO.id_campo == id_campo).delete()
-
-    redirect(URL('agregar_tipo_campos.html'))
+    
+    redirect(URL('ver_tipo_actividad.html',args=[id_tipo]))
 
 def editar_tipo():
 
