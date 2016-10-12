@@ -46,66 +46,95 @@ def get_tipo_usuario():
     else:
         redirect(URL(c ="default",f="index"))
 
+
+        # MIENTRAS
+
 def login_cas():
-    if not request.vars.getfirst('ticket'):
-        #redirect(URL('error'))
-        pass
-    try:
-        import urllib2, ssl
-        ssl._create_default_https_context = ssl._create_unverified_context
+    session.usuario = dict()
+    session.usuario['usbid'] = "00-00000"
+    session.usuario['tipo'] = "Administrador"
+    session.usuario["first_name"] = "Usuario"
+    session.usuario["last_name"] = "Parche"
+    session.usuario['cedula'] = 21467704
+    session.usuario["email"] = "usuarioparche@gmail.com"
+    session.usuario["phone"] = " "
+    session.usuario["alternativo"] = " "
+    redirect(URL('vMenuPrincipal'))
 
-        url = "https://secure.dst.usb.ve/validate?ticket="+\
-        request.vars.getfirst('ticket') +\
-        "&service=" + URL_RETORNO
-
-        req = urllib2.Request(url)
-        response = urllib2.urlopen(req)
-        the_page = response.read()
-
-    except Exception, e:
-        print "Exception: "
-        print e
-        # redirect(URL('error'))
-
-    if the_page[0:2] == "no":
-        pass
-    else:
-        # session.casticket = request.vars.getfirst('ticket')
-        data  = the_page.split()
-        usbid = data[1]
-
-        usuario = get_ldap_data(usbid) #Se leen los datos del CAS
-        tablaUsuarios = db.USUARIO
-
-        session.usuario = usuario
-        print "Hola",session.usuario
-        session.usuario['usbid'] = usbid
-
-        if not db(tablaUsuarios.usbid == usbid).isempty():
-            datosUsuario = db(tablaUsuarios.usbid==usbid).select()[0]
-            session.usuario['tipo'] = datosUsuario.tipo
-            session.usuario['alternativo'] = datosUsuario.correo_alter
-            print session.usuario['alternativo']
-            session.usuario['phone'] = datosUsuario.telefono
-
-            print "\nguardado sesion : ", session.usuario
-
-            if datosUsuario.tipo == "Bloqueado":
-                response.flash = T("Usuario bloqueado")
-                redirect(URL(c = "default",f="index"))
-            else:
-                redirect(URL('perfil'))
+def vMenuPrincipal():
+    if session.usuario != None:
+        admin = 4
+        if(session.usuario["tipo"] == "DEX"):
+            admin = 2
+        elif(session.usuario["tipo"] == "Administrador"):
+            admin = 1
         else:
-            session.usuario['tipo'] = "Usuario"
+            admin = 0
+        return dict(admin = admin)
+    else:
+        redirect(URL("index"))
 
-            db.USUARIO.insert(ci=session.usuario["cedula"],  # Lo insertamos en la base de datos.
-            usbid=session.usuario["usbid"],
-            nombres=session.usuario["first_name"],
-            apellidos=session.usuario["last_name"],
-            correo_inst=session.usuario["email"],
-            telefono=session.usuario["phone"],
-            tipo = "Usuario")
-            redirect(URL('vRegistroUsuario'))
+
+# def login_cas():
+#     if not request.vars.getfirst('ticket'):
+#         #redirect(URL('error'))
+#         pass
+#     try:
+#         import urllib2, ssl
+#         ssl._create_default_https_context = ssl._create_unverified_context
+
+#         url = "https://secure.dst.usb.ve/validate?ticket="+\
+#         request.vars.getfirst('ticket') +\
+#         "&service=" + URL_RETORNO
+
+#         req = urllib2.Request(url)
+#         response = urllib2.urlopen(req)
+#         the_page = response.read()
+
+#     except Exception, e:
+#         print "Exception: "
+#         print e
+#         # redirect(URL('error'))
+
+#     if the_page[0:2] == "no":
+#         pass
+#     else:
+#         # session.casticket = request.vars.getfirst('ticket')
+#         data  = the_page.split()
+#         usbid = data[1]
+
+#         usuario = get_ldap_data(usbid) #Se leen los datos del CAS
+#         tablaUsuarios = db.USUARIO
+
+#         session.usuario = usuario
+#         print "Hola",session.usuario
+#         session.usuario['usbid'] = usbid
+
+#         if not db(tablaUsuarios.usbid == usbid).isempty():
+#             datosUsuario = db(tablaUsuarios.usbid==usbid).select()[0]
+#             session.usuario['tipo'] = datosUsuario.tipo
+#             session.usuario['alternativo'] = datosUsuario.correo_alter
+#             print session.usuario['alternativo']
+#             session.usuario['phone'] = datosUsuario.telefono
+
+#             print "\nguardado sesion : ", session.usuario
+
+#             if datosUsuario.tipo == "Bloqueado":
+#                 response.flash = T("Usuario bloqueado")
+#                 redirect(URL(c = "default",f="index"))
+#             else:
+#                 redirect(URL('perfil'))
+#         else:
+#             session.usuario['tipo'] = "Usuario"
+
+#             db.USUARIO.insert(ci=session.usuario["cedula"],  # Lo insertamos en la base de datos.
+#             usbid=session.usuario["usbid"],
+#             nombres=session.usuario["first_name"],
+#             apellidos=session.usuario["last_name"],
+#             correo_inst=session.usuario["email"],
+#             telefono=session.usuario["phone"],
+#             tipo = "Usuario")
+#             redirect(URL('vRegistroUsuario'))
     
 
 def logout_cas():

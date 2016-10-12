@@ -1,7 +1,7 @@
 {{extend 'layoutSIRADEXloged.html'}}
 
 {{block titulo}}
-    <h2> <center> Registros de Programas en el Sistema </center> </h2>
+    Registros de Programas en el Sistema
 {{end}}
 
 
@@ -50,7 +50,9 @@
         </thead>
         <tbody id="actividades">
             {{if len(programas) == 0:}}
-                No hay programas que mostrar.
+                <tr>
+                    <td> No hay programas que mostrar.</td>
+                </tr>
             {{else:}}
                 {{for programa in programas:}}
                     <tr>
