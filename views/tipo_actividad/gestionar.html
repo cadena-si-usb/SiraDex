@@ -1,8 +1,8 @@
 {{extend 'layoutSIRADEXloged.html'}}
 
 {{block titulo}}
-        {{if programa_nombre != None:}} 
-           Programa: {{=programa_nombre}}
+        {{if programa.nombre != None:}} 
+           Programa: {{=programa.nombre}}
        {{else:}}
            Tipos de Actividades del Sistema 
        {{pass}}
@@ -11,8 +11,8 @@
 
 {{block descripcion}}
     <div class="col-sm-8">
-        <h4><p> {{if programa_descripcion != None:}} 
-                       Descripción: {{=programa_descripcion}}
+        <h4><p> {{if programa.descripcion != None:}} 
+                       Descripción: {{=programa.descripcion}}
                 {{else:}}
                         
                 {{pass}}
@@ -55,7 +55,7 @@
               <span class="glyphicon glyphicon-plus-sign"
                     aria-hidden="true"></span> Agregar Actividad
             </button>
-            <a href="{{=URL(c='archivo_historico', f='gestionar.html')}}" >
+            <a href="{{=URL(c='archivo_historico', f='gestionar',args=[programa.id_programa])}}" >
             <button type="button" class="btn btn-default red-trash btn-border">
               <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Archivo Histórico
             </button>

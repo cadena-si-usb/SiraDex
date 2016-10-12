@@ -16,10 +16,11 @@ from funciones_siradex import get_tipo_usuario
 '''
 def gestionar():
 
-    listaTipoActividades = db(db.TIPO_ACTIVIDAD.papelera == True).select(db.TIPO_ACTIVIDAD.nombre
-                                                   ,db.TIPO_ACTIVIDAD.descripcion
-                                                   ,db.TIPO_ACTIVIDAD.id_tipo
-                                                   ,db.TIPO_ACTIVIDAD.tipo_p_r)
+    listaTipoActividades = db( (db.TIPO_ACTIVIDAD.papelera == True) & 
+                               (db.TIPO_ACTIVIDAD.id_tipo == request.args(0) ) ).select(db.TIPO_ACTIVIDAD.nombre
+                                                                                ,db.TIPO_ACTIVIDAD.descripcion
+                                                                                ,db.TIPO_ACTIVIDAD.id_tipo
+                                                                                ,db.TIPO_ACTIVIDAD.tipo_p_r)
 
     listaProgramas = db(db.PROGRAMA.papelera == True).select()
 

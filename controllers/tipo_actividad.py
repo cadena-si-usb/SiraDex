@@ -23,7 +23,6 @@ def gestionar():
         tipo.descripcion = request.vars.Descripcion
         tipo.id_programa = request.vars.Programa
         tipo.update_record()                                 # Se actualiza el tipo de actividad.
-        redirect("gestionar.html")
 
     if request.vars and (request.vars["_formname"]=="formulario_agregar_tipo"):
         programa = db(db.PROGRAMA.nombre == request.vars.Programa).select()
@@ -32,7 +31,6 @@ def gestionar():
                                  tipo_p_r = request.vars.Tipo,
                                  descripcion = request.vars.Descripcion,
                                  id_programa = id_programa)
-        redirect("gestionar.html")
     
     
     if len(request.args) == 0:
@@ -49,15 +47,14 @@ def gestionar():
         id_programa = request.args[0]
         
         listaTipoActividades =   db((db.TIPO_ACTIVIDAD.papelera == False) 
-                                 and (db.TIPO_ACTIVIDAD.id_programa == id_programa)).select(db.TIPO_ACTIVIDAD.nombre
+                                 & (db.TIPO_ACTIVIDAD.id_programa == id_programa)).select(db.TIPO_ACTIVIDAD.nombre
                                                    ,db.TIPO_ACTIVIDAD.descripcion
                                                    ,db.TIPO_ACTIVIDAD.id_tipo)
         programa = db(db.PROGRAMA.id_programa == id_programa).select(db.PROGRAMA.ALL).first()
-        programa = {"nombre":programa.nombre,"descripcion":programa.descripcion}
         
     return dict(admin = get_tipo_usuario()
             , listaTipoActividades = listaTipoActividades
-            , programa_nombre = programa["nombre"], programa_descripcion = programa["descripcion"])
+            , programa = programa)
 
 #. --------------------------------------------------------------------------- .
 '''
