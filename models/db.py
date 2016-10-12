@@ -129,7 +129,7 @@ auth.settings.reset_password_requires_verification = True
 # auth.enable_record_versioning(db)
 #raise HTTP(404)
 
-tipo_campos = ['Fecha', 'Teléfono', 'Texto','Documento', 'Imagen', 'Número']
+tipo_campos = ['Fecha', 'Telefono', 'Texto Corto','Documento', 'Numero Entero', 'Texto Largo']
 
 #db.usuario.drop()
 db.define_table('USUARIO',

@@ -65,30 +65,45 @@
 
 	                <!-- Filtro de Tipo de Actividad -->
 	                <div class="form-group">
-	                    <label for="TipoActividad" class = "control-label col-sm-3">
+	                    <label for="id_tipo" class = "control-label col-sm-3">
 	                    	Tipo Actividad (*)
 	                    </label>
-	                    <div class="col-sm-9">
+	                    <div class="col-sm-9 ">
 		                    <select class="form-control" name="id_tipo" id="lista_tipos"  onchange="ajax('seleccion_actividad', ['id_tipo'], ':eval')">
 		                    	<!--Con el ajax traemos las actividades-->      
 		                    </select>
+
 		                </div>
 	                </div>
 
-	                <!-- Filtro de Fecha -->
+	                <!-- Filtro de Fecha y Lugar -->
 	                <div class="form-group">
-	                    <label for="date">Fecha:</label>
-
+	                    <label for="fecha" class = "control-label col-sm-3">Fecha (*)</label>
+	                    <div class="col-sm-3">
+	                    	<input class="form-control" type="date" name="fecha" max='{{=fecha_max}}'/>
+	                    </div>
+	                    <div class="col-sm-6">
+	    	                <label for="lugar" class="control-label col-sm-3">Lugar (*)</label>
+	    	                <div class="col-sm-9">
+	                    		<input class="form-control" name="lugar"/>
+	                    	</div>
+	                    </div>
 	                </div>
 
-	                <!-- Filtro de Autor -->
-	                <div class="form-group">
-	                    <label for="Autor">Autor:</label>
-	                    </select>
-	                </div>
+	                <div  class="form-group">
+	                	<h3 id="nombre_actividad" class="col-sm-offset-3"><!--Nombre que viene del ajax--></h3>
+	                	<p id="descripcion_actividad" class="col-sm-offset-3"><!-- Descripcion que viene del ajax--></p>
+	                	<p id="comprobantes_actividad" class="col-sm-offset-3"><!--Comprobantes que viene del ajax--></p>
 
-	                <div class="form-group">
-	                	<input type="submit" />
+		                <div id="campos_actividad">
+		                	<!--Campos del tipo de actividad provenientes del ajax-->
+		                </div>
+	                </div>
+	                
+	                
+
+	                <div class="form-group ">
+	                	<input type="submit" class="col-sm-10 btn blue-add btn-block btn-border " value="Agregar" />
   						<input type="hidden" name="_formname" value="crear_tipo" />
 	                </div>
 	            </form>
