@@ -24,11 +24,30 @@ def gestionar():
             message = session.message
             session.message = ""
             aux = db(db.USUARIO).select(db.USUARIO.usbid,db.USUARIO.nombres,db.USUARIO.apellidos,db.USUARIO.tipo)
-            return dict(usuarios = aux,message = message, admin=get_tipo_usuario())
+
+            form_editar=SQLFORM(
+                    db.USUARIO,
+                    button=['Actualizar'],
+                    fields=['tipo'],
+                    labels={'tipo':'TIPO'})
+            form_editar.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+            form_editar.element(_type='submit')['_value']="Actualizar"
+
+            if len(request.vars)!=0:
+                if (not db(db.USUARIO.usbid == request.args[0]).isempty()):
+                    if(request.args[0] != session.usuario["usbid"]):
+                        db(db.USUARIO.usbid == request.args[0]).update(tipo = request.vars.tipo)
+                        redirect(URL('gestionar'))
+                    else:
+                        message = T("Para cambiar sus permisos, por favor comuníquese con un administrador")
+                else:
+                    message = T("El Usuario no se encuentra registrado")
+
+            return dict(form_editar=form_editar,usuarios = aux,message = message, admin=get_tipo_usuario())
         else:
             redirect(URL("perfil"))
     else:
-        redirect(URL("index"))
+        redirect(URL("index"))        
 
 def agregar():
     if session.usuario != None:
@@ -134,36 +153,33 @@ def eliminar():
         redirect(URL("index"))
 
 def modificar():
-    if session.usuario != None:
-        if session.usuario["tipo"] == "Bloqueado":
-            redirect(URL("index"))
-        if session.usuario["tipo"] == "Administrador":
-            message= ""
-            form = SQLFORM.factory(
-                            Field("USBID", default=request.args[0],writable = False),
-                            readonly=True)
-            forma=SQLFORM(
-                    db.USUARIO,
-                    button=['Actualizar'],
-                    fields=['tipo'],
-                    labels={'tipo':'TIPO'})
-            forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
-            forma.element(_type='submit')['_value']="Actualizar"
-            if len(request.vars)!=0:
-                if (not db(db.USUARIO.usbid == request.args[0]).isempty()):
-                    if(request.args[0] != session.usuario["usbid"]):
-                        db(db.USUARIO.usbid == request.args[0]).update(tipo = request.vars.tipo)
-                        redirect(URL('gestionar'))
-                    else:
-                        message = T("Para cambiar sus permisos, por favor comuníquese con un administrador")
-                else:
-                    message = T("El Usuario no se encuentra registrado")
+    admin = get_tipo_usuario()
 
-            return dict(forma = form, form = forma, message = message, admin=get_tipo_usuario())
-        else:
-            redirect(URL("perfil"))
+    if admin == 1:
+        message= ""
+        form = SQLFORM.factory(
+                        Field("USBID", default=request.args[0],writable = False),
+                        readonly=True)
+        forma=SQLFORM(
+                db.USUARIO,
+                button=['Actualizar'],
+                fields=['tipo'],
+                labels={'tipo':'TIPO'})
+        forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+        forma.element(_type='submit')['_value']="Actualizar"
+        if len(request.vars)!=0:
+            if (not db(db.USUARIO.usbid == request.args[0]).isempty()):
+                if(request.args[0] != session.usuario["usbid"]):
+                    db(db.USUARIO.usbid == request.args[0]).update(tipo = request.vars.tipo)
+                    redirect(URL('gestionar'))
+                else:
+                    message = T("Para cambiar sus permisos, por favor comuníquese con un administrador")
+            else:
+                message = T("El Usuario no se encuentra registrado")
+
+        return dict(forma = form, form = forma, message = message, admin=get_tipo_usuario())
     else:
-        redirect(URL("index"))
+        redirect(URL(c ="default",f="perfil"))
 
 def get_tipo_usuario():
     if session.usuario != None:
