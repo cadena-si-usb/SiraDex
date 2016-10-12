@@ -13,3 +13,5 @@ INSERT INTO tipo_actividad values(7, '7 Actividad programa 3','p', 'descr', 3, '
 INSERT INTO tipo_actividad values(8, '8 Actividad programa 3','p', 'descr', 3, 't');
 
 
+INSERT INTO usuario values('123', 'usbid123','francisco', 'rojas','123456', 'correo1');
+INSERT INTO usuario values('431', 'usbid431','frandres', 'rrrs','123r', 'correo2');
