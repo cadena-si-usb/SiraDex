@@ -16,7 +16,7 @@
         </tbody>
     </table>
 
-    <h3> < Campos > </h3>
+    <center><h3>Campos</h3></center>
     <br>
 <a href="#">
     <span class="glyphicon glyphicon-plus blue"
@@ -40,9 +40,9 @@
                     <tr>
                         <td> <center> {{=campo.nombre}} </center></td>
                         <td> <center> {{=campo.tipo_campo}} </center></td>
-                        <td> <center> {{=campo.obligatorio}} </center></td>
-                        <td> 
-                            <center> 
+                        <td> <center> {{= 'Si' if campo.obligatorio else 'No'}} </center></td>
+                        <td>
+                            <center>
                                 <a href="#">
                                     <span class="glyphicon glyphicon-edit blue"
                                           onclick="ajax('{{=URL('editar_campo')}}/{{=campo.id_campo}}',[],'editar_campo_tipo');"
@@ -52,8 +52,8 @@
                                 </a>
                             </center>
                         </td>
-                        <td> 
-                            <center> 
+                        <td>
+                            <center>
                                 <a href="javascript:location.reload();">
                                     <span class="glyphicon glyphicon-remove red"
                                           onclick="ajax('{{=URL('eliminar_campo')}}/{{=tipo.id_tipo}}/{{=campo.id_campo}}',[]);"
@@ -78,7 +78,7 @@
       </div>
       <div class="modal-body">
           <p><center id="editar_campo_tipo"> Formulario para editar Campo de Tipo
-              
+
           </center> </p>
       </div>
     </div>
@@ -96,7 +96,7 @@
       </div>
       <div class="modal-body">
           <p><center id="agregar_campo_tipo"> Formulario para Agregar Campo de Tipo
-              
+
           </center> </p>
       </div>
     </div>
