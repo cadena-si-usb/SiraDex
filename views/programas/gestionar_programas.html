@@ -56,7 +56,7 @@
             {{else:}}
                 {{for programa in programas:}}
                     <tr>
-                        <td><a class="a-table" href="{{=URL(c='tipo_actividad', f='gestionar.html')}}">{{=programa.nombre}}</a></td>
+                        <td><a class="a-table" href="{{=URL(c='tipo_actividad', f='gestionar', args=[programa.id_programa])}}">{{=programa.nombre}}</a></td>
                         <td><center>{{=programa.descripcion}}</center></td>
                         <td class="center-vertically">
                             <center>

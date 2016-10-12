@@ -2,12 +2,12 @@
 
 
 {{block titulo}}
-    <h2> Programa: < Nombre Programa > </h2>
+    Programa: {{=programa.nombre}} 
 {{end}}
 
 {{block descripcion}}
     <div class="col-sm-8">
-        <h4><p>< Descripcion Programa > </p></h4>
+        <h4><p> {{=programa.descripcion}} </p></h4>
         <br>
     </div>
 {{end}}
@@ -64,6 +64,11 @@
                 </tr>
             </thead>
             <tbody>
+                {{if len(listaTipoActividades) == 0:}}
+                <tr>
+                    <td> No hay Tipos de Actividades que mostrar.</td>
+                </tr>
+                {{else:}}
                     {{for tipoActividad in listaTipoActividades: }}
                     <tr>
                         <td class="col-md-4">
@@ -96,6 +101,7 @@
                         </td>
                     </tr>
                     {{pass}}
+                {{pass}}
             </tbody>
         </table>
     </div>
@@ -149,8 +155,7 @@
                 <a>
                   <button type="button" 
                           class="btn blue-add btn-border"
-                          data-dismiss="modal"
-                          onclick="ajax('{{=URL('enviar_tipo_papelera')}}/{{=tipoActividad.id_tipo}}',[]);location.reload();">
+                          data-dismiss="modal">
                       Eliminar</button>
                 </a>
                 <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>

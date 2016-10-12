@@ -14,6 +14,9 @@ Vista de Gestionar Tipo Actividad, tiene las opciones:
     Gestionar Tipo de Actividad
 '''
 def gestionar():
+    # Vista de los Datos del Programa
+    programa = db(db.PROGRAMA.id_programa==request.args(0)).select().first()
+    
     
     # Vista básica
     if request.vars and (request.vars["_formname"]=="formulario_editar_tipo"):
@@ -41,7 +44,7 @@ def gestionar():
     
     
     return dict(admin = get_tipo_usuario()
-            , listaTipoActividades = listaTipoActividades)
+            , listaTipoActividades = listaTipoActividades, programa = programa)
 
 #. --------------------------------------------------------------------------- .
 '''
