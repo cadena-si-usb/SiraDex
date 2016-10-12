@@ -97,6 +97,7 @@ def login_cas():
                 redirect(URL('perfil'))
         else:
             session.usuario['tipo'] = "Usuario"
+            session.usuario['alternativo'] = None
 
             db.USUARIO.insert(ci=session.usuario["cedula"],  # Lo insertamos en la base de datos.
             usbid=session.usuario["usbid"],
@@ -104,6 +105,7 @@ def login_cas():
             apellidos=session.usuario["last_name"],
             correo_inst=session.usuario["email"],
             telefono=session.usuario["phone"],
+            correo_alter=None,
             tipo = "Usuario")
             redirect(URL('vRegistroUsuario'))
     

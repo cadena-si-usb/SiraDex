@@ -60,16 +60,31 @@ def tipos():
 
 def agregar():
     if session.usuario != None:
-    	if(session.usuario["tipo"] == "DEX"):
+        if(session.usuario["tipo"] == "DEX"):
             admin = 2
         elif(session.usuario["tipo"] == "Administrador"):
             admin = 1
-	else:
-		admin = 0
+    	else:
+    		admin = 0
     else:
         redirect(URL(c ="default",f="index"))
 
-    tipo = int(request.args(0))
+
+    programas =  db(db.PROGRAMA).select(db.PROGRAMA.nombre,db.PROGRAMA.id_programa).as_list()
+        
+    formulario = SQLFORM(db.PRODUCTO)
+    if formulario.process(session=None, formname='crear_tipo').accepted:
+        response.flash = "Actividad Creada"
+    elif formulario.errors:
+        response.flash = "Corrige los errores"
+    else:
+        response.flash = "Por favor completa el formulario"
+
+
+    
+    
+    '''
+    
     rows = db(db.ACT_POSEE_CAMPO.id_tipo_act == tipo).select()
     nombre_tipo = db(db.TIPO_ACTIVIDAD.id_tipo == tipo).select().first().nombre
     fields = []
@@ -118,8 +133,10 @@ def agregar():
         redirect(URL('gestionar'))
     elif form.errors:
         response.flash = 'el formulario tiene errores'
+    '''
 
     return locals()
+
 
 def modificar():
     if session.usuario != None:
@@ -208,16 +225,19 @@ def eliminar():
 
 # Funcion utilizada para el ajax en el agregar
 def obtener_actividades():
-    programa = db(db.PROGRAMA.nombre==request.vars.Programa[0]).select().first()
-    tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa.id_programa).select('nombre')
+    programa = db(db.PROGRAMA.nombre==request.vars.Programa).select().first()
+    tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa.id_programa).select(db.TIPO_ACTIVIDAD.nombre,
+        db.TIPO_ACTIVIDAD.id_tipo).as_list()
     
     concat = '<option></option>'
     print tiposA
 
     for tipo in tiposA:
-        option = tipo.nombre
-        concat += '<option value="'+option+'">'+option+'</option>'
+        print "tipo"
+        print "<option value='"+9+"'>"+5+"</option>"
 
-    
+        concat += '<option value="'+tipo['id_tipo']+'">'+tipo['nombre']+'</option>'
+        print concat
 
+    pro
     return "jQuery('#lista_tipos').empty().append('"+concat+"')"
