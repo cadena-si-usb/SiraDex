@@ -1,38 +1,8 @@
 # Funcion para busquedas publicas
 def busqueda():
+        sql = "SELECT "
 
-    if session.usuario != None:
-        if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
-            if(session.usuario["tipo"] == "DEX"):
-                admin = 2
-            elif(session.usuario["tipo"] == "Administrador"):
-                admin = 1
-            else:
-                admin = 0
-        else:
-            redirect(URL(c ="default",f="vMenuPrincipal"))
-    else:
-        redirect(URL(c ="default",f="index"))
-
-
-
-    query = reduce(lambda a, b: (a&b),[db.PRODUCTO.validacion == 'Validada',
-                                       db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo
-                                       ]
-                  )
-    # Hago el query
-    #query=((db.PRODUCTO.validacion == 'Validada'))
-
-    # Muestro los ids, el estado y nombres de las actividades validadas
-    aux = db(query).select(db.PRODUCTO.id_producto,
-                           db.PRODUCTO.estado,
-                           db.PRODUCTO.id_tipo
-                          )
-
-    aux1 = db(query).select(db.TIPO_ACTIVIDAD.nombre, db.TIPO_ACTIVIDAD.id_tipo
-                         )
-
-    return dict(tipos = aux1, productos = aux, admin = admin) # no necesita el admin, creo
+        print request.vars
 
 # Vista de validaciones
 def gestionar_validacion():

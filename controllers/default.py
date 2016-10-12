@@ -78,18 +78,14 @@ def login_cas():
         tablaUsuarios = db.USUARIO
 
         session.usuario = usuario
-        print "Hola",session.usuario
         session.usuario['usbid'] = usbid
 
         if not db(tablaUsuarios.usbid == usbid).isempty():
             datosUsuario = db(tablaUsuarios.usbid==usbid).select()[0]
             session.usuario['tipo'] = datosUsuario.tipo
             session.usuario['alternativo'] = datosUsuario.correo_alter
-            
-            print session.usuario['alternativo']
-            session.usuario['phone'] = datosUsuario.telefono
 
-            print "\nguardado sesion : ", session.usuario
+            session.usuario['phone'] = datosUsuario.telefono
 
             if datosUsuario.tipo == "Bloqueado":
                 response.flash = T("Usuario bloqueado")
@@ -287,30 +283,15 @@ def index():
 
 def obtener_actividades():
     if request.vars.Programa[0]=="all":
-        tiposA = db(db.TIPO_ACTIVIDAD).select('nombre')
+        tiposA = db(db.TIPO_ACTIVIDAD).select()
     else:
-        programa = db(db.PROGRAMA.nombre==request.vars.Programa[0]).select().first()
-        tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa.id_programa).select('nombre')
+        tiposA = db(db.TIPO_ACTIVIDAD.id_programa==int(request.vars.Programa[0])).select()
     
     concat = '<option value="all" selected="">--cualquiera--</option>'
-    print tiposA
 
     for tipo in tiposA:
         option = tipo.nombre
-        concat += '<option value="'+option+'">'+option+'</option>'
+        concat += '<option value="'+str(tipo.id_tipo)+'">'+option+'</option>'
 
     return "jQuery('#lista_tipos').empty().append('"+concat+"')"
 
-def obtener_autores():
-    tipoA = db(db.TIPO_ACTIVIDAD.nombre==request.vars.TipoActividad).select().first()
-    sql = "select nombres from usuario where ci in (select ci_usu_creador from producto where id_tipo=="+str(tipoA.id_tipo)+");"
-    autores = db.executesql(sql)
-
-    concat = "<option></option>"
-
-    for autor in autores:
-        option = autor.nombre
-        print option
-        concat += "<option value="+option+">"+option+"</option>"
-
-    return 'jQuery("#lista_autores").empty().append("%s")'% repr(concat)
