@@ -91,6 +91,7 @@ def agregar():
         print "se envio"
     elif formulario.errors:
         print "error"
+        print formulario.errors
     else:
         print "fatal"
 
