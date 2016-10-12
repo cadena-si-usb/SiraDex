@@ -78,17 +78,13 @@ def login_cas():
         tablaUsuarios = db.USUARIO
 
         session.usuario = usuario
-        print "Hola",session.usuario
         session.usuario['usbid'] = usbid
 
         if not db(tablaUsuarios.usbid == usbid).isempty():
             datosUsuario = db(tablaUsuarios.usbid==usbid).select()[0]
             session.usuario['tipo'] = datosUsuario.tipo
             session.usuario['alternativo'] = datosUsuario.correo_alter
-            print session.usuario['alternativo']
             session.usuario['phone'] = datosUsuario.telefono
-
-            print "\nguardado sesion : ", session.usuario
 
             if datosUsuario.tipo == "Bloqueado":
                 response.flash = T("Usuario bloqueado")
