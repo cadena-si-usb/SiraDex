@@ -4,15 +4,17 @@
     Gestión de Usuarios
 {{end}}
 
-{{block contenido}}
+{{block descripcion}}
     <div id = "error">
         {{=message}}
     </div>
+{{end}}
+
+{{block contenido}}
     <div class="row">
     <div class="col-md-12">
         <div class="card">
                 <!-- Nav tabs -->
-        <div class="card">
         <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active">
             <a  href="#admin" 
@@ -290,10 +292,9 @@
         </div>                        
         </div>
     </div>
-    </div>
-        <a href ="{{=URL(c='usuarios',f ='agregar')}}" id="sombra"> 
-        {{=IMG(_src=URL('static', 'icon/i_add.png'),_height='55',_alt='Agregar Producto') }}
-        </a>
+    <a href ="{{=URL(c='usuarios',f ='agregar')}}" id="sombra"> 
+    {{=IMG(_src=URL('static', 'icon/i_add.png'),_height='55',_alt='Agregar Producto') }}
+    </a>
 
 <!-- Modal Eliminar-->
   <div id="modalEliminarUsuario" class="modal fade" role="dialog">

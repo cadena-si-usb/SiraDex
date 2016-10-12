@@ -160,6 +160,7 @@ def modificar():
         form = SQLFORM.factory(
                         Field("USBID", default=request.args[0],writable = False),
                         readonly=True)
+        
         forma=SQLFORM(
                 db.USUARIO,
                 button=['Actualizar'],
@@ -167,6 +168,7 @@ def modificar():
                 labels={'tipo':'TIPO'})
         forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
         forma.element(_type='submit')['_value']="Actualizar"
+        
         if len(request.vars)!=0:
             if (not db(db.USUARIO.usbid == request.args[0]).isempty()):
                 if(request.args[0] != session.usuario["usbid"]):
