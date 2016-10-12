@@ -487,6 +487,6 @@ def obtener_actividades():
 
     for tipo in tiposA:
         option = tipo.nombre
-        concat += '<option value="'+option+'">'+option+'</option>'
+        concat += '<option value="'+tipo.id_tipo+'">'+option+'</option>'
 
     return "jQuery('#lista_tipos').empty().append('"+concat+"')"
