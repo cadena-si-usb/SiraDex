@@ -134,7 +134,7 @@
 
                 <!--Actividades-->
                 <span>Tipo Actividad:</span>
-                <select name="TipoActividad" id="lista_tipos2" onchange="ajax('obtener_autores', ['TipoActividad'], ':eval')">
+                <select name="TipoActividad" id="lista_tipos2">
                     <option></option>
                     {{for x in rowsT:}}
                     <option value="{{=x['nombre']}}">{{=x['nombre']}}</option>

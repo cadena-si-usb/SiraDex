@@ -84,6 +84,7 @@ def login_cas():
             datosUsuario = db(tablaUsuarios.usbid==usbid).select()[0]
             session.usuario['tipo'] = datosUsuario.tipo
             session.usuario['alternativo'] = datosUsuario.correo_alter
+
             session.usuario['phone'] = datosUsuario.telefono
 
             if datosUsuario.tipo == "Bloqueado":
@@ -93,12 +94,14 @@ def login_cas():
                 redirect(URL('perfil'))
         else:
             session.usuario['tipo'] = "Usuario"
+            session.usuario['alternativo'] = None
 
             db.USUARIO.insert(ci=session.usuario["cedula"],  # Lo insertamos en la base de datos.
             usbid=session.usuario["usbid"],
             nombres=session.usuario["first_name"],
             apellidos=session.usuario["last_name"],
             correo_inst=session.usuario["email"],
+            correo_alter= None,
             telefono=session.usuario["phone"],
             tipo = "Usuario")
             redirect(URL('vRegistroUsuario'))
@@ -487,17 +490,3 @@ def obtener_actividades():
         concat += '<option value="'+option+'">'+option+'</option>'
 
     return "jQuery('#lista_tipos').empty().append('"+concat+"')"
-
-def obtener_autores():
-    tipoA = db(db.TIPO_ACTIVIDAD.nombre==request.vars.TipoActividad).select().first()
-    sql = "select nombres from usuario where ci in (select ci_usu_creador from producto where id_tipo=="+str(tipoA.id_tipo)+");"
-    autores = db.executesql(sql)
-
-    concat = "<option></option>"
-
-    for autor in autores:
-        option = autor.nombre
-        print option
-        concat += "<option value="+option+">"+option+"</option>"
-
-    return 'jQuery("#lista_autores").empty().append("%s")'% repr(concat)
