@@ -282,11 +282,11 @@ def index():
     return locals()
 
 def obtener_actividades():
-    if request.vars.Programa[0]=="all":
-        print "hello"
+
+    if request.vars.Programa=="all":
         tiposA = db(db.TIPO_ACTIVIDAD).select()
     else:
-        tiposA = db(db.TIPO_ACTIVIDAD.id_programa==int(request.vars.Programa[0])).select()
+        tiposA = db(db.TIPO_ACTIVIDAD.id_programa==int(request.vars.Programa)).select()
     
     concat = '<option value="all" selected="">--cualquiera--</option>'
 
