@@ -119,7 +119,7 @@
             <center> <p>¿Está seguro que quiere restaurar este Tipo de Actividad?</p> </center>
             <br>
             <center>
-                <a>
+                <a href="javascript:location.reload();">
                   <button type="button"
                           id="botonRestaurarTipoActividad"
                           class="btn blue-add btn-border">
@@ -147,7 +147,7 @@
             <center> <p>¿Está seguro que desea eliminar de manera permanente este tipo de Actividad? Se borraran todas las actividades asociadas al mismo</p> </center>
             <br>
             <center>
-                <a>
+                <a href="javascript:location.reload();">
                   <button type="button"
                           class="btn blue-add btn-border"
                           id="botonEliminarTipoActividad"
@@ -243,14 +243,17 @@
     $('#ModalEliminarTipoActividad').on('show.bs.modal', function (event){
 
         if (event.relatedTarget != null){
+            
             $("#botonEliminarTipoActividad").attr("data-id-tipo", event.relatedTarget.getAttribute("data-id-tipo"));
+            
         }
     });
 
     $("#botonEliminarTipoActividad").click(function (event){
 
-        var id_tipo = $("#botonEliminarTipoActividadTipoActividad").attr("data-id-tipo");
-        ajax("{{=URL('eliminar_tipo_papelera')}}/"+id_tipo,[]);
+        var id_tipo = $("#botonEliminarTipoActividad").attr("data-id-tipo");
+        
+        ajax("{{=URL(c='archivo_historico',f='eliminar_tipo_papelera')}}/"+id_tipo,[]);
         location.reload();
     });
 
