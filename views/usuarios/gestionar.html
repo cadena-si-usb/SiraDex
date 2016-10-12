@@ -84,7 +84,7 @@
                     <!-- Boton Modificar -->
                     <td class="center-vertically"> 
                     <center>
-                    <a href="{{=URL(f='vModificarRol', args=[ admin.usbid ] )}}">
+                    <a href="{{=URL(c='usuarios',f='modificar', args=[ admin.usbid ] )}}">
                     <span class="glyphicon glyphicon-edit green-icn"></span>
                     </a>
                     </center>
@@ -92,7 +92,7 @@
                     <!-- Boton Eliminar -->                    
                     <td class="center-vertically">
                     <center>
-                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar este admin?')) {window.location.href = '{{=URL(f='vEliminarUsuario',args=[ admin.usbid ] )}}';}">
+                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar este admin?')) {window.location.href = '{{=URL(c='usuarios',f='eliminar',args=[ admin.usbid ] )}}';}">
                     <span class="glyphicon glyphicon-remove red"></span>
                     </a>
                     </center>
@@ -125,7 +125,7 @@
                     <!-- Boton Modificar -->
                     <td class="center-vertically"> 
                     <center>
-                    <a href="{{=URL(f='vModificarRol', args=[ usuario.usbid ] )}}">
+                    <a href="{{=URL(c='usuarios',f='modificar', args=[ usuario.usbid ] )}}">
                     <span class="glyphicon glyphicon-edit green-icn"></span>
                     </a>
                     </center>
@@ -133,7 +133,7 @@
                     <!-- Boton Eliminar -->                    
                     <td class="center-vertically">
                     <center>
-                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar este usuario?')) {window.location.href = '{{=URL(f='vEliminarUsuario',args=[ usuario.usbid ] )}}';}">
+                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar este usuario?')) {window.location.href = '{{=URL(c='usuarios',f='eliminar',args=[ usuario.usbid ] )}}';}">
                     <span class="glyphicon glyphicon-remove red"></span>
                     </a>
                     </center>
@@ -167,7 +167,7 @@
                     <!-- Boton Modificar -->
                     <td class="center-vertically"> 
                     <center>
-                    <a href="{{=URL(f='vModificarRol', args=[ usuario.usbid ] )}}">
+                    <a href="{{=URL(c='usuarios',f='modificar', args=[ usuario.usbid ] )}}">
                     <span class="glyphicon glyphicon-edit green-icn"></span>
                     </a>
                     </center>
@@ -175,7 +175,7 @@
 
                     <td class="center-vertically">
                     <center>
-                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar a este usuario?')) {window.location.href = '{{=URL(f='vEliminarUsuario',args=[ usuario.usbid ] )}}';}">
+                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar a este usuario?')) {window.location.href = '{{=URL(c='usuarios',f='eliminar',args=[ usuario.usbid ] )}}';}">
                     <span class="glyphicon glyphicon-remove red"></span>
                     </a>
                     </center>
@@ -209,7 +209,7 @@
                     <!-- Boton Modificar -->
                     <td class="center-vertically"> 
                     <center>
-                    <a href="{{=URL(f='vModificarRol', args=[ usuario.usbid ] )}}">
+                    <a href="{{=URL(c='usuarios',f='modificar', args=[ usuario.usbid ] )}}">
                     <span class="glyphicon glyphicon-edit green-icn"></span>
                     </a>
                     </center>
@@ -217,7 +217,7 @@
 
                     <td class="center-vertically">
                     <center>
-                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar a este usuario?')) {window.location.href = '{{=URL(f='vEliminarUsuario',args=[ usuario.usbid ] )}}';}">
+                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar a este usuario?')) {window.location.href = '{{=URL(c='usuarios',f='eliminar',args=[ usuario.usbid ] )}}';}">
                     <span class="glyphicon glyphicon-remove red"></span>
                     </a>
                     </center>
@@ -251,7 +251,7 @@
                     <!-- Boton Modificar -->
                     <td class="center-vertically"> 
                     <center>
-                    <a href="{{=URL(f='vModificarRol', args=[ usuario.usbid ] )}}">
+                    <a href="{{=URL(c='usuarios',f='modificar', args=[ usuario.usbid ] )}}">
                     <span class="glyphicon glyphicon-edit green-icn"></span>
                     </a>
                     </center>
@@ -259,7 +259,7 @@
 
                     <td class="center-vertically">
                     <center>
-                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar a este usuario?')) {window.location.href = '{{=URL(f='vEliminarUsuario',args=[ usuario.usbid ] )}}';}">
+                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar a este usuario?')) {window.location.href = '{{=URL(c='usuarios',f='eliminar',args=[ usuario.usbid ] )}}';}">
                     <span class="glyphicon glyphicon-remove red"></span>
                     </a>
                     </center>
@@ -273,7 +273,7 @@
         </div>
     </div>
     </div>
-        <a href ="{{=URL('vAgregarUsuario')}}" id="sombra"> 
+        <a href ="{{=URL(c='usuarios',f ='agregar')}}" id="sombra"> 
         {{=IMG(_src=URL('static', 'icon/i_add.png'),_height='55',_alt='Agregar Producto') }}
         </a>
 {{end}}
