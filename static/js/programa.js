@@ -9,7 +9,7 @@ $(document).ready(function(){
   // Obtengo la lista de errores generados por el formulario de editar.
   var mensajeErrorEditar = $("#modalEditar").attr("data-hayErroresEditar");
   mensajeErrorEditar = mensajeErrorEditar.replace(/<Storage |>/gi, "").replace(/'/g, '"')
-  console.log(mensajeErrorEditar);
+  
   // Definición del comportamiento del botón agregar programa cuando se hace click.
   $("#agregarProgBtn").click(function(){
     // Muestra la cantidad de caracteres disponible en el textfield de nombre.
@@ -30,9 +30,9 @@ $(document).ready(function(){
       var id_programa = $(e.relatedTarget).data('id-programa');
       var nombre      = $(e.relatedTarget).data('nombre');
       var descripcion = $(e.relatedTarget).data('descripcion');
+      localStorage.setItem("programaEditar", id_programa);
       $(e.currentTarget).find('input[name="id_programa"]').val(id_programa);
       $(e.currentTarget).find('input[name="Nombre"]').val(nombre);
-      console.log(descripcion);
       $(e.currentTarget).find("#no_table_Descripcion").val(descripcion);
 
       // Muestra la cantidad de caracteres disponible en el textfield de nombre.
@@ -47,6 +47,7 @@ $(document).ready(function(){
       var programaEditar = localStorage.getItem("programaEditar");
       $('span[data-id-programa="' + programaEditar + '"]').click();
       $(".error_wrapper").css('color','red');
+      console.log(programaEditar);
   }
 
   // Se tuvo que añadir el id al formulario para poder editarlo o eliminarlo en
