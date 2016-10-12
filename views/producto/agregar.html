@@ -69,7 +69,7 @@
 	                    	Tipo Actividad (*)
 	                    </label>
 	                    <div class="col-sm-9">
-		                    <select class="form-control" name="id_tipo" id="lista_tipos" >
+		                    <select class="form-control" name="id_tipo" id="lista_tipos"  onchange="ajax('seleccion_actividad', ['id_tipo'], ':eval')">
 		                    	<!--Con el ajax traemos las actividades-->      
 		                    </select>
 		                </div>
