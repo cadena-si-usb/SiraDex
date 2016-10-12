@@ -1,8 +1,34 @@
 # Funcion para busquedas publicas
 def busqueda():
-        sql = "SELECT "
+    if request.vars.Programa == "all" and request.vars.TipoActividad == "all":
+        sql = "SELECT nombre FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
+         + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor + "%\');" 
 
-        print request.vars
+        productos = db.executesql(sql)
+
+    elif request.vars.Programa != "all" and request.vars.TipoActividad == "all":
+        sql = "SELECT nombre FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
+         + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
+         + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + request.vars.Programa + ");"
+
+        productos = db.executesql(sql)
+
+    elif request.vars.Programa == "all" and request.vars.TipoActividad != "all":
+        sql = "SELECT nombre FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
+         + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
+         + "%\') AND id_tipo=\'" + request.vars.TipoActividad + "\';" 
+
+        productos = db.executesql(sql)
+
+    else:
+        sql = "SELECT nombre FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
+         + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
+         + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + request.vars.Programa\
+         + ") AND id_tipo=\'" + request.vars.TipoActividad + "\' ;"
+
+        productos = db.executesql(sql)
+
+    return locals()
 
 # Vista de validaciones
 def gestionar_validacion():
