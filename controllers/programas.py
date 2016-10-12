@@ -139,7 +139,7 @@ def eliminar_programa():
 
     programa = db(db.PROGRAMA.id_programa == id_programa).select()[0]
 
-    programa.papelera           = True,
+    programa.papelera           = True
     programa.modif_fecha        = request.now
     programa.ci_usu_modificador = session.usuario['cedula']
     programa.update_record()
