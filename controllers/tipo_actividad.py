@@ -307,7 +307,8 @@ def enviar_tipo_papelera():
 '''
 def gestionar_archivo_historico():
 
-    listaTipoActividad = db(db.TIPO_ACTIVIDAD.papelera == True).select(db.TIPO_ACTIVIDAD.nombre,
+    listaTipoActividad = db( (db.TIPO_ACTIVIDAD.papelera == True) &
+                             (db.TIPO_ACTIVIDAD.id_programa == request.args(0)) ).select(db.TIPO_ACTIVIDAD.nombre,
                                                                        db.TIPO_ACTIVIDAD.descripcion,
                                                                        db.TIPO_ACTIVIDAD.modif_fecha,
                                                                        db.TIPO_ACTIVIDAD.id_tipo,
@@ -361,7 +362,7 @@ def restaurar_tipo():
 
 #. --------------------------------------------------------------------------- .
 '''
- Metodo que restaura un Programa
+ Metodo que restaurar un Programa de la P
 '''
 def restaurar_programa():
     id_programa = int(request.args[0])
