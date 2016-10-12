@@ -25,15 +25,15 @@
 {{end}}
 
 {{block descripcion}}
-<div class="col-lg-12">
-    <p class="text-justify">
+<div class="text-justify">
+    
+    <p>
     Tiene como objetivo promover, planificar, coordinar y evaluar las políticas universitarias mediante las cuales la Universidad se vincula con la sociedad y amplía, complementa y profundiza los alcances de aquellos postulados de su misión relativos tanto a aspectos formativos, educativos y de acción comunitaria, como a los referidos a la generación e instrumentación de conocimientos para la resolución de los problemas concretos del país. Asimismo, tiene como propósito hacer de la Universidad un actor protagónico cooperante en el desarrollo del país, fomentar la integración de la comunidad universitaria y fortalecer la formación integral y la sensibilidad social del estudiante.
-    </p>
+
     <br>
     <br>
-    <p class="text-justify">
+
     Los programas asignados por el Consejo Directivo al Decanato de Extensión son:
-    </p>
     <ul>
     <li>La educación permanente</li>
     <li>La acción social y el desarrollo comunitario</li>
@@ -48,7 +48,6 @@
     </ul>
     <br>
     <br>
-    Puedes buscar productos en el buscador que sirve para buscar productos:
     </p>
 </div>
 {{end}}
@@ -89,53 +88,55 @@
         <br>
             <!-- Filtros -->
             <div id="filtros">
-            <center>
-                <div role = "menu" class="tab-pane">
-                    <!--Filtro de Programa-->
-                    <div class="form-group">
-                        <label for="Programa"> Programas</label>
-                        <select name="Programa" 
-                                class="form-control"
-                                onchange="ajax('obtener_actividades', ['Programa'], ':eval')">
-                            
-                            <option value="all" selected="">--cualquiera--</option>
-                            
-                            {{for x in rows:}}
-                                <option value="{{=x['id_programa']}}">{{=x['nombre']}}</option>
-                            {{pass}}
-                        </select>
-                    </div>
+                <center>
+                    <div role = "menu" class="tab-pane">
+                        <!--Filtro de Programa-->
+                        <div class="form-group">
+                            <label for="Programa"> Programas</label>
+                            <select name="Programa" 
+                                    class="form-control"
+                                    onchange="ajax('obtener_actividades', ['Programa'], ':eval')">
+                                
+                                <option value="all" selected="">--cualquiera--</option>
+                                
+                                {{for x in rows:}}
+                                    <option value="{{=x['id_programa']}}">{{=x['nombre']}}</option>
+                                {{pass}}
+                            </select>
+                        </div>
 
-                    <!-- Filtro de Tipo de Actividad -->
-                    <div class="form-group">
-                        <label for="TipoActividad"> Tipo Actividad:</label>
-                        <select name="TipoActividad" 
-                                class="form-control"
-                                id="lista_tipos" >
-                            
-                            <option value="all" selected="">--cualquiera--</option>
-                            
-                            {{for x in rowsT:}}
-                                <option value="{{=x['id_tipo']}}">{{=x['nombre']}}</option>
-                            {{pass}}
-                        </select>
-                    </div>
-                    <br>
-                    <br>
-                    <!-- Filtro de Fecha -->
-                    <div class="form-group">
-                        <label for="date">Fecha:</label>
-                        <input type="date" name="fecha" max='{{=fecha}}' id="focusedInput" class="form-control"/>
+                        <!-- Filtro de Tipo de Actividad -->
+                        <div class="form-group">
+                            <label for="TipoActividad"> Tipo Actividad:</label>
+                            <select name="TipoActividad" 
+                                    class="form-control"
+                                    id="lista_tipos" >
+                                
+                                <option value="all" selected="">--cualquiera--</option>
+                                
+                                {{for x in rowsT:}}
+                                    <option value="{{=x['id_tipo']}}">{{=x['nombre']}}</option>
+                                {{pass}}
+                            </select>
+                        </div>
+                        
+                        <br>
+                        <br>
+                        
+                        <!-- Filtro de Fecha -->
+                        <div class="form-group">
+                            <label for="date">Fecha:</label>
+                            <input type="date" name="fecha" max='{{=fecha}}' id="focusedInput" class="form-control"/>
 
-                    </div>
+                        </div>
 
-                    <!-- Filtro de Autor -->
-                    <div class="form-group">
-                        <label for="Autor">Autor:</label>
-                        <input type="text" name="Autor" id="focusedInput" class="form-control"/>
+                        <!-- Filtro de Autor -->
+                        <div class="form-group">
+                            <label for="Autor">Autor:</label>
+                            <input type="text" name="Autor" id="focusedInput" class="form-control"/>
+                        </div>
                     </div>
-                </div>
-            </center>
+                </center>
             </div>
     </form>        
 
@@ -143,7 +144,6 @@
 {{end}}
 
 {{block footer}}
-    <div id="footer" class="container-fluid">
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
 {{end}}
