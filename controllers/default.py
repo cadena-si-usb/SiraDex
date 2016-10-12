@@ -85,6 +85,7 @@ def login_cas():
             datosUsuario = db(tablaUsuarios.usbid==usbid).select()[0]
             session.usuario['tipo'] = datosUsuario.tipo
             session.usuario['alternativo'] = datosUsuario.correo_alter
+            
             print session.usuario['alternativo']
             session.usuario['phone'] = datosUsuario.telefono
 
@@ -97,12 +98,14 @@ def login_cas():
                 redirect(URL('perfil'))
         else:
             session.usuario['tipo'] = "Usuario"
+            session.usuario['alternativo'] = None
 
             db.USUARIO.insert(ci=session.usuario["cedula"],  # Lo insertamos en la base de datos.
             usbid=session.usuario["usbid"],
             nombres=session.usuario["first_name"],
             apellidos=session.usuario["last_name"],
             correo_inst=session.usuario["email"],
+            correo_alter= None,
             telefono=session.usuario["phone"],
             tipo = "Usuario")
             redirect(URL('vRegistroUsuario'))
