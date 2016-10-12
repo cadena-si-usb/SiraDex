@@ -35,9 +35,12 @@ CREATE TABLE JEFE_DEPENDENCIA(
 );
 
 CREATE TABLE PROGRAMA(
-  id_programa  SERIAL        NOT NULL,
-  nombre       VARCHAR(256)  NOT NULL,
-  descripcion  Varchar(2048) NOT NULL,
+  id_programa  			SERIAL        NOT NULL,
+  nombre       			VARCHAR(256)  NOT NULL,
+  descripcion  			Varchar(2048) NOT NULL,
+  papelera            	BOOLEAN NOT NULL DEFAULT FALSE,
+  ci_usu_modificador  	VARCHAR(10),
+  modif_fecha         	DATE,
 
   CONSTRAINT PK_PROGRAMA
              PRIMARY KEY (id_programa)

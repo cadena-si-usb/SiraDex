@@ -288,9 +288,11 @@ def eliminar_campos():
 def enviar_tipo_papelera():
     
     programa_id = request.args[1]
+    admin=get_tipo_usuario()
     id_tipo = request.args[0]
     tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
     tipo.update(papelera=True)
+    #tipo.update(ci_usuario_propone="21467704");
     tipo.update_record()
     redirect(URL('gestionar',args=[programa_id]))
 
@@ -299,7 +301,10 @@ def enviar_tipo_papelera():
  Vista de gestion de la papelera
 '''
 def gestionar_archivo_historico():
-    return dict(admin=get_tipo_usuario())
+    listaPapelera = db(db.TIPO_ACTIVIDAD.papelera == True).select(db.TIPO_ACTIVIDAD.nombre,
+                                                        db.TIPO_ACTIVIDAD.descripcion,
+                                                        db.TIPO_ACTIVIDAD.id_tipo)
+    return dict(admin=get_tipo_usuario(), listaPapelera=listaPapelera)
 
 #. --------------------------------------------------------------------------- .
 '''

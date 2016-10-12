@@ -165,6 +165,9 @@ db.define_table('PROGRAMA',
     Field('id_programa', type='id'),
     Field('nombre',type='string',length=256, notnull=True, unique=True),
     Field('descripcion',type='string',length=2048, notnull=True, unique=True),
+    Field('papelera', type='boolean', notnull = True, default=False),
+    Field('modif_fecha', type='date'),
+    Field('ci_usu_modificador', db.USUARIO.ci),
     primarykey=['id_programa'],
     migrate=False
 );

@@ -47,7 +47,7 @@ def gestionar_programas():
     admin = get_tipo_usuario()
 
     # Obtengo todos los programas almacenados en la base de datos.
-    programas = db().select(db.PROGRAMA.ALL)
+    programas = db( db.PROGRAMA.papelera == False ).select(db.PROGRAMA.ALL)
 
     # Para agregar un programa.
     formulario = SQLFORM.factory(
@@ -133,8 +133,11 @@ def gestionar_programas():
 
 
 def eliminar_programa():
-    admin = get_tipo_usuario()
-    db(db.PROGRAMA.id==request.args(0)).delete()
+    id_programa = request.args[0]
+    programa = db(db.PROGRAMA.id_programa == id_programa).select(db.PROGRAMA.ALL).first()
+    programa.update(papelera=True)
+    #tipo.update(ci_usuario_propone="21467704");
+    programa.update_record()
     redirect(URL('gestionar_programas.html'))
     return locals()
 

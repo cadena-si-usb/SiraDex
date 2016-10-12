@@ -53,7 +53,7 @@ def login_cas():
     session.usuario = dict()
     session.usuario['usbid'] = "00-00000"
     session.usuario['tipo'] = "Administrador"
-    session.usuario["first_name"] = "Usuario"
+    session.usuario["nombres"] = "Usuario"
     session.usuario["last_name"] = "Parche"
     session.usuario['cedula'] = 21467704
     session.usuario["email"] = "usuarioparche@gmail.com"
