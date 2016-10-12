@@ -35,7 +35,7 @@ def gestionar():
                                  descripcion = request.vars.Descripcion,
                                  id_programa = id_programa)
 
-    listaTipoActividades = db( (db.TIPO_ACTIVIDAD.papelera == False) and
+    listaTipoActividades = db( (db.TIPO_ACTIVIDAD.papelera == False) &
                                (db.TIPO_ACTIVIDAD.id_programa == request.args(0) ) ).select(db.TIPO_ACTIVIDAD.nombre,
                                                                                 db.TIPO_ACTIVIDAD.descripcion,
                                                                                 db.TIPO_ACTIVIDAD.id_tipo)
@@ -287,12 +287,12 @@ def eliminar_campos():
 '''
 def enviar_tipo_papelera():
     
+    programa_id = request.args[1]
     id_tipo = request.args[0]
     tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
     tipo.update(papelera=True)
     tipo.update_record()
-    session.message = 'Tipo Enviado a la Papelera'
-    redirect(URL('gestionar.html'))
+    redirect(URL('gestionar',args=[programa_id]))
 
 #. --------------------------------------------------------------------------- .
 '''

@@ -1,4 +1,13 @@
 $(document).ready(function(){
+    // Pasamos los argumentos para eliminar catalogo.
+  $('#myModalDelete').on('show.bs.modal', function(e){
+      var linkEliminar = $(e.relatedTarget).data('link-eliminar-tipo');
+      $("#BotonEliminar").attr("href", linkEliminar);
+  });
+});
+
+$(document).ready(function(){
+
   var maxLongNombre  = 128;    // Longitud máxima que tendrá el campo nombre.
   var maxLongDescrip = 2048;   // Longitud máxima que tendrá el campo descripción.
   var hayPrograma = $(".formularioTipo").attr("data-hayPrograma");
@@ -14,4 +23,5 @@ $(document).ready(function(){
   {
     $(".formularioTipo").hide();
   }
+
 });

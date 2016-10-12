@@ -1,6 +1,5 @@
 {{extend 'layoutSIRADEXloged.html'}}
 
-
 {{block titulo}}
     Programa: {{=programa_datos.nombre}}
 {{end}}
@@ -13,6 +12,10 @@
 {{end}}
 
 {{block contenido}}
+
+    <script src="{{=URL('static','js/global.js')}}"></script>
+    <script src="{{=URL('static','js/tipo_actividad.js')}}"></script>
+
       <div class="row">
         <div class="col-sm-6">
              <form class="navbar-form" role="search">
@@ -93,8 +96,9 @@
                                 <a>
                                    <span class="glyphicon glyphicon-remove red" 
                                          data-toggle="modal" 
-                                         data-target="#myModalDelete">
-                                       
+                                         data-target="#myModalDelete"
+                                         data-link-eliminar-tipo="{{=URL(f='enviar_tipo_papelera', 
+                                                                         args=[tipoActividad.id_tipo, programa_datos.id_programa])}}">
                                    </span>
                                 </a>
                             <center>
@@ -152,11 +156,10 @@
             <center> <p>Está seguro que quiere eliminar este tipo de Actividad.</p> </center>
             <br>
             <center>
-                <a>
-                  <button type="button" 
-                          class="btn blue-add btn-border"
-                          data-dismiss="modal">
-                      Eliminar</button>
+                <a id="BotonEliminar">
+                  <button type="button" class="btn blue-add btn-border">
+                          Eliminar
+                  </button>
                 </a>
                 <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
             </center>
