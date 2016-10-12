@@ -3,6 +3,7 @@ def busqueda():
         sql = "SELECT "
 
         print request.vars
+return locals()
 
 # Vista de validaciones
 def gestionar_validacion():

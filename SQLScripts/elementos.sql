@@ -12,4 +12,14 @@ INSERT INTO tipo_actividad values(6, '6 Actividad programa 2','p', 'descr', 2, '
 INSERT INTO tipo_actividad values(7, '7 Actividad programa 3','p', 'descr', 3, 't');
 INSERT INTO tipo_actividad values(8, '8 Actividad programa 3','p', 'descr', 3, 't');
 
+INSERT INTO catalogo values(1,1,'catalogo 1');
+INSERT INTO catalogo values(2,1,'catalogo 2');
+
+INSERT INTO campo values(1,1,'1 campo-catalogo 1','Texto Largo',true);
+INSERT INTO campo values(2,1,'2 campo-catalogo 1','Texto Largo',true);
+INSERT INTO campo values(3,2,'3 campo-catalogo 2','Texto Largo',true);
+
+INSERT INTO act_posee_campo values(1,1);
+INSERT INTO act_posee_campo values(1,2);
+INSERT INTO act_posee_campo values(1,3);
 
