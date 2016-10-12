@@ -34,7 +34,6 @@ def gestionar():
 '''
 def eliminar_tipo_papelera():
     id_tipo = int(request.args[0])
-    print("eliminar_def",id_tipo)
     query = reduce(lambda a, b: (a & b), [db.TIPO_ACTIVIDAD.papelera == True,
                                           db.TIPO_ACTIVIDAD.id_tipo == id_tipo,
                                           db.TIPO_ACTIVIDAD.id_tipo == db.ACT_POSEE_CAMPO.id_tipo_act,
@@ -56,7 +55,7 @@ def eliminar_tipo_papelera():
 
     # Guardo mensaje de exito
     session.message = 'Tipo Eliminado'
-    redirect(URL('gestionar_archivo_historico.html'))
+    redirect(URL('gestionar.html'))
 
 #. --------------------------------------------------------------------------- .
 '''
@@ -65,11 +64,17 @@ def eliminar_tipo_papelera():
 def restaurar_tipo():
 
     id_tipo = request.args[0]
-    print(id_tipo)
     tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
-    print(tipo_actividad.nombre)
     tipo_actividad.update(papelera=False)
     tipo_actividad.update_record()
-    print(tipo_actividad.papelera)
     session.message = 'Tipo Restaurado'
-    redirect(URL('gestionar_archivo_historico.html'))
+    redirect(URL('gestionar.html'))
+
+def restaurar_programa():
+    id_programa = request.args[0]
+    programa = db(db.PROGRAMA.id_programa == id_programa).select().first()
+
+    programa.papelera = False
+    programa.update_record()
+    session.message = 'Programa Restaurado.'
+    redirect(URL('gestionar.html'))
