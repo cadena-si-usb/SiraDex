@@ -78,7 +78,7 @@ CREATE TABLE PRODUCTO(
   estado          VARCHAR DEFAULT 'En Espera',
   evaluacion_criterio VARCHAR(256),
   evaluacion_valor    VARCHAR(256),
-  modif_fecha         DATE,
+  fecha               DATE,
   ci_usu_modificador  VARCHAR(10),
   ci_usu_creador      VARCHAR(10),
 
