@@ -85,16 +85,6 @@ def agregar():
 
                     # Primero verificamos que el usuario que intenta agregarse no esta en la base de datos
                     if db(db.USUARIO.usbid == usbidAux).isempty():
-                        # Lo insertamos en la base de datos.
-                        db.USUARIO.insert(ci=user["cedula"],
-                                usbid=usbidAux,
-                                nombres=datosCompAux[1],
-                                apellidos=datosCompAux[2],
-                                correo_inst=user["email"],
-                                telefono = telefonoAux,
-                                correo_alter = correo_alterAux,
-                                tipo = tipoAux)
-
                         # Luego de insertar al usuario, mostramos un formulario al administrador con los datos de la persona agregada
                         form = SQLFORM.factory(
                             Field("USBID", default=datosCompAux[0],writable = False),
@@ -102,6 +92,15 @@ def agregar():
                             Field('apellidos', default=datosCompAux[2],writable=False),
                             readonly=True)
                         if len(tipoAux) >= 3:
+                        # Lo insertamos en la base de datos.
+                            db.USUARIO.insert(ci=user["cedula"],
+                                    usbid=usbidAux,
+                                    nombres=datosCompAux[1],
+                                    apellidos=datosCompAux[2],
+                                    correo_inst=user["email"],
+                                    telefono = telefonoAux,
+                                    correo_alter = correo_alterAux,
+                                    tipo = tipoAux)                            
                             return dict(form = form, message = message, bool = 1, admin=get_tipo_usuario())
                         else:
                             message = T("Debe Especificar un Tipo")
