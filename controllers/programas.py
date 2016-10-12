@@ -100,21 +100,24 @@ def gestionar_programas():
 
     # Se verifica si los campos están llenos correctamente.
     if formulario_editar.accepts(request.vars, session, formname="formulario_editar"):
-        programa = db(db.PROGRAMA.id_programa == request.vars.id_programa).select()[0]
+        id_programa  = int(request.vars.id_programa)
+        programa = db(db.PROGRAMA.id_programa == id_programa).select()[0]
 
-        nombre_repetido    = False
+        nombre_repetido = False
 
         todos_programas = db().select(db.PROGRAMA.ALL)
 
         for programa in todos_programas:
             if (programa.nombre == request.vars.Nombre and
-                programa.id_programa != request.vars.id_programa):
+                programa.id_programa != request.id_programa):
                 nombre_repetido = True
                 break
 
+        print nombre_repetido
+
         # Si el nombre no esta repetido, modificamos el campo
         if nombre_repetido:
-            session.message = 'Ya existe un programa llamado "' + request.vars.Nombre + '".'
+            formulario_editar.errors.Nombre = 'Ya existe un programa llamado "' + request.vars.Nombre + '".'
         else:
             programa.nombre = request.vars.Nombre
             programa.descripcion = request.vars.Descripcion
@@ -127,9 +130,10 @@ def gestionar_programas():
         session.message = 'Error en los datos del formulario, por favor intente nuevamente.'
 
     # MÉTODO POST FORMULARIO EDITAR:
-
+    print formulario_editar.errors
     return dict(admin=admin, programas=programas, hayErroresAgregar=formulario.errors,
-                formulario=formulario, formulario_editar=formulario_editar)
+                hayErroresEditar=formulario_editar.errors, formulario=formulario,
+                formulario_editar=formulario_editar)
 
 
 def eliminar_programa():
