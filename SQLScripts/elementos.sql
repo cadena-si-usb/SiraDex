@@ -23,3 +23,7 @@ INSERT INTO act_posee_campo values(1,1);
 INSERT INTO act_posee_campo values(1,2);
 INSERT INTO act_posee_campo values(1,3);
 
+INSERT INTO usuario values('123', 'usbid123','francisco', 'rojas','123456', 'correo1');
+INSERT INTO usuario values('431', 'usbid431','frandres', 'rrrs','123r', 'correo2');
+
+INSERT INTO producto values(2, 2,'productisimo','','', '','','123',NULL);
