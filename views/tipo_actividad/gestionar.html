@@ -85,7 +85,7 @@
                     {{for tipoActividad in listaTipoActividades: }}
                     <tr>
                         <td class="col-md-4">
-                            <a href="{{=URL(c='tipo_actividad', f='ver_tipo_actividad.html',args=[tipoActividad.id_tipo])}}">
+                            <a href="{{=URL(c='tipo_actividad', f='ver_tipo_actividad',args=[tipoActividad.id_tipo])}}">
                                 {{=tipoActividad.nombre}}
                             </a>
                         </td>
