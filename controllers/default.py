@@ -283,6 +283,7 @@ def index():
 
 def obtener_actividades():
     if request.vars.Programa[0]=="all":
+        print "hello"
         tiposA = db(db.TIPO_ACTIVIDAD).select()
     else:
         tiposA = db(db.TIPO_ACTIVIDAD.id_programa==int(request.vars.Programa[0])).select()
