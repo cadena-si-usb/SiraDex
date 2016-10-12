@@ -56,12 +56,12 @@
             {{else:}}
                 {{for programa in programas:}}
                     <tr>
-                        <td><a class="a-table" href="{{=URL(c='tipo_actividad', f='gestionar', args=[programa.id_programa])}}">{{=programa.nombre}}</a></td>
+                        <td><a class="a-table" href="{{=URL(c='tipo_actividad', f='gestionar.html')}}/{{=programa.id_programa}}">{{=programa.nombre}}</a></td>
                         <td><center>{{=programa.descripcion}}</center></td>
                         <td class="center-vertically">
                             <center>
                                 <a>
-                                    <span class="glyphicon glyphicon-edit blue" id="editarProgBtn" data-toggle="modal"
+                                    <span class="glyphicon glyphicon-edit blue botonEditar" id="editarProgBtn" data-toggle="modal"
                                           data-id-programa={{=programa.id_programa}}
                                           data-nombre="{{=programa.nombre}}"
                                           data-descripcion="{{=programa.descripcion}}"
@@ -111,7 +111,7 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <center><h4 class="modal-title">Editar Programa</h4><center>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" id="modalEditar" data-hayErroresEditar="{{=hayErroresEditar}}">
           <p> <center> {{=formulario_editar}} </center> </p>
       </div>
     </div>

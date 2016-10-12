@@ -1,42 +1,9 @@
-{{#extend 'SIRADEX_tipos_Actividad_layout.html'}}
-{{extend 'SIRADEXLayout.html'}}
+
 <link href="{{=URL('static', 'css/camposFormStyle.css')}}" rel="stylesheet" type="text/css" />
 <script src="{{=URL('static','js/global.js')}}"></script>
 <script src="{{=URL('static','js/campo_tipo_actividad.js')}}"></script>
 
-<div class = "session_message">
-    {{ = session.message or ''}}
-</div>
-Agregue la cantidad de campos que desee
-<br/>
-<br/>
-<div id = 'campos' >
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <td class="col-md-6">Nombre</td>
-                <td class="col-md-3">Tipo</td>
-                <td class="col-md-2">Obligatorio</td>
-                <td class="col-md-1"></td>
-            </tr>
-        </thead>
-        <tbody>
-            {{for campo in campos:}}
-                <tr>
-                    <td class="col-md-6">{{=campo.CAMPO.nombre}}</td>
-                    <td class="col-md-3">{{=campo.CAMPO.tipo_campo}}</td>
-                    <td class="col-md-2">{{=campo.CAMPO.obligatorio}}</td>
-                    <td class="col-md-1">
-                        <a href = "{{=URL(f='eliminar_campo', args=[ campo.CAMPO.id_campo ] )}}">
-                            {{=IMG(_src=URL('static', 'iconos/Delete.png'))}}
-                        </a>
-                    </td>
-                </tr>
-            {{pass}}
-        </tbody>
-    </table>
-</div>
-<br/>
+
 <div id = 'formulario'>
     <!-- Formulario para agregar un único campo. -->
     {{= formSimple.custom.begin}}
