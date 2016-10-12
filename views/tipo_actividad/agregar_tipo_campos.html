@@ -19,7 +19,7 @@
         </tr>
     </table>
     {{= formSimple.custom.end}}
-
+    <br>
     <!-- formulario para agregar campos provenientes de un catálogo. -->
     {{= formMultiple.custom.begin}}
     <table class="table table-condensed">
@@ -32,14 +32,16 @@
     {{= formMultiple.custom.end}}
 
 </div>
-<br/><br/><br/>
-<div id="buttons" class="container-fluid">
-    <row>
-        <div class="col-md-2">
-        <input type=button class="btn btn-primary" onClick="parent.location='{{=URL('tipo_actividad', 'agregar_tipo_aux')}}'" value='Finalizar'>
-        </div>
-        <div class="col-md-2 col-md-offset-3">
-        <input type=button class="btn btn-primary" onClick="parent.location='{{=URL('tipo_actividad', 'eliminar_campos') }}'" value='Abortar'>
-        </div>
-    </row>
+<br></br>
+<div class="container-fluid">
+    <div class= "row">
+        <center>
+            <div class="col-md-3 col-sm-offset-3">
+                <input type=button class="btn blue-add btn-block btn-border" onClick="parent.location='{{=URL('tipo_actividad', 'agregar_tipo_aux')}}'" value='Finalizar'/>
+            </div>
+            <div class="col-md-3">
+                <input type=button class="btn btn-default btn-block btn-border" onClick="parent.location='{{=URL('tipo_actividad', 'eliminar_campos') }}'" value='Abortar'/>
+            </div>
+        </center>
+    </div>
 </div>

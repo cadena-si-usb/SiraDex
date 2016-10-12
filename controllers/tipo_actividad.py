@@ -122,6 +122,9 @@ def agregar_tipo():
     else:
         session.message = ''
 
+    formulario_agregar_tipo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    formulario_agregar_tipo.element(_type='submit')['_value']="Agregar"
+
     return dict(formulario=formulario_agregar_tipo, admin = get_tipo_usuario(), mensaje=session.message, hayPrograma = hayPrograma)
 
 #. --------------------------------------------------------------------------- .
@@ -242,6 +245,12 @@ def agregar_tipo_campos():
         session.message = 'Datos inválidos en el catálogo.'
     else:
         session.message = ''
+
+    formSimple.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    formSimple.element(_type='submit')['_value']="Agregar"
+
+    formMultiple.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    formMultiple.element(_type='submit')['_value']="Agregar"
     
     return dict(formSimple = formSimple, formMultiple = formMultiple,
                 campos = campos_guardados, admin = get_tipo_usuario())
@@ -301,8 +310,6 @@ def enviar_tipo_papelera():
     tipo.update_record()
     session.message = 'Tipo Enviado a la Papelera'
     redirect(URL('gestionar.html'))
-
-
 
 #. --------------------------------------------------------------------------- .
 def ver_tipo_actividad():
@@ -466,6 +473,9 @@ def editar_tipo():
     else:
         session.message = ''
 
+    formulario_editar_tipo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    formulario_editar_tipo.element(_type='submit')['_value']="Editar"
+
 
     return dict(tipo=tipo, formulario=formulario_editar_tipo, admin=get_tipo_usuario())
 
@@ -511,6 +521,10 @@ def editar_campo():
 
     else :
         mensaje = ""
+
+
+    formulario_editar_campo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    formulario_editar_campo.element(_type='submit')['_value']="Editar"
 
     return dict(formulario = formulario_editar_campo, mensaje=mensaje, admin=admin)
 
