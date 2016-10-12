@@ -441,7 +441,7 @@
 /*        Filtros cableados       */
 /*                                */
 /**********************************/
- 	.filtros{
+/*  	.filtros{
 		border-collapse: separate;
 		left: -565px !important;
 		margin-left: 0 !important;
@@ -461,12 +461,13 @@
 	.filtros > .form-group > .form-control{
 		width: 100% !important;
 	}
- 
+  */
+
 /**********************************/
 /*                                */
 /*        Form horizontal         */
 /*                                */
 /**********************************/
- 	.form-horizontal{
+/*  	.form-horizontal{
 		padding: 6px 20px !important;
-	} 
+	}  */

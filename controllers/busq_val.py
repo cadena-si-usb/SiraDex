@@ -1,5 +1,7 @@
 # Funcion para busquedas publicas
 def busqueda():
+
+
     if request.vars.Programa == "all" and request.vars.TipoActividad == "all":
         sql = "SELECT nombre FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
          + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor + "%\');" 
@@ -27,7 +29,7 @@ def busqueda():
          + ") AND id_tipo=\'" + request.vars.TipoActividad + "\' ;"
 
         productos = db.executesql(sql)
-
+    print productos
     return locals()
 
 # Vista de validaciones

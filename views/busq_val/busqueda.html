@@ -1,1 +1,51 @@
 {{ extend 'layoutSIRADEX.html'}}
+
+{{block titulo}}
+	Busqueda
+{{end}}
+
+{{block navegacion}}
+    <nav class="navbar navbar-default" style="border-color:#FFF">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav navbar-right" >
+               <li class="activo">
+                <!-- EN SERVIDOR -->
+                   <!-- <a  id = login 
+                            class ='btn btn-xs' 
+                            href='http://secure.dst.usb.ve/login?service=http%3A%2F%2F159.90.211.179%2FSiraDex%2Fdefault%2Flogin_cas'> -->
+                <!-- EN DESARROLLO -->
+                        <a  class ='btn btn-xs ' 
+                            href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas'>
+                        Iniciar Sesión
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+{{end}}
+
+{{block subtitulo}}
+	
+{{end}}
+
+
+{{block contenido}}
+{{end}}
+
+{{block footer}}
+    <div id="footer" class="container-fluid">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+{{end}}
+
+{{block script}}
+    <script>
+        $(document).ready(function(){
+            $("#filtros").hide();
+            $("#btn-filtro").click(function(){
+            $("#filtros").toggle(300);
+                });
+            });
+
+    </script>
+{{end}}
