@@ -109,11 +109,9 @@ def login_cas():
             tipo = "Usuario")
             redirect(URL('vRegistroUsuario'))
     
-
 def logout_cas():
     session.usuario = None
     return response.render()
-    
 
 # Controlador para el registro del usuario
 def vRegistroUsuario():
@@ -304,49 +302,46 @@ def vAgregarUsuario():
                 fields=['usbid','tipo','telefono','correo_alter'],
                 submit_button='Agregar',
                 labels={'usbid':'USBID','telefono':'Teléfono', 'correo_alter':'Correo alternativo','tipo':'Tipo'})
+            # Estilo del boton
             forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
             forma.element(_type='submit')['_value']="Agregar"
+            
             # Si el largo de request.vars es mayor a cero, quiere decir que de introdujo informacion en el formulario.
-            if len(request.vars)!=0:
+            if len(request.vars) != 0:
                 # En usbidAux almacenamos el usbid proporcionado por el administrador
-                # En imprimir1 almacenamos la informacion del LDAP con grep
+                # En buscarUser revisamos si el usuario a agregar efectivamente esta en el CAS
                 usbidAux = request.vars.usbid
-                user = get_ldap_data(usbidAux)
-                telefonoAux = request.vars.telefono
-                correo_alterAux = request.vars.correo_alter
-                tipoAux = request.vars.tipo
-                if(len(tipoAux) < 3):
-                    message = T("Debe Especificar un Tipo")
-                    redirect(URL("vAgregarUsuario"))
-                imprimir1 = os.popen("ldapsearch -x -h ldap.usb.ve -b \"dc=usb,dc=ve\" uid="+ usbidAux +" | grep '^givenName\|^personalId\|^sn\|^uid:\|^mail\|^studentId\|^career\|^gidNumber'")
+                buscasUser = os.popen("ldapsearch -x -h ldap.usb.ve -b \"dc=usb,dc=ve\" uid="+ usbidAux +" |grep numEntries")
 
-                # Recorremos cada linea del archivo para realizar las asignaciones correspondientes de acuerdo a la informacion proporcionada por el LDAP
-                for line in imprimir1.readlines():
-                    line = line.split(':')        # Separamos los campos por los dos puntos.
-                    if line[0] == "uid":          # Primera Posicion: Carnet con guion.
-                        datosCompAux[0] = line[1]
-                    elif line[0] == "givenName":  # Segunda Posicion: Nombre(s) del usuario.
-                        datosCompAux[1] = line[1]
-                    elif line[0] == "sn":         # Tercera Posicion: Apellido(s) del usuario.
-                        datosCompAux[2] = line[1]
-                    elif line[0] == "personalId": # Cuarta Posicion: Cedula de identidad del usuario.
-                        datosCompAux[3] = line[1]
-                    elif line[0] == "gidNumber":  # Quinta Posicion: Rol del usuario (Profesor, estudiante, etc.).
-                        datosCompAux[4] = line[1]
-                    elif line[0] == "mail":       # Sexta Posicion: Email del usuario.
-                        datosCompAux[5] = line[1]
-                    elif line[0] == "career":     # Septima posicion: Carrera del usuario.
-                        datosCompAux[6] = line[1]
-                    elif line[0] == "studentId":  # Octava posicion: Carnet sin guion.
-                        datosCompAux[7] = line[1]
-
-                # Si datosCompAux esta vacio, quiere decir que no se el carnet no esta en LDAP
-                print(datosCompAux)
-                if datosCompAux[0]=="":
-                    message = T("El usuario no se encuentra asociado al CAS")
-                    #return dict(message = response.flash)
-                # En caso contrario, el usuario debe ser agregado a la base de datos de la universidad.
+                if buscasUser.read() == '':
+                    message = T("El usuario no esta registrado en el CAS")
                 else:
+                    user = get_ldap_data(usbidAux)
+                    telefonoAux = request.vars.telefono
+                    correo_alterAux = request.vars.correo_alter
+                    tipoAux = request.vars.tipo
+                    imprimir1 = os.popen("ldapsearch -x -h ldap.usb.ve -b \"dc=usb,dc=ve\" uid="+ usbidAux +" | grep '^givenName\|^personalId\|^sn\|^uid:\|^mail\|^studentId\|^career\|^gidNumber'")
+
+                    # Recorremos cada linea del archivo para realizar las asignaciones correspondientes de acuerdo a la informacion proporcionada por el LDAP
+                    for line in imprimir1.readlines():
+                        line = line.split(':')        # Separamos los campos por los dos puntos.
+                        if line[0] == "uid":          # Primera Posicion: Carnet con guion.
+                            datosCompAux[0] = line[1]
+                        elif line[0] == "givenName":  # Segunda Posicion: Nombre(s) del usuario.
+                            datosCompAux[1] = line[1]
+                        elif line[0] == "sn":         # Tercera Posicion: Apellido(s) del usuario.
+                            datosCompAux[2] = line[1]
+                        elif line[0] == "personalId": # Cuarta Posicion: Cedula de identidad del usuario.
+                            datosCompAux[3] = line[1]
+                        elif line[0] == "gidNumber":  # Quinta Posicion: Rol del usuario (Profesor, estudiante, etc.).
+                            datosCompAux[4] = line[1]
+                        elif line[0] == "mail":       # Sexta Posicion: Email del usuario.
+                            datosCompAux[5] = line[1]
+                        elif line[0] == "career":     # Septima posicion: Carrera del usuario.
+                            datosCompAux[6] = line[1]
+                        elif line[0] == "studentId":  # Octava posicion: Carnet sin guion.
+                            datosCompAux[7] = line[1]
+
                     # Primero verificamos que el usuario que intenta agregarse no esta en la base de datos
                     if db(db.USUARIO.usbid == usbidAux).isempty():
                         # Lo insertamos en la base de datos.
@@ -365,10 +360,13 @@ def vAgregarUsuario():
                             Field('Nombres',default=datosCompAux[1],writable = False),
                             Field('apellidos', default=datosCompAux[2],writable=False),
                             readonly=True)
-                        return dict(form = form, message = message, bool = 1, admin=get_tipo_usuario())
+                        if len(tipoAux) >= 3:
+                            return dict(form = form, message = message, bool = 1, admin=get_tipo_usuario())
+                        else:
+                            message = T("Debe Especificar un Tipo")
+
                     else:
                         message= T("El usuario ya esta registrado")
-                        #return dict(message = response.flash)
             return dict(form = forma,message = message, admin=get_tipo_usuario())
         else:
             redirect(URL("perfil"))
