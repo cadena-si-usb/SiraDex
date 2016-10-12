@@ -18,19 +18,28 @@ def gestionar():
 
     rows = db(db.PRODUCTO.ci_usu_creador==session.usuario['cedula']).select()
     detalles = {}
+    nombres = {}
     cant_esp = 0
     cant_val = 0
     cant_rec = 0
-
+    print '####################################'
     for row in rows:
         dict_campos = dict()
+        dict_nombres = dict()
+
         campos = db((db.PRODUCTO_TIENE_CAMPO.id_campo == db.CAMPO.id_campo)
                     & (db.PRODUCTO_TIENE_CAMPO.id_producto == row.id_producto)).select()
 
         for campo in campos:
             dict_campos[campo.CAMPO.nombre] = campo.PRODUCTO_TIENE_CAMPO.valor_campo
-
         detalles[row] = dict_campos
+
+        nombres_act = db((db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo) 
+                    & (db.PRODUCTO.id_producto == row.id_producto)).select()
+        
+        for nombre in nombres_act:
+            print nombre.TIPO_ACTIVIDAD.nombre
+            nombres[row] = nombre.TIPO_ACTIVIDAD.nombre
 
         if row["estado"] == "En espera":
             cant_esp += 1
