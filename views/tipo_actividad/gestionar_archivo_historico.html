@@ -57,7 +57,11 @@
                             <td class="center-vertically">
                                 <center>
                                     <a>
-                                        <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#myModalEliminar"></span>
+                                        <span class="glyphicon glyphicon-remove red" 
+                                              data-toggle="modal" 
+                                              data-target="#myModalEliminar"
+                                              data-link-eliminar="{{=URL(f='eliminar_tipo_papelera', args=[tipoActividad.id_tipo])}}"
+                                              ></span>
                                     </a>
                                 <center>
                              </td>
@@ -159,7 +163,7 @@
             <center> <p>¿Está seguro que desea eliminar de manera permanente este elemento? Se borraran todas las actividades asociadas al mismo</p> </center>
             <br>
             <center>
-                <a>
+                <a id="BotonEliminar">
                   <button type="button" class="btn blue-add btn-border">Eliminar</button>
                 </a>
                 <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
