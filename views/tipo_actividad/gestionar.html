@@ -25,7 +25,7 @@
 
                     <!-- Lupa -->
                     <span class="input-group-btn">
-                        <button type="submit" 
+                        <button type="submit"
                                 class="btn btn-default glyphicon glyphicon-search"
                                 id="btn-lupa" style="top:0px !important;">
                         </button>
@@ -34,15 +34,15 @@
             </form>
         </div>
         <div class="col-sm-5 col-sm-push-1" style="margin-top:10px;margin-left:50px">
-            <button type="button" 
-                    class="btn btn-default green btn-border" 
-                    data-toggle="modal" 
+            <button type="button"
+                    class="btn btn-default green btn-border"
+                    data-toggle="modal"
                     data-target="#myModal"
                     onclick="ajax('{{=URL('agregar_tipo')}}',[],'agregar_tipo_actividad');">
-              <span class="glyphicon glyphicon-plus-sign" 
+              <span class="glyphicon glyphicon-plus-sign"
                     aria-hidden="true"></span> Agregar Actividad
             </button>
-            <a href="{{=URL(c='tipo_actividad', f='gestionar_archivo_historico.html')}}" >
+            <a href="{{=URL(c='archivo_historico', f='gestionar.html')}}" >
             <button type="button" class="btn btn-default red-trash btn-border">
               <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Archivo Histórico
             </button>
@@ -68,15 +68,15 @@
                     <tr>
                         <td class="col-md-4">
                             <a href="{{=URL(c='tipo_actividad', f='ver_tipo_actividad.html',args=[tipoActividad.id_tipo])}}">
-                                {{=tipoActividad.nombre}} 
+                                {{=tipoActividad.nombre}}
                             </a>
                         </td>
                         <td class="col-md-6"> {{=tipoActividad.descripcion}}</td>
                         <td class="center-vertically">
                             <center>
                                 <a href="#">
-                                    <span class="glyphicon glyphicon-edit blue" 
-                                          data-toggle="modal" 
+                                    <span class="glyphicon glyphicon-edit blue"
+                                          data-toggle="modal"
                                           data-target="#myModalEditar"
                                           onclick="ajax('{{=URL('editar_tipo')}}/{{=tipoActividad.id_tipo}}',[],'editar_tipo_actividad');">
                                     </span>
@@ -86,11 +86,11 @@
                         <td class="center-vertically">
                             <center>
                                 <a href="#">
-                                   <span class="glyphicon glyphicon-remove red" 
-                                         data-toggle="modal" 
+                                   <span class="glyphicon glyphicon-remove red"
+                                         data-toggle="modal"
                                          data-target="#myModalDelete"
                                          data-id-tipo="{{=tipoActividad.id_tipo}}">
-                                       
+
                                    </span>
                                 </a>
                             <center>
@@ -126,8 +126,8 @@
         <center><h4 class="modal-title">Editar Tipo de Actividad</h4><center>
       </div>
       <div class="modal-body">
-          <p><center id="editar_tipo_actividad"> Formulario para editar Tipo de Actividad 
-              
+          <p><center id="editar_tipo_actividad"> Formulario para editar Tipo de Actividad
+
           </center> </p>
       </div>
     </div>
@@ -148,7 +148,7 @@
             <br>
             <center>
                 <a>
-                  <button type="button" 
+                  <button type="button"
                           class="btn blue-add btn-border"
                           data-dismiss="modal"
                           id="botonDelete">
@@ -165,26 +165,26 @@
 
 
 <script type="text/javascript">
-    
+
     // Eliminar definitivamente
-    
+
     $('#myModalDelete').on('show.bs.modal', function (event) {
         if (event.relatedTarget != null){
             $("#botonDelete").attr("data-id-tipo", event.relatedTarget.getAttribute("data-id-tipo"));
         }
     });
-    
+
     $("#botonDelete").click(function (event){
-        
+
         var id_tipo = $("#botonDelete").attr("data-id-tipo");
         ajax("{{=URL('enviar_tipo_papelera')}}/"+id_tipo,[]);
         location.reload();
     });
-    
+
     $(document).ready(function () {
         document.getElementById("botonEliminar");
     });
-    
+
 </script>
 
 
