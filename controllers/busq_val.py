@@ -55,7 +55,7 @@ def gestionar_validacion():
                   )
 
     # Muestro los ids y nombres de las actividades a validar o rechazar
-    auxEsp = db(queryEsp).select(db.PRODUCTO.id_producto, db.PRODUCTO.id_tipo
+    auxEsp = db(queryEsp).select(db.PRODUCTO.id_producto, db.PRODUCTO.id_tipo, db.PRODUCTO.nombre
                          )
     aux1Esp = db(queryEsp).select(db.TIPO_ACTIVIDAD.nombre, db.TIPO_ACTIVIDAD.id_tipo
                          )
@@ -65,19 +65,20 @@ def gestionar_validacion():
                                        db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo
                                        ]
                   )  
-    auxVal = db(queryVal).select(db.PRODUCTO.id_producto, db.PRODUCTO.id_tipo
+    auxVal = db(queryVal).select(db.PRODUCTO.id_producto, db.PRODUCTO.id_tipo, db.PRODUCTO.nombre
                          )
-    aux1Val = db(queryVal).select(db.TIPO_ACTIVIDAD.nombre, db.TIPO_ACTIVIDAD.id_tipo
+    aux1Val = db(queryVal).select(db.TIPO_ACTIVIDAD.nombre, db.TIPO_ACTIVIDAD.id_tipo, db.PRODUCTO.nombre
                          )
     # Hago el query Rechazada
     queryRec = reduce(lambda a, b: (a&b),[db.PRODUCTO.estado == 'Rechazada',
                                        db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo
                                        ]
                   )                       
-    auxRec = db(queryRec).select(db.PRODUCTO.id_producto, db.PRODUCTO.id_tipo
+    auxRec = db(queryRec).select(db.PRODUCTO.id_producto, db.PRODUCTO.id_tipo, db.PRODUCTO.nombre
                          )
-    aux1Rec = db(queryRec).select(db.TIPO_ACTIVIDAD.nombre, db.TIPO_ACTIVIDAD.id_tipo
+    aux1Rec = db(queryRec).select(db.TIPO_ACTIVIDAD.nombre, db.TIPO_ACTIVIDAD.id_tipo, db.PRODUCTO.nombre
                          )
+
     return dict(tiposEsp = aux1Esp, producEsp = auxEsp, tiposVal = aux1Val, producVal = auxVal, tiposRec = aux1Rec, producRec = auxRec, admin = admin)
 
 # Metodo para validar un producto

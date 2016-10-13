@@ -45,156 +45,159 @@
             </ul>
 
             <!-- Tab panes -->
-        <div class="tab-content">
-        <!-- Espera -->
-        <div role="tabpanel" class="tab-pane active" id="esp">
-        {{if len(producEsp) == 0:}}
-            No hay actividades En espera de validacion
-        {{else:}}
-        <table class="table table-striped table-condensed table-hover sortable">
-            <thead>
-            <tr>
-                <th>ID Producto</td>
-                <th>Nombre Producto</td>
-                <th>Tipo Producto</td>
-                <th><center>Validar</center></td>
-                <th><center>Rechazar</center></td>
-            </tr>
-            </thead>
-            <tbody>
-                {{for producto in producEsp:}}
-                    <tr>
-                        <td>
-                            {{=producto.id_producto}}
-                        </td>
+        
+            <div class="tab-content">
+                <!-- Espera -->
+                <div role="tabpanel" class="tab-pane active" id="esp">
+                    {{if len(producEsp) == 0:}}
+                        No hay actividades En espera de validacion
+                    {{else:}}
+                        <table class="table table-striped table-condensed table-hover sortable">
+                            <thead>
+                            <tr>
+                                <th>ID Producto</th>
+                                <th>Nombre Producto</th>
+                                <th>Tipo Producto</th>
+                                <th><center>Validar</center></th>
+                                <th><center>Rechazar</center></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {{for producto in producEsp:}}
+                                    <tr>
+                                        <td>
+                                            {{=producto.id_producto}}
+                                        </td>
 
-                        <td>
-                            =producto.nombre
-                        </td>
-                        {{for tipo in tiposEsp:}}
-                            {{if tipo.id_tipo == producto.id_tipo:}}
-                                <td>
-                                    {{=tipo.nombre}}
-                                </td>
-                                {{break}}
-                            {{pass}}
-                        <td>
-                            <a href="{{=URL(f='validar.html', args=[producto.id_producto])}}">
-                                <center><span class="glyphicon glyphicon-ok" style="color:#B2FF59"></span></center>
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{{=URL(f='rechazar.html', args=[producto.id_producto])}}">
-                                <center><span class="glyphicon glyphicon-remove red"></span></center>
-                            </a>
-                        </td>
-                        {{pass}}
-                    </tr>
-                {{pass}}
-            </tbody>
-        </table>
-        {{pass}}
+                                        <td>
+                                            =producto.nombre
+                                        </td>
+                                        {{for tipo in tiposEsp:}}
+                                            {{if tipo.id_tipo == producto.id_tipo:}}
+                                                <td>
+                                                    {{=tipo.nombre}}
+                                                </td>
+                                                {{break}}
+                                            {{pass}}
+                                        <td>
+                                            <a href="{{=URL(f='validar.html', args=[producto.id_producto])}}">
+                                                <center><span class="glyphicon glyphicon-ok" style="color:#B2FF59"></span></center>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{{=URL(f='rechazar.html', args=[producto.id_producto])}}">
+                                                <center><span class="glyphicon glyphicon-remove red"></span></center>
+                                            </a>
+                                        </td>
+                                        {{pass}}
+                                    </tr>
+                                {{pass}}
+                            </tbody>
+                        </table>
+                    {{pass}}
+                </div>        
+                
+                <!-- Validadas -->
+                <div role="tabpanel" class="tab-pane" id="val">
+                    {{if len(producVal) == 0:}}        
+                        No hay actividades validadas
+                    {{else:}}
+                        <table class="table table-striped table-condensed table-hover sortable">
+                            <thead>
+                            <tr>
+                                <th>ID Producto</th>
+                                <th>Nombre Producto</th>
+                                <th>Tipo Producto</th>
+                                <th><center>Validar</center></th>
+                                <th><center>Rechazar</center></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {{for producto in producVal:}}
+                                    <tr>                       
+                                        <td>
+                                            {{=producto.id_producto}}
+                                        </td>
 
-        </div>        
-        <!-- Validadas -->
-        <div role="tabpanel" class="tab-pane" id="val">
-        {{if len(producVal) == 0:}}        
-            No hay actividades validadas
-        {{else:}}
-        <table class="table table-striped table-condensed table-hover sortable">
-            <thead>
-            <tr>
-                <th>ID Producto</td>
-                <th>Nombre Producto</td>
-                <th>Tipo Producto</td>
-                <th><center>Validar</center></td>
-                <th><center>Rechazar</center></td>
-            </tr>
-            </thead>
-            <tbody>
-                {{for producto in producVal:}}
-                    <tr>                       
-                        <td>
-                            {{=producto.id_producto}}
-                        </td>
+                                        <td>
+                                            =producto.nombre
+                                        </td> 
 
-                        <td>
-                            =producto.nombre
-                        </td> 
+                                        {{for tipo in tiposVal:}}
+                                            {{if tipo.id_tipo == producto.id_tipo:}}
+                                                <td>
+                                                    {{=tipo.nombre}}
+                                                </td>
+                                                {{break}}
+                                            {{pass}}
+                                        <td>
+                                            <a href="{{=URL(f='validar.html', args=[producto.id_producto])}}">
+                                                <center><span class="glyphicon glyphicon-ok" style="color:#9E9E9E"></span></center>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{{=URL(f='rechazar.html', args=[producto.id_producto])}}">
+                                                <center><span class="glyphicon glyphicon-remove" style="color:#9E9E9E"></span></center>
+                                            </a>
+                                        </td>
+                                        {{pass}}
+                                    </tr>
+                                {{pass}}
+                            </tbody>
+                        </table>
+                    {{pass}}
+                </div>
+                
+                <!--  Rechazadas -->
+                <div role="tabpanel" class="tab-pane" id="rec">
+                    {{if len(producRec) == 0:}}        
+                        No hay actividades rechazadas
+                    {{else:}}
+                        <table class="table table-striped table-condensed table-hover sortable">
+                            <thead>
+                            <tr>
+                                <th>ID Producto</th>
+                                <th>Nombre Producto</th>
+                                <th>Tipo Producto</th>
+                                <th><center>Validar</center></th>
+                                <th><center>Rechazar</center></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {{for producto in producRec:}}
+                                    <tr>                                            
+                                        <td>
+                                            {{=producto.id_producto}}
+                                        </td>
 
-                        {{for tipo in tiposVal:}}
-                            {{if tipo.id_tipo == producto.id_tipo:}}
-                                <td>
-                                    {{=tipo.nombre}}
-                                </td>
-                                {{break}}
-                            {{pass}}
-                        <td>
-                            <a href="{{=URL(f='validar.html', args=[producto.id_producto])}}">
-                                <center><span class="glyphicon glyphicon-ok" style="color:#9E9E9E"></span></center>
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{{=URL(f='rechazar.html', args=[producto.id_producto])}}">
-                                <center><span class="glyphicon glyphicon-remove" style="color:#9E9E9E"></span></center>
-                            </a>
-                        </td>
-                        {{pass}}
-                    </tr>
-                {{pass}}
-            </tbody>
-        </table>
-        {{pass}}
-        </div>
-        <!--  Rechazadas -->
-        <div role="tabpanel" class="tab-pane" id="rec">
-        {{if len(producRec) == 0:}}        
-            No hay actividades rechazadas
-        {{else:}}
-        <table class="table table-striped table-condensed table-hover sortable">
-            <thead>
-            <tr>
-                <th>ID Producto</td>
-                <th>Nombre Producto</td>
-                <th>Tipo Producto</td>
-                <th><center>Validar</center></td>
-                <th><center>Rechazar</center></td>
-            </tr>
-            </thead>
-            <tbody>
-                {{for producto in producRec:}}
-                    <tr>                                            
-                        <td>
-                            {{=producto.id_producto}}
-                        </td>
+                                        <td>
+                                            =producto.nombre
+                                        </td>
 
-                        <td>
-                            =producto.nombre
-                        </td>
-
-                        {{for tipo in tiposRec:}}
-                            {{if tipo.id_tipo == producto.id_tipo:}}
-                                <td>
-                                    {{=tipo.nombre}}
-                                </td>
-                                {{break}}
-                            {{pass}}
-                        <td>
-                                <center><span class="glyphicon glyphicon-ok" style="color:#9E9E9E"></span></center>
-                        </td>
-                        <td>
-                            <center><span class="glyphicon glyphicon-remove" style="color:#9E9E9E"></span></center>
-                        </td>
-                        {{pass}}
-                    </tr>
-                {{pass}}
-            </tbody>
-        </table>
-        {{pass}}
-        </div>                       
-        </div>
+                                        {{for tipo in tiposRec:}}
+                                            {{if tipo.id_tipo == producto.id_tipo:}}
+                                                <td>
+                                                    {{=tipo.nombre}}
+                                                </td>
+                                                {{break}}
+                                            {{pass}}
+                                        <td>
+                                            <a href="{{=URL(f='validar.html', args=[producto.id_producto])}}">
+                                                <center><span class="glyphicon glyphicon-ok" style="color:#B2FF59"></span></center>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <center><span class="glyphicon glyphicon-remove" style="color:#9E9E9E"></span></center>
+                                        </td>
+                                        {{pass}}
+                                    </tr>
+                                {{pass}}
+                            </tbody>
+                        </table>
+                    {{pass}}
+                </div>                       
+            </div>
         </div>
     </div>
 </div>
-
 {{end}}
