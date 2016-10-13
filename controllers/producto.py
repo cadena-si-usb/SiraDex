@@ -91,6 +91,7 @@ def agregar():
         print "se envio"
     elif formulario.errors:
         print "error"
+        formulario.errors.fecha = T('mala fecha')
         print formulario.errors
     else:
         print "fatal"
