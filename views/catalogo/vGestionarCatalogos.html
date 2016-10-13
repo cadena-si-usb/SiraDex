@@ -107,6 +107,7 @@
   </div>
 </div>
 
+
 <!-- Modal Agregar Catalogo-->
 <div id="modalAgregarCatalogo" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -116,7 +117,7 @@
         <center><h4 class="modal-title"> Agregar Catálogo </h4><center>
       </div>
       <div class="modal-body">
-          <p><center>{{ = formulario_agregar_catalogo}} </center> </p>
+          <p>{{ = formulario_agregar_catalogo}}</p>
       </div>
     </div>
   </div>
@@ -131,31 +132,37 @@
         <center><h4 class="modal-title"> Agregar Campo </h4><center>
       </div>
       <div class="modal-body">
-        <center>
         {{=formulario_agregar_campo.custom.begin}}
-          <div class=row>
-            <div class="col-md-4"><b>Nombre del Campo</b></div>
-            <div class="col-md-6">{{=formulario_agregar_campo.custom.widget.nombre}}</div>
+          <div class="row">
+            <div class="col-md-4 right" ><b>Nombre del Campo</b></div>
+            <div class="col-md-7">{{=formulario_agregar_campo.custom.widget.nombre}}</div>
           </div>
           <br>
-          <div class=row>
-            <div class="col-md-4"><b>Tipo</b></div>
-            <div class="col-md-6">{{=formulario_agregar_campo.custom.widget.tipo_campo}}</div>
+          <div class="row">
+            <div class="col-md-4 right"><b>Tipo</b></div>
+            <div class="col-md-7">{{=formulario_agregar_campo.custom.widget.tipo_campo}}</div>
           </div>
           <br>
-          <div class=row>
-            <div class="col-md-4"><b>Obligatorio</b></div>
-            <div class="col-md-6">{{=formulario_agregar_campo.custom.widget.obligatorio}}</div>
+          <div class="row">
+            <div class="col-md-4 right"><b>Obligatorio</b></div>
+            <div class="col-md-7">{{=formulario_agregar_campo.custom.widget.obligatorio}}</div>
           </div>
           <br>
-          <div  style="display:none;">{{=formulario_agregar_campo.custom.widget.id_catalogo}}</div>
-          {{=formulario_agregar_campo.custom.submit}}
-        {{=formulario_agregar_campo.custom.end}}
-        </center>
-      </div>
+          <div class="row">
+            <div class="col-md-4 right"></div>
+              <div class="col-md-7 right">
+              <div style="display:none;">{{=formulario_agregar_campo.custom.widget.id_catalogo}} </div>
+                
+                  {{=formulario_agregar_campo.custom.submit}}
+               
+                   {{=formulario_agregar_campo.custom.end}}
+            </div>
+          </div>
+        </div>
     </div>
   </div>
 </div>
+
 
 <div id="modalEditarCampo" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -165,32 +172,36 @@
         <center><h4 class="modal-title"> Editar Campo </h4><center>
       </div>
       <div class="modal-body">
-        <center>
         {{=formulario_editar_campo.custom.begin}}
           <div class=row>
-            <div class="col-md-4"><b>Nombre del Campo</b></div>
-            <div class="col-md-6">{{=formulario_editar_campo.custom.widget.nombre}}</div>
+            <div class="col-md-4 right"><b>Nombre del Campo</b></div>
+            <div class="col-md-7">{{=formulario_editar_campo.custom.widget.nombre}}</div>
           </div>
           <br>
           <div class=row>
-            <div class="col-md-4"><b>Tipo</b></div>
-            <div class="col-md-6">{{=formulario_editar_campo.custom.widget.tipo_campo}}</div>
+            <div class="col-md-4 right"><b>Tipo</b></div>
+            <div class="col-md-7">{{=formulario_editar_campo.custom.widget.tipo_campo}}</div>
           </div>
           <br>
           <div class=row>
-            <div class="col-md-4"><b>Obligatorio</b></div>
-            <div class="col-md-6">{{=formulario_editar_campo.custom.widget.obligatorio}}</div>
+            <div class="col-md-4 right"><b>Obligatorio</b></div>
+            <div class="col-md-7">{{=formulario_editar_campo.custom.widget.obligatorio}}</div>
           </div>
           <br>
-          <div style="display: none;">{{=formulario_editar_campo.custom.widget.id_catalogo}}</div>
-          <div style="display: none;">{{=formulario_editar_campo.custom.widget.id_campo_cat}}</div>
-          {{=formulario_editar_campo.custom.submit}}
-        {{=formulario_editar_campo.custom.end}}
-        </center>
+          <div class="row">
+            <div class="col-md-4 right"></div>
+            <div class="col-md-7 ">
+              <div style="display: none;">{{=formulario_editar_campo.custom.widget.id_catalogo}}</div>
+              <div style="display: none;">{{=formulario_editar_campo.custom.widget.id_campo_cat}}</div>
+              {{=formulario_editar_campo.custom.submit}}
+              {{=formulario_editar_campo.custom.end}}
+            </div>
+          </div>
       </div>
     </div>
   </div>
 </div>
+
 
 <!-- Modal Eliminar-->
 <div class="container">

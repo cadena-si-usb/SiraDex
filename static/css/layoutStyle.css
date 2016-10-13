@@ -474,3 +474,7 @@ style=""
 	.form-horizontal{
 		padding: 6px 20px !important;
 	}
+
+    .right {
+        text-align: right;
+    }

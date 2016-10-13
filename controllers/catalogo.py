@@ -25,7 +25,7 @@ def vGestionarCatalogos():
     #Formulario para agregar un catalogo.
     formulario_agregar_catalogo = AgregarCatalogo()
     formulario_agregar_campo    = AgregarCampo()
-    formulario_editar_campo      = EditarCampo()
+    formulario_editar_campo     = EditarCampo()
 
     if formulario_agregar_catalogo.process(formname = "formulario_agregar_catalogo").accepted:
         # Creamos el catalogo y obtenemos su id, para pasarlo al controlador de agregar campo.
@@ -95,6 +95,16 @@ def vGestionarCatalogos():
     else:
         message = 'Error en el Formulario de Editar Campo'
 
+
+
+    formulario_agregar_catalogo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    formulario_agregar_catalogo.element(_type='submit')['_value']="Editar"
+
+    formulario_agregar_campo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    formulario_agregar_campo.element(_type='submit')['_value']="Editar"
+
+    formulario_editar_campo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    formulario_editar_campo.element(_type='submit')['_value']="Editar"
 
     return dict(catalogos                   = catalogos,
                 formulario_agregar_catalogo = formulario_agregar_catalogo,
