@@ -4,21 +4,21 @@ def busqueda():
 
     if request.vars.Programa == "all" and request.vars.TipoActividad == "all":
         sql = "SELECT nombre FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
-         + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor + "%\') AND estado=\'Validado\';" 
+         + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor + "%\') AND estado=\'Validada\';" 
 
         productos = db.executesql(sql)
 
     elif request.vars.Programa != "all" and request.vars.TipoActividad == "all":
         sql = "SELECT nombre FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
          + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
-         + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + request.vars.Programa + ") AND estado=\'Validado\';"
+         + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + request.vars.Programa + ") AND estado=\'Validada\';"
 
         productos = db.executesql(sql)
 
     elif request.vars.Programa == "all" and request.vars.TipoActividad != "all":
         sql = "SELECT nombre FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
          + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
-         + "%\') AND id_tipo=\'" + request.vars.TipoActividad + "\' AND estado=\'Validado\';" 
+         + "%\') AND id_tipo=\'" + request.vars.TipoActividad + "\' AND estado=\'Validada\';" 
 
         productos = db.executesql(sql)
 
@@ -26,9 +26,10 @@ def busqueda():
         sql = "SELECT nombre FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
          + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
          + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + request.vars.Programa\
-         + ") AND id_tipo=\'" + request.vars.TipoActividad + "\' AND estado=\'Validado\';"
+         + ") AND id_tipo=\'" + request.vars.TipoActividad + "\' AND estado=\'Validada\';"
 
         productos = db.executesql(sql)
+    print productos
     return locals()
 
 # Vista de validaciones
@@ -49,6 +50,17 @@ def gestionar_validacion():
 
 
     # Hago el query Espera
+    productosE = db(db.PRODUCTO.estado == "En espera" and db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo).select(db.PRODUCTO.nombre, db.PRODUCTO.estado, db.PRODUCTO.id, db.TIPO_ACTIVIDAD.nombre)
+    productosV = db(db.PRODUCTO.estado == "Validada" and db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo).select(db.PRODUCTO.nombre, db.PRODUCTO.estado, db.PRODUCTO.id, db.TIPO_ACTIVIDAD.nombre)
+    productosR = db(db.PRODUCTO.estado == "Rechazada" and db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo).select(db.PRODUCTO.nombre, db.PRODUCTO.estado, db.PRODUCTO.id, db.TIPO_ACTIVIDAD.nombre)
+    print '##########################'
+    print productosE
+    for p in productosE:
+        print p['PRODUCTO'].nombre
+        print p['PRODUCTO'].id_producto
+        print p['PRODUCTO'].estado
+    print '##########################'
+    '''
     queryEsp = reduce(lambda a, b: (a&b),[db.PRODUCTO.estado == 'En espera',
                                        db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo
                                        ]
@@ -78,7 +90,8 @@ def gestionar_validacion():
                          )
     aux1Rec = db(queryRec).select(db.TIPO_ACTIVIDAD.nombre, db.TIPO_ACTIVIDAD.id_tipo, db.PRODUCTO.nombre
                          )
-    return dict(tiposEsp = aux1Esp, producEsp = auxEsp, tiposVal = aux1Val, producVal = auxVal, tiposRec = aux1Rec, producRec = auxRec, admin = admin)
+    return dict(tiposEsp = aux1Esp, producEsp = auxEsp, tiposVal = aux1Val, producVal = auxVal, tiposRec = aux1Rec, producRec = auxRec, admin = admin)'''
+    return locals()
 
 # Metodo para validar un producto
 def validar():

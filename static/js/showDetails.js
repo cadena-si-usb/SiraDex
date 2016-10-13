@@ -7,10 +7,9 @@ $(function(){
             var contenido_corto   = $(this).html().substr(0,largo_max); /* Divide el contenido en dos partes */
             var contenido_largo    = $(this).html().substr(largo_max);
             
-            $(this).html(contenido_corto+'<span class="ocultar"> (...)</span>'+
-                         '<a href="#" class="leer_mas"><br/>Mas detalles</a>'+
+            $(this).html(contenido_corto+'<a href="#" class="leer_mas"><span class="ocultar"> (...)</span></a>'+
                          '<span class="mas_texto" style="display:none;">'+contenido_largo+'</span>'+
-                         '<a href="#" class="leer_menos" style="display:none;"><br/>Menos detalles</a>'); /* Nueva forma del contenido, para usar la funcionalidad */
+                         '<a href="#" class="leer_menos" style="display:none;"><br/>Menos</a>'); /* Nueva forma del contenido, para usar la funcionalidad */
 
                          
             $(this).find('a.leer_mas').click(function(event){
