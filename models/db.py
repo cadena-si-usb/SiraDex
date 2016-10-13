@@ -129,7 +129,7 @@ auth.settings.reset_password_requires_verification = True
 # auth.enable_record_versioning(db)
 #raise HTTP(404)
 
-tipo_campos = ['Fecha', 'Telefono', 'Texto Corto','Documento', 'Numero Entero', 'Texto Largo']
+tipo_campos = ['Fecha', 'Telefono', 'Texto Corto','Documento','Cantidad Entera','Cantidad Decimal', 'Texto Largo', 'Cedula']
 
 #db.usuario.drop()
 db.define_table('USUARIO',
@@ -198,7 +198,9 @@ db.define_table('PRODUCTO',
     Field('estado',type='string', default='En espera', requires=IS_IN_SET(['Validado', 'En espera', 'Rechazado'])),
     Field('evaluacion_criterio',type='string',length=256),
     Field('evaluacion_valor',type='string', length=256),
-    Field('fecha', type='date'),
+    Field('fecha_realizacion', type='date'),
+    Field('fecha_modificacion', type='date'),
+    Field('lugar', type='string',length=50),
     Field('ci_usu_modificador', db.USUARIO.ci),
     Field('ci_usu_creador', db.USUARIO.ci),
     primarykey=['id_producto'],
@@ -254,11 +256,10 @@ db.define_table('ACT_POSEE_CAMPO',
 );
 
 db.define_table('PRODUCTO_TIENE_CAMPO',
-    Field('id_producto',db.PRODUCTO.id_producto),
+    Field('id_prod',db.PRODUCTO.id_producto),
     Field('id_campo', db.CAMPO.id_campo),
-    Field('nombre',type='string', length=256),
     Field('valor_campo', type='string', length=512),
-    primarykey=['id_producto', 'id_campo'],
+    primarykey=['id_prod', 'id_campo'],
     migrate=False
 );
 
