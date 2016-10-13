@@ -30,6 +30,9 @@
 
 
 {{block contenido}}
+    {{ for x in productos: }}
+    <p>{{=x[0]}}</p>
+    {{ pass }}
 {{end}}
 
 {{block footer}}
