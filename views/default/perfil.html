@@ -105,7 +105,7 @@
                 {{for x in productos["Validados"]:}}
                     <tr>
                     <td class="center-vertically">
-                        Aqui deberia estar el nombre si lo tuviera {{=x.id_producto}}
+                        {{=x.nombre}}
                     </td>    
                     </tr>
                 {{pass}}
@@ -123,7 +123,7 @@
                 {{for x in productos["En espera"]:}}
                     <tr>
                         <td class="center-vertically">     
-                            Aqui deberia estar el nombre si lo tuviera {{=x.id_producto}}
+                            {{=x.nombre}}
                         </td>
                     </tr>    
                 {{pass}}
@@ -140,7 +140,7 @@
                 {{for x in productos["Rechazados"]:}}
                 <tr>
                     <td class="center-vertically">
-                Aqui deberia estar el nombre si lo tuviera {{=x.id_producto}}        
+                        {{=x.nombre}}        
                     </td>
                 </tr>
                 {{pass}}

@@ -3,13 +3,16 @@
 {{block titulo}}
 	Agregar Producto
 {{end}}
+{{block subtitulo}}
+	{{=nombre_actividad}}
+{{end}}
 
 {{block descripcion}}
 <div class="col-lg-12">
+	<p>{{=descripcion_actividad}}</p>
+	<h4> Formulario </h4>
     <p class="text-justify">
 		Los campos con asteriscos <span style="color:red">*</span> son obligatorios
-		<br>
-			Los campos con el nombre en negrita sirven para ingresar a los participantes de la actividad. El usuario que esta registrando la Actividad debe ser seleccionado en al menos uno de estos campos.  
     </p>
 </div>
 {{end}}
@@ -20,10 +23,20 @@
 	<div class="col-md-12">
 		<div class="card">
 			<div class="tab-pane">
-                        
-				<form enctype="multipart/form-data" method="post" class="form-horizontal" role="form">
+            	{{=form}}
 
-					<!--Nombre del producto-->
+	                
+
+
+
+			</div>
+		</div>
+	</div>
+</div>
+{{end}}
+<!--<form enctype="multipart/form-data" method="post" class="form-horizontal" role="form">
+
+
 					<div class="form-group">
 	                    <label for="PRODUCTO_nombre" class = "control-label col-sm-3">
 	                    	Nombre (*)
@@ -36,7 +49,7 @@
 						</div>
 	                </div>
 
-	                <!--Descripcion del producto-->
+
 					<div class="form-group">
 	                    <label for="PRODUCTO_descripcion" class = "control-label col-sm-3">
 	                    	Descripcion
@@ -49,7 +62,6 @@
 						</div>
 	                </div>
 
-	                <!--Seleccion de Programa-->
 	                <div class="form-group">
 	                    <label for="Programa" class = "control-label col-sm-3"> Programa(*)</label>
 	                    <div class="col-sm-8">
@@ -63,20 +75,20 @@
 	                    </div>
 	                </div>
 
-	                <!-- Filtro de Tipo de Actividad -->
+
 	                <div class="form-group">
 	                    <label for="id_tipo" class = "control-label col-sm-3">
 	                    	Tipo Actividad (*)
 	                    </label>
 	                    <div class="col-sm-8 ">
 		                    <select class="form-control" name="id_tipo" id="lista_tipos"  onchange="ajax('seleccion_actividad', ['id_tipo'], ':eval')">
-		                    	<!--Con el ajax traemos las actividades-->      
+      
 		                    </select>
 
 		                </div>
 	                </div>
 
-	                <!-- Filtro de Fecha y Lugar -->
+
 	                <div class="form-group">
 	                    <label for="fecha" class = "control-label col-sm-3">Fecha (*)</label>
 	                    <div class="col-sm-3">
@@ -90,32 +102,27 @@
 	                    </div>
 	                    <div class="hidden">
 	                    	<input class="form-control" name="estado" value="En espera" />
-	                    	<input class="form-control" name="ci_usu_creador" value={{session.usuario['cedula']}} />
+	                    </div>
+	                    <div class="hidden">
+	                    	<input class="form-control" name="ci_usu_creador" value="{{=session.usuario['cedula']}}"/>
 	                    </div>
 	                </div>
 
 	                <div  class="form-group">
-	                	<h3 id="nombre_actividad" class="col-sm-offset-3"><!--Nombre que viene del ajax--></h3>
-	                	<p id="descripcion_actividad" class="col-sm-offset-3"><!-- Descripcion que viene del ajax--></p>
-	                	<p id="comprobantes_actividad" class="col-sm-offset-3"><!--Comprobantes que viene del ajax--></p>
+	                	<h3 id="nombre_actividad" class="col-sm-offset-3"></h3>
+	                	<p id="descripcion_actividad" class="col-sm-offset-3"></p>
+	                	<p id="comprobantes_actividad" class="col-sm-offset-3"></p>
 
 		                <div id="campos_actividad">
-		                	<!--Campos del tipo de actividad provenientes del ajax-->
+	
 		                </div>
 	                </div>
 
+	               
 	                
 	                <div class="form-group ">
 	                	<input type="submit" class="col-sm-offset-3 col-sm-8 btn blue-add btn-border " value="Agregar" />
   						<input type="hidden" name="_formname" value="crear_tipo" />
+  						<input type="hidden" name="_formname_campos" value="agregar_campos" />
 	                </div>
-	            </form>          
-	                
-
-
-
-			</div>
-		</div>
-	</div>
-</div>
-{{end}}
+	            </form>          -->

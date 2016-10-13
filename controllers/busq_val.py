@@ -4,21 +4,21 @@ def busqueda():
 
     if request.vars.Programa == "all" and request.vars.TipoActividad == "all":
         sql = "SELECT nombre FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
-         + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor + "%\');" 
+         + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor + "%\') AND estado=\'Validado\';" 
 
         productos = db.executesql(sql)
 
     elif request.vars.Programa != "all" and request.vars.TipoActividad == "all":
         sql = "SELECT nombre FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
          + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
-         + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + request.vars.Programa + ");"
+         + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + request.vars.Programa + ") AND estado=\'Validado\';"
 
         productos = db.executesql(sql)
 
     elif request.vars.Programa == "all" and request.vars.TipoActividad != "all":
         sql = "SELECT nombre FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
          + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
-         + "%\') AND id_tipo=\'" + request.vars.TipoActividad + "\';" 
+         + "%\') AND id_tipo=\'" + request.vars.TipoActividad + "\' AND estado=\'Validado\';" 
 
         productos = db.executesql(sql)
 
@@ -26,10 +26,9 @@ def busqueda():
         sql = "SELECT nombre FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
          + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
          + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + request.vars.Programa\
-         + ") AND id_tipo=\'" + request.vars.TipoActividad + "\' ;"
+         + ") AND id_tipo=\'" + request.vars.TipoActividad + "\' AND estado=\'Validado\';"
 
         productos = db.executesql(sql)
-    print productos
     return locals()
 
 # Vista de validaciones
@@ -56,7 +55,7 @@ def gestionar_validacion():
                   )
 
     # Muestro los ids y nombres de las actividades a validar o rechazar
-    auxEsp = db(queryEsp).select(db.PRODUCTO.id_producto, db.PRODUCTO.id_tipo
+    auxEsp = db(queryEsp).select(db.PRODUCTO.id_producto, db.PRODUCTO.id_tipo, db.PRODUCTO.nombre
                          )
     aux1Esp = db(queryEsp).select(db.TIPO_ACTIVIDAD.nombre, db.TIPO_ACTIVIDAD.id_tipo
                          )
@@ -66,19 +65,18 @@ def gestionar_validacion():
                                        db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo
                                        ]
                   )  
-    auxVal = db(queryVal).select(db.PRODUCTO.id_producto, db.PRODUCTO.id_tipo
+    auxVal = db(queryVal).select(db.PRODUCTO.id_producto, db.PRODUCTO.id_tipo, db.PRODUCTO.nombre
                          )
-    aux1Val = db(queryVal).select(db.TIPO_ACTIVIDAD.nombre, db.TIPO_ACTIVIDAD.id_tipo
+    aux1Val = db(queryVal).select(db.TIPO_ACTIVIDAD.nombre, db.TIPO_ACTIVIDAD.id_tipo, db.PRODUCTO.nombre
                          )
-
     # Hago el query Rechazada
     queryRec = reduce(lambda a, b: (a&b),[db.PRODUCTO.estado == 'Rechazada',
                                        db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo
                                        ]
                   )                       
-    auxRec = db(queryRec).select(db.PRODUCTO.id_producto, db.PRODUCTO.id_tipo
+    auxRec = db(queryRec).select(db.PRODUCTO.id_producto, db.PRODUCTO.id_tipo, db.PRODUCTO.nombre
                          )
-    aux1Rec = db(queryRec).select(db.TIPO_ACTIVIDAD.nombre, db.TIPO_ACTIVIDAD.id_tipo
+    aux1Rec = db(queryRec).select(db.TIPO_ACTIVIDAD.nombre, db.TIPO_ACTIVIDAD.id_tipo, db.PRODUCTO.nombre
                          )
     return dict(tiposEsp = aux1Esp, producEsp = auxEsp, tiposVal = aux1Val, producVal = auxVal, tiposRec = aux1Rec, producRec = auxRec, admin = admin)
 

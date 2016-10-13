@@ -15,18 +15,14 @@ INSERT INTO tipo_actividad values(8, '8 Actividad programa 3','p', 'descr', 3, '
 INSERT INTO catalogo values(1,1,'catalogo 1');
 INSERT INTO catalogo values(2,1,'catalogo 2');
 
-INSERT INTO campo values(1,1,'1 campo-catalogo 1','Texto Largo',true);
-INSERT INTO campo values(2,1,'2 campo-catalogo 1','Texto Largo',true);
-INSERT INTO campo values(3,2,'3 campo-catalogo 2','Texto Largo',true);
+INSERT INTO campo values(1,1,'1 campo catalogo 1','Texto Largo',true);
+INSERT INTO campo values(2,1,'2 campo catalogo 1','Texto Largo',true);
+INSERT INTO campo values(3,2,'3 campo catalogo 2','Texto Largo',true);
 
 INSERT INTO act_posee_campo values(1,1);
 INSERT INTO act_posee_campo values(1,2);
 INSERT INTO act_posee_campo values(1,3);
 
-INSERT INTO usuario values('123', 'usbid123','francisco', 'rojas','123456', 'correo1');
-INSERT INTO usuario values('431', 'usbid431','frandres', 'rrrs','123r', 'correo2');
-
-INSERT INTO producto values(2, 2,'productisimo','','', '','','123',NULL);
 
 #UPDATE usuario SET tipo='Administrador' WHERE usbid='12-10941';
 #INSERT INTO producto VALUES (4,1,'nombre 4','no tiene','En espera','','',NULL,'24272072','24272072');

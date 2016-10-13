@@ -78,7 +78,9 @@ CREATE TABLE PRODUCTO(
   estado          VARCHAR DEFAULT 'En Espera',
   evaluacion_criterio VARCHAR(256),
   evaluacion_valor    VARCHAR(256),
-  fecha               DATE,
+  fecha_realizacion   DATE,
+  fecha_modificacion  DATE,
+  lugar               VARCHAR(50),
   ci_usu_modificador  VARCHAR(10),
   ci_usu_creador      VARCHAR(10),
 
@@ -161,7 +163,6 @@ CREATE TABLE ACT_POSEE_CAMPO(
 CREATE TABLE PRODUCTO_TIENE_CAMPO(
   id_prod        INT,
   id_campo       INT,
-  nombre_campo   VARCHAR(256),
   valor_campo    VARCHAR(512),
 
   CONSTRAINT PK_TIENE_CAMPO
