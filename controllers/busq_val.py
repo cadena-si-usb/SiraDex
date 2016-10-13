@@ -70,7 +70,6 @@ def gestionar_validacion():
                          )
     aux1Val = db(queryVal).select(db.TIPO_ACTIVIDAD.nombre, db.TIPO_ACTIVIDAD.id_tipo
                          )
-
     # Hago el query Rechazada
     queryRec = reduce(lambda a, b: (a&b),[db.PRODUCTO.estado == 'Rechazada',
                                        db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo

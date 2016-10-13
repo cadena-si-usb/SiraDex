@@ -22,7 +22,6 @@ def gestionar():
     cant_esp = 0
     cant_val = 0
     cant_rec = 0
-    print '####################################'
     for row in rows:
         dict_campos = dict()
         dict_nombres = dict()

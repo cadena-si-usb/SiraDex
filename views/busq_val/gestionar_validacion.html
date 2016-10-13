@@ -49,15 +49,16 @@
         <!-- Espera -->
         <div role="tabpanel" class="tab-pane active" id="esp">
         {{if len(producEsp) == 0:}}
-        No hay actividades En espera de validacion
+            No hay actividades En espera de validacion
         {{else:}}
-        <table class="table table-bordered">
+        <table class="table table-striped table-condensed table-hover sortable">
             <thead>
             <tr>
-                <th class="col-md-4">ID Producto</td>
-                <th class="col-md-4">Nombre Producto</td>
-                <th class="col-md-1">Validar</td>
-                <th class="col-md-1">Rechazar</td>
+                <th>ID Producto</td>
+                <th>Nombre Producto</td>
+                <th>Tipo Producto</td>
+                <th>Validar</td>
+                <th>Rechazar</td>
             </tr>
             </thead>
             <tbody>
@@ -67,6 +68,9 @@
                             {{=producto.id_producto}}
                         </td>
 
+                        <td class="col-md-4">
+                            =producto.nombre
+                        </td>
                         {{for tipo in tiposEsp:}}
                             {{if tipo.id_tipo == producto.id_tipo:}}
                                 <td class="col-md-6">
@@ -76,12 +80,12 @@
                             {{pass}}
                         <td class="col-md-1">
                             <a href="{{=URL(f='validar.html', args=[producto.id_producto])}}">
-                                {{=IMG(_src=URL('static','iconos/Add_26x26.png'))}}
+                                <center><span class="glyphicon glyphicon-ok" style="color:#B2FF59"></span></center>
                             </a>
                         </td>
                         <td class="col-md-1">
                             <a href="{{=URL(f='rechazar.html', args=[producto.id_producto])}}">
-                                {{=IMG(_src=URL('static','iconos/Delete_26x26.png'))}}
+                                <center><span class="glyphicon glyphicon-remove red"></span></center>
                             </a>
                         </td>
                         {{pass}}
@@ -94,11 +98,103 @@
         </div>        
         <!-- Validadas -->
         <div role="tabpanel" class="tab-pane" id="val">
-            Validas
+        {{if len(producVal) == 0:}}        
+            No hay actividades validadas
+        {{else:}}
+        <table class="table table-striped table-condensed table-hover sortable">
+            <thead>
+            <tr>
+                <th>ID Producto</td>
+                <th>Nombre Producto</td>
+                <th>Tipo Producto</td>
+                <th>Validar</td>
+                <th>Rechazar</td>
+            </tr>
+            </thead>
+            <tbody>
+                {{for producto in producVal:}}
+                    <tr>                       
+                        <td>
+                            {{=producto.id_producto}}
+                        </td>
+
+                        <td>
+                            =producto.nombre
+                        </td> 
+
+                        {{for tipo in tiposVal:}}
+                            {{if tipo.id_tipo == producto.id_tipo:}}
+                                <td>
+                                    {{=tipo.nombre}}
+                                </td>
+                                {{break}}
+                            {{pass}}
+                        <td>
+                            <a href="{{=URL(f='validar.html', args=[producto.id_producto])}}">
+                                <center><span class="glyphicon glyphicon-ok" style="color:#9E9E9E"></span></center>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{=URL(f='rechazar.html', args=[producto.id_producto])}}">
+                                <center><span class="glyphicon glyphicon-remove" style="color:#9E9E9E"></span></center>
+                            </a>
+                        </td>
+                        {{pass}}
+                    </tr>
+                {{pass}}
+            </tbody>
+        </table>
+        {{pass}}
         </div>
         <!--  Rechazadas -->
         <div role="tabpanel" class="tab-pane" id="rec">
-            Rechazadas
+        {{if len(producRec) == 0:}}        
+            No hay actividades rechazadas
+        {{else:}}
+        <table class="table table-striped table-condensed table-hover sortable">
+            <thead>
+            <tr>
+                <th>ID Producto</td>
+                <th>Nombre Producto</td>
+                <th>Tipo Producto</td>
+                <th>Validar</td>
+                <th>Rechazar</td>
+            </tr>
+            </thead>
+            <tbody>
+                {{for producto in producRec:}}
+                    <tr>                                            
+                        <td>
+                            {{=producto.id_producto}}
+                        </td>
+
+                        <td>
+                            =producto.nombre
+                        </td>
+
+                        {{for tipo in tiposRec:}}
+                            {{if tipo.id_tipo == producto.id_tipo:}}
+                                <td>
+                                    {{=tipo.nombre}}
+                                </td>
+                                {{break}}
+                            {{pass}}
+                        <td>
+                            <a href="{{=URL(f='validar.html', args=[producto.id_producto])}}">
+                                <center><span class="glyphicon glyphicon-ok" style="color:#B2FF59"></span></center>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{=URL(f='rechazar.html', args=[producto.id_producto])}}">
+                                <center><span class="glyphicon glyphicon-remove red"></span></center>
+                            </a>
+                        </td>
+                        {{pass}}
+                    </tr>
+                {{pass}}
+            </tbody>
+        </table>
+        {{pass}}
         </div>                       
         </div>
         </div>
