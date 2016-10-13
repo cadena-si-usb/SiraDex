@@ -57,33 +57,33 @@
                 <th>ID Producto</td>
                 <th>Nombre Producto</td>
                 <th>Tipo Producto</td>
-                <th>Validar</td>
-                <th>Rechazar</td>
+                <th><center>Validar</center></td>
+                <th><center>Rechazar</center></td>
             </tr>
             </thead>
             <tbody>
                 {{for producto in producEsp:}}
                     <tr>
-                        <td class="col-md-4">
+                        <td>
                             {{=producto.id_producto}}
                         </td>
 
-                        <td class="col-md-4">
+                        <td>
                             =producto.nombre
                         </td>
                         {{for tipo in tiposEsp:}}
                             {{if tipo.id_tipo == producto.id_tipo:}}
-                                <td class="col-md-6">
+                                <td>
                                     {{=tipo.nombre}}
                                 </td>
                                 {{break}}
                             {{pass}}
-                        <td class="col-md-1">
+                        <td>
                             <a href="{{=URL(f='validar.html', args=[producto.id_producto])}}">
                                 <center><span class="glyphicon glyphicon-ok" style="color:#B2FF59"></span></center>
                             </a>
                         </td>
-                        <td class="col-md-1">
+                        <td>
                             <a href="{{=URL(f='rechazar.html', args=[producto.id_producto])}}">
                                 <center><span class="glyphicon glyphicon-remove red"></span></center>
                             </a>
@@ -107,8 +107,8 @@
                 <th>ID Producto</td>
                 <th>Nombre Producto</td>
                 <th>Tipo Producto</td>
-                <th>Validar</td>
-                <th>Rechazar</td>
+                <th><center>Validar</center></td>
+                <th><center>Rechazar</center></td>
             </tr>
             </thead>
             <tbody>
@@ -157,8 +157,8 @@
                 <th>ID Producto</td>
                 <th>Nombre Producto</td>
                 <th>Tipo Producto</td>
-                <th>Validar</td>
-                <th>Rechazar</td>
+                <th><center>Validar</center></td>
+                <th><center>Rechazar</center></td>
             </tr>
             </thead>
             <tbody>
@@ -180,14 +180,10 @@
                                 {{break}}
                             {{pass}}
                         <td>
-                            <a href="{{=URL(f='validar.html', args=[producto.id_producto])}}">
-                                <center><span class="glyphicon glyphicon-ok" style="color:#B2FF59"></span></center>
-                            </a>
+                                <center><span class="glyphicon glyphicon-ok" style="color:#9E9E9E"></span></center>
                         </td>
                         <td>
-                            <a href="{{=URL(f='rechazar.html', args=[producto.id_producto])}}">
-                                <center><span class="glyphicon glyphicon-remove red"></span></center>
-                            </a>
+                            <center><span class="glyphicon glyphicon-remove" style="color:#9E9E9E"></span></center>
                         </td>
                         {{pass}}
                     </tr>
