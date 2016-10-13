@@ -50,14 +50,16 @@ def gestionar_validacion():
 
 
     # Hago el query Espera
-    productosE = db(db.PRODUCTO.estado == "En espera" and db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo).select(db.PRODUCTO.nombre, db.PRODUCTO.id, db.TIPO_ACTIVIDAD.nombre)
-    productosV = db(db.PRODUCTO.estado == "Validada" and db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo).select(db.PRODUCTO.nombre, db.PRODUCTO.id, db.TIPO_ACTIVIDAD.nombre)
-    productosR = db(db.PRODUCTO.estado == "Rechazada" and db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo).select(db.PRODUCTO.nombre, db.PRODUCTO.id, db.TIPO_ACTIVIDAD.nombre)
-    # print '##########################'
-    # for p in productosE:
-    #     print p['PRODUCTO'].nombre
-    #     print p['PRODUCTO'].id_producto
-    # print '##########################'
+    productosE = db(db.PRODUCTO.estado == "En espera" and db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo).select(db.PRODUCTO.nombre, db.PRODUCTO.estado, db.PRODUCTO.id, db.TIPO_ACTIVIDAD.nombre)
+    productosV = db(db.PRODUCTO.estado == "Validada" and db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo).select(db.PRODUCTO.nombre, db.PRODUCTO.estado, db.PRODUCTO.id, db.TIPO_ACTIVIDAD.nombre)
+    productosR = db(db.PRODUCTO.estado == "Rechazada" and db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo).select(db.PRODUCTO.nombre, db.PRODUCTO.estado, db.PRODUCTO.id, db.TIPO_ACTIVIDAD.nombre)
+    print '##########################'
+    print productosE
+    for p in productosE:
+        print p['PRODUCTO'].nombre
+        print p['PRODUCTO'].id_producto
+        print p['PRODUCTO'].estado
+    print '##########################'
     '''
     queryEsp = reduce(lambda a, b: (a&b),[db.PRODUCTO.estado == 'En espera',
                                        db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo
