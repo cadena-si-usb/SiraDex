@@ -16,13 +16,22 @@ from funciones_siradex import get_tipo_usuario
 '''
 def gestionar():
 
-    listaTipoActividades = db( (db.TIPO_ACTIVIDAD.papelera == True) & 
-                               (db.TIPO_ACTIVIDAD.id_programa == request.args(0) ) ).select(db.TIPO_ACTIVIDAD.nombre
-                                                                                ,db.TIPO_ACTIVIDAD.descripcion
-                                                                                ,db.TIPO_ACTIVIDAD.id_tipo
-                                                                                ,db.TIPO_ACTIVIDAD.tipo_p_r
-                                                                                ,db.TIPO_ACTIVIDAD.id_programa
-                                                                                )
+    if request.args:
+
+        listaTipoActividades = db( (db.TIPO_ACTIVIDAD.papelera == True) &
+                                   (db.TIPO_ACTIVIDAD.id_programa == request.args(0) ) ).select(db.TIPO_ACTIVIDAD.nombre
+                                                                                    ,db.TIPO_ACTIVIDAD.descripcion
+                                                                                    ,db.TIPO_ACTIVIDAD.id_tipo
+                                                                                    ,db.TIPO_ACTIVIDAD.tipo_p_r
+                                                                                    ,db.TIPO_ACTIVIDAD.id_programa
+                                                                                    )
+    else:
+        listaTipoActividades = db(db.TIPO_ACTIVIDAD.papelera == True).select(db.TIPO_ACTIVIDAD.nombre
+                                                                                    ,db.TIPO_ACTIVIDAD.descripcion
+                                                                                    ,db.TIPO_ACTIVIDAD.id_tipo
+                                                                                    ,db.TIPO_ACTIVIDAD.tipo_p_r
+                                                                                    ,db.TIPO_ACTIVIDAD.id_programa
+                                                                                    )
 
     listaProgramas = db(db.PROGRAMA.papelera == True).select()
 
@@ -36,9 +45,9 @@ def gestionar():
  de manera definitiva
 '''
 def eliminar_tipo_papelera():
-    
+
     id_tipo = int(request.args[0])
-    
+
     query = reduce(lambda a, b: (a & b), [db.TIPO_ACTIVIDAD.papelera == True,
                                           db.TIPO_ACTIVIDAD.id_tipo == id_tipo,
                                           db.TIPO_ACTIVIDAD.id_tipo == db.ACT_POSEE_CAMPO.id_tipo_act,
@@ -46,18 +55,18 @@ def eliminar_tipo_papelera():
                    )
     # Guardo los reusltados en 'aux'
     aux = db(query).select(db.ACT_POSEE_CAMPO.ALL)
-    
+
     # Borro las relaciones
     if (len(aux) > 0):
         db(db.ACT_POSEE_CAMPO.id_tipo_act == aux[0].id_tipo_act).delete()
-    
+
     # Borro los campos
     for row in aux:
         db(db.CAMPO.id_campo == row.id_campo).delete()
-    
+
     # Borro el tipo_activdad
     db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).delete()
-    
+
     # Guardo mensaje de exito
     session.message = 'Tipo Eliminado'
     redirect(URL('gestionar.html'))
