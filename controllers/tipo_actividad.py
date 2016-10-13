@@ -32,7 +32,7 @@ def gestionar():
                                  descripcion = request.vars.Descripcion,
                                  id_programa = id_programa)
 
-    
+
     if len(request.args) == 0:
 
         listaTipoActividades = db(db.TIPO_ACTIVIDAD.papelera == False).select(db.TIPO_ACTIVIDAD.nombre
@@ -51,7 +51,7 @@ def gestionar():
                                                    ,db.TIPO_ACTIVIDAD.descripcion
                                                    ,db.TIPO_ACTIVIDAD.id_tipo)
         programa = db(db.PROGRAMA.id_programa == id_programa).select(db.PROGRAMA.ALL).first()
-        programa = {"nombre":programa.nombre,"descripcion":programa.descripcion}
+        # programa = {"nombre":programa.nombre,"descripcion":programa.descripcion}
 
     return dict(admin = get_tipo_usuario()
             , listaTipoActividades = listaTipoActividades
