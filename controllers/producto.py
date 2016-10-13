@@ -125,7 +125,6 @@ def agregar():
         except:
             pass
 
-        print nombre
         obligatorio = rows_campo.obligatorio
         tipo_campo = rows_campo.tipo_campo
         if obligatorio:
@@ -150,7 +149,9 @@ def agregar():
         
             
     #fields.append(Field(nombre,requires=IS_IN_SET([(1,'Method1'), (2,'Method2'), (3,'Method3')], zero='Select')))
-    form=SQLFORM.factory(*fields)
+    form=SQLFORM.factory(*fields)    
+    form.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    form.element(_type='submit')['_value']="Agregar"
 
     if form.process().accepted:
         no = ['nombre','descripcion','fecha_realizacion','lugar']
@@ -195,60 +196,131 @@ def modificar():
     else:
         redirect(URL(c ="default",f="index"))
 
-    id_act = int(request.args(0))
-    rows = db(db.PRODUCTO_TIENE_CAMPO.id_prod == id_act).select()
+    id_producto = int(request.args(0))
+
+    now = datetime.datetime.now()
+    if now.month < 10 :
+        mes = "-0" +  str(now.month)
+    else:
+        mes = "-" +  str(now.month)
+    if now.day < 10 :
+        dia = "-0" +  str(now.day)
+    else:
+        dia = "-" +  str(now.month)
+    fecha_max = str(now.year) + mes + dia
+
+    # Obtenemos la actividad para mostrarla en el html
+    producto = db(db.PRODUCTO.id_producto==id_producto).select().first()    
+    tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == producto.id_tipo).select().first()
+    
+    nombre_actividad = tipo_actividad.nombre
+    descripcion_actividad = tipo_actividad.descripcion
+
+    # Creamos el formulario
+    rows = db(db.PRODUCTO_TIENE_CAMPO.id_prod == id_producto).select()
     fields = []
-    valores = []
+    fields.append(Field('nombre','string',requires=[IS_NOT_EMPTY(),IS_LENGTH(50)]))
+    fields.append(Field('descripcion','string',requires=[IS_NOT_EMPTY(),IS_LENGTH(250)]))
+    fields.append(Field('fecha_realizacion','date',requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
+    fields.append(Field('lugar','string',requires=[IS_NOT_EMPTY(),IS_LENGTH(50)]))
+
+    valores = {}
+    valores['nombre'] = producto.nombre
+    valores['descripcion'] = producto.descripcion
+    valores['fecha_realizacion'] = producto.fecha_realizacion
+    valores['lugar'] = producto.lugar
+    
+    
     for row in rows:
         rows_campo = db(db.CAMPO.id_campo == row.id_campo).select().first()
-        nombre = rows_campo.nombre
-        nombre = nombre.replace(" ", "_")
+        nombre = rows_campo.nombre.replace(" ", "_")
+        try :
+            if int(nombre[0]):
+                nombre = "campo_"+nombre
+        except:
+            pass
+
         obligatorio = rows_campo.obligatorio
-        tipo_campo = ''
-        tipo_campo = rows_campo.lista
-# tipo_campos = ['fecha', 'participante', 'ci', 'comunidad', 'telefono', 'texto','documento', 'cantidad entera', 'cantidad decimal']
+        tipo_campo = rows_campo.tipo_campo
+
         if obligatorio:
-            if tipo_campo in   ['fecha']:             fields.append(Field(nombre,'date',requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
-            elif tipo_campo in ['participante,texto']:fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
-            elif tipo_campo in ['ci']:                fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX')]))
-            elif tipo_campo in ['comunidad']:         fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY()]))
-            elif tipo_campo in ['documento']:         fields.append(Field(nombre,'upload',uploadfolder=URL('static/archivos'),requires=[IS_NOT_EMPTY(error_message='Debe subirse un archivo')]))
-            elif tipo_campo in ['telefono']:          fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{2}-\d{2}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx')]))
-            elif tipo_campo in ['cantidad entera']:   fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
-            elif tipo_campo in ['cantidad decimal']:  fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
+            if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
+            elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
+            elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX')]))
+            elif tipo_campo in ['Documento']:         fields.append(Field(nombre,'upload',uploadfolder=URL('static/archivos'),requires=[IS_NOT_EMPTY(error_message='Debe subirse un archivo')]))
+            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{2}-\d{2}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx')]))
+            elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
+            elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
+            elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',requires=IS_NOT_EMPTY()))
+                
         else:
-            if tipo_campo in   ['fecha']:             fields.append(Field(nombre,'date',requires=IS_EMPTY_OR(IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD'))))
-            elif tipo_campo in ['participante,texto']:fields.append(Field(nombre,'string'))
-            elif tipo_campo in ['ci']:                fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\d{2}.\d{3}.\d{3}$',error_message='CI invalida, debe ser: XX.XXX.XXX'))))
-            elif tipo_campo in ['comunidad']:         fields.append(Field(nombre,'string'))
-            elif tipo_campo in ['documento']:         fields.append(Field(nombre,'upload',requires=IS_EMPTY_OR(IS_UPLOAD_FILENAME()),uploadfolder=URL('static/archivos')))
-            elif tipo_campo in ['telefono']:          fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\(0\d{3}\)\d{3}-\d{2}-\d{2}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx'))))
-            elif tipo_campo in ['cantidad entera']:   fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_INT_IN_RANGE(-9000000000000000000, 9000000000000000000,error_message='Numero muy grande o muy pequeno'))))
-            elif tipo_campo in ['cantidad decimal']:  fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_DECIMAL_IN_RANGE(-9000000000000000000, 9000000000000000000, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -+9000000000000000000'))))
+            if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',requires=IS_EMPTY_OR(IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD'))))
+            elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string'))
+            elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX'))))
+            elif tipo_campo in ['Documento']:         fields.append(Field(nombre,'upload',requires=IS_EMPTY_OR(IS_UPLOAD_FILENAME()),uploadfolder=URL('static/archivos')))
+            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\(0\d{3}\)\d{3}-\d{2}-\d{2}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx'))))
+            elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807))))
+            elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807'))))
+            elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',requires=IS_NOT_EMPTY()))
 
-
-        valores.append([nombre,row.valor_campo])
+        valores[nombre]=row.valor_campo
 
     form=SQLFORM.factory(*fields)
     form.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
     form.element(_type='submit')['_value']="Modificar"
-    for i in range(len(valores)):
-        setattr(form.vars, valores[i][0], valores[i][1])
 
+    print valores
+    # Le escribimos la informacion a las vistas
+    for nombre_campo in valores.keys():
+        setattr(form.vars, nombre_campo, valores[nombre_campo])
+
+    # Al aceptar el formulario
     if form.process().accepted:
+        no = ['nombre','descripcion','fecha_realizacion','fecha_modificacion','lugar']
+        sql = "UPDATE PRODUCTO SET estado = 'En espera' WHERE id_producto = '"+str(id_producto)+"';"
+
+        sql2 = "UPDATE PRODUCTO SET fecha_modificacion='"+str(now.date())+"' WHERE id_producto = '"+str(id_producto)+"';"
+        print "\n\nel sql quedo:" +sql
+        print "\nel otro: "+sql2
+        db.executesql(sql)
+        print "listo1"
+        db.executesql(sql2)
+        print "listo 2"
 
         for var in form.vars:
-            campo = var.replace("_"," ")
-            id_cam = db(db.CAMPO.nombre==campo).select().first().id_campo
-            valor = getattr(form.vars ,var)
+            print "trabajare con: " + var
+            valor_anterior = valores[var]
+            print "valor anterior: " + str(valor_anterior)
+            print "entrara " + str(not(var in no))
+            if not(var in no):
+                try:
+                    if (var[0:6]=="campo_"):
+                        campo = var[6:]
+                except:
+                    pass
+                print "var:" + var
+                valor_nuevo = getattr(form.vars ,var)
+                print "El valor es: " + valor_nuevo
+                if valor_nuevo != valor_anterior:
+                    campo = campo.replace("_"," ")
+                    id_campo = db(db.CAMPO.nombre==campo).select().first().id_campo
 
-            sql = "UPDATE PRODUCTO_TIENE_CAMPO SET valor_campo = '" + str(valor)
-            sql = sql + "' WHERE id_producto = '" + str(id_act) + "' AND id_campo = '" + str(id_cam) + "';"
-            db.executesql(sql)
+                    sql = "UPDATE PRODUCTO_TIENE_CAMPO SET valor_campo = '" + str(valor_nuevo)
+                    sql = sql + "' WHERE id_prod = '" + str(id_producto) + "' AND id_campo = '" + str(id_campo) + "';"
+                    db.executesql(sql)
 
-            update_act = "UPDATE PRODUCTO SET ci_usuario_modifica = '" + str(session.usuario['cedula'])
-            update_act = update_act + "' WHERE id_producto = '" + str(id_act) + "';"
-            db.executesql(update_act)
+                else:
+                    print "next"
+            else:
+                valor_nuevo = getattr(form.vars ,var)
+                if valor_nuevo != valor_anterior:
+                    sql = "UPDATE PRODUCTO SET "+var+"= '"+str(valor_nuevo)+\
+                          "' WHERE id_producto = '"+str(id_producto)+"';"
+                    db.executesql(sql)
+                    print " agregada "+ str(var)
+                else:
+                    print "next "+ str(var)
+
 
         redirect(URL('gestionar'))
 
