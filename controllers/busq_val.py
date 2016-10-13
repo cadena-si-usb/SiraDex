@@ -4,21 +4,21 @@ def busqueda():
 
     if request.vars.Programa == "all" and request.vars.TipoActividad == "all":
         sql = "SELECT nombre FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
-         + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor + "%\');" 
+         + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor + "%\') AND estado=\'Validado\';" 
 
         productos = db.executesql(sql)
 
     elif request.vars.Programa != "all" and request.vars.TipoActividad == "all":
         sql = "SELECT nombre FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
          + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
-         + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + request.vars.Programa + ");"
+         + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + request.vars.Programa + ") AND estado=\'Validado\';"
 
         productos = db.executesql(sql)
 
     elif request.vars.Programa == "all" and request.vars.TipoActividad != "all":
         sql = "SELECT nombre FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
          + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
-         + "%\') AND id_tipo=\'" + request.vars.TipoActividad + "\';" 
+         + "%\') AND id_tipo=\'" + request.vars.TipoActividad + "\' AND estado=\'Validado\';" 
 
         productos = db.executesql(sql)
 
@@ -26,10 +26,9 @@ def busqueda():
         sql = "SELECT nombre FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
          + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
          + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + request.vars.Programa\
-         + ") AND id_tipo=\'" + request.vars.TipoActividad + "\' ;"
+         + ") AND id_tipo=\'" + request.vars.TipoActividad + "\' AND estado=\'Validado\';"
 
         productos = db.executesql(sql)
-    print productos
     return locals()
 
 # Vista de validaciones

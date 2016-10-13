@@ -22,10 +22,3 @@ INSERT INTO campo values(3,2,'3 campo-catalogo 2','Texto Largo',true);
 INSERT INTO act_posee_campo values(1,1);
 INSERT INTO act_posee_campo values(1,2);
 INSERT INTO act_posee_campo values(1,3);
-
-INSERT INTO usuario values('123', 'usbid123','francisco', 'rojas','123456', 'correo1');
-INSERT INTO usuario values('431', 'usbid431','frandres', 'rrrs','123r', 'correo2');
-
-INSERT INTO producto values(2, 2,'productisimo','','', '','','123',NULL);
-
-#INSERT INTO producto VALUES (4,1,'nombre 4','no tiene','En espera','','',NULL,'24272072','24272072');

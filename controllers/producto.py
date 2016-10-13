@@ -97,8 +97,10 @@ def agregar():
     formulario = SQLFORM(db.PRODUCTO)
     if formulario.process(session=None, formname='crear_tipo').accepted:
         print "se envio"
+        redirect(URL('gestionar'))
     elif formulario.errors:
         print "error"
+        formulario.errors.fecha = T('mala fecha')
         print formulario.errors
     else:
         print "fatal"
