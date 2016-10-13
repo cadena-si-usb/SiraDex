@@ -65,7 +65,8 @@ def gestionar_validacion():
     for p in productosR:
         print p['PRODUCTO'].nombre
         print p['PRODUCTO'].id_producto
-    print '##########################'
+    print productosE
+
     '''
     queryEsp = reduce(lambda a, b: (a&b),[db.PRODUCTO.estado == 'En espera',
                                        db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo
