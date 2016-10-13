@@ -23,7 +23,6 @@ def gestionar():
         tipo.descripcion = request.vars.Descripcion
         tipo.id_programa = request.vars.Programa
         tipo.update_record()                                 # Se actualiza el tipo de actividad.
-        redirect("gestionar.html")
 
     if request.vars and (request.vars["_formname"]=="formulario_agregar_tipo"):
         programa = db(db.PROGRAMA.nombre == request.vars.Programa).select()
@@ -32,9 +31,8 @@ def gestionar():
                                  tipo_p_r = request.vars.Tipo,
                                  descripcion = request.vars.Descripcion,
                                  id_programa = id_programa)
-        redirect("gestionar.html")
 
-
+    
     if len(request.args) == 0:
 
         listaTipoActividades = db(db.TIPO_ACTIVIDAD.papelera == False).select(db.TIPO_ACTIVIDAD.nombre
@@ -57,7 +55,7 @@ def gestionar():
 
     return dict(admin = get_tipo_usuario()
             , listaTipoActividades = listaTipoActividades
-            , programa_nombre = programa["nombre"], programa_descripcion = programa["descripcion"])
+            , programa = programa)
 
 #. --------------------------------------------------------------------------- .
 '''
@@ -124,6 +122,9 @@ def agregar_tipo():
     # Metodo GET
     else:
         session.message = ''
+
+    formulario_agregar_tipo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    formulario_agregar_tipo.element(_type='submit')['_value']="Agregar"
 
     return dict(formulario=formulario_agregar_tipo, admin = get_tipo_usuario(), mensaje=session.message, hayPrograma = hayPrograma)
 
@@ -246,6 +247,12 @@ def agregar_tipo_campos():
     else:
         session.message = ''
 
+    formSimple.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    formSimple.element(_type='submit')['_value']="Agregar"
+
+    formMultiple.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    formMultiple.element(_type='submit')['_value']="Agregar"
+
     return dict(formSimple = formSimple, formMultiple = formMultiple,
                 campos = campos_guardados, admin = get_tipo_usuario())
 #. --------------------------------------------------------------------------- .
@@ -304,8 +311,6 @@ def enviar_tipo_papelera():
     tipo.update_record()
     session.message = 'Tipo Enviado a la Papelera'
     redirect(URL('gestionar.html'))
-
-
 
 #. --------------------------------------------------------------------------- .
 def ver_tipo_actividad():
@@ -469,6 +474,9 @@ def editar_tipo():
     else:
         session.message = ''
 
+    formulario_editar_tipo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    formulario_editar_tipo.element(_type='submit')['_value']="Editar"
+
 
     return dict(tipo=tipo, formulario=formulario_editar_tipo, admin=get_tipo_usuario())
 
@@ -514,6 +522,10 @@ def editar_campo():
 
     else :
         mensaje = ""
+
+
+    formulario_editar_campo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    formulario_editar_campo.element(_type='submit')['_value']="Editar"
 
     return dict(formulario = formulario_editar_campo, mensaje=mensaje, admin=admin)
 

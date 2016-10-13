@@ -91,6 +91,7 @@
 /**********************************/
 	#titulo{
 		color: #444;
+        font-size: 200%;
 	}
 
 	#contenido{
@@ -473,3 +474,7 @@ style=""
 	.form-horizontal{
 		padding: 6px 20px !important;
 	}
+
+    .right {
+        text-align: right;
+    }

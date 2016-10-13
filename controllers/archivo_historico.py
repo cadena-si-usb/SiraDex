@@ -16,10 +16,13 @@ from funciones_siradex import get_tipo_usuario
 '''
 def gestionar():
 
-    listaTipoActividades = db(db.TIPO_ACTIVIDAD.papelera == True).select(db.TIPO_ACTIVIDAD.nombre
-                                                   ,db.TIPO_ACTIVIDAD.descripcion
-                                                   ,db.TIPO_ACTIVIDAD.id_tipo
-                                                   ,db.TIPO_ACTIVIDAD.tipo_p_r)
+    listaTipoActividades = db( (db.TIPO_ACTIVIDAD.papelera == True) & 
+                               (db.TIPO_ACTIVIDAD.id_programa == request.args(0) ) ).select(db.TIPO_ACTIVIDAD.nombre
+                                                                                ,db.TIPO_ACTIVIDAD.descripcion
+                                                                                ,db.TIPO_ACTIVIDAD.id_tipo
+                                                                                ,db.TIPO_ACTIVIDAD.tipo_p_r
+                                                                                ,db.TIPO_ACTIVIDAD.id_programa
+                                                                                )
 
     listaProgramas = db(db.PROGRAMA.papelera == True).select()
 
@@ -69,7 +72,6 @@ def restaurar_tipo():
     tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
     tipo_actividad.update(papelera=False)
     tipo_actividad.update_record()
-    session.message = 'Tipo Restaurado'
     redirect(URL('gestionar.html'))
 
 def restaurar_programa():

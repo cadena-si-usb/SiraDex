@@ -1,19 +1,18 @@
 {{extend 'layoutSIRADEXloged.html'}}
 
-
 {{block titulo}}
-    <h2>          {{if programa_nombre != None:}} 
-                       Programa: {{=programa_nombre}}
-                   {{else:}}
-                       Tipos de Actividades del Sistema 
-                   {{pass}}
-    </h2>
+        {{if programa.nombre != None:}} 
+           Programa: {{=programa.nombre}}
+       {{else:}}
+           Tipos de Actividades del Sistema 
+       {{pass}}
+
 {{end}}
 
 {{block descripcion}}
     <div class="col-sm-8">
-        <h4><p> {{if programa_descripcion != None:}} 
-                       Descripción: {{=programa_descripcion}}
+        <h4><p> {{if programa.descripcion != None:}} 
+                       Descripción: {{=programa.descripcion}}
                 {{else:}}
                         
                 {{pass}}
@@ -23,6 +22,10 @@
 {{end}}
 
 {{block contenido}}
+
+    <script src="{{=URL('static','js/global.js')}}"></script>
+    <script src="{{=URL('static','js/tipo_actividad.js')}}"></script>
+
       <div class="row">
         <div class="col-sm-6">
              <form class="navbar-form" role="search">
@@ -52,7 +55,7 @@
               <span class="glyphicon glyphicon-plus-sign"
                     aria-hidden="true"></span> Agregar Actividad
             </button>
-            <a href="{{=URL(c='archivo_historico', f='gestionar.html')}}" >
+            <a href="{{=URL(c='archivo_historico', f='gestionar',args=[programa.id_programa])}}" >
             <button type="button" class="btn btn-default red-trash btn-border">
               <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Archivo Histórico
             </button>
@@ -67,17 +70,22 @@
         <table class="table table-striped table-condensed table-hover sortable">
             <thead>
                 <tr>
-                    <th>Nombre</td>
-                    <th>Descripción</td>
-                    <th><center>Editar</center></td>
-                    <th><center>Eliminar</center></td>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th><center>Editar</center></th>
+                    <th><center>Eliminar</center></th>
                 </tr>
             </thead>
             <tbody>
+                {{if len(listaTipoActividades) == 0:}}
+                <tr>
+                    <td colspan="4"> No hay Tipos de Actividades que mostrar.</td>
+                </tr>
+                {{else:}}
                     {{for tipoActividad in listaTipoActividades: }}
                     <tr>
                         <td class="col-md-4">
-                            <a href="{{=URL(c='tipo_actividad', f='ver_tipo_actividad.html',args=[tipoActividad.id_tipo])}}">
+                            <a href="{{=URL(c='tipo_actividad', f='ver_tipo_actividad',args=[tipoActividad.id_tipo])}}">
                                 {{=tipoActividad.nombre}}
                             </a>
                         </td>
@@ -100,13 +108,13 @@
                                          data-toggle="modal"
                                          data-target="#myModalDelete"
                                          data-id-tipo="{{=tipoActividad.id_tipo}}">
-
                                    </span>
                                 </a>
                             <center>
                         </td>
                     </tr>
                     {{pass}}
+                {{pass}}
             </tbody>
         </table>
     </div>

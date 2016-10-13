@@ -166,6 +166,7 @@
 'Edit Profile': 'Editar Perfil',
 'edit profile': 'editar perfil',
 'Edit This App': 'Edite esta App',
+'Editar': 'Editar',
 'Editing file': 'Editando archivo',
 'Editing file "%s"': 'Editando archivo "%s"',
 'El nombre del programa debe comenzar con una letra.': 'El nombre del programa debe comenzar con una letra.',
