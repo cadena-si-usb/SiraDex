@@ -63,7 +63,6 @@ def ver_producto():
             readonly=True)
 
   #Agregamos los otros elementos de los campos
-  print db(db.PRODUCTO).select()
   campos = db(db.PRODUCTO_TIENE_CAMPO.id_prod == producto.id_producto).select()
   
   elementos = []
@@ -82,6 +81,21 @@ def ver_producto():
   if len(elementos) != 0:
     form_datos = SQLFORM.factory(*elementos, readonly=True)
 
+  form_validado = SQLFORM(
+            db.PRODUCTO,            
+            fields=['nombre'],            
+            labels={'nombre':'Nuevo nombre'},
+            col3={'nombre':'Este es el nombre que aparecera al momento de exportar las actividades'}
+
+  )
+  form_validado.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+  form_validado.element(_type='submit')['_value']="Actualizar"
+
+  print "El var request es:"
+  print request.var
+  if request.var:
+    print "holaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    print request.var
 
   return locals()
 
