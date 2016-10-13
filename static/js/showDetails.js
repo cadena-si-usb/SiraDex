@@ -1,7 +1,7 @@
 $(function(){
     $('.detalles').each(function(event){ /* selecciona los div con la clase .detalles*/
     
-        var largo_max = 100; /* indica cuantos caracteres apareceran antes de que aparezca "Mas detalles" */
+        var largo_max = 140; /* indica cuantos caracteres apareceran antes de que aparezca "Mas detalles" */
 
         if($(this).html().length > largo_max){
             var contenido_corto   = $(this).html().substr(0,largo_max); /* Divide el contenido en dos partes */

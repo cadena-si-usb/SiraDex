@@ -82,7 +82,7 @@
                                 {{if x.estado == 'Validada':}}
                                 <tr>
                                     <!-- Nombre -->
-                                    <td class="center-vertically"> 
+                                    <td class="center-vertically detalles"> 
                                     {{=x.nombre}}</td>
                                     
                                     <!-- Boton Modificar -->
@@ -134,9 +134,12 @@
                                 {{if x.estado == 'En espera':}}
                                 <tr>
                                     <!-- Nombre Producto -->
-                                    <td class="center-vertically"> {{=x.nombre}}</td>
+                                        
+                                    <td class="center-vertically detalles"> 
+                                    {{=x.nombre}}
+                                    </td>
                                     <!-- Nombre Actividad -->
-                                    <td class="center-vertically"> {{=nombres[x]}}</td>
+                                    <td class="center-vertically detalles"> {{=nombres[x]}}</td>
                                     <!-- Modificacion -->
                                     <td class="center-vertically"> {{x.fecha}}</td>
                                     <!-- Realizacion  -->
@@ -188,8 +191,8 @@
                             {{for x in rows:}}
                                 {{if x.estado == 'Rechazada':}}
                                 <tr>
-                                    <td class="center-vertically"> {{=x.nombre}}</td>
-                                    <td class="center-vertically"> {{=nombres[x]}}</td>
+                                    <td class="center-vertically detalles"> {{=x.nombre}}</td>
+                                    <td class="center-vertically detalles"> {{=nombres[x]}}</td>
                                     <td class="center-vertically"><!--   Creacion    --> {{x.fecha}}</td>
                                     <td class="center-vertically"> <!-- Modificacion --> {{x.fecha}}</td>
                                     <!-- Boton Modificar -->
