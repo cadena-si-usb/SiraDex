@@ -5,6 +5,8 @@ from pprint import pprint
 from datetime import time
 import datetime
 
+tipo_global = None
+
 def gestionar():
     if session.usuario != None:
         if(session.usuario["tipo"] == "DEX"):
@@ -84,11 +86,13 @@ def agregar():
 
     # Lista de programas para listarlos en el select
     programas =  db(db.PROGRAMA).select(db.PROGRAMA.nombre,db.PROGRAMA.id_programa).as_list()
-        
-
-    formulario = SQLFORM(db.PRODUCTO)
+    
+    
+    formulario = SQLFORM(db.PRODUCTO, db.PRODUCTO_TIENE_CAMPO)
     if formulario.process(session=None, formname='crear_tipo').accepted:
-        print "se envio"
+        id = db.PRODUCTO.insert(**db.PRODUCTO._filter_fields(formulario.vars))
+        formulario.vars.PRODUCTO=id
+        id = db.PRODUCTO_TIENE_CAMPO.insert(**db.PRODUCTO_TIENE_CAMPO._filter_fields(formulario.vars))
     elif formulario.errors:
         print "error"
         print formulario.errors
@@ -96,52 +100,54 @@ def agregar():
         print "fatal"
 
     '''
-    tipo =  request.vars.id_tipo
-    posibles_campos = {'Fecha':'date', 'Telefono':'string', 'Texto Corto':'string','Documento':'upload', 'Numero Entero':'integer', 'Texto Largo':'text'}
+    if tipo_global:
+        print "Ahora si entre"
+        tipo =  request.vars.id_tipo
+        posibles_campos = {'Fecha':'date', 'Telefono':'string', 'Texto Corto':'string','Documento':'upload', 'Numero Entero':'integer', 'Texto Largo':'text'}
 
-    campos_id = db(db.ACT_POSEE_CAMPO.id_tipo_act == tipo).select()
-    tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == tipo).select().first()
-    nombre_actividad = tipo_actividad.nombre
-    descripcion_actividad = tipo_actividad.descripcion
+        campos_id = db(db.ACT_POSEE_CAMPO.id_tipo_act == tipo).select()
+        tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == tipo).select().first()
+        nombre_actividad = tipo_actividad.nombre
+        descripcion_actividad = tipo_actividad.descripcion
 
 
 
-                             if obligatorio:
-                                    if tipo_campo in   ['fecha']:             fields.append(Field(nombre,'date',requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
-                                    elif tipo_campo in ['participante,texto']:fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
-                                    elif tipo_campo in ['ci']:                fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX')]))
-                                    elif tipo_campo in ['comunidad']:         fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY()]))
-                                    elif tipo_campo in ['documento']:         fields.append(Field(nombre,'upload',uploadfolder=URL('static/archivos'),requires=[IS_NOT_EMPTY(error_message='Debe subirse un archivo')]))
-                                    elif tipo_campo in ['telefono']:          fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{2}-\d{2}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx')]))
-                                    elif tipo_campo in ['cantidad entera']:   fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
-                                    elif tipo_campo in ['cantidad decimal']:  fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
-                                else:
-                                    if tipo_campo in   ['fecha']:             fields.append(Field(nombre,'date',requires=IS_EMPTY_OR(IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD'))))
-                                    elif tipo_campo in ['participante,texto']:fields.append(Field(nombre,'string'))
-                                    elif tipo_campo in ['ci']:                fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\d{2}.\d{3}.\d{3}$',error_message='CI invalida, debe ser: XX.XXX.XXX'))))
-                                    elif tipo_campo in ['comunidad']:         fields.append(Field(nombre,'string'))
-                                    elif tipo_campo in ['documento']:         fields.append(Field(nombre,'upload',requires=IS_EMPTY_OR(IS_UPLOAD_FILENAME()),uploadfolder=URL('static/archivos')))
-                                    elif tipo_campo in ['telefono']:          fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\(0\d{3}\)\d{3}-\d{2}-\d{2}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx'))))
-                                    elif tipo_campo in ['cantidad entera']:   fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_INT_IN_RANGE(-9000000000000000000, 9000000000000000000,error_message='Numero muy grande o muy pequeno'))))
-                                    elif tipo_campo in ['cantidad decimal']:  fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_DECIMAL_IN_RANGE(-9000000000000000000, 9000000000000000000, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -+9000000000000000000'))))
-                        
-                            #fields.append(Field(nombre,requires=IS_IN_SET([(1,'Method1'), (2,'Method2'), (3,'Method3')], zero='Select')))
-                            print fields
-                            form=SQLFORM.factory(*fields)
-                        
-                            if form.process().accepted:
-                                dicc_act = db.ACTIVIDAD.insert(id_tipo = tipo,ci_usuario_crea= session.usuario['cedula'])
-                                id_act = dicc_act['id_actividad']
-                                for var in form.vars:
-                                    campo = var.replace("_"," ")
-                                    id_cam = db(db.CAMPO.nombre==campo).select().first().id_campo
-                                    valor = getattr(form.vars ,var)
-                                    db.TIENE_CAMPO.insert(id_actividad=id_act,id_campo=id_cam,valor_campo= valor)
-                                redirect(URL('gestionar'))
-                            elif form.errors:
-                                response.flash = 'el formulario tiene errores
+                                if obligatorio:
+                                        if tipo_campo in   ['fecha']:             fields.append(Field(nombre,'date',requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
+                                        elif tipo_campo in ['participante,texto']:fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
+                                        elif tipo_campo in ['ci']:                fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX')]))
+                                        elif tipo_campo in ['comunidad']:         fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY()]))
+                                        elif tipo_campo in ['documento']:         fields.append(Field(nombre,'upload',uploadfolder=URL('static/archivos'),requires=[IS_NOT_EMPTY(error_message='Debe subirse un archivo')]))
+                                        elif tipo_campo in ['telefono']:          fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{2}-\d{2}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx')]))
+                                        elif tipo_campo in ['cantidad entera']:   fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
+                                        elif tipo_campo in ['cantidad decimal']:  fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
+                                    else:
+                                        if tipo_campo in   ['fecha']:             fields.append(Field(nombre,'date',requires=IS_EMPTY_OR(IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD'))))
+                                        elif tipo_campo in ['participante,texto']:fields.append(Field(nombre,'string'))
+                                        elif tipo_campo in ['ci']:                fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\d{2}.\d{3}.\d{3}$',error_message='CI invalida, debe ser: XX.XXX.XXX'))))
+                                        elif tipo_campo in ['comunidad']:         fields.append(Field(nombre,'string'))
+                                        elif tipo_campo in ['documento']:         fields.append(Field(nombre,'upload',requires=IS_EMPTY_OR(IS_UPLOAD_FILENAME()),uploadfolder=URL('static/archivos')))
+                                        elif tipo_campo in ['telefono']:          fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\(0\d{3}\)\d{3}-\d{2}-\d{2}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx'))))
+                                        elif tipo_campo in ['cantidad entera']:   fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_INT_IN_RANGE(-9000000000000000000, 9000000000000000000,error_message='Numero muy grande o muy pequeno'))))
+                                        elif tipo_campo in ['cantidad decimal']:  fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_DECIMAL_IN_RANGE(-9000000000000000000, 9000000000000000000, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -+9000000000000000000'))))
+                            
+                                #fields.append(Field(nombre,requires=IS_IN_SET([(1,'Method1'), (2,'Method2'), (3,'Method3')], zero='Select')))
+                                print fields
+                                form=SQLFORM.factory(*fields)
+                            
+                                if form.process().accepted:
+                                    dicc_act = db.ACTIVIDAD.insert(id_tipo = tipo,ci_usuario_crea= session.usuario['cedula'])
+                                    id_act = dicc_act['id_actividad']
+                                    for var in form.vars:
+                                        campo = var.replace("_"," ")
+                                        id_cam = db(db.CAMPO.nombre==campo).select().first().id_campo
+                                        valor = getattr(form.vars ,var)
+                                        db.TIENE_CAMPO.insert(id_actividad=id_act,id_campo=id_cam,valor_campo= valor)
+                                    redirect(URL('gestionar'))
+                                elif form.errors:
+                                    response.flash = 'el formulario tiene errores
 
-                                '''
+    '''            
 
     return locals()
 
@@ -259,12 +265,14 @@ def obtener_actividades():
 # Funcion utilizada para el ajax cuando se elige la actividad para que aparezcan los campos
 def seleccion_actividad():
     if request.vars.id_tipo=="":
+        tipo_global = None
         respuesta = "jQuery('#nombre_actividad').empty();"
         respuesta += "jQuery('#descripcion_actividad').empty();"
         respuesta += "jQuery('#campos_actividad').empty()"
         return respuesta
 
     tipo =  request.vars.id_tipo
+    tipo_global = tipo
     posibles_campos = {'Fecha':'date', 'Telefono':'string', 'Texto Corto':'string','Documento':'upload', 'Numero Entero':'integer', 'Texto Largo':'text'}
 
     campos_id = db(db.ACT_POSEE_CAMPO.id_tipo_act == tipo).select()

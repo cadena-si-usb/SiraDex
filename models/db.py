@@ -254,11 +254,11 @@ db.define_table('ACT_POSEE_CAMPO',
 );
 
 db.define_table('PRODUCTO_TIENE_CAMPO',
-    Field('id_producto',db.PRODUCTO.id_producto),
+    Field('id_prod',db.PRODUCTO.id_producto),
     Field('id_campo', db.CAMPO.id_campo),
-    Field('nombre',type='string', length=256),
+    Field('nombre_campo',type='string', length=256),
     Field('valor_campo', type='string', length=512),
-    primarykey=['id_producto', 'id_campo'],
+    primarykey=['id_prod', 'id_campo'],
     migrate=False
 );
 

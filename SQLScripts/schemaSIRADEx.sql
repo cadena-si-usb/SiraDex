@@ -159,15 +159,15 @@ CREATE TABLE ACT_POSEE_CAMPO(
 );
 
 CREATE TABLE PRODUCTO_TIENE_CAMPO(
-  id_producto    INT,
+  id_prod        INT,
   id_campo       INT,
-  nombre         VARCHAR(256),
+  nombre_campo   VARCHAR(256),
   valor_campo    VARCHAR(512),
 
   CONSTRAINT PK_TIENE_CAMPO
-             PRIMARY KEY (id_producto, id_campo),
+             PRIMARY KEY (id_prod, id_campo),
   CONSTRAINT FK_TIENE_CAMPO_ID_PRODUCTO
-             FOREIGN KEY (id_producto)
+             FOREIGN KEY (id_prod)
              REFERENCES  PRODUCTO(id_producto),
   CONSTRAINT FK_TIENE_CAMPO_ID_CAMPO
              FOREIGN KEY (id_campo)

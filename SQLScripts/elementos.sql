@@ -28,4 +28,5 @@ INSERT INTO usuario values('431', 'usbid431','frandres', 'rrrs','123r', 'correo2
 
 INSERT INTO producto values(2, 2,'productisimo','','', '','','123',NULL);
 
+#UPDATE usuario SET tipo='Administrador' WHERE usbid='12-10941';
 #INSERT INTO producto VALUES (4,1,'nombre 4','no tiene','En espera','','',NULL,'24272072','24272072');
