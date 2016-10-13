@@ -50,10 +50,14 @@ def gestionar_validacion():
 
 
     # Hago el query Espera
-    productosE = db(db.PRODUCTO.estado == "En espera").select(db.PRODUCTO.nombre,db.PRODUCTO.id_producto)
-    productosV = db(db.PRODUCTO.estado == "Validada").select(db.PRODUCTO.nombre,db.PRODUCTO.id_producto)
-    productosR = db(db.PRODUCTO.estado == "Rechazada").select(db.PRODUCTO.nombre,db.PRODUCTO.id_producto)
-    return locals()
+    productosE = db(db.PRODUCTO.estado == "En espera" and db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo).select(db.PRODUCTO.nombre, db.PRODUCTO.id, db.TIPO_ACTIVIDAD.nombre)
+    productosV = db(db.PRODUCTO.estado == "Validada" and db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo).select(db.PRODUCTO.nombre, db.PRODUCTO.id, db.TIPO_ACTIVIDAD.nombre)
+    productosR = db(db.PRODUCTO.estado == "Rechazada" and db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo).select(db.PRODUCTO.nombre, db.PRODUCTO.id, db.TIPO_ACTIVIDAD.nombre)
+    # print '##########################'
+    # for p in productosE:
+    #     print p['PRODUCTO'].nombre
+    #     print p['PRODUCTO'].id_producto
+    # print '##########################'
     '''
     queryEsp = reduce(lambda a, b: (a&b),[db.PRODUCTO.estado == 'En espera',
                                        db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo
@@ -85,7 +89,7 @@ def gestionar_validacion():
     aux1Rec = db(queryRec).select(db.TIPO_ACTIVIDAD.nombre, db.TIPO_ACTIVIDAD.id_tipo, db.PRODUCTO.nombre
                          )
     return dict(tiposEsp = aux1Esp, producEsp = auxEsp, tiposVal = aux1Val, producVal = auxVal, tiposRec = aux1Rec, producRec = auxRec, admin = admin)'''
-    # return locals()
+    return locals()
 
 # Metodo para validar un producto
 def validar():

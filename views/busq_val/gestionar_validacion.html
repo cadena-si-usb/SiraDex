@@ -66,26 +66,24 @@
                                 {{for producto in productosE:}}
                                     <tr>
                                         <td>
-                                            {{=producto.id_producto}}
+                                            {{=producto['PRODUCTO'].id_producto}}
                                         </td>
 
                                         <td class="detalles">
-                                            {{=producto.nombre}}
+                                            {{=producto['PRODUCTO'].nombre}}
                                         </td>
-                                        
                                             
-                                                <td class="detalles">
-                                                    =tipo.nombre
-                                                </td>
-                                                
+                                        <td class="detalles">
+                                           {{=producto['TIPO_ACTIVIDAD'].nombre}}
+                                        </td>
                                             
                                         <td>
-                                            <a href="{{=URL(f='validar', args=[producto.id_producto])}}">
+                                            <a href="{{=URL(f='validar', args=[producto['PRODUCTO'].id_producto])}}">
                                                 <center><span class="glyphicon glyphicon-ok" style="color:#B2FF59"></span></center>
                                             </a>
                                         </td>
                                         <td>
-                                            <a href="{{=URL(f='rechazar', args=[producto.id_producto])}}">
+                                            <a href="{{=URL(f='rechazar', args=[producto['PRODUCTO'].id_producto])}}">
                                                 <center><span class="glyphicon glyphicon-remove red"></span></center>
                                             </a>
                                         </td>
@@ -116,27 +114,24 @@
                                 {{for producto in productosV:}}
                                     <tr>                       
                                         <td>
-                                            {{=producto.id_producto}}
+                                            {{=producto['PRODUCTO'].id_producto}}
                                         </td>
 
                                         <td class="detalles">
-                                            {{=producto.nombre}}
+                                            {{=producto['PRODUCTO'].nombre}}
                                         </td> 
-
-                                        
                                             
-                                                <td class="detalles">
-                                                    =tipo.nombre
-                                                </td>
-                                                
+                                        <td class="detalles">
+                                            {{=producto['TIPO_ACTIVIDAD'].nombre}}
+                                        </td> 
                                             
                                         <td>
-                                            <a href="{{=URL(f='validar', args=[producto.id_producto])}}">
+                                            <a href="{{=URL(f='validar', args=[producto['PRODUCTO'].id_producto])}}">
                                                 <center><span class="glyphicon glyphicon-ok" style="color:#9E9E9E"></span></center>
                                             </a>
                                         </td>
                                         <td>
-                                            <a href="{{=URL(f='rechazar', args=[producto.id_producto])}}">
+                                            <a href="{{=URL(f='rechazar', args=[producto['PRODUCTO'].id_producto])}}">
                                                 <center><span class="glyphicon glyphicon-remove" style="color:#9E9E9E"></span></center>
                                             </a>
                                         </td>
@@ -166,20 +161,17 @@
                             <tbody>
                                 {{for producto in productosR:}}
                                     <tr>                                            
-                                        <td>
-                                            {{=producto.id_producto}}
+                                        <td class="detalles">
+                                            {{=producto['PRODUCTO'].id_producto}}
                                         </td>
 
-                                        <td>
-                                            {{=producto.nombre}}
+                                        <td class="detalles">
+                                            {{=producto['PRODUCTO'].nombre}}
                                         </td>
-
-                                        
                                             
-                                                <td class="detalles">
-                                                    =tipo.nombre
-                                                </td>
-                                                
+                                        <td class="detalles">
+                                            {{=producto['TIPO_ACTIVIDAD'].nombre}}
+                                        </td>    
                                             
                                         <td>
                                                 <center><span class="glyphicon glyphicon-ok" style="color:#9E9E9E"></span></center>
