@@ -46,21 +46,6 @@ def get_tipo_usuario():
     else:
         redirect(URL(c ="default",f="index"))
 
-
-def vMenuPrincipal():
-    if session.usuario != None:
-        admin = 4
-        if(session.usuario["tipo"] == "DEX"):
-            admin = 2
-        elif(session.usuario["tipo"] == "Administrador"):
-            admin = 1
-        else:
-            admin = 0
-        return dict(admin = admin)
-    else:
-        redirect(URL("index"))
-
-
 def login_cas():
     if not request.vars.getfirst('ticket'):
         #redirect(URL('error'))
@@ -93,18 +78,16 @@ def login_cas():
         tablaUsuarios = db.USUARIO
 
         session.usuario = usuario
-        print "Hola",session.usuario
         session.usuario['usbid'] = usbid
 
         if not db(tablaUsuarios.usbid == usbid).isempty():
             datosUsuario = db(tablaUsuarios.usbid==usbid).select()[0]
             session.usuario['tipo'] = datosUsuario.tipo
             session.usuario['alternativo'] = datosUsuario.correo_alter
-            print session.usuario['alternativo']
+
             session.usuario['phone'] = datosUsuario.telefono
 
-            print "\nguardado sesion : ", session.usuario
-
+            
             if datosUsuario.tipo == "Bloqueado":
                 response.flash = T("Usuario bloqueado")
                 redirect(URL(c = "default",f="index"))
@@ -112,21 +95,23 @@ def login_cas():
                 redirect(URL('perfil'))
         else:
             session.usuario['tipo'] = "Usuario"
+            session.usuario['alternativo'] = None
 
             db.USUARIO.insert(ci=session.usuario["cedula"],  # Lo insertamos en la base de datos.
             usbid=session.usuario["usbid"],
             nombres=session.usuario["first_name"],
             apellidos=session.usuario["last_name"],
             correo_inst=session.usuario["email"],
+            correo_alter= None,
             telefono=session.usuario["phone"],
             tipo = "Usuario")
             redirect(URL('vRegistroUsuario'))
-
+    
 
 def logout_cas():
     session.usuario = None
     return response.render()
-
+    
 
 # Controlador para el registro del usuario
 def vRegistroUsuario():
@@ -237,7 +222,7 @@ def EditarPerfil():
             Field('Nombres',default=session.usuario["first_name"],writable = False),
             Field('Apellidos', default=session.usuario["last_name"],writable=False),
             readonly=True)
-
+        
 
         # Modificar datos del perfil
         usuario = db(db.USUARIO.ci==session.usuario['cedula']).select().first()
@@ -245,27 +230,27 @@ def EditarPerfil():
         forma=SQLFORM(
             db.USUARIO,
             record=usuario,
-
+            
             fields=['telefono','correo_alter'],
 
-
+            
             labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'})
         forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
         forma.element(_type='submit')['_value']="Actualizar"
 
-
+        
         if request.vars:
             nuevoTelefono = request.vars.telefono
             nuevoCorreoAlter = request.vars.correo_alter
-
+            
             valor_telefono = None if ((nuevoTelefono == "") | (nuevoTelefono== None)) else nuevoTelefono
             session.usuario["phone"] = valor_telefono
 
             valor_correo = None if ((nuevoCorreoAlter == "") | (nuevoCorreoAlter== None)) else nuevoCorreoAlter
             session.usuario["alternativo"] = valor_correo
-
+            
             db(db.USUARIO.ci == session.usuario["cedula"]).update(telefono=valor_telefono, correo_alter=valor_correo)
-
+            
             print "\n\nEl nuevo usuario quedo: "
             print session.usuario
             redirect(URL('perfil'))
@@ -494,31 +479,17 @@ def index():
     return locals()
 
 def obtener_actividades():
-    if request.vars.Programa[0]=="all":
-        tiposA = db(db.TIPO_ACTIVIDAD).select('nombre')
-    else:
-        programa = db(db.PROGRAMA.nombre==request.vars.Programa[0]).select().first()
-        tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa.id_programa).select('nombre')
 
+    if request.vars.Programa=="all":
+        tiposA = db(db.TIPO_ACTIVIDAD).select()
+    else:
+        tiposA = db(db.TIPO_ACTIVIDAD.id_programa==int(request.vars.Programa)).select()
+    
     concat = '<option value="all" selected="">--cualquiera--</option>'
-    print tiposA
 
     for tipo in tiposA:
         option = tipo.nombre
-        concat += '<option value="'+option+'">'+option+'</option>'
+        concat += '<option value="'+str(tipo.id_tipo)+'">'+option+'</option>'
 
     return "jQuery('#lista_tipos').empty().append('"+concat+"')"
 
-def obtener_autores():
-    tipoA = db(db.TIPO_ACTIVIDAD.nombre==request.vars.TipoActividad).select().first()
-    sql = "select nombres from usuario where ci in (select ci_usu_creador from producto where id_tipo=="+str(tipoA.id_tipo)+");"
-    autores = db.executesql(sql)
-
-    concat = "<option></option>"
-
-    for autor in autores:
-        option = autor.nombre
-        print option
-        concat += "<option value="+option+">"+option+"</option>"
-
-    return 'jQuery("#lista_autores").empty().append("%s")'% repr(concat)

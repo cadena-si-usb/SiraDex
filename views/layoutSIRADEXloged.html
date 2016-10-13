@@ -16,7 +16,7 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-    <!--
+    
       <form class="navbar-form navbar-left" role="search">
         <div class="input-group">
           <input    type="text" 
@@ -33,14 +33,14 @@
         </span>
         </div>
       </form>
-    -->
+      
       <ul class="nav navbar-nav navbar-right">
             <!--Opciones administrador-->
-            {{ if admin == 1: }}
+            {{ if admin in [1,2]: }}
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="{{=URL(c='default', f='setVista.html', args=[2])}}"> Sistema</a>
                 <ul class="dropdown-menu" style="right:auto">
-
+                    {{if admin == 1:}}
                     <li><a href="#">Consultar Log</a></li>
 
                     <li class="dropdown-submenu">
@@ -50,23 +50,19 @@
                             <li><a href="#">Crear Backup</a></li>
                         </ul>
                     </li>
-                    <li><a href="{{=URL(c='catalogo', f='vGestionarCatalogos')}}">Catálogos</a></li>
-                    <li><a href="{{=URL(c='default', f='vGestionarUsuarios')}}">Usuarios</a></li>
-                    <li><a href="{{=URL(c='tipo_actividad', f='gestionar')}}">Tipos de Actividad</a></li>
+                    <li><a href="{{=URL(c='usuarios', f='gestionar')}}">Usuarios</a></li>
                     <li><a href="#">Notificaciones</a></li>
+                    <li role="separator" class="divider"></li>
+                    {{pass}}
+		    <li><a href="{{=URL(c='tipo_actividad', f='gestionar')}}">Tipos de Actividad</a></li>
+                    <li><a href="{{=URL(c='catalogo', f='vGestionarCatalogos')}}">Catálogos</a></li>
+                    <li><a href="#">Papelera</a></li>
                 </ul>
             </li>
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown"> Solicitudes</a>
-                <ul class="dropdown-menu" style="right:auto">
+            <li><a href="{{=URL(c='busq_val', f='gestionar_validacion.html')}}">
+                Solicitudes
+            </a></li>
 
-                    <li><a href="#">Validados</a></li>
-
-                    <li><a href="#">En Espera</a></li>
-
-                    <li><a href="#">Rechazados</a></li>
-                </ul>
-            </li>
             <li><a href="{{=URL(c='programas', f='gestionar_programas.html')}}">
                 Programas
             </a></li>
@@ -79,7 +75,7 @@
                 <li class="dropdown activo">
                     <a  class="dropdown-toggle" 
                         data-toggle="dropdown" 
-                        href="{{=URL(c='default', f='perfil', args=[2])}}"> {{=session.usuario['first_name'].split(' ',1)[0]}}
+                        href="{{=URL(c='default', f='perfil', args=[2])}}"> {{=session.usuario['first_name'].split(' ',1)[0]}} {{=session.usuario['last_name'].split(' ',1)[0]}}
                     </a>
                     <ul class="dropdown-menu" style="right:auto">
                         <li><a href="{{=URL(c='default',f='perfil')}}">Ver Perfil</a></li>

@@ -91,7 +91,6 @@
 /**********************************/
 	#titulo{
 		color: #444;
-        font-size: 200%;
 	}
 
 	#contenido{
@@ -198,6 +197,17 @@
     margin-left: 93%;
 	}
 
+/**********************************/
+/*                                */
+/*            Dropdown            */
+/*                                */
+/**********************************/
+	.dropdown-submenu {
+	    position: relative;
+	}
+	.dropdown-menu >.dropdown-submenu>.dropdown-menu {
+	    display:none;
+	}
 
 a#disabled-dropdown,
 a#disabled-dropdown:visited ,
@@ -270,7 +280,13 @@ a#disabled-dropdown:hover {
     font-size: small;
 }
 
-/* Styles iconos y botones */
+/**********************************/
+/*                                */
+/*     Styles iconos y botones    */
+/*                                */
+/**********************************/
+	
+
 
 .center-vertically {
     min-height: 10em;
@@ -341,12 +357,14 @@ a: hover {
     color: #43A047 !important;
 }
 
-/* Tabla */
-
-.tabla-border {
-    border: 0px solid #FFF !important;
-}
-style=""
+/**********************************/
+/*                                */
+/*              Tabla             */
+/*                                */
+/**********************************/
+	.tabla-border {
+	    border: 0px solid #FFF !important;
+	}
 
 /**********************************/
 /*                                */
@@ -474,7 +492,3 @@ style=""
 	.form-horizontal{
 		padding: 6px 20px !important;
 	}
-
-    .right {
-        text-align: right;
-    }

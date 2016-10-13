@@ -1,0 +1,77 @@
+{{extend 'layoutSIRADEXloged.html'}}
+
+{{block titulo}}
+    Evaluando Productos
+{{end}}
+
+{{block subtitulo}}
+    <!-- Nombre del usuario -->
+   Producto del usuario: {{=usuario_nombre}}  
+    </a>
+{{end}}
+
+{{block descripcion}}
+    <div class="row"> 
+        <div class="col-sm-12">
+        <!-- Datos del usuario -->
+            <p><b>Programa: </b> {{=programa_nombre}}</p>
+            <p><b>Tipo de Actividad: </b>{{=tipo_actividad.nombre}}</p>
+        </div>
+    </div>
+{{end}}
+
+{{block contenido}}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <br>
+                <h4 class="col-sm-offset-2">Informacion del Producto:</h4>
+                <br>
+                {{=form}}
+                {{if len(elementos) != 0:}}
+                    <br>
+                    <h4 class="col-sm-offset-2">Campos adicionales:</h4>
+                    <div class="col-xs-offset-2">
+                    {{=form_datos}}
+                    </div>
+                {{pass}}
+                <br>
+                <!--<h4 class="col-sm-offset-2">Comprobantes:</h4>-->
+
+                {{if producto.estado=='En espera':}}
+                <center>
+                    
+                    <a href="{{=URL(f='validar', args=[producto.id_producto])}}">
+                        <button id="button_validar" type="button" class="btn btn-default btn-border" style="color:#7CB342" >
+                            Validar <span class="glyphicon glyphicon-ok" aria-hidden="true" ></span>
+                        </button>
+                    </a>
+
+                    <a href="{{=URL(f='rechazar', args=[producto.id_producto])}}">
+                    <button type="button" class="btn btn-default red btn-border"  style="color:#F44336">
+                        Rechazar <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </button>
+                        </a>
+                </center>
+                <br>
+
+                
+                <div id='div_validar' class="hidden">
+                    {{=form_validado}}
+                </div>
+                {{pass}}
+
+            </div>
+        </div>
+    </div>
+{{end}}
+
+{{block script}}
+    <script>
+        /*$(document).ready(function(){
+            $("#button_validar").on("click", function(){
+                $("#div_validar").removeClass("hidden");
+            });
+        });*/
+    </script>
+{{end}}

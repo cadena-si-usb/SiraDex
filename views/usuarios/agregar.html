@@ -6,7 +6,7 @@
 
 {{block descripcion}}
             <br/>
-            <div id = error>
+            <div id = "error" style="color:#F44336">
                 {{=message}}
             </div>
 {{end}}
@@ -26,10 +26,11 @@
          <div class="col-md-6 col-md-offset-3">
          <center>
          {{ if bool == 1: }}
-            <li><a class ='btn blue-add btn-block btn-border' href='vGestionarUsuarios'>
+            <li><a class ='btn blue-add btn-block btn-border' href="{{=URL(c='usuarios',f='gestionar')}}"">
              Continuar
             </a></li>
             </center>
          </div>
+         
         {{ pass }}
 {{end}}

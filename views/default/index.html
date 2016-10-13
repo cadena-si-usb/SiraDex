@@ -25,17 +25,29 @@
 {{end}}
 
 {{block descripcion}}
-<div class="col-lg-12">
-    <p class="text-justify">
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt sed corporis dolores totam excepturi commodi nobis expedita quo officiis sint facere id dicta rerum dolor amet, obcaecati aliquam fugit perspiciatis
+<div class="text-justify">
+    
+    <p>
+    Tiene como objetivo promover, planificar, coordinar y evaluar las políticas universitarias mediante las cuales la Universidad se vincula con la sociedad y amplía, complementa y profundiza los alcances de aquellos postulados de su misión relativos tanto a aspectos formativos, educativos y de acción comunitaria, como a los referidos a la generación e instrumentación de conocimientos para la resolución de los problemas concretos del país. Asimismo, tiene como propósito hacer de la Universidad un actor protagónico cooperante en el desarrollo del país, fomentar la integración de la comunidad universitaria y fortalecer la formación integral y la sensibilidad social del estudiante.
+
     <br>
     <br>
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt sed corporis dolores totam excepturi commodi nobis expedita quo officiis sint facere id dicta rerum dolor amet, obcaecati aliquam fugit perspiciatis
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt sed corporis dolores totam excepturi commodi nobis expedita quo officiis sint facere id dicta rerum dolor amet, obcaecati aliquam fugit perspiciatis
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt sed corporis dolores totam excepturi commodi nobis expedita quo officiis sint facere id dicta rerum dolor amet, obcaecati aliquam fugit perspiciatis
+
+    Los programas asignados por el Consejo Directivo al Decanato de Extensión son:
+    <ul>
+    <li>La educación permanente</li>
+    <li>La acción social y el desarrollo comunitario</li>
+    <li>La asistencia técnica a los sectores productivos y de servicios públicos y privados</li>
+    <li>El fomento y la proyección Artística, Cultural y Deportiva</li>
+    <li>La divulgación y promoción del quehacer universitario</li>
+    <li>Programa Igualdad de Oportunidades </li>
+    <li>Programa de Seguimiento de Egresados</li>
+    <li>Programa de Información Ocupacional y de Investigación del Mercado Laboral </li>
+    <li>Programa de Promoción del Emprendimiento </li>
+    <li>Programa de Enlace Universidad – Empresa</li>
+    </ul>
     <br>
     <br>
-    Puedes buscar productos en el buscador que sirve para buscar productos:
     </p>
 </div>
 {{end}}
@@ -43,14 +55,15 @@
 {{block contenido}}
 
     <!-- Busquedas publicas -->
-        <!-- Busquedor -->
-        <form class="navbar-form" role="search">
+        <!-- Buscador -->
+        <form class="navbar-form" role="search" action="{{=URL(c='busq_val',f='busqueda')}}" method="post">
             <div class="input-group col-lg-12 col-lg-offset-1">
                 <!-- barra de busqueda -->
                 <input  type="text" 
                         class="form-control" 
                         placeholder="Buscar Productos"
-                        id="form-busqueda">
+                        id="form-busqueda"
+                        name="Producto"/>
                     
                 <div class="input-group-btn" >
                     <div clss="btn-group" role="group">
@@ -61,98 +74,76 @@
                             </button>
                         </span>
 
-
                     <!-- Lupa -->
                         <span class="input-group-btn">
                             <button type="submit" 
-                                    class="btn btn-default"
-                                    id="btn-lupa">
-                                    <span id="cable">.</span><span class="glyphicon glyphicon-search"></span>
+                                    class="btn btn-default glyphicon glyphicon-search"
+                                    id="btn-lupa"
+                                    style="top:0px !important;">
                             </button>
                         </span>
-
-                        <!-- Filtros -->
-                        <div id= "filtros" class="filtros dropdown-menu dropdown-menu-right" role = "menu">
-                            <form class="form-horizontal" role="form">
-
-                                <!--Filtro de Programa-->
-                                <div class="form-group">
-                                    <label for="Programa"> Programas:</label>
-                                    <select class= "form-control" name="Programa" onchange="ajax('obtener_actividades', ['Programa'], ':eval')">
-                                        <option value="all" selected="">--cualquiera--</option>
-                                        {{for x in rows:}}
-                                        <option value="{{=x['nombre']}}">{{=x['nombre']}}</option>
-
-                                        {{pass}}
-                                    </select>
-                                </div>
-
-                                <!-- Filtro de Tipo de Actividad -->
-                                <div class="form-group">
-                                    <label for="TipoActividad"> Tipo Actividad:</label>
-                                    <select class="form-control" name="TipoActividad" id="lista_tipos" >
-                                        <option value="all" selected="">--cualquiera--</option>
-                                        {{for x in rowsT:}}
-                                        <option value="{{=x['nombre']}}">{{=x['nombre']}}</option>
-
-                                        {{pass}}
-                                    </select>
-                                </div>
-
-                                <!-- Filtro de Fecha -->
-                                <div class="form-group">
-                                    <label for="date">Fecha:</label>
-                                    <input class="form-control" type="date" name="fecha" max='{{=fecha}}'/>
-
-                                </div>
-
-                                <!-- Filtro de Autor -->
-                                <div class="form-group">
-                                    <label for="Autor">Autor:</label>
-                                    <select class="form-control" name="Autor" id="list_autores">
-                                    </select>
-                                </div>
-                            </form>
-                        </div>  
-
                     </div>
                 </div>
-                                                                
-            </div>        
-        <!-- Filtros -->
-            <div class="hidden">
-                <!-- AQUI VAN LOS FILTROS -->
+            </div>
+        <br>
+            <!-- Filtros -->
+            <div id="filtros">
+                <center>
+                    <div role = "menu" class="tab-pane">
+                        <!--Filtro de Programa-->
+                        <div class="form-group">
+                            <label for="Programa"> Programas</label>
+                            <select name="Programa" 
+                                    class="form-control"
+                                    onchange="ajax('obtener_actividades', ['Programa'], ':eval')">
+                                
+                                <option value="all" selected="">--cualquiera--</option>
+                                
+                                {{for x in rows:}}
+                                    <option value="{{=x['id_programa']}}">{{=x['nombre']}}</option>
+                                {{pass}}
+                            </select>
+                        </div>
 
-                <!--Programas-->
-                <span>Programas:</span>
-                <select name="Programa" onchange="ajax('obtener_actividades', ['Programa'], ':eval')">
-                    <option></option>
-                    {{for x in rows:}}
-                    <option value="{{=x['nombre']}}">{{=x['nombre']}}</option>
+                        <!-- Filtro de Tipo de Actividad -->
+                        <div class="form-group">
+                            <label for="TipoActividad"> Tipo Actividad:</label>
+                            <select name="TipoActividad" 
+                                    class="form-control"
+                                    id="lista_tipos" >
+                                
+                                <option value="all" selected="">--cualquiera--</option>
+                                
+                                {{for x in rowsT:}}
+                                    <option value="{{=x['id_tipo']}}">{{=x['nombre']}}</option>
+                                {{pass}}
+                            </select>
+                        </div>
+                        
+                        <br>
+                        <br>
+                        
+                        <!-- Filtro de Fecha -->
+                        <div class="form-group">
+                            <label for="date">Fecha:</label>
+                            <input type="date" name="fecha" max='{{=fecha}}' id="focusedInput" class="form-control"/>
 
-                    {{pass}}
-                </select>
+                        </div>
 
-                <!--Actividades-->
-                <span>Tipo Actividad:</span>
-                <select name="TipoActividad" id="lista_tipos2" onchange="ajax('obtener_autores', ['TipoActividad'], ':eval')">
-                    <option></option>
-                    {{for x in rowsT:}}
-                    <option value="{{=x['nombre']}}">{{=x['nombre']}}</option>
+                        <!-- Filtro de Autor -->
+                        <div class="form-group">
+                            <label for="Autor">Autor:</label>
+                            <input type="text" name="Autor" id="focusedInput" class="form-control"/>
+                        </div>
+                    </div>
+                </center>
+            </div>
+    </form>        
 
-                    {{pass}}
-                </select>
-                <span>Fecha:</span>
-                <input type="date" name="fecha" max='{{=fecha}}'/>
-                <span>Autor:</span>
-                <select name="Autor" id="list_autores">
-                </select>
-        </form>
 
 {{end}}
 
 {{block footer}}
-    <div id="footer" class="container-fluid">
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
 {{end}}
