@@ -33,28 +33,28 @@ def gestionar():
                                  descripcion = request.vars.Descripcion,
                                  id_programa = id_programa)
         redirect("gestionar.html")
-    
-    
+
+
     if len(request.args) == 0:
-        
+
         listaTipoActividades = db(db.TIPO_ACTIVIDAD.papelera == False).select(db.TIPO_ACTIVIDAD.nombre
                                                    ,db.TIPO_ACTIVIDAD.descripcion
                                                    ,db.TIPO_ACTIVIDAD.id_tipo)
         programa = dict()
         programa["nombre"] = None
         programa["descripcion"] = None
-        
+
     else :
-        
+
         id_programa = request.args[0]
-        
-        listaTipoActividades =   db((db.TIPO_ACTIVIDAD.papelera == False) 
+
+        listaTipoActividades =   db((db.TIPO_ACTIVIDAD.papelera == False)
                                  and (db.TIPO_ACTIVIDAD.id_programa == id_programa)).select(db.TIPO_ACTIVIDAD.nombre
                                                    ,db.TIPO_ACTIVIDAD.descripcion
                                                    ,db.TIPO_ACTIVIDAD.id_tipo)
         programa = db(db.PROGRAMA.id_programa == id_programa).select(db.PROGRAMA.ALL).first()
         programa = {"nombre":programa.nombre,"descripcion":programa.descripcion}
-        
+
     return dict(admin = get_tipo_usuario()
             , listaTipoActividades = listaTipoActividades
             , programa_nombre = programa["nombre"], programa_descripcion = programa["descripcion"])
@@ -85,7 +85,7 @@ def agregar_tipo():
     formulario_agregar_tipo = SQLFORM.factory(
                         Field('Nombre',
                                requires = [IS_NOT_EMPTY(error_message='El nombre del tipo de actividad no puede quedar vacío.'),
-                                           IS_MATCH('([A-zÀ-ÿŸ])([A-zÀ-ÿŸ0-9" "])*', error_message="El nombre del tipo de actividad debe comenzar con una letra."),
+                                           IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales."),
                                            IS_LENGTH(128)]),
                         Field('Tipo', default = 'Seleccione...',
                               requires = IS_IN_SET({'P':'Evaluables por pares académicos', 'R':'No evaluables por pares académicos'},
@@ -139,23 +139,23 @@ def agregar_tipo_campos():
     # Se definen los posibles tipos de campo.
     tipo_campos = ['Fecha', 'Participante', 'CI', 'Comunidad', 'Teléfono',
                     'Texto','Documento', 'Imagen', 'Cantidad entera', 'Cantidad decimal']
-    
+
     # Creo query para realizar busqueda de los campos que ya han sido agregados
     # a ese tipo actividad
     query = reduce(lambda a, b: (a&b),[db.TIPO_ACTIVIDAD.id_tipo == id_tipo,
                                       db.TIPO_ACTIVIDAD.id_tipo == db.ACT_POSEE_CAMPO.id_tipo_act,
                                       db.ACT_POSEE_CAMPO.id_campo == db.CAMPO.id_campo])
-    
+
     # Guardo los resultados de dicho query en 'campos_guardados'
     campos_guardados = db(query).select(db.CAMPO.ALL, db.ACT_POSEE_CAMPO.ALL)
-    
-    
+
+
     # Obtengo todos los catálogos almacenados.
     lista_catalogos = db().select(db.CATALOGO.ALL)
     catalogos = {}
-    
+
     for catalogo in lista_catalogos: catalogos[catalogo.id] = catalogo.nombre
-    
+
     # Genero formulario para los campos.
     # Si no se utiliza catálogo.
     formSimple = SQLFORM.factory(
@@ -164,7 +164,7 @@ def agregar_tipo_campos():
                     Field('Obligatorio', widget=SQLFORM.widgets.boolean.widget),
                     submit_button = 'Agregar'
                     )
-    
+
     # Si se utilizan catálogos.
     formMultiple = SQLFORM.factory(
                         Field('Catalogo', default='Seleccione...',
@@ -173,79 +173,79 @@ def agregar_tipo_campos():
                         labels = {'Catalogo' : 'Catálogo'},
                         submit_button = 'Agregar'
                     )
-    
+
     # Metodos POST
     # En caso de que los datos del formulario simple sean aceptados
     if formSimple.accepts(request.vars, session,formname="formSimple"):
         # Verifico si se seleccionó el campo "Obligatorio".
         if request.vars.Obligatorio == None:
             request.vars.Obligatorio = False
-        
+
         # Se inserta el campo, en la base de datos, que se desea utilizar.
         db.CAMPO.insert(nombre = request.vars.Nombre,
                         obligatorio = request.vars.Obligatorio,
                         tipo_campo = request.vars.Tipo,
                         id_catalogo = None)
-        
+
         # Se busca el id del campo.
         queryCampo = reduce(lambda a, b: (a&b),[db.CAMPO.nombre == request.vars.Nombre,
                                             db.CAMPO.tipo_campo == request.vars.Tipo,
                                             db.CAMPO.obligatorio == request.vars.Obligatorio])
-        
+
         id_campo = db(queryCampo).select(db.CAMPO.id_campo).first()
-        
+
         # Se almacena la relación entre el campo añadido y el tipo de actividad
         # correspondiente.
         db.ACT_POSEE_CAMPO.insert(id_tipo_act = id_tipo, id_campo = id_campo)
-        
+
         # Se redirige a la vista permitiendo agregar más campos.
         redirect(URL('agregar_tipo_campos.html'))
     # En caso de que el formulario no sea aceptado
     elif ('Nombre' in request.vars and formSimple.errors):
-        
+
         session.message = 'Datos invalidos'
     # Métodos POST
     # En caso de que los datos del formulario multiple sean aceptados.
     elif formMultiple.accepts(request.vars, session,formname="formMultiple"):
-        
+
         # Busco el id del catálogo que se deseó utilizar.
         id_catalogo = request.vars.Catalogo
-        
+
         # Se determina si los campos del catálogo ya habían sido agregados
         for campo_guardado in campos_guardados :
             if str(campo_guardado.CAMPO.id_catalogo) == id_catalogo :
                 session.message = "El catálogo seleccionado ya había sido agregado."
-                return dict(formSimple = formSimple, 
+                return dict(formSimple = formSimple,
                             formMultiple = formMultiple,
-                            campos = campos_guardados, 
+                            campos = campos_guardados,
                             admin = get_tipo_usuario())
-                
-        
+
+
         campos_catalogo = db(db.CAMPO_CATALOGO.id_catalogo == id_catalogo).select(db.CAMPO_CATALOGO.ALL)
-        
+
         # Duplico los campos del catálogo
         for campo in campos_catalogo:
-            
+
             db.CAMPO.insert(nombre = campo.nombre,
                             obligatorio = campo.obligatorio,
                             tipo_campo = campo.tipo_campo,
                             id_catalogo = id_catalogo
                             )
-            
+
             queryCampo = reduce(lambda a, b: (a&b),[db.CAMPO.nombre == campo.nombre,
                                                 db.CAMPO.tipo_campo == campo.tipo_campo,
                                                 db.CAMPO.obligatorio == campo.obligatorio,
                                                 db.CAMPO.id_catalogo == id_catalogo])
-            
+
             id_campo = db(queryCampo).select(db.CAMPO.id_campo).first()
             db.ACT_POSEE_CAMPO.insert(id_tipo_act = id_tipo, id_campo = id_campo)
-        
+
         redirect(URL('agregar_tipo_campos.html'))
     elif ('Catalogo' in request.vars and formMultiple.errors):
         session.message = 'Datos inválidos en el catálogo.'
     else:
         session.message = ''
-    
+
     return dict(formSimple = formSimple, formMultiple = formMultiple,
                 campos = campos_guardados, admin = get_tipo_usuario())
 #. --------------------------------------------------------------------------- .
@@ -310,100 +310,100 @@ def enviar_tipo_papelera():
 #. --------------------------------------------------------------------------- .
 def ver_tipo_actividad():
     id_tipo = request.args[0]
-    
+
     query = reduce(lambda a, b: (a & b), [db.TIPO_ACTIVIDAD.id_tipo == id_tipo,
                                           db.TIPO_ACTIVIDAD.id_tipo == db.ACT_POSEE_CAMPO.id_tipo_act,
                                           db.ACT_POSEE_CAMPO.id_campo == db.CAMPO.id_campo])
-    
+
     campos_guardados = db(query).select(db.CAMPO.ALL)
-    
+
     tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
     programa = db(db.PROGRAMA.id_programa == tipo.id_programa).select(db.PROGRAMA.ALL).first()
-    
+
     if request.vars and (request.vars["_formname"] == "formulario_editar_campo") :
-        
+
         campo = db(db.CAMPO.id_campo == session.editar_campo_id_campo).select(db.CAMPO.ALL).first()
         campo.update_record(nombre = request.vars.Nombre,
                             tipo_campo = request.vars.Tipo,
                             obligatorio = request.vars.obligatorio)
         redirect(URL("ver_tipo_actividad", args=[id_tipo]))
-    
+
     if request.vars and (request.vars["_formname"] == "formSimple") :
-        
+
         # Verifico si se seleccionó el campo "Obligatorio".
         if request.vars.Obligatorio == None:
             request.vars.Obligatorio = False
-        
+
         # Se inserta el campo, en la base de datos, que se desea utilizar.
         db.CAMPO.insert(nombre = request.vars.Nombre,
                         obligatorio = request.vars.Obligatorio,
                         tipo_campo = request.vars.Tipo,
                         id_catalogo = None)
-        
+
         # Se busca el id del campo.
         queryCampo = reduce(lambda a, b: (a&b),[db.CAMPO.nombre == request.vars.Nombre,
                                             db.CAMPO.tipo_campo == request.vars.Tipo,
                                             db.CAMPO.obligatorio == request.vars.Obligatorio])
-        
+
         id_campo = db(queryCampo).select(db.CAMPO.id_campo).first()
-        
+
         # Se almacena la relación entre el campo añadido y el tipo de actividad
         # correspondiente.
         db.ACT_POSEE_CAMPO.insert(id_tipo_act = id_tipo, id_campo = id_campo)
-        
+
         # Se redirige a la vista permitiendo agregar más campos.
         redirect(URL('ver_tipo_actividad.html',args=[id_tipo]))
-    
+
     if request.vars and (request.vars["_formname"] == "formMultiple") :
-        
+
         query = reduce(lambda a, b: (a&b),[db.TIPO_ACTIVIDAD.id_tipo == id_tipo,
                                       db.TIPO_ACTIVIDAD.id_tipo == db.ACT_POSEE_CAMPO.id_tipo_act,
                                       db.ACT_POSEE_CAMPO.id_campo == db.CAMPO.id_campo])
-        
+
         # Guardo los resultados de dicho query en 'campos_guardados'
         campos_guardados = db(query).select(db.CAMPO.ALL, db.ACT_POSEE_CAMPO.ALL)
-        
+
         # Busco el id del catálogo que se deseó utilizar.
         id_catalogo = request.vars.Catalogo
-        
+
         # Se determina si los campos del catálogo ya habían sido agregados
         for campo_guardado in campos_guardados :
             if str(campo_guardado.CAMPO.id_catalogo) == id_catalogo :
                 session.message = "El catálogo seleccionado ya había sido agregado."
                 redirect(URL('ver_tipo_actividad.html',args=[id_tipo]))
-                
-        
+
+
         campos_catalogo = db(db.CAMPO_CATALOGO.id_catalogo == id_catalogo).select(db.CAMPO_CATALOGO.ALL)
-        
+
         # Duplico los campos del catálogo
         for campo in campos_catalogo:
-            
+
             db.CAMPO.insert(nombre = campo.nombre,
                             obligatorio = campo.obligatorio,
                             tipo_campo = campo.tipo_campo,
                             id_catalogo = id_catalogo
                             )
-            
+
             queryCampo = reduce(lambda a, b: (a&b),[db.CAMPO.nombre == campo.nombre,
                                                 db.CAMPO.tipo_campo == campo.tipo_campo,
                                                 db.CAMPO.obligatorio == campo.obligatorio,
                                                 db.CAMPO.id_catalogo == id_catalogo])
-            
+
             id_campo = db(queryCampo).select(db.CAMPO.id_campo).first()
             db.ACT_POSEE_CAMPO.insert(id_tipo_act = id_tipo, id_campo = id_campo)
-        
+
         redirect(URL('ver_tipo_actividad.html',args=[id_tipo]))
-    
+
     return dict(campos = campos_guardados, tipo = tipo, admin = get_tipo_usuario(), tipo_nombre = tipo.nombre, programa_nombre = programa.nombre)
 
 #. --------------------------------------------------------------------------- .
 def eliminar_campo():
     id_tipo = int(request.args[0])
     id_campo = int(request.args[1])
-    
+
     db(db.ACT_POSEE_CAMPO.id_campo == id_campo).delete()
     db(db.CAMPO.id_campo == id_campo).delete()
-    
+
     redirect(URL('ver_tipo_actividad.html',args=[id_tipo]))
 
 def editar_tipo():
@@ -429,7 +429,7 @@ def editar_tipo():
                         Field('Nombre',
                               default = tipo.nombre,
                               requires = [IS_NOT_EMPTY(error_message='El nombre del tipo de actividad no puede quedar vacío.'),
-                                           IS_MATCH('([A-zÀ-ÿŸ])([A-zÀ-ÿŸ0-9" "])*', error_message="El nombre del tipo de actividad debe comenzar con una letra."),
+                                           IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales."),
                                            IS_LENGTH(128)]),
                         Field('Tipo', default = tipo.tipo_p_r,
                               requires = IS_IN_SET({'P':'Evaluables por pares académicos', 'R':'No evaluables por pares académicos'},

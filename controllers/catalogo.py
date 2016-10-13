@@ -25,7 +25,7 @@ def vGestionarCatalogos():
     #Formulario para agregar un catalogo.
     formulario_agregar_catalogo = AgregarCatalogo()
     formulario_agregar_campo    = AgregarCampo()
-    formulario_editar_campo      = EditarCampo()
+    formulario_editar_campo     = EditarCampo()
 
     if formulario_agregar_catalogo.process(formname = "formulario_agregar_catalogo").accepted:
         # Creamos el catalogo y obtenemos su id, para pasarlo al controlador de agregar campo.
@@ -112,7 +112,7 @@ def AgregarCatalogo():
     formulario = SQLFORM.factory(
                         Field('nombre',
                               requires = [IS_NOT_EMPTY(error_message='El nombre del catalogo no puede quedar vacio.'),
-                                          IS_MATCH('([A-Za-z])([A-Za-z0-9" "])*', error_message="El nombre del catalogo debe comenzar con una letra."),
+                                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales."),
                                           IS_NOT_IN_DB(db, 'CATALOGO.nombre', error_message="Ya existe un catalogo con ese nombre.")]),
                               submit_button='Agregar',
                               labels={'nombre':'Nombre'})
@@ -129,7 +129,7 @@ def AgregarCampo():
     formulario = SQLFORM.factory(
                     Field('nombre',
                           requires = [IS_NOT_EMPTY(error_message='El nombre del campo no puede quedar vacio.'),
-                                      IS_MATCH('([A-Za-z])([A-Za-z0-9" "])*', error_message="El nombre del campo debe comenzar con una letra.")]),
+                                      IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales.")]),
                     Field('tipo_campo',
                            requires = [IS_IN_SET(tipo_campos, zero='Seleccione...', error_message="Debe seleccionar un tipo para el campo.")],
                            widget = SQLFORM.widgets.options.widget),
@@ -170,7 +170,7 @@ def EditarCampo():
     formulario = SQLFORM.factory(
                     Field('nombre',
                           requires = [IS_NOT_EMPTY(error_message='El nombre del campo no puede quedar vacio.'),
-                                      IS_MATCH('([A-Za-z])([A-Za-z0-9" "])*', error_message="El nombre del campo debe comenzar con una letra.")]),
+                                      IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales.")]),
                     Field('tipo_campo',
                            requires = [IS_IN_SET(tipo_campos, zero='Seleccione...', error_message="Debe seleccionar un tipo para el campo.")],
                            widget = SQLFORM.widgets.options.widget),
@@ -182,46 +182,6 @@ def EditarCampo():
                               'obligatorio' : 'Obligatorio'},
                     submit_button='Guardar'
                    )
-
-    # # En caso de que los datos del formulario sean aceptados
-    # if formulario.accepts(request.vars, session):
-    #
-    #     nombre_nuevo = request.vars.nombre
-    #     id_catalogo  = request.vars.id_catalogo
-    #     id_campo     = request.vars.id_campo_cat
-    #     nombre_repetido    = False
-    #
-    #     #Bucamos los campos que esten guardados
-    #     campos_guardados = db(db.CAMPO_CATALOGO.id_catalogo == id_catalogo).select()
-    #
-    #     #Si existe un campo que tenga el mismo nombre
-    #     #Y no sea el campo que estamos modificando.
-    #     #Entonces existe un campo con nombre repetido.
-    #     for campo in campos_guardados:
-    #         if (campo.nombre == nombre_nuevo and
-    #             campo.id_campo_cat != datos_campo.id_campo_cat):
-    #             nombre_repetido = True
-    #             break
-    #
-    #     # Si el nombre no esta repetido, modificamos el campo
-    #     if nombre_repetido:
-    #         session.msgErr = 1
-    #         session.message = 'Ya existe un campo llamado "' + nombre_nuevo + '" en el catalogo.'
-    #     else:
-    #         #Actualizamos el campo
-    #         db.CAMPO_CATALOGO[id_campo] = dict(nombre      = nombre_nuevo,
-    #                                            tipo_campo  = request.vars.tipo_campo,
-    #                                            obligatorio = request.vars.obligatorio)
-    #
-    #         session.msgErr = 0
-    #     # Redirijo a la misma pagina para seguir agregando campos
-    #     redirect(URL('vGestionarCatalogos'))
-    # # En caso de que el formulario no sea aceptado
-    # elif formulario.errors:
-    #     session.message = 'Datos invalidos para el campo.'
-    # else:
-    #     if(not(session.msgErr)):
-    #         session.message = ''
 
     return formulario
 

@@ -15,7 +15,7 @@ def agregar_programa():
     formulario = SQLFORM.factory(
                         Field('Nombre',
                               requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacio.'),
-                                          IS_MATCH('([A-Za-z])([A-Za-z0-9" "])*', error_message="El nombre del programa no puede iniciar con numeros.")]),
+                                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solamente letras, sin numeros ni caracteres especiales.")]),
                         Field('Descripcion', type="text",
                               requires=IS_NOT_EMPTY(error_message='La descripcion del programa no puede quedar vacia.')),
                         submit_button = 'Agregar',
@@ -55,7 +55,7 @@ def gestionar_programas():
     formulario = SQLFORM.factory(
         Field('Nombre',
               requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacio.'),
-                          IS_MATCH('([A-zÀ-ÿŸ])([A-zÀ-ÿŸ0-9" "])*', error_message="El nombre del tipo de actividad debe comenzar con una letra."),
+                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solamente letras, sin numeros ni caracteres especiales."),
                           IS_LENGTH(256),
                           IS_NOT_IN_DB(db, 'PROGRAMA.nombre', error_message="Ya existe un programa con ese nombre.")]),
         Field('Descripcion', type="text",
@@ -72,7 +72,7 @@ def gestionar_programas():
     formulario_editar  = SQLFORM.factory(
         Field('Nombre',
               requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacio.'),
-                          IS_MATCH('([A-zÀ-ÿŸ])([A-zÀ-ÿŸ0-9" "])*', error_message="El nombre del programa no puede iniciar con numeros."),
+                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solamente letras, sin numeros ni caracteres especiales."),
                           IS_LENGTH(256),
                           IS_NOT_IN_DB(db(db.PROGRAMA.id_programa != request.vars['id_programa']), 'PROGRAMA.nombre',
                                             error_message= ('Ya existe un programa con el nombre "' + request.vars['Nombre'] + '".') if not(request.vars['Nombre'] is None) else 'Ya existe un programa con el nombre ')]),
@@ -143,7 +143,7 @@ def editar_programa():
                         Field('Nombre',
                               default = programa.nombre,
                               requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacio.'),
-                                          IS_MATCH('([A-Za-z])([A-Za-z0-9" "])*', error_message="El nombre del programa debe comenzar con una letra.")]),
+                                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solamente letras, sin numeros ni caracteres especiales.")]),
                         Field('Descripcion', type="text",
                               default = programa.descripcion,
                               requires=IS_NOT_EMPTY(error_message='La descripcion del programa no puede quedar vacia.')),
