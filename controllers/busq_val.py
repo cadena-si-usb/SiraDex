@@ -29,7 +29,6 @@ def busqueda():
          + ") AND id_tipo=\'" + request.vars.TipoActividad + "\' AND estado=\'Validada\';"
 
         productos = db.executesql(sql)
-    print productos
     return locals()
 
 # Vista de validaciones
@@ -50,54 +49,17 @@ def gestionar_validacion():
 
 
     # Hago el query Espera
-    productosE = db(db.PRODUCTO.estado == "En espera" and db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo).select(db.PRODUCTO.nombre, db.PRODUCTO.id, db.TIPO_ACTIVIDAD.nombre)
-    productosV = db(db.PRODUCTO.estado == "Validada" and db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo).select(db.PRODUCTO.nombre, db.PRODUCTO.id, db.TIPO_ACTIVIDAD.nombre)
-    productosR = db(db.PRODUCTO.estado == "Rechazada" and db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo).select(db.PRODUCTO.nombre, db.PRODUCTO.id, db.TIPO_ACTIVIDAD.nombre)
-    print '##########################'
-    for p in productosE:
-        print p['PRODUCTO'].nombre
-        print p['PRODUCTO'].id_producto
-    print '##########################'
-    for p in productosV:
-        print p['PRODUCTO'].nombre
-        print p['PRODUCTO'].id_producto
-    print '##########################'
-    for p in productosR:
-        print p['PRODUCTO'].nombre
-        print p['PRODUCTO'].id_producto
-    print productosE
 
-    '''
-    queryEsp = reduce(lambda a, b: (a&b),[db.PRODUCTO.estado == 'En espera',
-                                       db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo
-                                       ]
-                  )
+    sqlValidadas = "select producto.id_producto, producto.nombre, tipo_actividad.nombre from producto inner join tipo_actividad"\
+    + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='Validada';"
+    sqlEspera = "select producto.id_producto, producto.nombre, tipo_actividad.nombre from producto inner join tipo_actividad"\
+    + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='En espera';"
+    sqlRechazadas = "select producto.id_producto, producto.nombre, tipo_actividad.nombre from producto inner join tipo_actividad"\
+    + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='Rechazada';"
+    productosV= db.executesql(sqlValidadas)
+    productosE = db.executesql(sqlEspera)
+    productosR = db.executesql(sqlRechazadas)
 
-    # Muestro los ids y nombres de las actividades a validar o rechazar
-    auxEsp = db(queryEsp).select(db.PRODUCTO.id_producto, db.PRODUCTO.id_tipo, db.PRODUCTO.nombre
-                         )
-    aux1Esp = db(queryEsp).select(db.TIPO_ACTIVIDAD.nombre, db.TIPO_ACTIVIDAD.id_tipo
-                         )
-
-    # Hago el query Validada
-    queryVal = reduce(lambda a, b: (a&b),[db.PRODUCTO.estado == 'Validada',
-                                       db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo
-                                       ]
-                  )  
-    auxVal = db(queryVal).select(db.PRODUCTO.id_producto, db.PRODUCTO.id_tipo, db.PRODUCTO.nombre
-                         )
-    aux1Val = db(queryVal).select(db.TIPO_ACTIVIDAD.nombre, db.TIPO_ACTIVIDAD.id_tipo, db.PRODUCTO.nombre
-                         )
-    # Hago el query Rechazada
-    queryRec = reduce(lambda a, b: (a&b),[db.PRODUCTO.estado == 'Rechazada',
-                                       db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo
-                                       ]
-                  )                       
-    auxRec = db(queryRec).select(db.PRODUCTO.id_producto, db.PRODUCTO.id_tipo, db.PRODUCTO.nombre
-                         )
-    aux1Rec = db(queryRec).select(db.TIPO_ACTIVIDAD.nombre, db.TIPO_ACTIVIDAD.id_tipo, db.PRODUCTO.nombre
-                         )
-    return dict(tiposEsp = aux1Esp, producEsp = auxEsp, tiposVal = aux1Val, producVal = auxVal, tiposRec = aux1Rec, producRec = auxRec, admin = admin)'''
     return locals()
 
 # Metodo para validar un producto
