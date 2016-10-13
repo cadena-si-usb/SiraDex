@@ -34,4 +34,20 @@ $(function(){
 
         
     });
-})
+});
+
+$(document).ready(function(){
+    $('.espera').on('click', function(e){
+        var elem = $(this);
+        var url = elem.data("url");
+
+        $('#myModal').on('show.bs.modal', function(){
+
+            web2py_ajax_page('GET', url, 'espera', '#myModal');
+            
+        })
+
+    });
+
+
+});

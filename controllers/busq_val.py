@@ -32,6 +32,61 @@ def busqueda():
     print productos
     return locals()
 
+# Mostrar productos
+def ver_producto():
+  if session.usuario != None:
+    if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
+      if(session.usuario["tipo"] == "DEX"):
+        admin = 2
+      elif(session.usuario["tipo"] == "Administrador"):
+        admin = 1
+      else:
+        admin = 0
+    else:
+      redirect(URL(c ="default",f="vMenuPrincipal"))
+  else:
+    redirect(URL(c ="default",f="index"))
+
+  id_producto = int(request.args(0))
+  producto = db(db.PRODUCTO.id_producto == id_producto).select().first()
+  usuario_producto = db(db.USUARIO.ci == producto.ci_usu_creador).select().first()
+  usuario_nombre = usuario_producto.nombres + " " + usuario_producto.apellidos
+  tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == producto.id_tipo).select().first()
+  programa_nombre = db(db.PROGRAMA.id_programa == tipo_actividad.id_programa).select().first().nombre
+
+
+  form = SQLFORM.factory(
+            Field("Nombre_Producto", default=producto.nombre,writable = False),
+            Field('Descripcion',default=producto.descripcion,writable = False),
+            Field('Fecha_de_Relaizacion', default=producto.fecha_realizacion,writable=False),
+            Field('Lugar', default=producto.lugar,writable=False),            
+            readonly=True)
+
+  #Agregamos los otros elementos de los campos
+  print db(db.PRODUCTO).select()
+  campos = db(db.PRODUCTO_TIENE_CAMPO.id_prod == producto.id_producto).select()
+  
+  elementos = []
+  for campo_valor in campos:
+    campo = db(db.CAMPO.id_campo == campo_valor.id_campo).select().first()
+    nombre_campo = campo.nombre
+    nombre_campo = nombre_campo.replace(" ", "_")
+    try :
+      if int(nombre_campo[0]):
+        nombre_campo = "campo_"+nombre_campo
+    except:
+      pass
+
+    elementos.append(Field(nombre_campo, default=campo_valor.valor_campo, writable=False))
+
+  if len(elementos) != 0:
+    form_datos = SQLFORM.factory(*elementos, readonly=True)
+
+
+  return locals()
+
+
+
 # Vista de validaciones
 def gestionar_validacion():
 

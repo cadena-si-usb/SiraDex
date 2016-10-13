@@ -58,8 +58,7 @@
                                 <th>ID Producto</th>
                                 <th>Nombre Producto</th>
                                 <th>Tipo Producto</th>
-                                <th><center>Validar</center></th>
-                                <th><center>Rechazar</center></th>
+                                <th><center>Mostrar</center></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -79,13 +78,8 @@
                                         </td>
                                             
                                         <td>
-                                            <a href="{{=URL(f='validar', args=[producto['PRODUCTO'].id_producto])}}">
-                                                <center><span class="glyphicon glyphicon-ok" style="color:#B2FF59"></span></center>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <a href="{{=URL(f='rechazar', args=[producto['PRODUCTO'].id_producto])}}">
-                                                <center><span class="glyphicon glyphicon-remove red"></span></center>
+                                            <a href="{{=URL(f='ver_producto', args=[producto['PRODUCTO'].id_producto])}}">
+                                                <center><span class="glyphicon glyphicon-eye-open" style="color:#9E9E9E"></span></center>
                                             </a>
                                         </td>
                                         {{pass}}
@@ -108,8 +102,7 @@
                                 <th>ID Producto</th>
                                 <th>Nombre Producto</th>
                                 <th>Tipo Producto</th>
-                                <th><center>Validar</center></th>
-                                <th><center>Rechazar</center></th>
+                                <th><center>Mostrar</center></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -129,15 +122,11 @@
                                         </td> 
                                             
                                         <td>
-                                            <a href="{{=URL(f='validar', args=[producto['PRODUCTO'].id_producto])}}">
-                                                <center><span class="glyphicon glyphicon-ok" style="color:#9E9E9E"></span></center>
+                                            <a href="{{=URL(f='ver_producto', args=[producto['PRODUCTO'].id_producto])}}">
+                                                <center><span class="glyphicon glyphicon-eye-open" style="color:#9E9E9E"></span></center>
                                             </a>
                                         </td>
-                                        <td>
-                                            <a href="{{=URL(f='rechazar', args=[producto['PRODUCTO'].id_producto])}}">
-                                                <center><span class="glyphicon glyphicon-remove" style="color:#9E9E9E"></span></center>
-                                            </a>
-                                        </td>
+
                                         {{pass}}
                                         {{pass}}
                                     </tr>
@@ -158,8 +147,7 @@
                                 <th>ID Producto</th>
                                 <th>Nombre Producto</th>
                                 <th>Tipo Producto</th>
-                                <th><center>Validar</center></th>
-                                <th><center>Rechazar</center></th>
+                                <th><center>Mostrar</center></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -179,11 +167,10 @@
                                         </td>    
                                             
                                         <td>
-                                                <center><span class="glyphicon glyphicon-ok" style="color:#9E9E9E"></span></center>
+                                            <a href="{{=URL(f='ver_producto', args=[producto['PRODUCTO'].id_producto])}}">
+                                                <center><span class="glyphicon glyphicon-eye-open" style="color:#9E9E9E"></span></center></a>
                                         </td>
-                                        <td>
-                                            <center><span class="glyphicon glyphicon-remove" style="color:#9E9E9E"></span></center>
-                                        </td>
+                                       
                                         {{pass}}
                                         {{pass}}
                                     </tr>
@@ -191,16 +178,32 @@
                             </tbody>
                         </table>
                     {{pass}}
-                </div>                       
+                </div>
+
             </div>
+            
         </div>
     </div>
 </div>
+
+<!--
+                                        <td>
+                                            <a href="{{=URL(f='validar', args=[producto['PRODUCTO'].id_producto])}}">
+                                                <center><span class="glyphicon glyphicon-ok" style="color:#B2FF59"></span></center>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{{=URL(f='rechazar', args=[producto['PRODUCTO'].id_producto])}}">
+                                                <center><span class="glyphicon glyphicon-remove red"></span></center>
+                                            </a>
+                                        </td>
+-->
 {{end}}
 
 {{block script}}
     <!-- SCRIPT PARA MOSTRAR Y OCULTAR DETALLES -->
     <script src="{{=URL('static','js/showDetails.js')}}"
             type="text/javascript">
+    
     </script>
 {{end}}
