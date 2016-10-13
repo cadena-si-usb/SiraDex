@@ -8,54 +8,116 @@ Vista de Gestionar Tipo Actividad, tiene las opciones:
 - Papelera (Archivo Historico)
 '''
 
+def construir_formulario_agregar_tipo():
+    
+    lista_programas = db().select(db.PROGRAMA.ALL)
+    programas = []
+    
+    # Se crea un diccionario para almacenar unicamente los nombres de los programas almacenados.
+    for programa in lista_programas: programas.append(programa.nombre)
+    
+    formulario_agregar_tipo = SQLFORM.factory(
+                        Field('Nombre',
+                               requires = [IS_NOT_EMPTY(error_message='El nombre del tipo de actividad no puede quedar vacío.'),
+                                           IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales."),
+                                           IS_LENGTH(128)]),
+                        Field('Tipo', default = 'Seleccione...',
+                              requires = IS_IN_SET({'P':'Evaluables por pares académicos', 'R':'No evaluables por pares académicos'},
+                                                    zero=T('Seleccione...'),
+                                                    error_message = 'Debes elegir entre "Evaluables por pares académicos" o "No evaluables por pares académicos"')),
+                        Field('Descripcion', type="text",
+                              requires = [IS_NOT_EMPTY(error_message='La descripción del tipo de actividad no puede quedar vacía.'),
+                                          IS_LENGTH(2048)]),
+                        Field('Programa',
+                              requires = IS_IN_SET(programas, zero="Seleccione...",
+                                                   error_message = 'Debes elegir uno de los programas listados.')),
+                        submit_button = 'Agregar',
+                        labels = {'Descripcion' : 'Descripción'}
+                )
+    return formulario_agregar_tipo
+
+def construir_formulario_editar_tipo():
+    
+    lista_programas = db().select(db.PROGRAMA.ALL)
+    programas = []
+    
+    # Se crea un diccionario para almacenar unicamente los nombres de los programas almacenados.
+    for programa in lista_programas: programas.append(programa.nombre)
+    
+    
+    formulario_editar_tipo = SQLFORM.factory(
+                        Field('Nombre',
+                              #default = tipo.nombre,
+                              requires = [IS_NOT_EMPTY(error_message='El nombre del tipo de actividad no puede quedar vacío.'),
+                                           IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales."),
+                                           IS_LENGTH(128)]),
+                        Field('Tipo', #default = tipo.tipo_p_r,
+                              requires = IS_IN_SET({'P':'Evaluables por pares académicos', 'R':'No evaluables por pares académicos'},
+                                                    zero=T('Seleccione...'),
+                                                    error_message = 'Debes elegir entre "Evaluables por pares académicos" o "No evaluables por pares académicos"')),
+                        Field('Descripcion', type="text",
+                              #default = tipo.descripcion,
+                              requires = [IS_NOT_EMPTY(error_message='La descripción del tipo de actividad no puede quedar vacía.'),
+                                          IS_LENGTH(2048)]),
+                        Field('Programa', #default = tipo.id_programa,
+                              requires = IS_IN_SET(programas, zero="Seleccione...",
+                                                   error_message = 'Debes elegir uno de los programas listados.')),
+                        Field('Id_tipo',type="hidden"),
+                        submit_button = 'Actualizar',
+                        labels = {'Descripcion' : 'Descripción'}
+                )
+    return formulario_editar_tipo
 
 #. ---------------------------------------------------------------------------
 '''
     Gestionar Tipo de Actividad
 '''
 def gestionar():
-
+    
+    formulario_agregar_tipo = construir_formulario_agregar_tipo()
+    formulario_editar_tipo = construir_formulario_editar_tipo()
+    print(request.vars)
     # Vista básica
-    if request.vars and (request.vars["_formname"]=="formulario_editar_tipo"):
-        tipo = db(db.TIPO_ACTIVIDAD.id_tipo == session.tipo_id_editar).select()[0]
+    if formulario_editar_tipo.accepts(request.vars, session,formname="formulario_editar_tipo"):
+        tipo = db(db.TIPO_ACTIVIDAD.id_tipo == request.vars.Id_tipo).select()[0]
         tipo.nombre = request.vars.Nombre
         tipo.tipo_p_r = request.vars.Tipo
         tipo.descripcion = request.vars.Descripcion
-        tipo.id_programa = request.vars.Programa
+        id_programa = db(db.PROGRAMA.nombre == request.vars.Programa).select(db.PROGRAMA.ALL).first().id_programa
+        tipo.id_programa = id_programa
         tipo.update_record()                                 # Se actualiza el tipo de actividad.
-
-    if request.vars and (request.vars["_formname"]=="formulario_agregar_tipo"):
+    
+    if formulario_agregar_tipo.accepts(request.vars, session,formname="formulario_agregar_tipo"):
         programa = db(db.PROGRAMA.nombre == request.vars.Programa).select()
         id_programa = programa[0].id_programa
         db.TIPO_ACTIVIDAD.insert(nombre = request.vars.Nombre,
                                  tipo_p_r = request.vars.Tipo,
                                  descripcion = request.vars.Descripcion,
                                  id_programa = id_programa)
-
-
+    
+    
     if len(request.args) == 0:
-
-        listaTipoActividades = db(db.TIPO_ACTIVIDAD.papelera == False).select(db.TIPO_ACTIVIDAD.nombre
-                                                   ,db.TIPO_ACTIVIDAD.descripcion
-                                                   ,db.TIPO_ACTIVIDAD.id_tipo)
+        
+        listaTipoActividades = db(db.TIPO_ACTIVIDAD.papelera == False).select(db.TIPO_ACTIVIDAD.ALL)
         programa = dict()
         programa["nombre"] = None
         programa["descripcion"] = None
-
+        
+        
     else :
-
+        
         id_programa = request.args[0]
-
+        
         listaTipoActividades =   db((db.TIPO_ACTIVIDAD.papelera == False)
-                                 and (db.TIPO_ACTIVIDAD.id_programa == id_programa)).select(db.TIPO_ACTIVIDAD.nombre
-                                                   ,db.TIPO_ACTIVIDAD.descripcion
-                                                   ,db.TIPO_ACTIVIDAD.id_tipo)
+                                 and (db.TIPO_ACTIVIDAD.id_programa == id_programa)).select(db.TIPO_ACTIVIDAD.ALL)
         programa = db(db.PROGRAMA.id_programa == id_programa).select(db.PROGRAMA.ALL).first()
         # programa = {"nombre":programa.nombre,"descripcion":programa.descripcion}
-
+        
     return dict(admin = get_tipo_usuario()
             , listaTipoActividades = listaTipoActividades
-            , programa = programa)
+            , programa_nombre = programa["nombre"], programa_descripcion = programa["descripcion"]
+            , formulario_agregar_tipo = formulario_agregar_tipo
+            , formulario_editar_tipo = formulario_editar_tipo)
 
 #. --------------------------------------------------------------------------- .
 '''

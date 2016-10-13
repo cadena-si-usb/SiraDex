@@ -1,8 +1,8 @@
 {{extend 'layoutSIRADEXloged.html'}}
 
 {{block titulo}}
-        {{if programa.nombre != None:}} 
-           Programa: {{=programa.nombre}}
+        {{if programa_nombre != None:}} 
+           Programa: {{=programa_nombre}}
        {{else:}}
            Tipos de Actividades del Sistema 
        {{pass}}
@@ -11,8 +11,8 @@
 
 {{block descripcion}}
     <div class="col-sm-8">
-        <h4><p> {{if programa.descripcion != None:}} 
-                       Descripción: {{=programa.descripcion}}
+        <h4><p> {{if programa_descripcion != None:}} 
+                       Descripción: {{=programa_descripcion}}
                 {{else:}}
                         
                 {{pass}}
@@ -51,11 +51,11 @@
                     class="btn btn-default green btn-border"
                     data-toggle="modal"
                     data-target="#myModal"
-                    onclick="ajax('{{=URL('agregar_tipo')}}',[],'agregar_tipo_actividad');">
+                    >
               <span class="glyphicon glyphicon-plus-sign"
                     aria-hidden="true"></span> Agregar Actividad
             </button>
-            <a href="{{=URL(c='archivo_historico', f='gestionar',args=[programa.id_programa])}}" >
+            <a href="#" >
             <button type="button" class="btn btn-default red-trash btn-border">
               <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Archivo Histórico
             </button>
@@ -96,7 +96,11 @@
                                     <span class="glyphicon glyphicon-edit blue"
                                           data-toggle="modal"
                                           data-target="#myModalEditar"
-                                          onclick="ajax('{{=URL('editar_tipo')}}/{{=tipoActividad.id_tipo}}',[],'editar_tipo_actividad');">
+                                          data-idtipo="{{=tipoActividad.id_tipo}}"
+                                          data-nombre="{{=tipoActividad.nombre}}"
+                                          data-descripcion="{{=tipoActividad.descripcion}}"
+                                          data-idprograma="{{=tipoActividad.id_programa}}"
+                                          data-tipopr="{{=tipoActividad.tipo_p_r}}">
                                     </span>
                                 </a>
                             <center>
@@ -130,6 +134,7 @@
       </div>
       <div class="modal-body" id="agregar_tipo_actividad">
           <p><center> Formulario para agregar Tipo de Actividad </center> </p>
+          {{=formulario_agregar_tipo}}
       </div>
     </div>
   </div>
@@ -147,6 +152,7 @@
           <p><center id="editar_tipo_actividad"> Formulario para editar Tipo de Actividad
 
           </center> </p>
+          {{=formulario_editar_tipo}}
       </div>
     </div>
   </div>
@@ -198,9 +204,32 @@
         ajax("{{=URL('enviar_tipo_papelera')}}/"+id_tipo,[]);
         location.reload();
     });
+    
+    
+
 
     $(document).ready(function () {
-        document.getElementById("botonEliminar");
+  var maxLongNombre  = 256;    // Longitud máxima que tendrá el campo nombre.
+  var maxLongDescrip = 2048;   // Longitud máxima que tendrá el campo descripción.
+  $('#myModalEditar').on('show.bs.modal', function(e){
+      var id_tipo = $(e.relatedTarget).data('idtipo');
+      var nombre      = $(e.relatedTarget).data('nombre');
+      var descripcion = $(e.relatedTarget).data('descripcion');
+      var id_programa = $(e.relatedTarget).data('idprograma');
+      var tipoPR =  $(e.relatedTarget).data('tipopr');
+      $(e.currentTarget).find('input[name="Id_tipo"]').val(id_tipo);
+      $("#no_table_Id_tipo__row").css("display","none");
+      $(e.currentTarget).find('input[name="Nombre"]').val(nombre);
+      $(e.currentTarget).find('textarea[name="Descripcion"]').val(descripcion);
+      $(e.currentTarget).find('select[name="Programa"]').val(id_programa);
+      $(e.currentTarget).find('select[name="Tipo"]').val(tipoPR);
+      // Muestra la cantidad de caracteres disponible en el textfield de nombre.
+      textoRestante(maxLongNombre,  $(e.currentTarget).find("#no_table_Nombre"));
+
+      // Muestra la cantidad de caracteres disponible en el textarea de descripción.
+      textoRestante(maxLongDescrip, $(e.currentTarget).find("#no_table_Descripcion"));
+  });
+        
     });
 
 </script>
