@@ -98,6 +98,8 @@ def gestionar_programas():
 
     # Se verifica si los campos están llenos correctamente.
     if formulario_editar.accepts(request.vars, session, formname="formulario_editar"):
+        id_programa = request.vars.id_programa
+        programa = db(db.PROGRAMA.id_programa == id_programa).select().first()
         session.form_nombre = request.vars.Nombre
         programa.nombre = request.vars.Nombre
         programa.descripcion = request.vars.Descripcion
