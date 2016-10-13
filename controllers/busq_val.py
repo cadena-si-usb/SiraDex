@@ -53,11 +53,19 @@ def gestionar_validacion():
     productosE = db(db.PRODUCTO.estado == "En espera" and db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo).select(db.PRODUCTO.nombre, db.PRODUCTO.id, db.TIPO_ACTIVIDAD.nombre)
     productosV = db(db.PRODUCTO.estado == "Validada" and db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo).select(db.PRODUCTO.nombre, db.PRODUCTO.id, db.TIPO_ACTIVIDAD.nombre)
     productosR = db(db.PRODUCTO.estado == "Rechazada" and db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo).select(db.PRODUCTO.nombre, db.PRODUCTO.id, db.TIPO_ACTIVIDAD.nombre)
-    # print '##########################'
-    # for p in productosE:
-    #     print p['PRODUCTO'].nombre
-    #     print p['PRODUCTO'].id_producto
-    # print '##########################'
+    print '##########################'
+    for p in productosE:
+        print p['PRODUCTO'].nombre
+        print p['PRODUCTO'].id_producto
+    print '##########################'
+    for p in productosV:
+        print p['PRODUCTO'].nombre
+        print p['PRODUCTO'].id_producto
+    print '##########################'
+    for p in productosR:
+        print p['PRODUCTO'].nombre
+        print p['PRODUCTO'].id_producto
+    print '##########################'
     '''
     queryEsp = reduce(lambda a, b: (a&b),[db.PRODUCTO.estado == 'En espera',
                                        db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo
@@ -107,6 +115,17 @@ def validar():
         redirect(URL(c ="default",f="index"))
 
     id_act = int(request.args[0])
+    ''''
+    formulario = SQLFORM(db.PRODUCTO,id_act)
+    if formulario.process(session=None, formname='validar_producto').accepted:
+        print "se envio"
+        redirect(URL('gestionar_validacion'))
+    elif formulario.errors:
+        print "error"
+        print formulario.errors
+    else:
+        print "fatal"
+    '''
     db(db.PRODUCTO.id_producto == id_act).update(estado='Validada')
     session.message = 'Producto validado exitosamente'
     redirect(URL('gestionar_validacion.html'))
