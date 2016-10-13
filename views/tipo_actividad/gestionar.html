@@ -1,20 +1,24 @@
 {{extend 'layoutSIRADEXloged.html'}}
 
 {{block titulo}}
+
         {{if programa_nombre != None:}} 
            Programa: {{=programa_nombre}}
+
        {{else:}}
-           Tipos de Actividades del Sistema 
+           Tipos de Actividades del Sistema
        {{pass}}
 
 {{end}}
 
 {{block descripcion}}
     <div class="col-sm-8">
+
         <h4><p> {{if programa_descripcion != None:}} 
                        Descripción: {{=programa_descripcion}}
+
                 {{else:}}
-                        
+
                 {{pass}}
              </p></h4>
         <br>

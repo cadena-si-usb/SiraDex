@@ -111,8 +111,8 @@ def gestionar():
         listaTipoActividades =   db((db.TIPO_ACTIVIDAD.papelera == False)
                                  and (db.TIPO_ACTIVIDAD.id_programa == id_programa)).select(db.TIPO_ACTIVIDAD.ALL)
         programa = db(db.PROGRAMA.id_programa == id_programa).select(db.PROGRAMA.ALL).first()
-        # programa = {"nombre":programa.nombre,"descripcion":programa.descripcion}
-        
+    
+    
     return dict(admin = get_tipo_usuario()
             , listaTipoActividades = listaTipoActividades
             , programa_nombre = programa["nombre"], programa_descripcion = programa["descripcion"]
