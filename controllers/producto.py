@@ -18,6 +18,7 @@ def gestionar():
         redirect(URL(c ="default",f="index"))
 
     rows = db(db.PRODUCTO.ci_usu_creador==session.usuario['cedula']).select()
+
     detalles = {}
     nombres = {}
     cant_esp = 0
@@ -52,7 +53,7 @@ def gestionar():
 
 
     # Para el modal de Agregar actividad
-    programas = db(db.PROGRAMA.papelera==False).select('nombre')
+    programas = db(db.PROGRAMA.papelera==False).select()
     formulario = SQLFORM.factory(
         Field('programa', requires=IS_NOT_EMPTY()),
         Field('id_tipo',  requires=IS_NOT_EMPTY()))

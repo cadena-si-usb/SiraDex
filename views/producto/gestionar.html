@@ -258,9 +258,7 @@
                             <select class= "form-control" name="programa" onchange="ajax('obtener_actividades', ['programa'], ':eval')">
                                 <option selected=""></option>
                                 {{for x in programas:}}
-                                    {{if not x['papelera']: }}
                                         <option value="{{=x['nombre']}}">{{=x['nombre']}}</option>
-                                    {{pass}}
                                 {{pass}}
                             </select>
                         </div>
