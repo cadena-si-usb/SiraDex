@@ -474,8 +474,8 @@ def index():
     else:
         dia = "-" +  str(now.month)
     fecha = str(now.year) + mes + dia
-    rows = db(db.PROGRAMA).select().as_list()
-    rowsT = db(db.TIPO_ACTIVIDAD).select().as_list()
+    rows = db(db.PROGRAMA.papelera == False).select().as_list()
+    rowsT = db(db.TIPO_ACTIVIDAD.papelera == False).select().as_list()
     return locals()
 
 def obtener_actividades():
