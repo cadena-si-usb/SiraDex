@@ -203,8 +203,7 @@ def agregar_tipo_campos():
     nombre_tipo = session.form_nombre
     id_tipo = request.args[0]
     # Se definen los posibles tipos de campo.
-    tipo_campos = ['Fecha', 'Participante', 'CI', 'Comunidad', 'Teléfono',
-                    'Texto','Documento', 'Imagen', 'Cantidad entera', 'Cantidad decimal']
+    tipo_campos = ['Fecha', 'Telefono', 'Texto Corto','Documento','Cantidad Entera','Cantidad Decimal', 'Texto Largo', 'Cedula']
 
     # Creo query para realizar busqueda de los campos que ya han sido agregados
     # a ese tipo actividad
@@ -559,7 +558,7 @@ def editar_campo():
     # Los atributos del campo son puestos por defecto en el formulario
     campo = db(db.CAMPO.id_campo == id_campo).select(db.CAMPO.ALL).first()
 
-    tipo_campos = ['fecha', 'participante', 'ci', 'comunidad', 'telefono', 'texto','documento', 'imagen', 'cantidad entera', 'cantidad decimal']
+    tipo_campos = ['Fecha', 'Telefono', 'Texto Corto','Documento','Cantidad Entera','Cantidad Decimal', 'Texto Largo', 'Cedula']
 
     formulario_editar_campo = SQLFORM.factory(
                     Field('Nombre', requires=IS_NOT_EMPTY(), default=campo.nombre),

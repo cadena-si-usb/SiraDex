@@ -2,7 +2,7 @@
 from funciones_siradex import get_tipo_usuario
 
 
-tipo_campos = ['Fecha', 'Teléfono', 'Texto','Documento', 'Imagen', 'Número']
+tipo_campos = ['Fecha', 'Telefono', 'Texto Corto','Documento','Cantidad Entera','Cantidad Decimal', 'Texto Largo', 'Cedula']
 
 '''
 Funcion que se encarga de obtener los datos para mostrar los catalogos
