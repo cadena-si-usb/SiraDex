@@ -171,7 +171,8 @@ def agregar():
 
                 campo = campo.replace("_"," ")
                 print "Lo imprimes: " + campo
-                id_camp = db(db.CAMPO.nombre==campo).select().first().id_campo
+                id
+                _camp = db(db.CAMPO.nombre==campo).select().first().id_campo
                 print id_camp
                 valor = getattr(form.vars ,var)
                 db.PRODUCTO_TIENE_CAMPO.insert(id_prod=id_producto,id_campo=id_camp,valor_campo= valor)
