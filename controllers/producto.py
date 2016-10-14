@@ -52,7 +52,7 @@ def gestionar():
 
 
     # Para el modal de Agregar actividad
-    programas = db(db.PROGRAMA).select('nombre')
+    programas = db(db.PROGRAMA.papelera==False).select('nombre')
     formulario = SQLFORM.factory(
         Field('programa', requires=IS_NOT_EMPTY()),
         Field('id_tipo',  requires=IS_NOT_EMPTY()))
@@ -74,7 +74,7 @@ def tipos():
     else:
         redirect(URL(c ="default",f="index"))
 
-    rows = db(db.TIPO_ACTIVIDAD.papelera=='False').select()
+    rows = db(db.TIPO_ACTIVIDAD.papelera==False).select()
     return locals()
 
 
