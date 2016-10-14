@@ -10,7 +10,6 @@
     <!-- icono editar -->
     <a id="editar" href="{{=URL(c='default',f='EditarPerfil')}}" >
     <span class="glyphicon glyphicon-edit green-icn"></span>
-    <!-- {{=IMG(_src=URL('static', 'icon', args='i_edit.png'),_style='max-height:1em') }} --> 
     </a>
 {{end}}
 
@@ -96,7 +95,6 @@
                                     <!-- Boton Descargar -->
                                     <td class="center-vertically">
                                     <center>
-                                    <!-- {{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }} -->
                                     <span class="glyphicon glyphicon-save blue"></span>
                                     </center>
                                     </td>
@@ -137,38 +135,37 @@
                         <tbody id="actividades">
                             {{for x in rows:}}
                                 {{if x.estado == 'En espera':}}
-                                <tr>
-                                    <!-- Nombre Producto -->
-                                        
-                                    <td class="center-vertically detalles"> 
-                                    {{=x.nombre}}
-                                    </td>
-                                    <!-- Nombre Actividad -->
-                                    <td class="center-vertically detalles"> {{=nombres[x]}}</td>
-                                    <!-- Modificacion -->
-                                    <td class="center-vertically"> {{=x.fecha_realizacion}}</td>
-                                    <!-- Realizacion  -->
-                                    <td class="center-vertically"> {{=x.fecha_modificacion}}</td>
-                                    <!-- Boton Modificar -->
-                                    <td class="center-vertically"> 
-                                    <center>
-                                    <span class="glyphicon glyphicon-edit" style="color:#9E9E9E"></span>
-                                    </center>
-                                    </td>
-                                    <!-- Boton Descargar -->
-                                    <td class="center-vertically">
-                                    <center>
-                                    <!-- {{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }} -->
-                                    <span class="glyphicon glyphicon-save blue"></span>
-                                    </center>
-                                    </td>
-                                    <!-- Boton Eliminar -->
-                                    <td class="center-vertically">
-                                    <center>
-                                    <span class="glyphicon glyphicon-remove" style="color:#9E9E9E"></span>
-                                    </center>
-                                    </td>
-                                </tr>                             
+                                    <tr>
+                                        <!-- Nombre Producto -->
+                                            
+                                        <td class="center-vertically detalles"> 
+                                        {{=x.nombre}}
+                                        </td>
+                                        <!-- Nombre Actividad -->
+                                        <td class="center-vertically detalles"> {{=nombres[x]}}</td>
+                                        <!-- Modificacion -->
+                                        <td class="center-vertically"> {{=x.fecha_realizacion}}</td>
+                                        <!-- Realizacion  -->
+                                        <td class="center-vertically"> {{=x.fecha_modificacion}}</td>
+                                        <!-- Boton Modificar -->
+                                        <td class="center-vertically"> 
+                                        <center>
+                                        <span class="glyphicon glyphicon-edit" style="color:#9E9E9E"></span>
+                                        </center>
+                                        </td>
+                                        <!-- Boton Descargar -->
+                                        <td class="center-vertically">
+                                        <center>
+                                        <span class="glyphicon glyphicon-save blue"></span>
+                                        </center>
+                                        </td>
+                                        <!-- Boton Eliminar -->
+                                        <td class="center-vertically">
+                                            <center>
+                                                <span class="glyphicon glyphicon-remove" style="color:#9E9E9E"></span>
+                                            </center>
+                                        </td>
+                                    </tr>                             
                                 {{pass}}
                             {{pass}}
                         </tbody>
@@ -204,7 +201,6 @@
                                     <td class="center-vertically"> 
                                     <center>
                                     <a href="{{=URL('modificar',args=x.id)}}">
-                                    <!-- {{=IMG(_src=URL('static', 'icon/i_edit.png'),_height='25',_title="Modificar") }} -->
                                     <span class="glyphicon glyphicon-edit green-icn"></span>
                                     </a>
                                     </center>
@@ -212,7 +208,6 @@
                                     <!-- Boton Descargar -->
                                     <td class="center-vertically">
                                     <center>
-                                    <!-- {{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }} -->
                                     <span class="glyphicon glyphicon-save blue"></span>
                                     </center>
                                     </td>
@@ -220,7 +215,6 @@
                                     <td class="center-vertically">
                                     <center>
                                     <a onClick = "if(confirm('¿Está seguro de que desea eliminar esta actividad?')) {window.location.href = '{{=URL(f='eliminar',args=[ x.id ] )}}';}">
-                                    <!-- {{=IMG(_src=URL('static', 'icon/i_delete.png'),_height='25',_title="Eliminar") }} -->
                                     <span class="glyphicon glyphicon-remove red"></span>
                                     </a>
                                     </center>
@@ -264,7 +258,7 @@
                             <select class= "form-control" name="programa" onchange="ajax('obtener_actividades', ['programa'], ':eval')">
                                 <option selected=""></option>
                                 {{for x in programas:}}
-                                    {{if not x['papelera']:}}
+                                    {{if not x['papelera']: }}
                                         <option value="{{=x['nombre']}}">{{=x['nombre']}}</option>
                                     {{pass}}
                                 {{pass}}
@@ -308,7 +302,7 @@
         <p>Some text in the modal.</p>
       </div>
       <div class="modal-footer">
-      <center>
+        <center>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
         </center>
       </div>
