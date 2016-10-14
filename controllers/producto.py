@@ -53,7 +53,7 @@ def gestionar():
 
 
     # Para el modal de Agregar actividad
-    programas = db(db.PROGRAMA.papelera==False).select()
+    programas = db(db.PROGRAMA.papelera==False).select('nombre')
     formulario = SQLFORM.factory(
         Field('programa', requires=IS_NOT_EMPTY()),
         Field('id_tipo',  requires=IS_NOT_EMPTY()))
