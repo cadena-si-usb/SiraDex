@@ -9,13 +9,6 @@ def download(): return response.download(request,db)
 def call(): return service()
 ### end requires
 
-## URLS DE RETORNO PARA EL CAS ##
-## Solo descomentar segun sea el caso.
-## PARA EL SERVIDOR:
-# URL_RETORNO = "http%3A%2F%2F159.90.211.179%2FSiraDex%2Fdefault%2Flogin_cas"
-## PARA DESSARROLLO. Cambiar el puerto 8000 si es necesario.
-URL_RETORNO = "http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas"
-
 def gestionar():
     if session.usuario != None:
         if session.usuario["tipo"] == "Bloqueado":

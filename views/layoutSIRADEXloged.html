@@ -38,7 +38,7 @@
             <!--Opciones administrador-->
             {{ if admin in [1,2]: }}
             <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="{{=URL(c='default', f='setVista.html', args=[2])}}"> Sistema</a>
+                <a class="dropdown-toggle" data-toggle="dropdown" href="{{=URL(c='default', f='setVista', args=[2])}}"> Sistema</a>
                 <ul class="dropdown-menu" style="right:auto">
                     {{if admin == 1:}}
                     <li><a href="#">Consultar Log</a></li>
