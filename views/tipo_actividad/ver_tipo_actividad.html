@@ -11,7 +11,7 @@
         <tbody class="tabla-border">
             <tr> <th class="col-md-2 tabla-border">Nombre:</th>           <td class="col-md-6 tabla-border"> {{=tipo.nombre}} </td> </tr>
             <tr> <th class="col-md-2 tabla-border">Descripción:</th>      <td class="col-md-6 tabla-border"> {{=tipo.descripcion}} </td> </tr>
-            <tr> <th class="col-md-2 tabla-border">Tipo de Programa:</th> <td class="col-md-6 tabla-border"> {{=tipo.tipo_p_r}} </td></tr>
+            <tr> <th class="col-md-2 tabla-border">Tipo de Programa:</th> <td class="col-md-6 tabla-border"> {{='Evaluables por pares académicos' if tipo.tipo_p_r == "P" else 'No evaluables por pares académicos'}} </td></tr>
             <tr> <th class="col-md-2 tabla-border">Programa:</th>         <td class="col-md-6 tabla-border"> {{=programa_nombre}} </td> </tr>
             <!--<tr> <th class="col-md-2">Producto</td>         <td class="col-md-6"> < Producto > </td> </tr>-->
         </tbody>
@@ -23,12 +23,12 @@
 <div class="row">
 
     <div class="col-sm-5 col-sm-push-9" style="margin-top:10px;margin-left:50px">
-      <button type="button" class="btn btn-default green btn-border" 
+      <button type="button" class="btn btn-default green btn-border"
               onclick="ajax('{{=URL(c='tipo_actividad',f='agregar_tipo_campos')}}/{{=tipo.id_tipo}}',[],'agregar_campo_tipo');"
               data-target="#myModalAgregarCampo"
               data-toggle="modal">
-        <span class="glyphicon glyphicon-plus-sign"></span>  Agregar Campo  
-      </button> 
+        <span class="glyphicon glyphicon-plus-sign"></span>  Agregar Campo
+      </button>
       <br></br>
     </div>
 
@@ -54,8 +54,8 @@
                               <td> <center> {{=campo.nombre}} </center></td>
                               <td> <center> {{=campo.tipo_campo}} </center></td>
                               <td> <center> {{=campo.obligatorio}} </center></td>
-                              <td> 
-                                  <center> 
+                              <td>
+                                  <center>
                                       <a href="#">
                                           <span class="glyphicon glyphicon-edit blue"
                                                 onclick="ajax('{{=URL('editar_campo')}}/{{=campo.id_campo}}',[],'editar_campo_tipo');"

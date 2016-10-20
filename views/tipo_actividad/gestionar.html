@@ -2,7 +2,7 @@
 
 {{block titulo}}
 
-        {{if programa_nombre != None:}} 
+        {{if programa_nombre != None:}}
            Programa: {{=programa_nombre}}
 
        {{else:}}
@@ -14,7 +14,7 @@
 {{block descripcion}}
     <div class="col-sm-8">
 
-        <h4><p> {{if programa_descripcion != None:}} 
+        <h4><p> {{if programa_descripcion != None:}}
                        Descripción: {{=programa_descripcion}}
 
                 {{else:}}
@@ -59,8 +59,8 @@
               <span class="glyphicon glyphicon-plus-sign"
                     aria-hidden="true"></span> Agregar Actividad
             </button>
-           
-            
+
+
             <a href="{{=URL(c='archivo_historico', f='gestionar.html')}}" >
             <button type="button" class="btn btn-default red-trash btn-border">
               <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Archivo Histórico
@@ -79,7 +79,7 @@
                     <th>Nombre</th>
                     <th>Descripción</th>
                     <th><center>Editar</center></th>
-                    <th><center>Eliminar</center></th>
+                    <th><center>Inhabilitar</center></th>
                 </tr>
             </thead>
             <tbody>
@@ -171,10 +171,10 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <center> <h4 class="modal-title">Eliminar Tipo de Actividad</h4> </center>
+            <center> <h4 class="modal-title">Inhabilitar Tipo de Actividad</h4> </center>
         </div>
         <div class="modal-body">
-            <center> <p>Está seguro que quiere eliminar este tipo de Actividad.</p> </center>
+            <center> <p>¿Está seguro que quiere inhabilitar este tipo de actividad?</p> </center>
             <br>
             <center>
                 <a href="javascript:location.reload();">
@@ -182,7 +182,7 @@
                           class="btn blue-add btn-border"
                           data-dismiss="modal"
                           id="botonDelete">
-                      Eliminar</button>
+                      Inhabilitar</button>
                 </a>
                 <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
             </center>
@@ -210,8 +210,8 @@
         ajax("{{=URL('enviar_tipo_papelera')}}/"+id_tipo,[]);
         location.reload();
     });
-    
-    
+
+
 
 
     $(document).ready(function () {
@@ -227,15 +227,15 @@
       $("#no_table_Id_tipo__row").css("display","none");
       $(e.currentTarget).find('input[name="Nombre"]').val(nombre);
       $(e.currentTarget).find('textarea[name="Descripcion"]').val(descripcion);
-      $(e.currentTarget).find('select[name="Programa"]').val(id_programa);
-      $(e.currentTarget).find('select[name="Tipo"]').val(tipoPR);
+      $(e.currentTarget).find('#no_table_Programa').val(id_programa);
+      $(e.currentTarget).find('#no_table_Tipo').val(tipoPR);
       // Muestra la cantidad de caracteres disponible en el textfield de nombre.
       textoRestante(maxLongNombre,  $(e.currentTarget).find("#no_table_Nombre"));
 
       // Muestra la cantidad de caracteres disponible en el textarea de descripción.
       textoRestante(maxLongDescrip, $(e.currentTarget).find("#no_table_Descripcion"));
   });
-        
+
     });
 
 </script>

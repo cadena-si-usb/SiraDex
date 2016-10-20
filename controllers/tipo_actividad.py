@@ -10,11 +10,12 @@ Vista de Gestionar Tipo Actividad, tiene las opciones:
 
 def construir_formulario_agregar_tipo():
 
-    lista_programas = db().select(db.PROGRAMA.ALL)
-    programas = []
+    lista_programas =  db(db.PROGRAMA.papelera == False).select()
+    programas = {}
 
     # Se crea un diccionario para almacenar unicamente los nombres de los programas almacenados.
-    for programa in lista_programas: programas.append(programa.nombre)
+    for programa in lista_programas:
+        programas[programa.id_programa] = programa.nombre
 
     formulario_agregar_tipo = SQLFORM.factory(
                         Field('Nombre',
@@ -38,11 +39,12 @@ def construir_formulario_agregar_tipo():
 
 def construir_formulario_editar_tipo():
 
-    lista_programas = db().select(db.PROGRAMA.ALL)
-    programas = []
+    lista_programas = db(db.PROGRAMA.papelera == False).select()
+    programas = {}
 
     # Se crea un diccionario para almacenar unicamente los nombres de los programas almacenados.
-    for programa in lista_programas: programas.append(programa.nombre)
+    for programa in lista_programas:
+        programas[programa.id_programa] = programa.nombre
 
 
     formulario_editar_tipo = SQLFORM.factory(
@@ -83,13 +85,12 @@ def gestionar():
         tipo.nombre = request.vars.Nombre
         tipo.tipo_p_r = request.vars.Tipo
         tipo.descripcion = request.vars.Descripcion
-        id_programa = db(db.PROGRAMA.nombre == request.vars.Programa).select(db.PROGRAMA.ALL).first().id_programa
+        id_programa = request.vars.Programa
         tipo.id_programa = id_programa
         tipo.update_record()                                 # Se actualiza el tipo de actividad.
 
     if formulario_agregar_tipo.accepts(request.vars, session,formname="formulario_agregar_tipo"):
-        programa = db(db.PROGRAMA.nombre == request.vars.Programa).select()
-        id_programa = programa[0].id_programa
+        id_programa = request.vars.Programa
         db.TIPO_ACTIVIDAD.insert(nombre = request.vars.Nombre,
                                  tipo_p_r = request.vars.Tipo,
                                  descripcion = request.vars.Descripcion,
@@ -202,8 +203,7 @@ def agregar_tipo_campos():
     nombre_tipo = session.form_nombre
     id_tipo = request.args[0]
     # Se definen los posibles tipos de campo.
-    tipo_campos = ['Fecha', 'Participante', 'CI', 'Comunidad', 'Teléfono',
-                    'Texto','Documento', 'Imagen', 'Cantidad entera', 'Cantidad decimal']
+    tipo_campos = ['Fecha', 'Telefono', 'Texto Corto','Documento','Cantidad Entera','Cantidad Decimal', 'Texto Largo', 'Cedula']
 
     # Creo query para realizar busqueda de los campos que ya han sido agregados
     # a ese tipo actividad
@@ -558,7 +558,7 @@ def editar_campo():
     # Los atributos del campo son puestos por defecto en el formulario
     campo = db(db.CAMPO.id_campo == id_campo).select(db.CAMPO.ALL).first()
 
-    tipo_campos = ['fecha', 'participante', 'ci', 'comunidad', 'telefono', 'texto','documento', 'imagen', 'cantidad entera', 'cantidad decimal']
+    tipo_campos = ['Fecha', 'Telefono', 'Texto Corto','Documento','Cantidad Entera','Cantidad Decimal', 'Texto Largo', 'Cedula']
 
     formulario_editar_campo = SQLFORM.factory(
                     Field('Nombre', requires=IS_NOT_EMPTY(), default=campo.nombre),
