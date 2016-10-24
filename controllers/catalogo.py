@@ -98,10 +98,10 @@ def vGestionarCatalogos():
 
 
     formulario_agregar_catalogo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
-    formulario_agregar_catalogo.element(_type='submit')['_value']="Editar"
+    formulario_agregar_catalogo.element(_type='submit')['_value']="Agregar"
 
     formulario_agregar_campo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
-    formulario_agregar_campo.element(_type='submit')['_value']="Editar"
+    formulario_agregar_campo.element(_type='submit')['_value']="Agregar"
 
     formulario_editar_campo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
     formulario_editar_campo.element(_type='submit')['_value']="Editar"
@@ -165,6 +165,13 @@ def eliminarCatalogo():
 
     #eliminamos todos los campos de ese catalogo
     campos_del_catalogo = db(db.CAMPO_CATALOGO.id_catalogo == id_catalogo).delete()
+
+    #Buscamos todas las actividades que tengan relacionado este catalogo
+    #y eliminamos las referencias a este.
+    campos_en_tipos_actividades = db(db.CAMPO.id_catalogo == id_catalogo).select()
+    for campo in campos_en_tipos_actividades:
+        campo.id_catalogo = None
+        campo.update_record()
 
     #eliminarmos el catalogo.
     del db.CATALOGO[id_catalogo]
