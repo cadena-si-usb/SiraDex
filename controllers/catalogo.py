@@ -24,15 +24,12 @@ def vGestionarCatalogos():
 
     #chequeamos si se esta gestionando un catalogo en particular
     catalogo_actual = None;
-    print request.args
     if request.args:
         catalogo_actual = int(request.args[0])
     else:
         #Si no es ninguno en especifico,
         #Tomamos como actual el primer catalogo de la lista.
         catalogo_actual = catalogos[0][0].id_catalogo
-
-    print "CATALOGO ", catalogo_actual
 
     #Formulario para agregar un catalogo.
     formulario_agregar_catalogo = AgregarCatalogo()
