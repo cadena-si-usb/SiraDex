@@ -16,24 +16,24 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-    
+
       <form class="navbar-form navbar-left" role="search">
         <div class="input-group">
-          <input    type="text" 
-                    class="form-control" 
-                    id="form-busqueda" 
+          <input    type="text"
+                    class="form-control"
+                    id="form-busqueda"
                     placeholder="Divierte con nuestro buscador">
 
         <span class="input-group-btn">
-        <button type="submit" 
-                class="btn btn-default" 
+        <button type="submit"
+                class="btn btn-default"
                 id="btn-lupa">
                 O
         </button>
         </span>
         </div>
       </form>
-      
+
       <ul class="nav navbar-nav navbar-right">
             <!--Opciones administrador-->
             {{ if admin in [1,2]: }}
@@ -54,9 +54,9 @@
                     <li><a href="#">Notificaciones</a></li>
                     <li role="separator" class="divider"></li>
                     {{pass}}
-		    <li><a href="{{=URL(c='tipo_actividad', f='gestionar')}}">Tipos de Actividad</a></li>
+		                <li><a href="{{=URL(c='tipo_actividad', f='gestionar')}}">Tipos de Actividad</a></li>
                     <li><a href="{{=URL(c='catalogo', f='vGestionarCatalogos')}}">Catálogos</a></li>
-                    <li><a href="#">Papelera</a></li>
+                    <li><a href="{{=URL(c='archivo_historico', f='gestionar')}}">Papelera</a></li>
                 </ul>
             </li>
             <li><a href="{{=URL(c='busq_val', f='gestionar_validacion.html')}}">
@@ -73,8 +73,8 @@
 
                 <!--Cierre de sesion-->
                 <li class="dropdown activo">
-                    <a  class="dropdown-toggle" 
-                        data-toggle="dropdown" 
+                    <a  class="dropdown-toggle"
+                        data-toggle="dropdown"
                         href="{{=URL(c='default', f='perfil', args=[2])}}"> {{=session.usuario['first_name'].split(' ',1)[0]}} {{=session.usuario['last_name'].split(' ',1)[0]}}
                     </a>
                     <ul class="dropdown-menu" style="right:auto">
