@@ -22,6 +22,18 @@ def vGestionarCatalogos():
         campos_guardados = db(db.CAMPO_CATALOGO.id_catalogo == catalogo.id).select()
         catalogos.append([catalogo, campos_guardados])
 
+    #chequeamos si se esta gestionando un catalogo en particular
+    catalogo_actual = None;
+    print request.args
+    if request.args:
+        catalogo_actual = int(request.args[0])
+    else:
+        #Si no es ninguno en especifico,
+        #Tomamos como actual el primer catalogo de la lista.
+        catalogo_actual = catalogos[0][0].id_catalogo
+
+    print "CATALOGO ", catalogo_actual
+
     #Formulario para agregar un catalogo.
     formulario_agregar_catalogo = AgregarCatalogo()
     formulario_agregar_campo    = AgregarCampo()
@@ -30,7 +42,7 @@ def vGestionarCatalogos():
     if formulario_agregar_catalogo.process(formname = "formulario_agregar_catalogo").accepted:
         # Creamos el catalogo y obtenemos su id, para pasarlo al controlador de agregar campo.
         id_catalogo = db.CATALOGO.insert(nombre = request.vars.nombre)['id_catalogo']
-        redirect(URL('vGestionarCatalogos'))
+        redirect(URL('vGestionarCatalogos',args=[id_catalogo]))
     # En caso de que el formulario no sea aceptado
     else:
         message = 'Error en el Formulario de Agregar Catalogo'
@@ -56,7 +68,7 @@ def vGestionarCatalogos():
                                      obligatorio = request.vars.obligatorio)
             message = ""
         # Redirijo a la misma pagina para seguir agregando campos
-        redirect(URL('vGestionarCatalogos'))
+        redirect(URL('vGestionarCatalogos',args=[id_catalogo]))
     # En caso de que el formulario no sea aceptado
     else:
         message = 'Error en el Formulario de Agregar Campo'
@@ -91,7 +103,7 @@ def vGestionarCatalogos():
 
             session.msgErr = 0
         # Redirijo a la misma pagina para seguir agregando campos
-        redirect(URL('vGestionarCatalogos'))
+        redirect(URL('vGestionarCatalogos',args=[id_catalogo]))
     else:
         message = 'Error en el Formulario de Editar Campo'
 
@@ -107,6 +119,7 @@ def vGestionarCatalogos():
     formulario_editar_campo.element(_type='submit')['_value']="Editar"
 
     return dict(catalogos                   = catalogos,
+                catalogo_actual             = catalogo_actual,
                 formulario_agregar_catalogo = formulario_agregar_catalogo,
                 formulario_agregar_campo    = formulario_agregar_campo,
                 formulario_editar_campo     = formulario_editar_campo,
@@ -211,9 +224,10 @@ def eliminarCampos():
 
     # Obtengo el id del campo que se eliminara
     id_campo_cat = request.args[0]
+    id_catalogo  = db(db.CAMPO_CATALOGO.id_campo_cat == id_campo_cat).select().first().id_catalogo
 
     # Elimino el campo del catalogo. Esto no afecta los tipos de actividades
     # Que estan definidas ya, ni los productos ya listos.
     del db.CAMPO_CATALOGO[id_campo_cat]
 
-    redirect(URL('vGestionarCatalogos.html'))
+    redirect(URL('vGestionarCatalogos',args=[id_catalogo]))
