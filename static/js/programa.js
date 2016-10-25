@@ -60,10 +60,14 @@ $(document).ready(function(){
       $("#BotonEliminar").attr("href", linkEliminar);
   });
 
+  // -.........................................................................-
+  // Para realizar la búsqueda.
   var options = {
     valueNames: ['nombre_programa', 'descripcion_programa', { data: ['nombre', 'descripcion'] }],
     item: '<td class="nombre_programa"></td><td class="descripcion_programa"><center></center></td>'
   };
 
   var programList = new List('programs', options);
+
+  // -.........................................................................-
 });
