@@ -1,15 +1,16 @@
 # coding: utf8
-# try something like
 
-from pprint import pprint
-from datetime import time
 import datetime
-from reportlab.platypus import *
-from reportlab.lib.units import cm
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet	
-from uuid import uuid4
 import os.path
+from pprint    import pprint
+from datetime  import time
+from uuid      import uuid4
+from reportlab.platypus   import *
+from reportlab.lib.units  import *
+from reportlab.lib        import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.enums  import *
+
 
 
 def gestionar():
@@ -42,9 +43,9 @@ def gestionar():
 
 		detalles[row] = dict_campos
 
-		nombres_act = db((db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo) 
+		nombres_act = db((db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo)
 					& (db.PRODUCTO.id_producto == row.id_producto)).select()
-		
+
 		for nombre in nombres_act:
 			print nombre.TIPO_ACTIVIDAD.nombre
 			nombres[row] = nombre.TIPO_ACTIVIDAD.nombre
@@ -52,7 +53,7 @@ def gestionar():
 		if row["estado"] == "En espera":
 			cant_esp += 1
 		elif row["estado"] == "Validada":
-			cant_val += 1 
+			cant_val += 1
 		elif row["estado"] == "Rechazada":
 			cant_rec += 1
 
@@ -106,13 +107,13 @@ def agregar():
 	else:
 		dia = "-" +  str(now.month)
 	fecha_max = str(now.year) + mes + dia
-	
+
 
 	tipo =  int(request.args(0))
-	
+
 	campos_id = db(db.ACT_POSEE_CAMPO.id_tipo_act == tipo).select()
 	tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == tipo).select().first()
-	
+
 	nombre_actividad = tipo_actividad.nombre
 	descripcion_actividad = tipo_actividad.descripcion
 
@@ -142,7 +143,7 @@ def agregar():
 			elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
 			elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
 			elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',requires=IS_NOT_EMPTY()))
-				
+
 		else:
 			if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',requires=IS_EMPTY_OR(IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD'))))
 			elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string'))
@@ -152,10 +153,10 @@ def agregar():
 			elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807))))
 			elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807'))))
 			elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',requires=IS_NOT_EMPTY()))
-		
-			
+
+
 	#fields.append(Field(nombre,requires=IS_IN_SET([(1,'Method1'), (2,'Method2'), (3,'Method3')], zero='Select')))
-	form=SQLFORM.factory(*fields)    
+	form=SQLFORM.factory(*fields)
 	form.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
 	form.element(_type='submit')['_value']="Agregar"
 
@@ -185,7 +186,7 @@ def agregar():
 	elif form.errors:
 		response.flash = 'el formulario tiene errores'
 
-			 
+
 
 	return locals()
 
@@ -216,9 +217,9 @@ def modificar():
 	fecha_max = str(now.year) + mes + dia
 
 	# Obtenemos la actividad para mostrarla en el html
-	producto = db(db.PRODUCTO.id_producto==id_producto).select().first()    
+	producto = db(db.PRODUCTO.id_producto==id_producto).select().first()
 	tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == producto.id_tipo).select().first()
-	
+
 	nombre_actividad = tipo_actividad.nombre
 	descripcion_actividad = tipo_actividad.descripcion
 
@@ -235,8 +236,8 @@ def modificar():
 	valores['descripcion'] = producto.descripcion
 	valores['fecha_realizacion'] = producto.fecha_realizacion
 	valores['lugar'] = producto.lugar
-	
-	
+
+
 	for row in rows:
 		rows_campo = db(db.CAMPO.id_campo == row.id_campo).select().first()
 		nombre = rows_campo.nombre.replace(" ", "_")
@@ -258,7 +259,7 @@ def modificar():
 			elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
 			elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
 			elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',requires=IS_NOT_EMPTY()))
-				
+
 		else:
 			if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',requires=IS_EMPTY_OR(IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD'))))
 			elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string'))
@@ -350,11 +351,11 @@ def eliminar():
 
 # Funcion utilizada para el ajax en el agregar
 def obtener_actividades():
-	
+
 	programa = db(db.PROGRAMA.nombre==request.vars.programa).select().first()
 	tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa.id_programa).select(db.TIPO_ACTIVIDAD.nombre,
 		db.TIPO_ACTIVIDAD.id_tipo).as_list()
-	
+
 	concat = '<option></option>'
 
 	for tipo in tiposA:
@@ -403,11 +404,11 @@ def seleccion_actividad():
 						'<div class="col-sm-8">'+\
 							'<input class="form-control input-'+posibles_campos[tipo_campo]+es_obligatorio+'" type="'+posibles_campos[tipo_campo]+'" name="'+nombre_campo_input+'"/>'+\
 						'</div>'+\
-					'</div>' 
+					'</div>'
 
 		respuesta_inputs += html_input
 
-			
+
 	respuesta = "jQuery('#nombre_actividad').empty().append('"+nombre_actividad+"');"
 	respuesta += "jQuery('#descripcion_actividad').empty().append('"+descripcion_actividad+"');"
 	respuesta += "jQuery('#campos_actividad').empty().append('"+respuesta_inputs+"')"
@@ -441,8 +442,8 @@ def agregar():
 
 	# Lista de programas para listarlos en el select
 	programas =  db(db.PROGRAMA).select(db.PROGRAMA.nombre,db.PROGRAMA.id_programa).as_list()
-	
-	
+
+
 	formulario = SQLFORM(db.PRODUCTO)
 	if formulario.process(session=None, formname='crear_tipo').accepted:
 		print formulario.vars
@@ -457,55 +458,81 @@ def agregar():
 	else:
 		print "fatal"
 
-  
+
 	return locals()
 '''
 
 
-#Funcion para exportar PDF de un producto 
+#Funcion para exportar PDF de un producto
 def get_pdf():
+
 	producto = db.PRODUCTO(request.args(0))
 	creador= db(db.USUARIO.ci == producto .ci_usu_creador).select()[0]
-	tmpfilename=os.path.join(request.folder,'private',str(uuid4()))
+	tmpfilename = os.path.join(request.folder,'private',str(uuid4()))
 	doc = SimpleDocTemplate(tmpfilename)
 	elements = []
 
-	estilo = getSampleStyleSheet() 
-	#P = Paragraph ( '''<br> <b> <u> PRODUCTO COMO ACTIVIDAD DE EXTENSIÓN </u> </b>''', estilo["BodyText"])
-	P1 = Paragraph('''<img src = "http://www.indene.usb.ve/images/cebolla_trans_negro.png"width="70" height="70"/>
-	''',
-	 estilo["BodyText"]) 
+	# Definimos los estilos para el documento
+	estilo = getSampleStyleSheet()
 
-	data = [[P1,'UNIVERSIDAD SIMÓN BOLÍVAR \n DECANATO DE EXTENSION\n\n' ],
-	#	   ['' , 'DECANATO DE EXTENSION'],
-		   [''],
-		   ['', '', 'PRODUCTO COMO ACTIVIDAD DE EXTENSION'],
+	estilo_titulo = estilo["Normal"]
+	estilo_titulo.alignment = TA_CENTER
+	estilo_titulo.fontName = "Helvetica"
+	estilo_titulo.fontSize = 12
+	estilo_titulo.leading = 15
+
+	estilo_tabla = estilo["BodyText"]
+	estilo_tabla.alignment = TA_LEFT
+	estilo_tabla.fontName = "Helvetica"
+	estilo_tabla.fontSize = 10
+	estilo_tabla.leading = 12
+
+	estilo_footer = estilo["Italic"]
+	estilo_footer.alignment = TA_CENTER
+	estilo_footer.fontName = "Helvetica"
+	estilo_footer.fontSize = 10
+	estilo_footer.leading = 12
+
+	# Agrega el footer al documento
+	def addFooter(canvas, doc):
+
+		footer1 = Paragraph('''<br/>Sartenejas, Baruta, Edo. Miranda - Apartado 89000 Cable Unibolivar Caracas Venezuela. Teléfono +58 0212-9063111
+		 					   <br/>Litoral. Camurí Grande, Edo. Vargas Parroquia Naiguatá. Teléfono +58 0212-9069000	''', estilo_footer)
+		w, h = footer1.wrap(doc.width, doc.bottomMargin)
+		footer1.drawOn(canvas, doc.leftMargin, h)
+
+
+	usb_logo_url = os.path.join(request.folder, 'static/images','usblogo.png')
+	usblogo = Image(usb_logo_url)
+	usblogo.drawHeight = 70
+	usblogo.drawWidth  = 100
+
+	elements.append(usblogo)
+	elements.append(Paragraph('Universidad Simón Bolívar' , estilo_titulo))
+	elements.append(Paragraph('Deacanato de Extensión' , estilo_titulo))
+	elements.append(Paragraph('Sistema de Registro de Actividades de Extensión (SIRADEX)' , estilo_titulo))
+	elements.append(Paragraph('<br/><br/>DATOS DEL PRODUCTO' , estilo_titulo))
+
+	data = [
 	[''],
-	['Nombre del Producto: ' + str(producto.nombre), ''],
-	['Realizado por: ' + str(creador.nombres +' '+ creador.apellidos),''],
-	['CI: ' + str(creador.ci),''],
-	['Descripción: ' + str (producto.descripcion), ''],
-	['Lugar en el cual se realizó el producto: ' + str (producto.lugar), ''],
-	['Fecha de Creación: ' + str (producto.fecha_realizacion), ''],
-	['Última Fecha de Modificación : ' + str (producto.fecha_modificacion), ''],
-	['Status del Producto : ' + str (producto.estado), ''],
-	['', '', '', '', '', '']
-	 ]
-	t=Table(data, 3*cm)
-	#REVISAR PARA DARLE ESTILO AL PDF
-	#t.setStyle(TableStyle([('FONTSIZE', (0,1), (0,1), 8, colors.red)])),
-#						  
-#			 			   
-#			 			   ('ALIGN', (0,0), (0,1), 'CENTER')]))
-			# 									   ('GRID', (0,2), (5,9), 0.25, colors.black),
-			# 									   ('SPAN', (0,2), (1,2)),
-			# 									   ('SPAN', (2,2), (3,2)),
-			# 									   ('SPAN', (4,2), (5,2)),
-			# 									   ('SPAN', (0,3), (2,3)),
-			# 									   ('SPAN', (3,3), (5,3)),
+	['', Paragraph('<b>NOMBRE DEL PRODUCTO:</b> ', estilo_tabla),  str(producto.nombre), ''],
+	['', Paragraph('<b>REALIZADO POR: </b>' , estilo_tabla),  str(creador.nombres +' '+ creador.apellidos),''],
+	['', Paragraph('<b>CI:</b> ' , estilo_tabla),  str(creador.ci),''],
+	['', Paragraph('<b>DESCRIPCIÓN:</b> ', estilo_tabla) ,  str (producto.descripcion), ''],
+	['', Paragraph('<b>LUGAR DE REALIZACIÓN:</b>', estilo_tabla),  str (producto.lugar), ''],
+	['', Paragraph('<b>FECHA DE CREACIÓN:</b> ', estilo_tabla) ,  str (producto.fecha_realizacion), ''],
+	['', Paragraph('<b>ÚLTIMA FECHA DE MODIFICACIÓN: </b>' , estilo_tabla) ,  str (producto.fecha_modificacion), ''],
+	['', Paragraph('<b>STATUS DEL PRODUCTO: </b>', estilo_tabla) ,  str (producto.estado), '']
+	]
+
+	t=Table(data, colWidths=(2*inch))
+
 	elements.append(t)
-	doc.build(elements)
+
+	# construimos el documento
+	doc.build(elements, onFirstPage=addFooter)
 	data = open(tmpfilename,"rb").read()
 	os.unlink(tmpfilename)
 	response.headers['Content-Type']='application/pdf'
+
 	return data
