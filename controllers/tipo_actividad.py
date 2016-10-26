@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from funciones_siradex import get_tipo_usuario
+
 #. --------------------------------------------------------------------------- .
 '''
 Vista de Gestionar Tipo Actividad, tiene las opciones:
@@ -467,22 +469,3 @@ def formularioEditarCampo():
                    )
 
     return formulario
-
-#. --------------------------------------------------------------------------- .
-def get_tipo_usuario():
-    if session.usuario != None:
-        if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
-            if(session.usuario["tipo"] == "DEX"):
-                admin = 2
-            elif(session.usuario["tipo"] == "Administrador"):
-                admin = 1
-            else:
-                admin = 0
-        else:
-            redirect(URL(c ="default",f="vMenuPrincipal"))
-    else:
-        redirect(URL(c ="default",f="index"))
-
-    return admin
-
-#. --------------------------------------------------------------------------- .

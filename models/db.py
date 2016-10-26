@@ -77,7 +77,7 @@ response.form_label_separator = myconf.get('forms.separator') or ''
 # (more options discussed in gluon/tools.py)
 # -------------------------------------------------------------------------
 
-from gluon.tools import Auth, Service, PluginManager
+from gluon.tools import Auth, Service, PluginManager, Mail
 import datetime
 
 # host names must be a list of allowed host names (glob syntax allowed)
@@ -93,12 +93,11 @@ auth.define_tables(username=False, signature=False)
 # -------------------------------------------------------------------------
 # configure email
 # -------------------------------------------------------------------------
-mail = auth.settings.mailer
-mail.settings.server = 'logging' if request.is_local else myconf.get('smtp.server')
-mail.settings.sender = myconf.get('smtp.sender')
-mail.settings.login = myconf.get('smtp.login')
-mail.settings.tls = myconf.get('smtp.tls') or False
-mail.settings.ssl = myconf.get('smtp.ssl') or False
+mail = Mail()
+mail.settings.server = 'smtp.gmail.com:587'
+mail.settings.sender = 'usbsiradex@gmail.com'
+mail.settings.login  = 'usbsiradex@gmail.com:SiradexUSB2016'
+
 
 # -------------------------------------------------------------------------
 # configure auth policy

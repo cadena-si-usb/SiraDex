@@ -1,10 +1,13 @@
+# -*- coding: utf-8 -*-
+from notificaciones import *
+
 # Funcion para busquedas publicas
 def busqueda():
 
 
     if request.vars.Programa == "all" and request.vars.TipoActividad == "all":
         sql = "SELECT nombre FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
-         + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor + "%\') AND estado=\'Validada\';" 
+         + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor + "%\') AND estado=\'Validada\';"
 
         productos = db.executesql(sql)
 
@@ -18,7 +21,7 @@ def busqueda():
     elif request.vars.Programa == "all" and request.vars.TipoActividad != "all":
         sql = "SELECT nombre FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
          + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
-         + "%\') AND id_tipo=\'" + request.vars.TipoActividad + "\' AND estado=\'Validada\';" 
+         + "%\') AND id_tipo=\'" + request.vars.TipoActividad + "\' AND estado=\'Validada\';"
 
         productos = db.executesql(sql)
 
@@ -58,12 +61,12 @@ def ver_producto():
             Field("Nombre_Producto", default=producto.nombre,writable = False),
             Field('Descripcion',default=producto.descripcion,writable = False),
             Field('Fecha_de_Relaizacion', default=producto.fecha_realizacion,writable=False),
-            Field('Lugar', default=producto.lugar,writable=False),            
+            Field('Lugar', default=producto.lugar,writable=False),
             readonly=True)
 
   #Agregamos los otros elementos de los campos
   campos = db(db.PRODUCTO_TIENE_CAMPO.id_prod == producto.id_producto).select()
-  
+
   elementos = []
   for campo_valor in campos:
     campo = db(db.CAMPO.id_campo == campo_valor.id_campo).select().first()
@@ -81,8 +84,8 @@ def ver_producto():
     form_datos = SQLFORM.factory(*elementos, readonly=True)
 
   form_validado = SQLFORM(
-            db.PRODUCTO,            
-            fields=['nombre'],            
+            db.PRODUCTO,
+            fields=['nombre'],
             labels={'nombre':'Nuevo nombre'},
             col3={'nombre':'Este es el nombre que aparecera al momento de exportar las actividades'}
 
@@ -158,7 +161,34 @@ def validar():
     else:
         print "fatal"
     '''
+
     db(db.PRODUCTO.id_producto == id_act).update(estado='Validada')
+
+    ## INICIO NOTIFICACION ##
+
+    # obtenemos el producto a validar
+    producto =  db(db.PRODUCTO.id_producto == id_act).select().first()
+
+    # obtenemos el usuario que realizo el producto
+    usuario = db(db.USUARIO.ci == producto.ci_usu_creador).select().first()
+
+    # parseamos los datos para la notificacion
+    datos_usuario = {'nombres' : usuario.nombres}
+    if usuario.correo_alter != None:
+        datos_usuario['email'] = usuario.correo_alter
+    else:
+        datos_usuario['email'] = usuario.correo_inst
+
+    producto = {'nombre': producto.nombre}
+
+    # enviamos la notificacion
+    enviar_correo_validacion(mail,datos_usuario, producto)
+
+    ## FIN NOTIFICACION ##
+
+    print datos_usuario['email']
+    print "HERE!"
+
     session.message = 'Producto validado exitosamente'
     redirect(URL('gestionar_validacion.html'))
 
