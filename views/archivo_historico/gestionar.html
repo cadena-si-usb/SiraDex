@@ -46,9 +46,8 @@
                                       <span class="glyphicon glyphicon-refresh restaurar"
                                             data-toggle="modal"
                                             data-target="#ModalRestaurarTipoActividad"
-                                            data-id-tipo='{{=tipoActividad.id_tipo}}'
+                                            data-link-restaurar='{{=URL(f='restaurar_tipo', args=[tipoActividad.id_tipo])}}'
                                             >
-
                                       </span>
                                   </a>
                               <center>
@@ -59,7 +58,8 @@
                                       <span class="glyphicon glyphicon-remove red"
                                             data-toggle="modal"
                                             data-target="#ModalEliminarTipoActividad"
-                                            data-id-tipo='{{=tipoActividad.id_tipo}}'></span>
+                                            data-link-eliminar='{{=URL(f='eliminar_tipo_papelera', args=[tipoActividad.id_tipo])}}'>
+                                      </span>
                                   </a>
                               <center>
                            </td>
@@ -129,11 +129,10 @@
             <center> <p>¿Está seguro que quiere restaurar este Tipo de Actividad?</p> </center>
             <br>
             <center>
-                <a href="javascript:location.reload();">
-                  <button type="button"
-                          id="botonRestaurarTipoActividad"
-                          class="btn blue-add btn-border">
-                      Restaurar</button>
+                <a id="botonRestaurarTipoActividad">
+                  <button type="button" class="btn blue-add btn-border">
+                      Restaurar
+                  </button>
                 </a>
                 <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
             </center>
@@ -157,11 +156,8 @@
             <center> <p>¿Está seguro que desea eliminar de manera permanente este tipo de Actividad? Se borraran todas las actividades asociadas al mismo</p> </center>
             <br>
             <center>
-                <a href="javascript:location.reload();">
-                  <button type="button"
-                          class="btn blue-add btn-border"
-                          id="botonEliminarTipoActividad"
-                          data-id-tipo="">Eliminar</button>
+                <a id="botonEliminarTipoActividad">
+                  <button type="button" class="btn blue-add btn-border">Eliminar</button>
                 </a>
                 <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
             </center>
@@ -173,7 +169,7 @@
 </div>
 </div>
 
-<!-- Modal Restaurar Tipo Actividad-->
+<!-- Modal Restaurar Programa-->
 <div class="container">
   <div class="modal fade" id="ModalRestaurarPrograma" role="dialog">
     <div class="modal-dialog">
@@ -187,9 +183,7 @@
             <br>
             <center>
                 <a id="botonRestaurarPrograma">
-                  <button type="button"
-                          class="btn blue-add btn-border">
-                      Restaurar</button>
+                  <button type="button" class="btn blue-add btn-border">Restaurar</button>
                 </a>
                 <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
             </center>
@@ -200,7 +194,7 @@
   </div>
 
 
-<!-- Modal Eliminar Tipo Actividad-->
+<!-- Modal Eliminar Programa-->
 <div class="container">
   <div class="modal fade" id="ModalEliminarPrograma" role="dialog">
     <div class="modal-dialog">
@@ -213,11 +207,8 @@
             <center> <p>¿Está seguro que desea eliminar de manera permanente este Programa? Se borraran todas las actividades asociadas al mismo</p> </center>
             <br>
             <center>
-                <a>
-                  <button type="button"
-                          class="btn blue-add btn-border"
-                          id="botonEliminarPrograma"
-                          data-id-tipo="">Eliminar</button>
+                <a id="botonEliminarPrograma">
+                  <button type="button" class="btn blue-add btn-border">Eliminar</button>
                 </a>
                 <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
             </center>
@@ -226,54 +217,26 @@
       </div>
     </div>
   </div>
-</div>
-</div>
-
 
 <script type="text/javascript">
 
-    // Restaurar
-
-    $('#ModalRestaurarTipoActividad').on('show.bs.modal', function (event) {
-
-        if (event.relatedTarget != null){
-            $("#botonRestaurarTipoActividad").attr("data-id-tipo", event.relatedTarget.getAttribute("data-id-tipo"));
-        }
+    // Restaurar Tipo Actividad
+    $('#ModalRestaurarTipoActividad').on('show.bs.modal', function(e){
+        var link_restaurar = $(e.relatedTarget).data('link-restaurar');
+        $("#botonRestaurarTipoActividad").attr("href", link_restaurar);
     });
 
-    $("#botonRestaurarTipoActividad").click(function (event){
-
-        var id_tipo = $("#botonRestaurarTipoActividad").attr("data-id-tipo");
-        ajax("{{=URL(f='restaurar_tipo')}}/"+id_tipo,[]);
-        location.reload();
+    // Eliminar Tipo Actividad
+    $('#ModalEliminarTipoActividad').on('show.bs.modal', function(e){
+        var link_eliminar = $(e.relatedTarget).data('link-eliminar');
+        $("#botonEliminarTipoActividad").attr("href", link_eliminar);
     });
 
-    // Eliminar definitivamente
 
-    $('#ModalEliminarTipoActividad').on('show.bs.modal', function (event){
-
-        if (event.relatedTarget != null){
-            
-            $("#botonEliminarTipoActividad").attr("data-id-tipo", event.relatedTarget.getAttribute("data-id-tipo"));
-            
-        }
-    });
-
-    $("#botonEliminarTipoActividad").click(function (event){
-
-        var id_tipo = $("#botonEliminarTipoActividad").attr("data-id-tipo");
-        
-        ajax("{{=URL(c='archivo_historico',f='eliminar_tipo_papelera')}}/"+id_tipo,[]);
-        location.reload();
-    });
-
-    $(document).ready(function () {
-        document.getElementById("tabTiposDeTrabajo").click();
-    });
-
-    $('#ModalRestaurarPrograma').on('show.bs.modal', function(event){
-        var linkrestaurar = $(event.relatedTarget).data('link-restaurar');
-        $("#botonRestaurarPrograma").attr("href", linkrestaurar);
+    // Restaurar Programa
+    $('#ModalRestaurarPrograma').on('show.bs.modal', function(e){
+        var link_eliminar = $(e.relatedTarget).data('link-restaurar');
+        $("#botonRestaurarPrograma").attr("href", link_eliminar);
     });
 
 </script>
