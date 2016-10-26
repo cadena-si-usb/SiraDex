@@ -11,8 +11,6 @@ from reportlab.lib        import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.enums  import *
 
-
-
 def gestionar():
 	if session.usuario != None:
 		if(session.usuario["tipo"] == "DEX"):

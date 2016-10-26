@@ -1,4 +1,7 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-# -*- coding: utf-8 -*-
+from gluon import current
+import os
+
 '''
   Define funciones principales para enviar notificaciones via correo electronico
   en el sistema.
@@ -20,7 +23,22 @@ def enviar_correo_validacion(mail, usuario, producto):
 
     email  = usuario['email']
     asunto = '[SIRADEX] Producto Aprobado'
-    body   =  get_plantilla_html()
+
+    # Mensaje del Correo
+
+    mensaje  = '''<h1>Estimado/a %(nombres)s:</h1>
+                  <p>Nos complace indicarle que su Producto de Extensión
+                        <b> %(nombreProducto)s</b>
+                        fue aprobado satisfactoriamente por el Decanato de Extensión.
+                  </p>
+                  <p>
+                     Recuerde que siempre puede ver el estado de este y sus otros productos
+                     iniciando sesión en el <a href="https://siradex.dex.usb.ve/SiraDex">SIDADEX.</a>
+                  </p>
+                  <p> Saludos cordiales.</p>
+               '''  % {'nombres': usuario['nombres'], 'nombreProducto' : producto['nombre']}
+
+    body   =  get_plantilla_html(mensaje)
 
     mail.send(email, asunto, body)
 
@@ -35,7 +53,11 @@ def enviar_correo_rechazo():
     pass
 
 
-def get_plantilla_html():
+# Define la plantilla html del correo electronico.
+# con el campo mensaje dependiendo del tipo sdel correo que se quiere.
+def get_plantilla_html(mensaje):
+
+    usb_logo_url = os.path.join(current.request.folder, 'static/images','usblogo.png')
 
     plantilla = '''
         <html>
@@ -70,6 +92,12 @@ def get_plantilla_html():
                  margin: 2px;
                }
 
+               .bottom-msg {
+                    margin-top: 20px;
+                    font: 10px verdana, arial, helvetica, sans-serif;
+                    color: black;
+               }
+
                footer{
                  background-color: #333333;
                  padding-top: 3px;
@@ -82,7 +110,7 @@ def get_plantilla_html():
 
           <header>
             <center>
-              <img src='http://www.usb.ve/conocer/corporativa/archivos/logos/logo/logo.png'>
+              <img src='%(urlimg)s'>
               <h1>Universidad Simón Bolívar</h1>
               <h2>Decanato de Extensión</h2>
               <h2>Sistema de Registro de Actividades de Extensión SIRADEX</h2>
@@ -91,7 +119,14 @@ def get_plantilla_html():
           </header>
 
           <body>
-            <p> Mensaje </p>
+            %(mensaje)s
+
+            <div class='bottom-msg'>
+                <center>
+                    <p> Este mensaje fue enviado de manera automatica por el Sistema SIRADEX</p>
+                    <p> Por favor no responda a este correo. En caso de duda o comentarios póngase en contacto con el Decanato de Extensión.</p>
+                </center>
+            </div>
           </body>
 
           <footer>
@@ -101,6 +136,6 @@ def get_plantilla_html():
             </center>
           </footer>
         </html>
-    '''
+    ''' % {'urlimg' : usb_logo_url, 'mensaje': mensaje}
 
     return plantilla

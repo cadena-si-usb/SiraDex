@@ -186,9 +186,6 @@ def validar():
 
     ## FIN NOTIFICACION ##
 
-    print datos_usuario['email']
-    print "HERE!"
-
     session.message = 'Producto validado exitosamente'
     redirect(URL('gestionar_validacion.html'))
 
