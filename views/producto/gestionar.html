@@ -96,8 +96,14 @@
                                     <!-- Boton Descargar -->
                                     <td class="center-vertically">
                                     <center>
-                                    <!-- {{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }} -->
-                                    <span class="glyphicon glyphicon-save blue"></span>
+                                  <!--  {{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }} -->
+
+                                    <a href='/{{=request.application}}/{{=request.controller}}/get_pdf/{{=x.id_producto}}'
+                                    class="glyphicon glyphicon-save blue" title="Imprimir Producto {{=x.id_producto}}"></a>
+
+                                    
+                                
+                                </a>
                                     </center>
                                     </td>
                                     <!-- Boton Eliminar -->
@@ -159,7 +165,9 @@
                                     <td class="center-vertically">
                                     <center>
                                     <!-- {{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }} -->
-                                    <span class="glyphicon glyphicon-save blue"></span>
+                                     <a href='/{{=request.application}}/{{=request.controller}}/get_pdf/{{=x.id_producto}}'
+                                    class="glyphicon glyphicon-save blue" title="Imprimir Producto {{=x.id_producto}}"></a>
+                        
                                     </center>
                                     </td>
                                     <!-- Boton Eliminar -->
@@ -212,8 +220,11 @@
                                     <!-- Boton Descargar -->
                                     <td class="center-vertically">
                                     <center>
-                                    <!-- {{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }} -->
-                                    <span class="glyphicon glyphicon-save blue"></span>
+                              <!--      {{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }} -->
+
+                                    <a href='/{{=request.application}}/{{=request.controller}}/get_pdf/{{=x.id_producto}}'
+                                    class="glyphicon glyphicon-save blue" title="Imprimir Producto {{=x.id_producto}}"></a>
+                                   
                                     </center>
                                     </td>
                                     <!-- Boton Eliminar -->
