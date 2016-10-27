@@ -49,8 +49,37 @@ def enviar_correo_validacion(mail, usuario, producto):
         Producto = [nombre]
         Razon    = ''
 '''
-def enviar_correo_rechazo():
-    pass
+def enviar_correo_rechazo(mail, usuario, producto, razon):
+    email  = usuario['email']
+    asunto = '[SIRADEX] Producto Rechazado'
+
+    # Mensaje del Correo
+
+    mensaje  = '''<h1>Estimado/a %(nombres)s:</h1>
+                  <p>Debemos indicarle que su Producto de Extensión
+                        <b> %(nombreProducto)s</b>
+                        no pudo ser aprobado por el Decanato de Extensión.
+                  </p>''' % {'nombres': usuario['nombres'], 'nombreProducto' : producto['nombre']}
+
+    if razon != "":
+        mensaje += '''<p> Las razones del rechazo de su producto son las siguientes: </p>
+                      <center>%(razon)s</center>
+                      <br>
+                  ''' % {'razon':razon}
+    mensaje +=  '''
+                  <p> Usted puede ingresar al <a href="https://siradex.dex.usb.ve/SiraDex">SIDADEX.</a>
+                      para editar este producto y solicitar nuevamente su evaluación.
+                  </p>
+                  <p>
+                     Recuerde que siempre puede ver el estado de este y sus otros productos
+                     iniciando sesión en el Sistema SIDADEX.</a>
+                  </p>
+                  <p> Saludos cordiales.</p>
+                '''
+                
+    body   =  get_plantilla_html(mensaje)
+
+    mail.send(email, asunto, body)
 
 
 # Define la plantilla html del correo electronico.
@@ -70,7 +99,7 @@ def get_plantilla_html(mensaje):
                 font-family: "Helvetica";
               }
 
-              header {
+              header, body {
                 color: black;
               }
 

@@ -93,6 +93,42 @@ def ver_producto():
   form_validado.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
   form_validado.element(_type='submit')['_value']="Actualizar"
 
+  ## Formulario para colocar la razon de rechazo de un producto.
+  formulario_rechazar = SQLFORM.factory(
+                          Field('razon', type="text"),
+                          Field('id_producto', type="string", default=""),
+                          submit_button = 'Agregar',
+                          labels = {'razon' : 'Razón de Rechazo del Producto'})
+
+  if formulario_rechazar.accepts(request.vars, session, formname="formulario_rechazar"):
+      id_producto = request.vars.id_producto
+      razon = request.vars.razon
+
+      ## Enviamos notificacion de rechazo
+      # obtenemos el producto a rehazar
+      producto =  db(db.PRODUCTO.id_producto == id_producto).select().first()
+
+      # obtenemos el usuario que realizo el producto
+      usuario = db(db.USUARIO.ci == producto.ci_usu_creador).select().first()
+
+      # parseamos los datos para la notificacion
+      datos_usuario = {'nombres' : usuario.nombres}
+      if usuario.correo_alter != None:
+          datos_usuario['email'] = usuario.correo_alter
+      else:
+          datos_usuario['email'] = usuario.correo_inst
+
+      producto = {'nombre': producto.nombre}
+
+      # enviamos la notificacion
+      enviar_correo_rechazo(mail, datos_usuario, producto, razon)
+
+      # rechazamos efectimavamente el producto.
+      rechazar(id_producto)
+
+
+  ## Fin formulario de rechazo
+
   print "El var request es:"
   print request.var
   if request.var:
@@ -100,8 +136,6 @@ def ver_producto():
     print request.var
 
   return locals()
-
-
 
 # Vista de validaciones
 def gestionar_validacion():
@@ -190,7 +224,7 @@ def validar():
     redirect(URL('gestionar_validacion.html'))
 
 # Metodo para rechazar una producto
-def rechazar():
+def rechazar(id_producto):
     if session.usuario != None:
         if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
             if(session.usuario["tipo"] == "DEX"):
@@ -204,7 +238,7 @@ def rechazar():
     else:
         redirect(URL(c ="default",f="index"))
 
-    id_act = int(request.args[0])
-    db(db.PRODUCTO.id_producto == id_act).update(estado='Rechazada')
+    # id_act = int(request.args[0])
+    db(db.PRODUCTO.id_producto == id_producto).update(estado='Rechazada')
     session.message = 'Producto rechazado'
     redirect(URL('gestionar_validacion.html'))
