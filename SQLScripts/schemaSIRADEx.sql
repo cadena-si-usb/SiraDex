@@ -105,6 +105,20 @@ CREATE TABLE PRODUCTO(
              REFERENCES  TIPO_ACTIVIDAD(id_tipo)
 );
 
+CREATE TABLE COMPROBANTE(
+  id_comprobante    SERIAL NOT NULL,
+  archivo           VARCHAR(256) NOT NULL,
+  descripcion       VARCHAR(100),
+  producto          INT,
+
+  CONSTRAINT  PK_COMPROBANTE
+              PRIMARY KEY (id_comprobante),
+
+  CONSTRAINT  FK_PRODUCTO_PRODUCTO
+              FOREIGN KEY (producto)
+              REFERENCES PRODUCTO(id_producto)
+);
+
 CREATE TABLE PERMISOS_TIPO_ACT(
   permiso   VARCHAR(256),
   id_tipo   INT,

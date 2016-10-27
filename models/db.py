@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 # -------------------------------------------------------------------------
 # This scaffolding model makes your app work on Google App Engine too
 # File is released under public domain and you can use without limitations
@@ -79,6 +80,7 @@ response.form_label_separator = myconf.get('forms.separator') or ''
 
 from gluon.tools import Auth, Service, PluginManager
 import datetime
+import os
 
 # host names must be a list of allowed host names (glob syntax allowed)
 auth = Auth(db, host_names=myconf.get('host.names'))
@@ -210,6 +212,17 @@ db.define_table('PRODUCTO',
     Field('ci_usu_creador', db.USUARIO.ci),
     primarykey=['id_producto'],
     migrate=False
+);
+
+db.define_table( 'COMPROBANTE',
+    Field('id_comprobante', type='id'),
+    #Field('archivo', type='upload',autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), custom_store=store_file, custom_retrieve=retrieve_file),
+    Field('archivo', type='upload',autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads')),
+    Field('descripcion', type='string', length=100),
+    #Field('producto',db.PRODUCTO.id_producto),
+    Field('producto','reference producto'),
+    primarykey=['id_comprobante'],
+    migrate = False
 );
 
 db.define_table('PERMISOS_TIPO_ACT',

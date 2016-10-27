@@ -4,7 +4,9 @@
 from pprint import pprint
 from datetime import time
 import datetime
-
+import os
+import shutil
+import contenttype as c
 
 def gestionar():
     if session.usuario != None:
@@ -122,17 +124,19 @@ def agregar():
         nombre = rows_campo.nombre.replace(" ", "_")
         try :
             if int(nombre[0]):
-                nombre = "campo_"+nombre
+                nombre = "c4mp0_"+nombre
         except:
             pass
 
+        print "Direccion"
+        print URL('static/archivos')
         obligatorio = rows_campo.obligatorio
         tipo_campo = rows_campo.tipo_campo
         if obligatorio:
             if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
             elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
             elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX')]))
-            elif tipo_campo in ['Documento']:         fields.append(Field(nombre,'upload',uploadfolder=URL('static/archivos'),requires=[IS_NOT_EMPTY(error_message='Debe subirse un archivo')]))
+            elif tipo_campo in ['Documento']:         fields.append(Field(nombre,'upload',uploadfolder=os.path.join(request.folder,'uploads') ,requires=[IS_NOT_EMPTY(error_message='Debe subirse un archivo')]))
             elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{2}-\d{2}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx')]))
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
             elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
@@ -142,15 +146,24 @@ def agregar():
             if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',requires=IS_EMPTY_OR(IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD'))))
             elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string'))
             elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX'))))
-            elif tipo_campo in ['Documento']:         fields.append(Field(nombre,'upload',requires=IS_EMPTY_OR(IS_UPLOAD_FILENAME()),uploadfolder=URL('static/archivos')))
+            elif tipo_campo in ['Documento']:         fields.append(Field(nombre,'upload',requires=IS_EMPTY_OR(IS_UPLOAD_FILENAME()),uploadfolder='/SiraDex/uploads'))
             elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\(0\d{3}\)\d{3}-\d{2}-\d{2}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx'))))
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807))))
             elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807'))))
             elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',requires=IS_NOT_EMPTY()))
         
-            
+    
+    for i in range(2):
+        fields.append(Field("d3scr1pc10n_comprobante_"+str(i+1), 'string', label="Descripcion")) 
+        fields.append(Field("c0mpr0bant3_"+str(i+1), 'upload', autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), label='Archivo'))  
+
+
     #fields.append(Field(nombre,requires=IS_IN_SET([(1,'Method1'), (2,'Method2'), (3,'Method3')], zero='Select')))
-    form=SQLFORM.factory(*fields)    
+    url = URL('download')
+    print url
+
+
+    form=SQLFORM.factory(*fields, upload=url) 
     form.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
     form.element(_type='submit')['_value']="Agregar"
 
@@ -162,21 +175,37 @@ def agregar():
         id_producto = dicc_producto['id_producto']
         for var in form.vars:
             if not(var in no):
-
                 try:
-                    print var[0:6]
-                    if (var[0:6]=="campo_"):
-                        campo = var[6:]
-                except:
-                    pass
+                    if (var[0:11]=="c0mpr0bant3"):
+                        numero_comprobante = var[12:13]
+                        descripcion = getattr(form.vars ,'d3scr1pc10n_comprobante_'+ numero_comprobante)
+                        nombre = getattr(form.vars ,var)
+                        if nombre!='':
+                            db.COMPROBANTE.insert(archivo=nombre,descripcion=descripcion,producto=id_producto)
 
-                campo = campo.replace("_"," ")
-                print "Lo imprimes: " + campo
-                id
-                _camp = db(db.CAMPO.nombre==campo).select().first().id_campo
-                print id_camp
-                valor = getattr(form.vars ,var)
-                db.PRODUCTO_TIENE_CAMPO.insert(id_prod=id_producto,id_campo=id_camp,valor_campo= valor)
+
+                    elif (var[0:11]=="d3scr1pc10n"):
+                        pass
+
+                    else:
+
+                        if (var[0:6]=="c4mp0_"):
+                            campo = var[6:]
+                        else:
+                            campo = var
+
+                        campo = campo.replace("_"," ")
+                        print "Lo imprimes: " + campo
+                        id_camp = db(db.CAMPO.nombre==campo).select().first().id_campo
+                        print id_camp
+                        valor = getattr(form.vars ,var)
+                        db.PRODUCTO_TIENE_CAMPO.insert(id_prod=id_producto,id_campo=id_camp,valor_campo= valor)
+
+                except Exception, e:
+                    print "Exception: "
+                    print e
+
+
         redirect(URL('gestionar'))
     elif form.errors:
         response.flash = 'el formulario tiene errores'
@@ -187,6 +216,7 @@ def agregar():
 
 
 
+upload = lambda filename: URL("download", args=[filename])
 def modificar():
     if session.usuario != None:
         if(session.usuario["tipo"] == "DEX"):
@@ -220,6 +250,7 @@ def modificar():
 
     # Creamos el formulario
     rows = db(db.PRODUCTO_TIENE_CAMPO.id_prod == id_producto).select()
+    comprobantes = db(db.COMPROBANTE.producto == id_producto).select()
     fields = []
     fields.append(Field('nombre','string',requires=[IS_NOT_EMPTY(),IS_LENGTH(50)]))
     fields.append(Field('descripcion','string',requires=[IS_NOT_EMPTY(),IS_LENGTH(250)]))
@@ -267,7 +298,32 @@ def modificar():
 
         valores[nombre]=row.valor_campo
 
-    form=SQLFORM.factory(*fields)
+    # Permite asignarle nombre a los input de comprobantes
+    grid = SQLFORM.grid(db.COMPROBANTE.producto == id_producto, onvalidation=validate, upload=upload)
+
+    '''name_comprobante = 0
+    for comprobante in comprobantes:
+        name_comprobante += 1
+        nombre = "c0mpr0bant3_"+str(name_comprobante)
+        descripcion = "d3scr1pc10n_comprobante_"+str(name_comprobante)
+
+        fields.append(Field(nombre, 'upload', autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), label='Comprobante '+str(name_comprobante)))  
+        fields.append(Field(descripcion, 'string', label="Descripcion")) 
+
+        valores[nombre]=comprobante.archivo
+        valores[descripcion]=comprobante.descripcion
+
+    while (name_comprobante < 5):
+        name_comprobante += 1
+        nombre = "c0mpr0bant3_"+str(name_comprobante)
+        descripcion = "d3scr1pc10n_comprobante_"+str(name_comprobante)
+
+        fields.append(Field(nombre, 'upload', autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), label='Comprobante '+str(name_comprobante)))  
+        fields.append(Field(descripcion, 'string', label="Descripcion")) '''
+
+
+
+    form=SQLFORM.factory(*fields, uploads=URL('download'))
     form.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
     form.element(_type='submit')['_value']="Modificar"
 
@@ -327,6 +383,39 @@ def modificar():
         redirect(URL('gestionar'))
 
     return locals()
+
+def download():
+    if not request.args:
+        raise HTTP(404)
+    name = request.args[-1]
+    field = db["comprobante"]["archivo"]
+    try:
+        (filename, archivo) = field.retrieve(name)
+    except IOError:
+        raise HTTP(404)
+    response.headers["Content-Type"] = c.contenttype(name)
+    response.headers["Content-Disposition"] = "attachment; filename=%s" % name
+    stream = response.stream(archivo, chunk_size=64*1024, request=request)
+    raise HTTP(200, stream, **response.headers)
+
+def link(): 
+    return response.download(request,db,attachment=False)
+
+def store_file(file, filename=None, path=None):
+    path = "applications/SiraDex/uploads"
+    if not os.path.exists(path):
+         os.makedirs(path)
+    pathfilename = os.path.join(path, filename)
+    dest_file = open(pathfilename, 'wb')
+    try:
+            shutil.copyfileobj(file, dest_file)
+    finally:
+            dest_file.close()
+    return filename
+
+def retrieve_file(filename, path=None):
+    path = "applications/SiraDex/uploads"
+    return (filename, open(os.path.join(path, filename), 'rb'))
 
 
 def eliminar():
@@ -456,3 +545,4 @@ def agregar():
   
     return locals()
 '''
+
