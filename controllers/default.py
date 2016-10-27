@@ -21,7 +21,7 @@ def call(): return service()
 ## URLS DE RETORNO PARA EL CAS ##
 ## Solo descomentar segun sea el caso.
 ## PARA EL SERVIDOR:
-# URL_RETORNO = "http%3A%2F%2F159.90.211.179%2FSiraDex%2Fdefault%2Flogin_cas"
+# URL_RETORNO = "http%3A%2F%2Fsiradex.dex.usb.ve%2FSiraDex%2Fdefault%2Flogin_cas"
 ## PARA DESSARROLLO. Cambiar el puerto 8000 si es necesario.
 URL_RETORNO = "http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas"
 
@@ -93,7 +93,7 @@ def login_cas():
 
             session.usuario['phone'] = datosUsuario.telefono
 
-            
+
             if datosUsuario.tipo == "Bloqueado":
                 response.flash = T("Usuario bloqueado")
                 redirect(URL(c = "default",f="index"))
@@ -112,7 +112,7 @@ def login_cas():
             telefono=session.usuario["phone"],
             tipo = "Usuario")
             redirect(URL('vRegistroUsuario'))
-    
+
 
 def logout_cas():
     session.usuario = None
@@ -231,31 +231,31 @@ def EditarPerfil():
 
         # Modificar datos del perfil
         usuario = db(db.USUARIO.ci==session.usuario['cedula']).select().first()
-        
+
         forma=SQLFORM(
             db.USUARIO,
             record=usuario,
-            
+
             fields=['telefono','correo_alter'],
 
-            
+
             labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'})
         forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
         forma.element(_type='submit')['_value']="Actualizar"
 
-        
+
         if request.vars:
             nuevoTelefono = request.vars.telefono
             nuevoCorreoAlter = request.vars.correo_alter
-            
+
             valor_telefono = None if ((nuevoTelefono == "") | (nuevoTelefono== None)) else nuevoTelefono
             session.usuario["phone"] = valor_telefono
 
             valor_correo = None if ((nuevoCorreoAlter == "") | (nuevoCorreoAlter== None)) else nuevoCorreoAlter
             session.usuario["alternativo"] = valor_correo
-            
+
             db(db.USUARIO.ci == session.usuario["cedula"]).update(telefono=valor_telefono, correo_alter=valor_correo)
-            
+
             print "\n\nEl nuevo usuario quedo: "
             print session.usuario
             redirect(URL('perfil'))
@@ -336,7 +336,7 @@ def obtener_actividades():
         tiposA = db(db.TIPO_ACTIVIDAD).select()
     else:
         tiposA = db(db.TIPO_ACTIVIDAD.id_programa==int(request.vars.Programa)).select()
-    
+
     concat = '<option value="all" selected="">--cualquiera--</option>'
 
     for tipo in tiposA:
@@ -344,4 +344,3 @@ def obtener_actividades():
         concat += '<option value="'+str(tipo.id_tipo)+'">'+option+'</option>'
 
     return "jQuery('#lista_tipos').empty().append('"+concat+"')"
-
