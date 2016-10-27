@@ -192,20 +192,24 @@ def perfil():
         redirect(URL("index"))
 
 def grafica():
-        query = "select programa.nombre, count(producto.nombre)" /
-        + " from ((programa inner join tipo_actividad on programa.id_programa=tipo_actividad.id_programa)"/
-        = " inner join producto on producto.id_tipo=tipo_actividad.id_tipo)group by programa.nombre;"
+        query = "select programa.nombre, count(producto.nombre)" + \
+        " from ((programa inner join tipo_actividad on programa.id_programa=tipo_actividad.id_programa)" + \
+        " inner join producto on producto.id_tipo=tipo_actividad.id_tipo and producto.ci_usu_creador=\'"+ session.usuario["cedula"] +\
+        "\' and producto.estado=\'Validado\') group by programa.nombre;"
+
+        query2 = "select count(producto.nombre) from producto where producto.ci_usu_creador=\'"+ session.usuario["cedula"]+"\' and producto.estado=\'Validado\';"
 
         datos = db.executesql(query)
-        print datos
+        num_productos = db.executesql(query2)[0][0]
+
+
         import pygal
         pie_chart = pygal.Pie(height=400, width=400)
-        pie_chart.title = 'Browser usage in February 2012 (in %)'
-        pie_chart.add('IE', 19.5)
-        pie_chart.add('Firefox', 36.6)
-        pie_chart.add('Chrome', 36.3)
-        pie_chart.add('Safari', 4.5)
-        pie_chart.add('Opera', 2.3)
+        pie_chart.title = 'Productos del usuario'
+        for producto in datos:
+            porcentaje = (producto[1]*100)//num_productos
+            pie_chart.add(producto[0],porcentaje)
+            
         return pie_chart.render()
 
 def vMenuDex():
