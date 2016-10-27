@@ -177,6 +177,8 @@ def perfil():
                     "En espera":[]
                     }
 
+        grafica = URL('default','grafica')
+
         for row in rows:
             if row.estado == "Validada":
                 productos["Validados"] += [row]
@@ -188,6 +190,23 @@ def perfil():
         return locals()
     else:
         redirect(URL("index"))
+
+def grafica():
+        query = "select programa.nombre, count(producto.nombre)" /
+        + " from ((programa inner join tipo_actividad on programa.id_programa=tipo_actividad.id_programa)"/
+        = " inner join producto on producto.id_tipo=tipo_actividad.id_tipo)group by programa.nombre;"
+
+        datos = db.executesql(query)
+        print datos
+        import pygal
+        pie_chart = pygal.Pie(height=400, width=400)
+        pie_chart.title = 'Browser usage in February 2012 (in %)'
+        pie_chart.add('IE', 19.5)
+        pie_chart.add('Firefox', 36.6)
+        pie_chart.add('Chrome', 36.3)
+        pie_chart.add('Safari', 4.5)
+        pie_chart.add('Opera', 2.3)
+        return pie_chart.render()
 
 def vMenuDex():
     if session.usuario != None:
