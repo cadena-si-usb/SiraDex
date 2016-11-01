@@ -75,11 +75,13 @@ $(document).ready(function () {
 
 	textoRestante1(maxLongNombre, $("#no_table_lugar"));
 
-	$('#no_table_lugar__row').append('	<hr class="col-sm-offset-3 col-sm-8">\
-										<h3 class="col-sm-offset-3 col-sm-3">Comprobantes</h3>\
-										<a id="agregar_comprobante" class = "col-sm-1" href="#" onclick="return false;">\
-											<img alt="Agregar Comprobante" src="/SiraDex/static/icon/i_add.png" height="55" >\
-										</a>'
+	$('#no_table_c0mpr0bant3_1__row').before('	<div id="comprobantes__row" class="form-group">\
+													<hr class="col-sm-offset-3 col-sm-8">\
+													<h3 class="col-sm-offset-3 col-sm-3">Comprobantes</h3>\
+													<a id="agregar_comprobante" href="#" onclick="return false;">\
+														<img alt="Agregar Comprobante" src="/SiraDex/static/icon/i_add.png" height="55" >\
+													</a>\
+												</div>'
 										);
 	for (i = 1; i <= cantidad_comprobantes; i++) {
     	$('#no_table_c0mpr0bant3_'+i+'__row').addClass("hidden");
