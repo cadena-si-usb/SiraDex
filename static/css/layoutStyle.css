@@ -492,3 +492,17 @@ a: hover {
 	.form-horizontal{
 		padding: 6px 20px !important;
 	}
+
+/**********************************/
+/*                                */
+/*             embed              */
+/*                                */
+/**********************************/	
+embed{
+	width: 100%;
+	height: 100%;
+}
+
+.graph > .background {
+	fill: rgba(255,255,255,1) !important;
+	}
