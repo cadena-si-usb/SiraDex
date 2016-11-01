@@ -9,7 +9,7 @@ $(document).ready(function(){
   // Obtengo la lista de errores generados por el formulario de editar.
   var mensajeErrorEditar = $("#modalEditar").attr("data-hayErroresEditar");
   mensajeErrorEditar = mensajeErrorEditar.replace(/<Storage |>/gi, "").replace(/'/g, '"')
-  
+
   // Definición del comportamiento del botón agregar programa cuando se hace click.
   $("#agregarProgBtn").click(function(){
     // Muestra la cantidad de caracteres disponible en el textfield de nombre.
@@ -59,4 +59,15 @@ $(document).ready(function(){
       var linkEliminar = $(e.relatedTarget).data('link-eliminar-programa');
       $("#BotonEliminar").attr("href", linkEliminar);
   });
+
+  // -.........................................................................-
+  // Para realizar la búsqueda.
+  var options = {
+    valueNames: ['nombre_programa', 'descripcion_programa', { data: ['nombre', 'descripcion'] }],
+    item: '<td class="nombre_programa"></td><td class="descripcion_programa"><center></center></td>'
+  };
+
+  var programList = new List('programs', options);
+
+  // -.........................................................................-
 });

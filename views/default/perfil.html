@@ -27,8 +27,20 @@
             <p class="text-justify">
                 <b>Nombre completo:</b> {{=session.usuario['first_name']}} {{=session.usuario['last_name']}}
                 <br>
-                <b>Carrera:</b>{{=session.usuario['carrera']}}
+                {{try:}}
+                {{if session.usuario['dpto'] != None:}}
+                <b>Departamento: </b>{{=session.usuario['dpto']}}
+                {{pass}}
                 <br>
+                {{except:}}
+                {{try:}}
+                {{if session.usuario['carrera'] != None:}}
+                <b>Carrera: </b>{{=session.usuario['carrera']}}
+                {{pass}}
+                <br>
+                {{except:}}
+                {{pass}}
+                {{pass}}
                 <b>Usbid:</b> {{=session.usuario['usbid']}}
                 <br>
                 <b>Cedula:</b> {{=session.usuario['cedula']}}

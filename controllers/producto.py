@@ -1,12 +1,20 @@
 # coding: utf8
 # try something like
 
-from pprint import pprint
-from datetime import time
+
 import datetime
 import os
 import shutil
 import contenttype as c
+import os.path
+from pprint    import pprint
+from datetime  import time
+from uuid      import uuid4
+from reportlab.platypus   import *
+from reportlab.lib.units  import *
+from reportlab.lib        import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.enums  import *
 
 def gestionar():
     if session.usuario != None:
@@ -175,6 +183,7 @@ def agregar():
         id_producto = dicc_producto['id_producto']
         for var in form.vars:
             if not(var in no):
+
                 try:
                     if (var[0:11]=="c0mpr0bant3"):
                         numero_comprobante = var[12:13]
