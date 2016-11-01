@@ -4,12 +4,12 @@
 	Agregar Producto
 {{end}}
 {{block subtitulo}}
-	{{=nombre_actividad}}
+	{{="Actividad: "+nombre_actividad}}
 {{end}}
 
 {{block descripcion}}
 <div class="col-lg-12">
-	<p>{{=descripcion_actividad}}</p>
+	<p>{{="Descripcion: "+descripcion_actividad}}</p>
 	<h4> Formulario </h4>
     <p class="text-justify">
 		Los campos con asteriscos <span style="color:red">*</span> son obligatorios
@@ -29,6 +29,11 @@
 		</div>
 	</div>
 </div>
+
+{{end}}
+
+
+{{block script}}
 
 <script>
 
@@ -54,36 +59,70 @@ function textoRestante1(maxLong, idDivUsar){
           return false;
     }
   });
-}
-    $(document).ready(function () {
-  var maxLongNombre  = 256;    // Longitud máxima que tendrá el campo nombre.
-  var maxLongDescrip = 2048;   // Longitud máxima que tendrá el campo descripción.
-      // Muestra la cantidad de caracteres disponible en el textfield de nombre.
-      $( "#no_table_nombre" ).focus(function(e) {
+};
 
-  		textoRestante1(maxLongNombre, $(e.currentTarget));
-});
+$(document).ready(function () {
+	var maxLongNombre  = 256;    // Longitud máxima que tendrá el campo nombre.
+	var maxLongDescrip = 2048;   // Longitud máxima que tendrá el campo descripción.
+	var comprobante_mostrado = 0;
+	var error_comprobante = 0;
+	var error_descripcion = 0;
+	var cantidad_comprobantes = 5;
+	// Muestra la cantidad de caracteres disponible en el textfield de nombre.
+	textoRestante1(maxLongNombre, $("#no_table_nombre" ));
 
-      $( "#no_table_descripcion" ).focus(function(e) {
+	textoRestante1(maxLongDescrip, $("#no_table_descripcion"));
 
-  		textoRestante1(maxLongDescrip, $(e.currentTarget));
- 	 });
+	textoRestante1(maxLongNombre, $("#no_table_lugar"));
 
-      $( "#no_table_lugar" ).parent().find(".string").focus(function(e) {
+	$('#no_table_lugar__row').append('	<hr class="col-sm-offset-3 col-sm-8">\
+										<h3 class="col-sm-offset-3 col-sm-3">Comprobantes</h3>\
+										<a id="agregar_comprobante" class = "col-sm-1" href="#" onclick="return false;">\
+											<img alt="Agregar Comprobante" src="/SiraDex/static/icon/i_add.png" height="55" >\
+										</a>'
+										);
+	for (i = 1; i <= cantidad_comprobantes; i++) {
+    	$('#no_table_c0mpr0bant3_'+i+'__row').addClass("hidden");
+    	$('#no_table_d3scr1pc10n_comprobante_'+i+'__row').addClass("hidden");
+	}
 
-  		textoRestante1(maxLongNombre, $(e.currentTarget));
- 	 });
+	$('#agregar_comprobante').click(function(){
+		if (comprobante_mostrado<cantidad_comprobantes){
+			if($('#no_table_c0mpr0bant3_'+comprobante_mostrado).val()=="" ){
+				if (!error_comprobante){
+					$('#no_table_c0mpr0bant3_'+comprobante_mostrado).parent().append('<span id="error_archivo_'+comprobante_mostrado+'" class="help-block error">Primero debes cargar el comprobante</span>');
+					error_comprobante = 1;
+				}
+			}
+			else{
+				$('#error_archivo_'+comprobante_mostrado).addClass("hidden");
+				if($('#no_table_d3scr1pc10n_comprobante_'+comprobante_mostrado).val()==""){
+					if (!error_descripcion){
+						$('#no_table_d3scr1pc10n_comprobante_'+comprobante_mostrado).parent().append('<span id="error_descripcion_'+comprobante_mostrado+'" class="help-block error">La descripcion de un archivo cargado es obligatoria</span>');
+						error_descripcion = 1;
+					}
+				}
+				else{
+					error_comprobante = 0;
+					error_descripcion = 0;
+					$('#error_descripcion_'+comprobante_mostrado).addClass("hidden");
+
+					comprobante_mostrado += 1;
+					$('#no_table_c0mpr0bant3_'+comprobante_mostrado+'__row').removeClass("hidden");
+					$('#no_table_d3scr1pc10n_comprobante_'+comprobante_mostrado+'__row').removeClass("hidden");
+					$('#no_table_c0mpr0bant3_'+comprobante_mostrado+'__row').prepend('<hr class="col-sm-offset-3 col-sm-8">');
+				};
+			};
+		};
+		if (comprobante_mostrado==cantidad_comprobantes){
+			$('#agregar_comprobante').addClass("hidden");
+		}
+
+	});
+
   });
 </script>
 
-{{end}}
-
-{{block script}}
-	<script >
-		$(document).ready(function() {
-			$('#no_table_d3scr1pc10n_comprobante_1__row').prepend('<hr class="col-sm-offset-3 col-sm-8"><h4 class="col-sm-offset-3">Comprobantes</h4><br>');
-		});
-	</script>
 {{end}}
 
 
