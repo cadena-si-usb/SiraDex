@@ -29,6 +29,53 @@
 		</div>
 	</div>
 </div>
+
+<script>
+
+function textoRestante1(maxLong, idDivUsar){
+  var longitudTexto = $(idDivUsar).val().length;
+  var textoRestante = maxLong - longitudTexto;
+
+  // Selecciono el div que es "hermano" del textfield de nombre.
+  var longitudTextoAct = $(idDivUsar).val().length;
+  $(idDivUsar).siblings(".help-block").html((maxLong - longitudTextoAct) + " caracteres");
+
+  // Si estoy escribiendo en el textfield de nombre, entonces...
+  $(idDivUsar).on('keypress keyup keydown', function(e){
+    var longitudTexto = $(idDivUsar).val().length;
+    var textoRestante = maxLong - longitudTexto;
+
+    $(idDivUsar).siblings(".help-block").html(textoRestante + " caracteres.");
+
+    /* keyCode.46: delete, keyCode.8: enter, keyCode.37 al keyCode.40: arrows. */
+    if (textoRestante <= 0 && e.keyCode != 46 && e.keyCode != 8 && e.keyCode != 37
+        && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40){
+          $(idDivUsar).val($(idDivUsar).val().substring(0, maxLong));
+          return false;
+    }
+  });
+}
+    $(document).ready(function () {
+  var maxLongNombre  = 256;    // Longitud máxima que tendrá el campo nombre.
+  var maxLongDescrip = 2048;   // Longitud máxima que tendrá el campo descripción.
+      // Muestra la cantidad de caracteres disponible en el textfield de nombre.
+      $( "#no_table_nombre" ).focus(function(e) {
+
+  		textoRestante1(maxLongNombre, $(e.currentTarget));
+});
+
+      $( "#no_table_descripcion" ).focus(function(e) {
+
+  		textoRestante1(maxLongDescrip, $(e.currentTarget));
+ 	 });
+
+      $( "#no_table_lugar" ).parent().find(".string").focus(function(e) {
+
+  		textoRestante1(maxLongNombre, $(e.currentTarget));
+ 	 });
+  });
+</script>
+
 {{end}}
 
 {{block script}}
