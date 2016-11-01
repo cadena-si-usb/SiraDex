@@ -213,12 +213,10 @@ db.define_table('PRODUCTO',
     migrate=False
 );
 
-db.define_table( 'COMPROBANTE',
+db.define_table('COMPROBANTE',
     Field('id_comprobante', type='id'),
-    #Field('archivo', type='upload',autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), custom_store=store_file, custom_retrieve=retrieve_file),
     Field('archivo', type='upload',autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads')),
     Field('descripcion', type='string', length=100),
-    #Field('producto',db.PRODUCTO.id_producto),
     Field('producto','reference producto'),
     primarykey=['id_comprobante'],
     migrate = False

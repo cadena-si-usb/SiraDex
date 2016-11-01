@@ -251,15 +251,19 @@ def modificar():
     fecha_max = str(now.year) + mes + dia
 
     # Obtenemos la actividad para mostrarla en el html
-    producto = db(db.PRODUCTO.id_producto==id_producto).select().first()    
+    producto = db(db.PRODUCTO.id_producto==id_producto).select().first()
+    query = "SELECT archivo, descripcion FROM COMPROBANTE WHERE producto="+str(id_producto)+";"
+    comprobantes = db.executesql(query)
+    
+    url = os.path.join(request.folder,'uploads/no_table.c0mpr0bant3_1/'+comprobantes[0][0][23:25]+'/'+comprobantes[0][0])
     tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == producto.id_tipo).select().first()
+
     
     nombre_actividad = tipo_actividad.nombre
     descripcion_actividad = tipo_actividad.descripcion
 
     # Creamos el formulario
     rows = db(db.PRODUCTO_TIENE_CAMPO.id_prod == id_producto).select()
-    comprobantes = db(db.COMPROBANTE.producto == id_producto).select()
     fields = []
     fields.append(Field('nombre','string',label="Nombre (*)",requires=[IS_NOT_EMPTY(),IS_LENGTH(50)]))
     fields.append(Field('descripcion','string',label="Descripcion (*)",requires=[IS_NOT_EMPTY(),IS_LENGTH(250)]))
@@ -286,13 +290,13 @@ def modificar():
         tipo_campo = rows_campo.tipo_campo
 
         if obligatorio:
-            if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',label=nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
-            elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string',label=nombre+" (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
-            elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',label=nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX')]))
-            elif tipo_campo in ['Documento']:         fields.append(Field(nombre,'upload',label=nombre+" (*)",uploadfolder=os.path.join(request.folder,'uploads'),requires=[IS_NOT_EMPTY(error_message='Debe subirse un archivo')]))
-            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',label=nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{2}-\d{2}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx')]))
-            elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',label=nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
-            elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',label=nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
+            if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
+            elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
+            elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX')]))
+            elif tipo_campo in ['Documento']:         fields.append(Field(nombre,'upload',label=rows_campo.nombre+" (*)",uploadfolder=os.path.join(request.folder,'uploads'),requires=[IS_NOT_EMPTY(error_message='Debe subirse un archivo')]))
+            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{2}-\d{2}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx')]))
+            elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
+            elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
             elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',label=nombre+" (*)",requires=IS_NOT_EMPTY()))
                 
         else:
@@ -307,31 +311,7 @@ def modificar():
 
         valores[nombre]=row.valor_campo
 
-    # Permite asignarle nombre a los input de comprobantes
-    grid = SQLFORM.grid(db.COMPROBANTE.producto == id_producto, onvalidation=validate, upload=upload)
-
-    '''name_comprobante = 0
-    for comprobante in comprobantes:
-        name_comprobante += 1
-        nombre = "c0mpr0bant3_"+str(name_comprobante)
-        descripcion = "d3scr1pc10n_comprobante_"+str(name_comprobante)
-
-        fields.append(Field(nombre, 'upload', autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), label='Comprobante '+str(name_comprobante)))  
-        fields.append(Field(descripcion, 'string', label="Descripcion")) 
-
-        valores[nombre]=comprobante.archivo
-        valores[descripcion]=comprobante.descripcion
-
-    while (name_comprobante < 5):
-        name_comprobante += 1
-        nombre = "c0mpr0bant3_"+str(name_comprobante)
-        descripcion = "d3scr1pc10n_comprobante_"+str(name_comprobante)
-
-        fields.append(Field(nombre, 'upload', autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), label='Comprobante '+str(name_comprobante)))  
-        fields.append(Field(descripcion, 'string', label="Descripcion")) '''
-
-
-
+    
     form=SQLFORM.factory(*fields, uploads=URL('download'))
     form.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
     form.element(_type='submit')['_value']="Modificar"
