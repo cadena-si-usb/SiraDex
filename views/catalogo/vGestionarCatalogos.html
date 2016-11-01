@@ -19,15 +19,15 @@
 <div class="card">
   <ul class="nav nav-tabs" role="tablist">
   {{for catalogo in catalogos:}}
-    <li class="nav-item">
-      <a class="nav-link active" data-toggle="tab" href="#{{ = catalogo[0].id}}" role="tab" id="Cat{{= catalogo[0].id}}">{{= catalogo[0].nombre}}</a>
+    <li class="nav-item {{='active' if catalogo[0].id_catalogo == catalogo_actual else ''}}">
+      <a class="nav-link" data-toggle="tab" href="#{{ = catalogo[0].id}}" role="tab" id="Cat{{= catalogo[0].id}}">{{= catalogo[0].nombre}}</a>
     </li>
    {{pass}}
   </ul>
 
   <div class="tab-content">
     {{for catalogo in catalogos:}}
-      <div class="tab-pane {{='active' if catalogo == catalogos[0] else ''}}" id="{{= catalogo[0].id}}" role="tabpanel">
+      <div class="tab-pane {{='active' if catalogo[0].id_catalogo == catalogo_actual else ''}}" id="{{= catalogo[0].id}}" role="tabpanel">
             <ul class="list-group">
                 {{if len(catalogo[1]) == 0:}}
                 <li class="list-group-item">
@@ -87,10 +87,10 @@
               <div class="row">
                   <center>
                     <div class="col-sm-2 col-sm-offset-4">
-                        <button type="button" class="btn btn-default btn-block green btn-border"
+                        <button type="button" class="btn btn-default green btn-border"
                                 data-toggle="modal" data-target="#modalAgregarCampo"
                                 data-id-catalogo="{{=catalogo[0].id}}">
-                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar
+                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Campo
                         </button>
                     </div>
                     <div class="col-sm-2">
@@ -172,7 +172,6 @@
         <center><h4 class="modal-title"> Editar Campo </h4><center>
       </div>
       <div class="modal-body">
-        {{=formulario_editar_campo.custom.begin}}
           <div class=row>
             <div class="col-md-4 right"><b>Nombre del Campo</b></div>
             <div class="col-md-7">{{=formulario_editar_campo.custom.widget.nombre}}</div>
@@ -201,7 +200,6 @@
     </div>
   </div>
 </div>
-
 
 <!-- Modal Eliminar-->
 <div class="container">

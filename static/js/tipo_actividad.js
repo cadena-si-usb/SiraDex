@@ -24,4 +24,14 @@ $(document).ready(function(){
     $(".formularioTipo").hide();
   }
 
+  // -.........................................................................-
+  // Para realizar la búsqueda.
+  var options = {
+    valueNames: ['nombre_tipo', 'descripcion_tipo', { data: ['nombre', 'descripcion'] }],
+    item: '<td class="nombre_tipo"></td><td class="descripcion_tipo"><center></center></td>'
+  };
+
+  var tipo_actividadList = new List('tipo_actividad', options);
+
+  // -.........................................................................-
 });

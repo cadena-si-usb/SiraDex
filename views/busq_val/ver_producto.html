@@ -6,12 +6,12 @@
 
 {{block subtitulo}}
     <!-- Nombre del usuario -->
-   Producto del usuario: {{=usuario_nombre}}  
+   Producto del usuario: {{=usuario_nombre}}
     </a>
 {{end}}
 
 {{block descripcion}}
-    <div class="row"> 
+    <div class="row">
         <div class="col-sm-12">
         <!-- Datos del usuario -->
             <p><b>Programa: </b> {{=programa_nombre}}</p>
@@ -40,22 +40,25 @@
 
                 {{if producto.estado=='En espera':}}
                 <center>
-                    
+
                     <a href="{{=URL(f='validar', args=[producto.id_producto])}}">
                         <button id="button_validar" type="button" class="btn btn-default btn-border" style="color:#7CB342" >
                             Validar <span class="glyphicon glyphicon-ok" aria-hidden="true" ></span>
                         </button>
                     </a>
 
-                    <a href="{{=URL(f='rechazar', args=[producto.id_producto])}}">
-                    <button type="button" class="btn btn-default red btn-border"  style="color:#F44336">
+                    <a href="#">
+                    <button type="button" class="btn btn-default red btn-border"
+                                          data-toggle="modal"
+                                          data-target="#modalRechazarProducto"
+                                          data-id-producto="{{=producto.id_producto}}"
+                                          style="color:#F44336">
                         Rechazar <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                     </button>
                         </a>
                 </center>
                 <br>
 
-                
                 <div id='div_validar' class="hidden">
                     {{=form_validado}}
                 </div>
@@ -64,6 +67,28 @@
             </div>
         </div>
     </div>
+
+  <!-- Modal Rechazar-->
+  <div id="modalRechazarProducto" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <center><h4 class="modal-title">Rechazar Producto</h4><center>
+        </div>
+        <div class="modal-body">
+            <center>
+                <p>  Usted esta a punto de rechazar este producto. </p>
+                <p>  Puede escribir una razon de por qué se rechaza el producto, el usuario creador sea notificado de esta acción.</p>
+                <p>  {{=formulario_rechazar}} </p>
+            </center>
+        </div>
+      </div>
+    </div>
+  </div>
+
 {{end}}
 
 {{block script}}
@@ -73,5 +98,14 @@
                 $("#div_validar").removeClass("hidden");
             });
         });*/
+
+        // Pasamos los argumentos para rechazar el producto
+        $('#modalRechazarProducto').on('show.bs.modal', function(e){
+            var id_producto = $(e.relatedTarget).data('id-producto');
+            $(e.currentTarget).find('input[name="id_producto"]').val(id_producto);
+        });
+
+        $("#no_table_id_producto__row").hide();
+
     </script>
 {{end}}

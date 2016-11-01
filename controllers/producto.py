@@ -1,12 +1,20 @@
 # coding: utf8
 # try something like
 
-from pprint import pprint
-from datetime import time
+
 import datetime
 import os
 import shutil
 import contenttype as c
+import os.path
+from pprint    import pprint
+from datetime  import time
+from uuid      import uuid4
+from reportlab.platypus   import *
+from reportlab.lib.units  import *
+from reportlab.lib        import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.enums  import *
 
 def gestionar():
     if session.usuario != None:
@@ -152,10 +160,11 @@ def agregar():
             elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807'))))
             elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',requires=IS_NOT_EMPTY()))
         
+
     
-    for i in range(2):
-        fields.append(Field("d3scr1pc10n_comprobante_"+str(i+1), 'string', label="Descripcion")) 
+    for i in range(5):
         fields.append(Field("c0mpr0bant3_"+str(i+1), 'upload', autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), label='Archivo'))  
+        fields.append(Field("d3scr1pc10n_comprobante_"+str(i+1), 'string', label="Descripcion")) 
 
 
     #fields.append(Field(nombre,requires=IS_IN_SET([(1,'Method1'), (2,'Method2'), (3,'Method3')], zero='Select')))
@@ -175,6 +184,7 @@ def agregar():
         id_producto = dicc_producto['id_producto']
         for var in form.vars:
             if not(var in no):
+
                 try:
                     if (var[0:11]=="c0mpr0bant3"):
                         numero_comprobante = var[12:13]

@@ -21,7 +21,7 @@ def call(): return service()
 ## URLS DE RETORNO PARA EL CAS ##
 ## Solo descomentar segun sea el caso.
 ## PARA EL SERVIDOR:
-# URL_RETORNO = "http%3A%2F%2F159.90.211.179%2FSiraDex%2Fdefault%2Flogin_cas"
+# URL_RETORNO = "http%3A%2F%2Fsiradex.dex.usb.ve%2FSiraDex%2Fdefault%2Flogin_cas"
 ## PARA DESSARROLLO. Cambiar el puerto 8000 si es necesario.
 URL_RETORNO = "http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas"
 
@@ -73,13 +73,20 @@ def login_cas():
         # session.casticket = request.vars.getfirst('ticket')
         data  = the_page.split()
         usbid = data[1]
+        print '~~>',usbid
 
         usuario = get_ldap_data(usbid) #Se leen los datos del CAS
+        print '~~>',usuario
+
         tablaUsuarios = db.USUARIO
 
         session.usuario = usuario
         session.usuario['usbid'] = usbid
-
+        #print '~>',usuario['tipo']
+        try:
+            print usuario['carrera']
+        except:
+            print('Es una esceocion')
         if not db(tablaUsuarios.usbid == usbid).isempty():
             datosUsuario = db(tablaUsuarios.usbid==usbid).select()[0]
             session.usuario['tipo'] = datosUsuario.tipo
@@ -106,7 +113,7 @@ def login_cas():
             telefono=session.usuario["phone"],
             tipo = "Usuario")
             redirect(URL('vRegistroUsuario'))
-    
+
 
 def logout_cas():
     session.usuario = None
@@ -200,16 +207,17 @@ def grafica():
         query2 = "select count(producto.nombre) from producto where producto.ci_usu_creador=\'"+ session.usuario["cedula"]+"\' and producto.estado=\'Validada\';"
 
         datos = db.executesql(query)
+        print "los datos: " + str(datos)
         num_productos = db.executesql(query2)[0][0]
-
+        print "los num " + str(num_productos)
 
         import pygal
         pie_chart = pygal.Pie(height=300, width=400,background = 'red')
         # pie_chart.title = 'Productos del usuario'
         for producto in datos:
             porcentaje = (producto[1]*100)//num_productos
+            print "termine"
             pie_chart.add(producto[0],porcentaje)
-            
         return pie_chart.render()
 
 def vMenuDex():
