@@ -56,6 +56,9 @@ def ver_producto():
   tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == producto.id_tipo).select().first()
   programa_nombre = db(db.PROGRAMA.id_programa == tipo_actividad.id_programa).select().first().nombre
 
+  query = "SELECT id_comprobante, descripcion FROM COMPROBANTE WHERE producto="+str(id_producto)+";"
+  comprobantes = db.executesql(query)
+
 
   form = SQLFORM.factory(
             Field("Nombre_Producto", default=producto.nombre,writable = False),
