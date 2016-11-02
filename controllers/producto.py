@@ -252,10 +252,9 @@ def modificar():
 
     # Obtenemos la actividad para mostrarla en el html
     producto = db(db.PRODUCTO.id_producto==id_producto).select().first()
-    query = "SELECT archivo, descripcion FROM COMPROBANTE WHERE producto="+str(id_producto)+";"
+    query = "SELECT id_comprobante, descripcion FROM COMPROBANTE WHERE producto="+str(id_producto)+";"
     comprobantes = db.executesql(query)
     
-    url = os.path.join(request.folder,'uploads/no_table.c0mpr0bant3_1/'+comprobantes[0][0][23:25]+'/'+comprobantes[0][0])
     tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == producto.id_tipo).select().first()
 
     
@@ -373,40 +372,6 @@ def modificar():
 
     return locals()
 
-def download():
-    if not request.args:
-        raise HTTP(404)
-    name = request.args[-1]
-    field = db["comprobante"]["archivo"]
-    try:
-        (filename, archivo) = field.retrieve(name)
-    except IOError:
-        raise HTTP(404)
-    response.headers["Content-Type"] = c.contenttype(name)
-    response.headers["Content-Disposition"] = "attachment; filename=%s" % name
-    stream = response.stream(archivo, chunk_size=64*1024, request=request)
-    raise HTTP(200, stream, **response.headers)
-
-def link(): 
-    return response.download(request,db,attachment=False)
-
-def store_file(file, filename=None, path=None):
-    path = "applications/SiraDex/uploads"
-    if not os.path.exists(path):
-         os.makedirs(path)
-    pathfilename = os.path.join(path, filename)
-    dest_file = open(pathfilename, 'wb')
-    try:
-            shutil.copyfileobj(file, dest_file)
-    finally:
-            dest_file.close()
-    return filename
-
-def retrieve_file(filename, path=None):
-    path = "applications/SiraDex/uploads"
-    return (filename, open(os.path.join(path, filename), 'rb'))
-
-
 def eliminar():
     id_act = int(request.args(0))
 
@@ -488,52 +453,30 @@ def seleccion_actividad():
 
     return respuesta
 
+def get_comprobante():
+    if not request.args:
+        raise HTTP(404)
+    query = "SELECT archivo FROM COMPROBANTE WHERE id_comprobante="+request.args(0)+";"
+    comprobante = db.executesql(query)
 
-'''
-def agregar():
-    if session.usuario != None:
-        if(session.usuario["tipo"] == "DEX"):
-            admin = 2
-        elif(session.usuario["tipo"] == "Administrador"):
-            admin = 1
-        else:
-            admin = 0
-    else:
-        redirect(URL(c ="default",f="index"))
+    pdf = os.path.join(request.folder,'uploads','no_table.c0mpr0bant3_1',comprobante[0][0][23:25],comprobante[0][0])
+    data = open(pdf,"rb").read()
 
-    # Para la fecha maxima de realizacion
-    now = datetime.datetime.now()
-    if now.month < 10 :
-        mes = "-0" +  str(now.month)
-    else:
-        mes = "-" +  str(now.month)
-    if now.day < 10 :
-        dia = "-0" +  str(now.day)
-    else:
-        dia = "-" +  str(now.month)
-    fecha_max = str(now.year) + mes + dia
+    response.headers['Content-Type']='application/pdf'
+    return data
 
-    # Lista de programas para listarlos en el select
-    programas =  db(db.PROGRAMA).select(db.PROGRAMA.nombre,db.PROGRAMA.id_programa).as_list()
-    
-    
-    formulario = SQLFORM(db.PRODUCTO)
-    if formulario.process(session=None, formname='crear_tipo').accepted:
-        print formulario.vars
-        redirect(URL('gestionar'))
-        id = db.PRODUCTO.insert(**db.PRODUCTO._filter_fields(formulario.vars))
-        formulario.vars.PRODUCTO=id
-        id = db.PRODUCTO_TIENE_CAMPO.insert(**db.PRODUCTO_TIENE_CAMPO._filter_fields(formulario.vars))
-    elif formulario.errors:
-        print "error"
-        formulario.errors.fecha = T('mala fecha')
-        print formulario.errors
-    else:
-        print "fatal"
+def descargar_comprobante():
+    if not request.args:
+        raise HTTP(404)
+    query = "SELECT archivo FROM COMPROBANTE WHERE id_comprobante="+request.args(0)+";"
+    comprobante = db.executesql(query)
 
-  
-    return locals()
-'''
+    pdf = os.path.join(request.folder,'uploads','no_table.c0mpr0bant3_1',comprobante[0][0][23:25],comprobante[0][0])
+    data = open(pdf,"rb").read()
+
+    response.headers['Content-Type']='application/pdf'
+    response.headers["Content-Disposition"] = "attachment; filename=%s" % comprobante[0][0]
+    return data
 
 #Funcion para exportar PDF de un producto
 def get_pdf():
