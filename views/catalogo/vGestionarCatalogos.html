@@ -17,12 +17,17 @@
 </div>
 <br>
 <div class="card">
-  <ul class="nav nav-tabs" role="tablist">
-  {{for catalogo in catalogos:}}
-    <li class="nav-item {{='active' if catalogo[0].id_catalogo == catalogo_actual else ''}}">
-      <a class="nav-link" data-toggle="tab" href="#{{ = catalogo[0].id}}" role="tab" id="Cat{{= catalogo[0].id}}">{{= catalogo[0].nombre}}</a>
-    </li>
-   {{pass}}
+  {{if len(catalogos) == 0:}}
+    <p> Actualmente no existen catálogos en el sistemas. Pruebe agregar
+        un nuevo catálogo usando el boton "Agregar Catálogo" </p>
+  {{else:}}
+    <ul class="nav nav-tabs" role="tablist">
+    {{for catalogo in catalogos:}}
+      <li class="nav-item {{='active' if catalogo[0].id_catalogo == catalogo_actual else ''}}">
+        <a class="nav-link" data-toggle="tab" href="#{{ = catalogo[0].id}}" role="tab" id="Cat{{= catalogo[0].id}}">{{= catalogo[0].nombre}}</a>
+      </li>
+     {{pass}}
+  {{pass}}
   </ul>
 
   <div class="tab-content">

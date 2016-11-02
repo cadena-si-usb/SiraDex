@@ -27,8 +27,9 @@ def vGestionarCatalogos():
         catalogo_actual = int(request.args[0])
     else:
         #Si no es ninguno en especifico,
-        #Tomamos como actual el primer catalogo de la lista.
-        catalogo_actual = catalogos[0][0].id_catalogo
+        #Tomamos como actual el primer catalogo de la lista, si Existe.
+        if catalogos != []:
+            catalogo_actual = catalogos[0][0].id_catalogo
 
     #Formulario para agregar un catalogo.
     formulario_agregar_catalogo = AgregarCatalogo()
