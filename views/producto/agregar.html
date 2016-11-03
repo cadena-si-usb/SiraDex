@@ -86,8 +86,13 @@ $(document).ready(function () {
 													<hr class="col-sm-offset-3 col-sm-8">\
 													<h3 class="col-sm-offset-3 col-sm-3">Comprobantes</h3>\
 													<a id="agregar_comprobante" href="#" onclick="return false;">\
-														<img alt="Agregar Comprobante" src="/SiraDex/static/icon/i_add.png" height="55" >\
+														<img alt="Agregar Comprobante" src="/SiraDex/static/icon/i_add.png" height="55">\
 													</a>\
+													<br>\
+													<span class="col-sm-offset-3 col-sm-6">\
+													Puedes subir <b>'+comprobante_mostrado+'</b> comprobantes mas\
+													<br>\
+													Solo puedes subir documentos PDF</span>\
 												</div>'
 										);
 	for (i = 1; i <= cantidad_comprobantes; i++) {
@@ -141,97 +146,3 @@ $(document).ready(function () {
 </script>
 
 {{end}}
-
-
-<!--<form enctype="multipart/form-data" method="post" class="form-horizontal" role="form">
-
-
-					<div class="form-group">
-	                    <label for="PRODUCTO_nombre" class = "control-label col-sm-3">
-	                    	Nombre (*)
-	                    </label>
-	                    <div class="col-sm-8">
-							<input id="PRODUCTO_nombre" class="form-control string" name="nombre" value="" type="text">
-							<span class="help-block">
-								El nombre es tentativo y luego sera actualizado por la Dex
-							</span>
-						</div>
-	                </div>
-
-
-					<div class="form-group">
-	                    <label for="PRODUCTO_descripcion" class = "control-label col-sm-3">
-	                    	Descripcion
-	                    </label>
-	                    <div class="col-sm-8">
-							<input id="PRODUCTO_descripcion" class="form-control string" name="descripcion" value="" type="text">
-							<span class="help-block">
-								La descripcion tiene como fin familiarizar al personal de la Dex con su producto
-							</span>
-						</div>
-	                </div>
-
-	                <div class="form-group">
-	                    <label for="Programa" class = "control-label col-sm-3"> Programa(*)</label>
-	                    <div class="col-sm-8">
-		                    <select class= "form-control" name="Programa" onchange="ajax('obtener_actividades', ['Programa'], ':eval')">
-		                        <option selected=""></option>
-		                        {{for x in programas:}}
-		                        <option value="{{=x['nombre']}}">{{=x['nombre']}}</option>
-
-		                        {{pass}}
-		                    </select>
-	                    </div>
-	                </div>
-
-
-	                <div class="form-group">
-	                    <label for="id_tipo" class = "control-label col-sm-3">
-	                    	Tipo Actividad (*)
-	                    </label>
-	                    <div class="col-sm-8 ">
-		                    <select class="form-control" name="id_tipo" id="lista_tipos"  onchange="ajax('seleccion_actividad', ['id_tipo'], ':eval')">
-      
-		                    </select>
-
-		                </div>
-	                </div>
-
-
-	                <div class="form-group">
-	                    <label for="fecha" class = "control-label col-sm-3">Fecha (*)</label>
-	                    <div class="col-sm-3">
-	                    	<input class="form-control" type="date" name="fecha" max='{{=fecha_max}}'/>
-	                    </div>
-	                    <div class="col-sm-6">
-	    	                <label for="lugar" class="control-label col-sm-3">Lugar (*)</label>
-	    	                <div class="col-sm-7">
-	                    		<input class="form-control" name="lugar"/>
-	                    	</div>
-	                    </div>
-	                    <div class="hidden">
-	                    	<input class="form-control" name="estado" value="En espera" />
-	                    </div>
-	                    <div class="hidden">
-	                    	<input class="form-control" name="ci_usu_creador" value="{{=session.usuario['cedula']}}"/>
-	                    </div>
-	                </div>
-
-	                <div  class="form-group">
-	                	<h3 id="nombre_actividad" class="col-sm-offset-3"></h3>
-	                	<p id="descripcion_actividad" class="col-sm-offset-3"></p>
-	                	<p id="comprobantes_actividad" class="col-sm-offset-3"></p>
-
-		                <div id="campos_actividad">
-	
-		                </div>
-	                </div>
-
-	               
-	                
-	                <div class="form-group ">
-	                	<input type="submit" class="col-sm-offset-3 col-sm-8 btn blue-add btn-border " value="Agregar" />
-  						<input type="hidden" name="_formname" value="crear_tipo" />
-  						<input type="hidden" name="_formname_campos" value="agregar_campos" />
-	                </div>
-	            </form>          -->
