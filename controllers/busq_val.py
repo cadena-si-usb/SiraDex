@@ -12,7 +12,7 @@ def busqueda():
         else:
           admin = 0
       else:
-        admin = -1
+        admin = -10
     else:
       admin = -1
 
