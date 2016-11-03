@@ -99,7 +99,7 @@
                                   <!--  {{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }} -->
 
                                     <a href='/{{=request.application}}/{{=request.controller}}/get_pdf/{{=x.id_producto}}'
-                                    class="glyphicon glyphicon-save blue" title="Imprimir Producto {{=x.id_producto}}"></a>
+                                    class="glyphicon glyphicon-save blue" target="blanck" title="Imprimir Producto {{=x.id_producto}}"></a>
 
                                     
                                 
@@ -166,7 +166,7 @@
                                     <center>
                                     <!-- {{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }} -->
                                      <a href='/{{=request.application}}/{{=request.controller}}/get_pdf/{{=x.id_producto}}'
-                                    class="glyphicon glyphicon-save blue" title="Imprimir Producto {{=x.id_producto}}"></a>
+                                    class="glyphicon glyphicon-save blue" target="blanck" title="Imprimir Producto {{=x.id_producto}}"></a>
                         
                                     </center>
                                     </td>
@@ -206,8 +206,8 @@
                                 <tr>
                                     <td class="center-vertically detalles"> {{=x.nombre}}</td>
                                     <td class="center-vertically detalles"> {{=nombres[x]}}</td>
-                                    <td class="center-vertically"><!--   Creacion    --> {{x.fecha_realizacion}}</td>
-                                    <td class="center-vertically"> <!-- Modificacion --> {{x.fecha_modificacion}}</td>
+                                    <td class="center-vertically"><!--   Creacion    --> {{=x.fecha_realizacion}}</td>
+                                    <td class="center-vertically"> <!-- Modificacion --> {{=x.fecha_modificacion}}</td>
                                     <!-- Boton Modificar -->
                                     <td class="center-vertically"> 
                                     <center>
@@ -223,7 +223,7 @@
                               <!--      {{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }} -->
 
                                     <a href='/{{=request.application}}/{{=request.controller}}/get_pdf/{{=x.id_producto}}'
-                                    class="glyphicon glyphicon-save blue" title="Imprimir Producto {{=x.id_producto}}"></a>
+                                    class="glyphicon glyphicon-save blue" target="blanck" title="Imprimir Producto {{=x.id_producto}}"></a>
                                    
                                     </center>
                                     </td>
