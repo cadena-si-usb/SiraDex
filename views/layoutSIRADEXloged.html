@@ -17,6 +17,22 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
+
+            <!--Opciones administrador-->
+            {{if admin == -1:}}
+      <ul class="nav navbar-nav navbar-right">
+               <li class="activo">
+                <!-- EN SERVIDOR -->
+                   <!-- <a  id = login 
+                            class ='btn btn-xs' 
+                            href='http://secure.dst.usb.ve/login?service=http%3A%2F%2F159.90.211.179%2FSiraDex%2Fdefault%2Flogin_cas'> -->
+                <!-- EN DESARROLLO -->
+                        <a  class ='btn btn-xs ' 
+                            href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas'>
+                        Iniciar Sesión
+                    </a>
+                </li>            
+            {{else:}}
       <form class="navbar-form navbar-left" role="search">
         <div class="input-group">
           <input    type="text"
@@ -26,49 +42,47 @@
 
         <span class="input-group-btn">
         <button type="submit"
-                class="btn btn-default"
-                id="btn-lupa">
-                O
+                class="btn btn-default glyphicon glyphicon-search"
+                id="btn-lupa"
+                style="top:0px !important;">
         </button>
         </span>
         </div>
       </form>
-
       <ul class="nav navbar-nav navbar-right">
-            <!--Opciones administrador-->
+
             {{ if admin in [1,2]: }}
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="{{=URL(c='default', f='setVista', args=[2])}}"> Sistema</a>
-                <ul class="dropdown-menu" style="right:auto">
-                    {{if admin == 1:}}
-                    <li><a href="#">Consultar Log</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="{{=URL(c='default', f='setVista', args=[2])}}"> Sistema</a>
+                    <ul class="dropdown-menu" style="right:auto">
+                        {{if admin == 1:}}
+                        <li><a href="#">Consultar Log</a></li>
 
-                    <li class="dropdown-submenu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Backup</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Ver Backup</a></li>
-                            <li><a href="#">Crear Backup</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="{{=URL(c='usuarios', f='gestionar')}}">Usuarios</a></li>
-                    <li><a href="#">Notificaciones</a></li>
-                    <li role="separator" class="divider"></li>
-                    {{pass}}
-		                <li><a href="{{=URL(c='tipo_actividad', f='gestionar')}}">Tipos de Actividad</a></li>
-                    <li><a href="{{=URL(c='catalogo', f='vGestionarCatalogos')}}">Catálogos</a></li>
-                    <li><a href="{{=URL(c='archivo_historico', f='gestionar')}}">Papelera</a></li>
-                </ul>
-            </li>
-            <li><a href="{{=URL(c='busq_val', f='gestionar_validacion.html')}}">
-                Solicitudes
-            </a></li>
+                        <li class="dropdown-submenu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Backup</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Ver Backup</a></li>
+                                <li><a href="#">Crear Backup</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{{=URL(c='usuarios', f='gestionar')}}">Usuarios</a></li>
+                        <li><a href="#">Notificaciones</a></li>
+                        <li role="separator" class="divider"></li>
+                        {{pass}}
+                            <li><a href="{{=URL(c='tipo_actividad', f='gestionar')}}">Tipos de Actividad</a></li>
+                        <li><a href="{{=URL(c='catalogo', f='vGestionarCatalogos')}}">Catálogos</a></li>
+                        <li><a href="{{=URL(c='archivo_historico', f='gestionar')}}">Papelera</a></li>
+                    </ul>
+                </li>
+                <li><a href="{{=URL(c='busq_val', f='gestionar_validacion.html')}}">
+                    Solicitudes
+                </a></li>
 
-            <li><a href="{{=URL(c='programas', f='gestionar_programas.html')}}">
-                Programas
-            </a></li>
+                <li><a href="{{=URL(c='programas', f='gestionar_programas.html')}}">
+                    Programas
+                </a></li>
 
             {{ pass }}
-
             <!--Opciones basicas-->
 
                 <!--Cierre de sesion-->
@@ -90,6 +104,7 @@
                         </li>
                     </ul>
             </li>
+            {{ pass }}
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->

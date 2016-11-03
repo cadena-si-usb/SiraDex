@@ -3,7 +3,18 @@ from notificaciones import *
 
 # Funcion para busquedas publicas
 def busqueda():
-
+    if session.usuario != None:
+      if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
+        if(session.usuario["tipo"] == "DEX"):
+          admin = 2
+        elif(session.usuario["tipo"] == "Administrador"):
+          admin = 1
+        else:
+          admin = 0
+      else:
+        admin = -1
+    else:
+      admin = -1
 
     if request.vars.Programa == "all" and request.vars.TipoActividad == "all":
         sql = "SELECT descripcion,nombre,id_tipo FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
