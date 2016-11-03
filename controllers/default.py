@@ -114,11 +114,9 @@ def login_cas():
             tipo = "Usuario")
             redirect(URL('vRegistroUsuario'))
 
-
 def logout_cas():
     session.usuario = None
     return response.render()
-    
 
 # Controlador para el registro del usuario
 def vRegistroUsuario():
@@ -305,6 +303,19 @@ def vMenuAdmin():
         redirect(URL("index"))
 
 def index():
+    if session.usuario != None:
+      if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
+        if(session.usuario["tipo"] == "DEX"):
+          admin = 2
+        elif(session.usuario["tipo"] == "Administrador"):
+          admin = 1
+        else:
+          admin = 0
+      else:
+        admin = -1
+    else:
+      admin = -1
+    
     now = datetime.datetime.now()
     if now.month < 10 :
         mes = "-0" +  str(now.month)
