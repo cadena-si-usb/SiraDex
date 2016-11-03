@@ -192,28 +192,32 @@ def agregar():
                         nombre = getattr(form.vars ,var)
                         if nombre!='':
                             db.COMPROBANTE.insert(archivo=nombre,descripcion=descripcion,producto=id_producto)
+                        continue
 
 
                     elif (var[0:11]=="d3scr1pc10n"):
-                        pass
-
-                    else:
-
-                        if (var[0:6]=="c4mp0_"):
-                            campo = var[6:]
-                        else:
-                            campo = var
-
-                        campo = campo.replace("_"," ")
-                        print "Lo imprimes: " + campo
-                        id_camp = db(db.CAMPO.nombre==campo).select().first().id_campo
-                        print id_camp
-                        valor = getattr(form.vars ,var)
-                        db.PRODUCTO_TIENE_CAMPO.insert(id_prod=id_producto,id_campo=id_camp,valor_campo= valor)
-
+                        continue
+  
                 except Exception, e:
                     print "Exception: "
                     print e
+
+                try:
+                    if (var[0:6]=="c4mp0_"):
+                        campo = var[6:]
+                    else:
+                        campo = var
+                except Exception, e:
+                    print "Exception: "
+                    print e
+                    campo = var
+
+                campo = campo.replace("_"," ")
+                print "Lo imprimes: " + campo
+                id_camp = db(db.CAMPO.nombre==campo).select().first().id_campo
+                print id_camp
+                valor = getattr(form.vars ,var)
+                db.PRODUCTO_TIENE_CAMPO.insert(id_prod=id_producto,id_campo=id_camp,valor_campo= valor)
 
 
         redirect(URL('gestionar'))
@@ -254,7 +258,7 @@ def modificar():
     producto = db(db.PRODUCTO.id_producto==id_producto).select().first()
     query = "SELECT id_comprobante, descripcion FROM COMPROBANTE WHERE producto="+str(id_producto)+";"
     comprobantes = db.executesql(query)
-    
+
     tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == producto.id_tipo).select().first()
 
     
@@ -310,6 +314,10 @@ def modificar():
 
         valores[nombre]=row.valor_campo
 
+    for i in range(5):
+        fields.append(Field("c0mpr0bant3_"+str(i+1), 'upload', autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), label='Archivo'))  
+        fields.append(Field("d3scr1pc10n_comprobante_"+str(i+1), 'string', label="Descripcion")) 
+
     
     form=SQLFORM.factory(*fields, uploads=URL('download'))
     form.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
@@ -334,19 +342,42 @@ def modificar():
         print "listo 2"
 
         for var in form.vars:
+            try:
+                if (var[0:11]=="c0mpr0bant3"):
+                    numero_comprobante = var[12:13]
+                    descripcion = getattr(form.vars ,'d3scr1pc10n_comprobante_'+ numero_comprobante)
+                    nombre = getattr(form.vars ,var)
+                    if nombre!='':
+                        db.COMPROBANTE.insert(archivo=nombre,descripcion=descripcion,producto=id_producto)
+                    continue
+
+
+                elif (var[0:11]=="d3scr1pc10n"):
+                    continue
+
+            except Exception, e:
+                print "Exception: "
+                print e
+
             print "trabajare con: " + var
             valor_anterior = valores[var]
             print "valor anterior: " + str(valor_anterior)
             print "entrara " + str(not(var in no))
             if not(var in no):
+
                 try:
                     if (var[0:6]=="campo_"):
                         campo = var[6:]
-                except:
-                    pass
+                    else:
+                        campo = var
+                except Exception,e:
+                    print "Exception: "
+                    print e
+                    campo = var
+
                 print "var:" + var
                 valor_nuevo = getattr(form.vars ,var)
-                print "El valor es: " + valor_nuevo
+                print "El valor es: " + str(valor_nuevo)
                 if valor_nuevo != valor_anterior:
                     campo = campo.replace("_"," ")
                     id_campo = db(db.CAMPO.nombre==campo).select().first().id_campo
@@ -366,7 +397,6 @@ def modificar():
                     print " agregada "+ str(var)
                 else:
                     print "next "+ str(var)
-
 
         redirect(URL('gestionar'))
 
@@ -459,7 +489,7 @@ def get_comprobante():
     query = "SELECT archivo FROM COMPROBANTE WHERE id_comprobante="+request.args(0)+";"
     comprobante = db.executesql(query)
 
-    pdf = os.path.join(request.folder,'uploads','no_table.c0mpr0bant3_1',comprobante[0][0][23:25],comprobante[0][0])
+    pdf = os.path.join(request.folder,'uploads',comprobante[0][0][0:22],comprobante[0][0][23:25],comprobante[0][0])
     data = open(pdf,"rb").read()
 
     response.headers['Content-Type']='application/pdf'
@@ -471,7 +501,7 @@ def descargar_comprobante():
     query = "SELECT archivo FROM COMPROBANTE WHERE id_comprobante="+request.args(0)+";"
     comprobante = db.executesql(query)
 
-    pdf = os.path.join(request.folder,'uploads','no_table.c0mpr0bant3_1',comprobante[0][0][23:25],comprobante[0][0])
+    pdf = os.path.join(request.folder,'uploads',comprobante[0][0][0:22],comprobante[0][0][23:25],comprobante[0][0])
     data = open(pdf,"rb").read()
 
     response.headers['Content-Type']='application/pdf'
@@ -550,4 +580,26 @@ def get_pdf():
     os.unlink(tmpfilename)
     response.headers['Content-Type']='application/pdf'
 
-    return data
+    return dat
+
+def eliminar_comprobante():
+    if not request.args:
+        raise HTTP(404)
+    id_comprobante = request.args(0)
+    query = "SELECT archivo FROM COMPROBANTE WHERE id_comprobante="+id_comprobante+";"
+    comprobante = db.executesql(query)
+
+    pdf = os.path.join(request.folder,'uploads','no_table.c0mpr0bant3_1',comprobante[0][0][23:25],comprobante[0][0])
+    try:
+        os.unlink(pdf)
+    except Exception,e:
+        print "Exception: "
+        print e
+
+
+    db(db.COMPROBANTE.id_comprobante == id_comprobante).delete()
+
+    redirect(URL('modificar/'+request.args(1)))
+
+    #return "producto {} eliminada".format(producto)
+    return locals()

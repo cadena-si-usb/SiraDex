@@ -80,10 +80,12 @@
                         <tbody id="actividades">
                             {{for x in rows:}}
                                 {{if x.estado == 'Validada':}}
-                                <tr data-toggle="modal" 
-                                    data-target="#myModal">
-                                    <!-- Nombre -->
-                                    <td class="center-vertically detalles"> 
+                                <tr >
+                                    <!-- Nombre 
+
+                                    <td class="center-vertically detalles" data-toggle="modal" 
+                                    data-target="#myModal" data-producto={{=x.id_producto}}> -->
+                                    <td class="center-vertically detalles">
                                     {{=x.nombre}}</td>
                                     
                                     <!-- Boton Modificar -->

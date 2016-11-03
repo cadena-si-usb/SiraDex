@@ -122,6 +122,14 @@ $(document).ready(function () {
 
 	});
 
+	$('.upload').change(function(){
+		var ext = $(this).val().split('.').pop().toLowerCase();
+		if(ext != 'pdf') {
+		    alert('solo se permite cargar archivos PDF');
+		    $(this).val('');
+		}
+	});
+
   });
 </script>
 
