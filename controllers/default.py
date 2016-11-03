@@ -199,21 +199,20 @@ def perfil():
         redirect(URL("index"))
 
 def grafica():
+
         query = "select programa.nombre, programa.abreviacion, count(producto.nombre)" + \
         " from ((programa inner join tipo_actividad on programa.id_programa=tipo_actividad.id_programa)" + \
         " inner join producto on producto.id_tipo=tipo_actividad.id_tipo and producto.ci_usu_creador=\'"+ session.usuario["cedula"] +\
-        "\' and producto.estado=\'Validada\') group by programa.nombre;"
+        "\' and producto.estado=\'Validada\') group by programa.nombre, programa.abreviacion;"
 
         query2 = "select count(producto.nombre) from producto where producto.ci_usu_creador=\'"+ session.usuario["cedula"]+"\' and producto.estado=\'Validada\';"
 
         datos = db.executesql(query)
-
         num_productos = db.executesql(query2)[0][0]
-
 
         import pygal
         pie_chart = pygal.Pie(height=300, width=400,background = 'red')
-        # pie_chart.title = 'Productos del usuario'
+        #pie_chart.title = 'Productos del usuario'
         for producto in datos:
             porcentaje = (producto[2]*100)//num_productos
             pie_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])
