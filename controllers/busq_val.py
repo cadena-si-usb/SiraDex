@@ -94,11 +94,29 @@ def ver_producto():
   form_validado.element(_type='submit')['_value']="Actualizar"
 
   ## Formulario para colocar la razon de rechazo de un producto.
+  formulario_validar = SQLFORM.factory(
+                          Field('nombre','string',
+                                    requires=[IS_NOT_EMPTY(error_message="El nombre del producto no puede quedar vacio."),
+                                              IS_LENGTH(50, error_message="El nombre del producto no puede superar los 50 caracteres.")]),
+                          Field('id_producto',type="string"),
+                          submit_button = 'Validar',
+                          labels = {'nombre' : 'Nuevo Nombre'})
+
+  ## Formulario para colocar la razon de rechazo de un producto.
   formulario_rechazar = SQLFORM.factory(
                           Field('razon', type="text"),
                           Field('id_producto', type="string", default=""),
                           submit_button = 'Agregar',
                           labels = {'razon' : 'Razón de Rechazo del Producto'})
+
+  if formulario_validar.accepts(request.vars, session, formname="formulario_validar"):
+      id_producto = request.vars.id_producto
+      nuevo_nombre = request.vars.nombre
+
+      #Actualizamos el nombre del producto
+      db.PRODUCTO[id_producto] = dict(nombre = nuevo_nombre)
+      #Validamos el producto
+      validar(id_producto)
 
   if formulario_rechazar.accepts(request.vars, session, formname="formulario_rechazar"):
       id_producto = request.vars.id_producto
@@ -128,12 +146,6 @@ def ver_producto():
 
 
   ## Fin formulario de rechazo
-
-  print "El var request es:"
-  print request.var
-  if request.var:
-    print "holaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-    print request.var
 
   return locals()
 
@@ -169,39 +181,14 @@ def gestionar_validacion():
     return locals()
 
 # Metodo para validar un producto
-def validar():
-    if session.usuario != None:
-        if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
-            if(session.usuario["tipo"] == "DEX"):
-                admin = 2
-            elif(session.usuario["tipo"] == "Administrador"):
-                admin = 1
-            else:
-                admin = 0
-        else:
-            redirect(URL(c ="default",f="vMenuPrincipal"))
-    else:
-        redirect(URL(c ="default",f="index"))
+def validar(id_producto):
 
-    id_act = int(request.args[0])
-    ''''
-    formulario = SQLFORM(db.PRODUCTO,id_act)
-    if formulario.process(session=None, formname='validar_producto').accepted:
-        print "se envio"
-        redirect(URL('gestionar_validacion'))
-    elif formulario.errors:
-        print "error"
-        print formulario.errors
-    else:
-        print "fatal"
-    '''
-
-    db(db.PRODUCTO.id_producto == id_act).update(estado='Validada')
+    db(db.PRODUCTO.id_producto == id_producto).update(estado='Validada')
 
     ## INICIO NOTIFICACION ##
 
     # obtenemos el producto a validar
-    producto =  db(db.PRODUCTO.id_producto == id_act).select().first()
+    producto =  db(db.PRODUCTO.id_producto == id_producto).select().first()
 
     # obtenemos el usuario que realizo el producto
     usuario = db(db.USUARIO.ci == producto.ci_usu_creador).select().first()
@@ -225,20 +212,6 @@ def validar():
 
 # Metodo para rechazar una producto
 def rechazar(id_producto):
-    if session.usuario != None:
-        if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
-            if(session.usuario["tipo"] == "DEX"):
-                admin = 2
-            elif(session.usuario["tipo"] == "Administrador"):
-                admin = 1
-            else:
-                admin = 0
-        else:
-            redirect(URL(c ="default",f="vMenuPrincipal"))
-    else:
-        redirect(URL(c ="default",f="index"))
-
-    # id_act = int(request.args[0])
     db(db.PRODUCTO.id_producto == id_producto).update(estado='Rechazada')
     session.message = 'Producto rechazado'
     redirect(URL('gestionar_validacion.html'))
