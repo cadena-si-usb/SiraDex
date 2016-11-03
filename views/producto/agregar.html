@@ -62,6 +62,13 @@ function textoRestante1(maxLong, idDivUsar){
 };
 
 $(document).ready(function () {
+	$(":file").filestyle({
+	    buttonBefore: true,
+	    buttonName: "btn-primary",
+	    placeholder: "Sin Archivo",
+	    buttonText: "  Adjuntar",
+	  });
+	
 	var maxLongNombre  = 256;    // Longitud máxima que tendrá el campo nombre.
 	var maxLongDescrip = 2048;   // Longitud máxima que tendrá el campo descripción.
 	var comprobante_mostrado = 0;
