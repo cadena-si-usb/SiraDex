@@ -35,6 +35,7 @@ def vGestionarCatalogos():
     formulario_agregar_catalogo = AgregarCatalogo()
     formulario_agregar_campo    = AgregarCampo()
     formulario_editar_campo     = EditarCampo()
+    formulario_cambiar_nombre   = cambiarNombreCatalogo()
 
     if formulario_agregar_catalogo.process(formname = "formulario_agregar_catalogo").accepted:
         # Creamos el catalogo y obtenemos su id, para pasarlo al controlador de agregar campo.
@@ -104,6 +105,15 @@ def vGestionarCatalogos():
     else:
         message = 'Error en el Formulario de Editar Campo'
 
+    if formulario_cambiar_nombre.process(formname = "formulario_cambiar_nombre").accepted:
+        nombre_nuevo = request.vars.nombre
+        id_catalogo  = request.vars.id_catalogo
+
+        #Actualizamos el nombre
+        db.CATALOGO[id_catalogo] = dict(nombre = nombre_nuevo)
+        redirect(URL('vGestionarCatalogos',args=[id_catalogo]))
+    else:
+        message = 'Error en el Formulario de Editar Nombre Catalogo'
 
 
     formulario_agregar_catalogo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
@@ -120,6 +130,7 @@ def vGestionarCatalogos():
                 formulario_agregar_catalogo = formulario_agregar_catalogo,
                 formulario_agregar_campo    = formulario_agregar_campo,
                 formulario_editar_campo     = formulario_editar_campo,
+                formulario_cambiar_nombre   = formulario_cambiar_nombre,
                 admin = admin)
 
 '''
@@ -228,3 +239,14 @@ def eliminarCampos():
     del db.CAMPO_CATALOGO[id_campo_cat]
 
     redirect(URL('vGestionarCatalogos',args=[id_catalogo]))
+
+def cambiarNombreCatalogo():
+    formulario = SQLFORM.factory(
+                        Field('nombre',
+                              requires = [IS_NOT_EMPTY(error_message='El nombre del catalogo no puede quedar vacio.'),
+                                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales."),
+                                          IS_NOT_IN_DB(db, 'CATALOGO.nombre', error_message="Ya existe un catalogo con ese nombre.")]),
+                        Field('id_catalogo', type='string'),
+                              submit_button='Cambiar Nombre',
+                              labels={'nombre':'Nuevo Nombre'})
+    return formulario
