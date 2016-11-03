@@ -74,7 +74,7 @@
     </div>
 
   <!-- Modal Validar-->
-  <div id="modalValidarProducto" class="modal fade" role="dialog">
+  <div id="modalValidarProducto" class="modal fade" role="dialog"  data-hayErrores="{{=hayErrores}}">
     <div class="modal-dialog">
       <!-- Modal content-->
       <div class="modal-content">
@@ -120,6 +120,13 @@
 
 {{block script}}
     <script>
+
+        var hayErrores = $("#modalValidarProducto").attr("data-hayErrores");
+        hayErrores = hayErrores.replace(/<Storage |>/gi, "").replace(/'/g, '"')
+
+        if (hayErrores != '{}') {
+          $('#modalValidarProducto').modal('show');
+        }
 
         // Pasamos los argumentos para validar el producto
         $('#modalValidarProducto').on('show.bs.modal', function(e){

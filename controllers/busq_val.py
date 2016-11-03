@@ -93,6 +93,8 @@ def ver_producto():
   form_validado.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
   form_validado.element(_type='submit')['_value']="Actualizar"
 
+
+
   ## Formulario para colocar la razon de rechazo de un producto.
   formulario_validar = SQLFORM.factory(
                           Field('nombre','string',
@@ -109,6 +111,8 @@ def ver_producto():
                           submit_button = 'Agregar',
                           labels = {'razon' : 'Razón de Rechazo del Producto'})
 
+  hayErrores = {}
+
   if formulario_validar.accepts(request.vars, session, formname="formulario_validar"):
       id_producto = request.vars.id_producto
       nuevo_nombre = request.vars.nombre
@@ -117,6 +121,8 @@ def ver_producto():
       db.PRODUCTO[id_producto] = dict(nombre = nuevo_nombre)
       #Validamos el producto
       validar(id_producto)
+  else:
+      hayErrores = formulario_validar.errors
 
   if formulario_rechazar.accepts(request.vars, session, formname="formulario_rechazar"):
       id_producto = request.vars.id_producto
