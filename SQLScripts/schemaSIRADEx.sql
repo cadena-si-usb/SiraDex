@@ -38,6 +38,7 @@ CREATE TABLE JEFE_DEPENDENCIA(
 CREATE TABLE PROGRAMA(
   id_programa         SERIAL        NOT NULL,
   nombre              VARCHAR(256)  NOT NULL,
+  abreviacion         VARCHAR(10)   NOT NULL,
   descripcion         Varchar(2048) NOT NULL,
   papelera            BOOLEAN       NOT NULL DEFAULT FALSE,
   modif_fecha         DATE,
