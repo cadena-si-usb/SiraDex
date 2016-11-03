@@ -89,10 +89,6 @@ $(document).ready(function () {
 														<img alt="Agregar Comprobante" src="/SiraDex/static/icon/i_add.png" height="55">\
 													</a>\
 													<br>\
-													<span class="col-sm-offset-3 col-sm-6">\
-													Puedes subir <b>'+comprobante_mostrado+'</b> comprobantes mas\
-													<br>\
-													Solo puedes subir documentos PDF</span>\
 												</div>'
 										);
 	for (i = 1; i <= cantidad_comprobantes; i++) {
@@ -101,6 +97,11 @@ $(document).ready(function () {
 	}
 
 	$('#agregar_comprobante').click(function(){
+		$('#cant_restante').remove();
+		$('#comprobantes__row').append('<span class="col-sm-offset-3 col-sm-6" id="cant_restante">\
+													Puedes subir <b>'+(5-comprobante_mostrado)+'</b> comprobantes mas\
+													<br>\
+													Solo puedes subir documentos PDF</span>');
 		if (comprobante_mostrado<cantidad_comprobantes){
 			if($('#no_table_c0mpr0bant3_'+comprobante_mostrado).val()=="" ){
 				if (!error_comprobante){
