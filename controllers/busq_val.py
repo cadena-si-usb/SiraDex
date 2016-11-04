@@ -126,7 +126,7 @@ def ver_producto():
   ## Formulario para colocar la razon de rechazo de un producto.
   formulario_rechazar = SQLFORM.factory(
                           Field('razon', type="text"),
-                          Field('id_producto', type="string", default=""),
+                          Field('id_producto_r', type="string", default=""),
                           submit_button = 'Agregar',
                           labels = {'razon' : 'Razón de Rechazo del Producto'})
 
@@ -144,7 +144,7 @@ def ver_producto():
       hayErrores = formulario_validar.errors
 
   if formulario_rechazar.accepts(request.vars, session, formname="formulario_rechazar"):
-      id_producto = request.vars.id_producto
+      id_producto = request.vars.id_producto_r
       razon = request.vars.razon
 
       ## Enviamos notificacion de rechazo

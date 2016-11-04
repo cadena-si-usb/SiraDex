@@ -40,7 +40,6 @@
                 </div>
                 <h4 class="col-sm-offset-2">Comprobantes:</h4>
                 <ul class="list-group col-sm-offset-3">
-
                 {{for comprobante in comprobantes:}}
                     <li>
                         <div class = "col-sm-8">
@@ -51,7 +50,7 @@
                         <span >
                             <a href='/{{=request.application}}/producto/descargar_comprobante/{{=comprobante[0]}}'
                                  title="Descargar Comprobante}" class="glyphicon glyphicon-save blue"></a>
-                    
+
                         </span>
                     </li>
                 {{pass}}
@@ -147,6 +146,7 @@
 
         if (hayErrores != '{}') {
           $('#modalValidarProducto').modal('show');
+          $("#no_table_id_producto__row").hide();
         }
 
         // Pasamos los argumentos para validar el producto
@@ -155,15 +155,17 @@
             var nombre       = $(e.relatedTarget).data('nombre');
             $(e.currentTarget).find('input[name="id_producto"]').val(id_producto);
             $(e.currentTarget).find('input[name="nombre"]').val(nombre);
+            $("#no_table_id_producto__row").hide();
         });
 
         // Pasamos los argumentos para rechazar el producto
         $('#modalRechazarProducto').on('show.bs.modal', function(e){
             var id_producto = $(e.relatedTarget).data('id-producto');
-            $(e.currentTarget).find('input[name="id_producto"]').val(id_producto);
+            $(e.currentTarget).find('input[name="id_producto_r"]').val(id_producto);
+            $("#no_table_id_producto_r__row").hide();
         });
 
-        $("#no_table_id_producto__row").hide();
+
 
     </script>
 {{end}}

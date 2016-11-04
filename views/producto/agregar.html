@@ -18,12 +18,12 @@
 {{end}}
 
 {{block contenido}}
-	
+
 <div class="row">
 	<div class="col-md-12">
 		<div class="card">
 			<div class="tab-pane">
-            	{{=form}}           
+            	{{=form}}
 
 			</div>
 		</div>
@@ -68,7 +68,7 @@ $(document).ready(function () {
 	    placeholder: "Sin Archivo",
 	    buttonText: "  Adjuntar",
 	  });
-	
+
 	var maxLongNombre  = 256;    // Longitud máxima que tendrá el campo nombre.
 	var maxLongDescrip = 2048;   // Longitud máxima que tendrá el campo descripción.
 	var comprobante_mostrado = 0;
@@ -139,7 +139,7 @@ $(document).ready(function () {
 		var ext = $(this).val().split('.').pop().toLowerCase();
 		if(ext != 'pdf') {
 		    alert('solo se permite cargar archivos PDF');
-		    $(this).val('');
+		    $(this).attr("placeholder", "Sin Archivo");
 		}
 	});
 
