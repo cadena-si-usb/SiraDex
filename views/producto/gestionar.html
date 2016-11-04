@@ -10,6 +10,7 @@
     <!-- icono editar -->
     <a id="editar" href="{{=URL(c='default',f='EditarPerfil')}}" >
     <span class="glyphicon glyphicon-edit green-icn"></span>
+    <!-- {{=IMG(_src=URL('static', 'icon', args='i_edit.png'),_style='max-height:1em') }} --> 
     </a>
 {{end}}
 
@@ -79,10 +80,12 @@
                         <tbody id="actividades">
                             {{for x in rows:}}
                                 {{if x.estado == 'Validada':}}
-                                <tr data-toggle="modal" 
-                                    data-target="#myModal">
-                                    <!-- Nombre -->
-                                    <td class="center-vertically detalles"> 
+                                <tr >
+                                    <!-- Nombre 
+
+                                    <td class="center-vertically detalles" data-toggle="modal" 
+                                    data-target="#myModal" data-producto={{=x.id_producto}}> -->
+                                    <td class="center-vertically detalles">
                                     {{=x.nombre}}</td>
                                     
                                     <!-- Boton Modificar -->
@@ -95,8 +98,14 @@
                                     <!-- Boton Descargar -->
                                     <td class="center-vertically">
                                     <center>
+                                  <!--  {{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }} -->
+
                                     <a href='/{{=request.application}}/{{=request.controller}}/get_pdf/{{=x.id_producto}}'
-                                    class="glyphicon glyphicon-save blue" title="Imprimir Producto {{=x.id_producto}}"></a>
+                                    class="glyphicon glyphicon-save blue" target="blanck" title="Imprimir Producto {{=x.id_producto}}"></a>
+
+                                    
+                                
+                                </a>
                                     </center>
                                     </td>
                                     <!-- Boton Eliminar -->
@@ -197,12 +206,13 @@
                                 <tr>
                                     <td class="center-vertically detalles"> {{=x.nombre}}</td>
                                     <td class="center-vertically detalles"> {{=nombres[x]}}</td>
-                                    <td class="center-vertically"><!--   Creacion    --> {{x.fecha_realizacion}}</td>
-                                    <td class="center-vertically"> <!-- Modificacion --> {{x.fecha_modificacion}}</td>
+                                    <td class="center-vertically"><!--   Creacion    --> {{=x.fecha_realizacion}}</td>
+                                    <td class="center-vertically"> <!-- Modificacion --> {{=x.fecha_modificacion}}</td>
                                     <!-- Boton Modificar -->
                                     <td class="center-vertically"> 
                                     <center>
                                     <a href="{{=URL('modificar',args=x.id)}}">
+                                    <!-- {{=IMG(_src=URL('static', 'icon/i_edit.png'),_height='25',_title="Modificar") }} -->
                                     <span class="glyphicon glyphicon-edit green-icn"></span>
                                     </a>
                                     </center>
@@ -210,14 +220,18 @@
                                     <!-- Boton Descargar -->
                                     <td class="center-vertically">
                                     <center>
+                              <!--      {{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }} -->
+
                                     <a href='/{{=request.application}}/{{=request.controller}}/get_pdf/{{=x.id_producto}}'
-                                    class="glyphicon glyphicon-save blue" title="Imprimir Producto {{=x.id_producto}}"></a>
+                                    class="glyphicon glyphicon-save blue" target="blanck" title="Imprimir Producto {{=x.id_producto}}"></a>
+                                   
                                     </center>
                                     </td>
                                     <!-- Boton Eliminar -->
                                     <td class="center-vertically">
                                     <center>
                                     <a onClick = "if(confirm('¿Está seguro de que desea eliminar esta actividad?')) {window.location.href = '{{=URL(f='eliminar',args=[ x.id ] )}}';}">
+                                    <!-- {{=IMG(_src=URL('static', 'icon/i_delete.png'),_height='25',_title="Eliminar") }} -->
                                     <span class="glyphicon glyphicon-remove red"></span>
                                     </a>
                                     </center>
@@ -261,7 +275,8 @@
                             <select class= "form-control" name="programa" onchange="ajax('obtener_actividades', ['programa'], ':eval')">
                                 <option selected=""></option>
                                 {{for x in programas:}}
-                                        <option value="{{=x['nombre']}}">{{=x['nombre']}}</option>
+                                <option value="{{=x['nombre']}}">{{=x['nombre']}}</option>
+
                                 {{pass}}
                             </select>
                         </div>
@@ -303,7 +318,7 @@
         <p>Some text in the modal.</p>
       </div>
       <div class="modal-footer">
-        <center>
+      <center>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
         </center>
       </div>

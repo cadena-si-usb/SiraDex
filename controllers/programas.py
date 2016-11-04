@@ -16,6 +16,9 @@ def agregar_programa():
                         Field('Nombre',
                               requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacio.'),
                                           IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales.")]),
+                        Field('Abreviacion',
+                              requires = [IS_NOT_EMPTY(error_message='La abreviacion del programa no puede quedar vacia.'),
+                                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales.")]),
                         Field('Descripcion', type="text",
                               requires=IS_NOT_EMPTY(error_message='La descripcion del programa no puede quedar vacia.')),
                         submit_button = 'Agregar',
@@ -28,6 +31,7 @@ def agregar_programa():
     if formulario.accepts(request.vars, session):
         session.form_nombre = request.vars.Nombre
         db.PROGRAMA.insert(nombre = request.vars.Nombre,
+                           abreviacion = request.vars.Abreviacion,
                            descripcion = request.vars.Descripcion
                            )
         redirect(URL('gestionar_programas.html'))
@@ -56,12 +60,16 @@ def gestionar_programas():
                           IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales."),
                           IS_LENGTH(256),
                           IS_NOT_IN_DB(db, 'PROGRAMA.nombre', error_message="Ya existe un programa con ese nombre.")]),
+        Field('Abreviacion',
+                requires = [IS_NOT_EMPTY(error_message='La abreviacion del programa no puede quedar vacia.'),
+                            IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales.")]),
         Field('Descripcion', type="text",
               requires=[IS_NOT_EMPTY(error_message='La descripcion del programa no puede quedar vacia.'),
                         IS_LENGTH(2048)]),
         submit_button = 'Agregar',
         labels = {'Descripcion' : 'Descripción',
-                  'Nombre' : 'Nombre del Programa'},
+                  'Nombre' : 'Nombre del Programa',
+                  'Abreviacion' : 'Abreviacion del Programa'},
         )
     formulario.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
     formulario.element(_type='submit')['_value']="Agregar"
@@ -74,12 +82,16 @@ def gestionar_programas():
                           IS_LENGTH(256),
                           IS_NOT_IN_DB(db(db.PROGRAMA.id_programa != request.vars['id_programa']), 'PROGRAMA.nombre',
                                             error_message= ('Ya existe un programa con el nombre "' + request.vars['Nombre'] + '".') if not(request.vars['Nombre'] is None) else 'Ya existe un programa con el nombre ')]),
+        Field('Abreviacion',
+                requires = [IS_NOT_EMPTY(error_message='La abreviacion del programa no puede quedar vacia.'),
+                            IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales.")]),        
         Field('Descripcion', type="text",
               requires=IS_NOT_EMPTY(error_message='La descripcion del programa no puede quedar vacia.')),
         Field('id_programa', type="string"),
         submit_button = 'Agregar',
         labels = {'Descripcion' : 'Descripción',
-                  'Nombre' : 'Nombre del Programa'},
+                  'Nombre' : 'Nombre del Programa',
+                  'Abreviacion' : 'Abreviacion del Programa'},
         )
     formulario_editar.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
     formulario_editar.element(_type='submit')['_value']="Editar"
@@ -89,6 +101,7 @@ def gestionar_programas():
     if formulario.accepts(request.vars, session, formname="formulario"):
         # Se agrega el programa deseado a la base de datos.
         db.PROGRAMA.insert(nombre = request.vars.Nombre,
+                            abreviacion = request.vars.Abreviacion,
                            descripcion = request.vars.Descripcion)
         # Se redirige a la vista de getión de programas.
         redirect(URL('gestionar_programas.html'))
@@ -102,6 +115,7 @@ def gestionar_programas():
         programa = db(db.PROGRAMA.id_programa == id_programa).select().first()
         session.form_nombre = request.vars.Nombre
         programa.nombre = request.vars.Nombre
+        programa.abreviacion = request.vars.Abreviacion
         programa.descripcion = request.vars.Descripcion
         programa.update_record()                    # Se actualiza el programa.
 
@@ -144,18 +158,22 @@ def editar_programa():
                               default = programa.nombre,
                               requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacio.'),
                                           IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales.")]),
+                        Field('Abreviacion',
+                            requires = [IS_NOT_EMPTY(error_message='La abreviacion del programa no puede quedar vacia.')]),
                         Field('Descripcion', type="text",
                               default = programa.descripcion,
                               requires=IS_NOT_EMPTY(error_message='La descripcion del programa no puede quedar vacia.')),
                         submit_button = 'Actualizar',
                         labels = {'Descripcion' : 'Descripción',
-                                  'Nombre' : 'Nombre del Programa'},
+                                  'Nombre' : 'Nombre del Programa',
+                                  'Abreviacion' : 'Abreviacion del Programa'}
                         )
 
     # Se verifica si los campos están llenos correctamente.
     if formulario.accepts(request.vars, session):
         session.form_nombre = request.vars.Nombre
         programa.nombre = request.vars.Nombre
+        programa.abreviacion = request.vars.Abreviacion
         programa.descripcion = request.vars.Descripcion
         programa.update_record()                    # Se actualiza el programa.
         redirect(URL('gestionar_programas.html'))   # Se redirige a la vista de gestión.

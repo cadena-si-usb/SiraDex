@@ -10,19 +10,10 @@
 	<div class="col-md-12">
 		<div class="card">
 			
-			<div class="tab-content">
-			<center>
-				
-				{{=form}}
-			</center>
+			<div id="id_comprobante" class="tab-content" data-producto='{{=request.args(0)}}'>
+					
+					{{=form}}
 			</div>
-			<div class="tab-content">
-			<center>
-				
-				{{=grid}}
-			</center>
-			</div>
-
 		</div>
 	</div>
 </div>
@@ -30,6 +21,114 @@
 
 {{block script}}
 	<script type="text/javascript">
+		$(document).ready(function () {
+			$(":file").filestyle({
+		    buttonBefore: true,
+		    buttonName: "btn-primary",
+		    placeholder: "Sin Archivo",
+		    buttonText: "  Adjuntar",
+		  });
 
+			var comprobante_mostrado = {{=len(comprobantes)}};
+			var error_comprobante = 0;
+			var error_descripcion = 0;
+			var cantidad_comprobantes = 5;
+			var agregados_aqui = 0;
+
+
+			var html='<div id="comprobantes__row" class="form-group">\
+							<hr class="col-sm-offset-3 col-sm-8">\
+							<h3 class="col-sm-offset-3 col-sm-3">Comprobantes</h3>\
+							<div class="row">\
+								<div class="col-sm-offset-3 col-sm-8 content"><br>\
+									{{if (len(comprobantes)==0): }}\
+										<p>No hay comprobantes cargados</p>\
+									{{else:}}\
+										<table><tbody>\
+										{{for comprobante in comprobantes:}}\
+											<tr>\
+												<td>\
+													<a  href="/{{=request.application}}/{{=request.controller}}/get_comprobante/{{=comprobante[0]}}" target="blanck">\
+						        					{{=comprobante[1]}}\
+						    						</a>\
+						    					</td>\
+						    					<td class="center-vertically">\
+	                                    			<center>\
+	                                   					<a onClick = "if(confirm(\'¿Está seguro de que desea eliminar este comprobante?\')) {window.location.href=\'{{=URL(f="eliminar_comprobante", args=[comprobante[0], id_producto])}}\';comprobante_mostrado=comprobante_mostrado-1}">\
+	                                                        <span class="glyphicon glyphicon-remove red"></span>\
+	                                    				</a>\
+	                                    			</center>\
+	                                    		</td>\
+						    				</tr>\
+										{{pass}}\
+										</tbody></table>\
+									{{pass}}\
+								<br></div>\
+								<div class="col-sm-offset-3 col-sm-8">\
+									<a id="agregar_comprobante" href="#" onclick="return false;">\
+										<img alt="Agregar Comprobante" src="/SiraDex/static/icon/i_add.png" height="55" >\
+									</a>\
+								</div>\
+							</div>\
+						</div>';
+
+
+
+
+			$('#no_table_c0mpr0bant3_1__row').before(html);
+			for (i = 1; i <= cantidad_comprobantes; i++) {
+		    	$('#no_table_c0mpr0bant3_'+i+'__row').addClass("hidden");
+		    	$('#no_table_d3scr1pc10n_comprobante_'+i+'__row').addClass("hidden");
+			}
+
+			$('#agregar_comprobante').click(function(){
+				if (comprobante_mostrado<cantidad_comprobantes){
+					
+					if($('#no_table_c0mpr0bant3_'+agregados_aqui).val()=="" ){
+						if (!error_comprobante){
+							$('#no_table_c0mpr0bant3_'+agregados_aqui).parent().append('<span id="error_archivo_'+agregados_aqui+'" class="help-block error">Primero debes cargar el comprobante</span>');
+							error_comprobante = 1;
+						}
+					}
+					else{
+						$('#error_archivo_'+agregados_aqui).addClass("hidden");
+						if($('#no_table_d3scr1pc10n_comprobante_'+agregados_aqui).val()==""){
+							if (!error_descripcion){
+								$('#no_table_d3scr1pc10n_comprobante_'+agregados_aqui).parent().append('<span id="error_descripcion_'+agregados_aqui+'" class="help-block error">La descripcion de un archivo cargado es obligatoria</span>');
+								error_descripcion = 1;
+							}
+						}
+						else{
+							error_comprobante = 0;
+							error_descripcion = 0;
+							$('#error_descripcion_'+agregados_aqui).addClass("hidden");
+
+							comprobante_mostrado += 1;
+							agregados_aqui += 1;
+							$('#no_table_c0mpr0bant3_'+agregados_aqui+'__row').removeClass("hidden");
+							$('#no_table_d3scr1pc10n_comprobante_'+agregados_aqui+'__row').removeClass("hidden");
+							$('#no_table_c0mpr0bant3_'+agregados_aqui+'__row').prepend('<hr class="col-sm-offset-3 col-sm-8">');
+						};
+					};
+				};
+				if (comprobante_mostrado==cantidad_comprobantes){
+					$('#agregar_comprobante').addClass("hidden");
+				}
+
+			});
+
+			$('.upload').change(function(){
+				var ext = $(this).val().split('.').pop().toLowerCase();
+				if(ext != 'pdf') {
+				    alert('solo se permite cargar archivos PDF');
+				    $(this).val('');
+				}
+			});
+
+			if (comprobante_mostrado==cantidad_comprobantes){
+				$('#agregar_comprobante').addClass("hidden");
+			};
+
+		});
 	</script>
 {{end}}

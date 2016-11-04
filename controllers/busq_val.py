@@ -3,28 +3,47 @@ from notificaciones import *
 
 # Funcion para busquedas publicas
 def busqueda():
-
+    if session.usuario != None:
+      if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
+        if(session.usuario["tipo"] == "DEX"):
+          admin = 2
+        elif(session.usuario["tipo"] == "Administrador"):
+          admin = 1
+        else:
+          admin = 0
+      else:
+        admin = -1
+    else:
+      admin = -1
 
     if request.vars.Programa == "all" and request.vars.TipoActividad == "all":
         sql = "SELECT descripcion,nombre,id_tipo FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
          + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor + "%\') AND estado=\'Validada\';"
-
         productos = db.executesql(sql)
 
     elif request.vars.Programa != "all" and request.vars.TipoActividad == "all":
         sql = "SELECT descripcion,nombre,id_tipo FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
          + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
-         + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + request.vars.Programa + ") AND estado=\'Validada\';"
+         + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + str(request.vars.Programa)+ ") AND estado=\'Validada\';"
 
         productos = db.executesql(sql)
 
     elif request.vars.Programa == "all" and request.vars.TipoActividad != "all":
         sql = "SELECT descripcion,nombre,id_tipo FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
          + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
-         + "%\') AND id_tipo=\'" + request.vars.TipoActividad + "\' AND estado=\'Validada\';"
+         + "%\') AND id_tipo=\'" + str(request.vars.TipoActividad) + "\' AND estado=\'Validada\';"
 
         productos = db.executesql(sql)
 
+    elif request.vars.Programa == None and request.vars.TipoActividad == None:
+        if (session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador"):
+          sql = "SELECT descripcion,nombre,id_tipo FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
+           + "%\' ;"
+        elif (session.usuario["tipo"] == "Usuario"):
+          sql = "SELECT descripcion,nombre,id_tipo FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
+          + "%\' AND estado=\'Validada\';"
+
+        productos = db.executesql(sql)
     else:
         sql = "SELECT descripcion,nombre,id_tipo FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
          + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
@@ -55,6 +74,9 @@ def ver_producto():
   usuario_nombre = usuario_producto.nombres + " " + usuario_producto.apellidos
   tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == producto.id_tipo).select().first()
   programa_nombre = db(db.PROGRAMA.id_programa == tipo_actividad.id_programa).select().first().nombre
+
+  query = "SELECT id_comprobante, descripcion FROM COMPROBANTE WHERE producto="+str(id_producto)+";"
+  comprobantes = db.executesql(query)
 
 
   form = SQLFORM.factory(

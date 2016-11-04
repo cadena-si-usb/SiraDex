@@ -122,10 +122,10 @@ def agregar():
     descripcion_actividad = tipo_actividad.descripcion
 
     fields = []
-    fields.append(Field('nombre','string',label="Nombre (*)",requires=[IS_NOT_EMPTY(),IS_LENGTH(50)]))
-    fields.append(Field('descripcion','string',label="Descripcion (*)",requires=[IS_NOT_EMPTY(),IS_LENGTH(250)]))
-    fields.append(Field('fecha_realizacion','date',label="Fecha de Realizacion (*)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
-    fields.append(Field('lugar','string',label="Lugar (*)",requires=[IS_NOT_EMPTY(),IS_LENGTH(50)]))
+    fields.append(Field('nombre','string',label="Nombre (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(50)]))
+    fields.append(Field('descripcion','string',label="Descripcion (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(250)]))
+    fields.append(Field('fecha_realizacion','date',label="Fecha de Realizacion (*)",requires=[IS_NOT_EMPTY(error_message='Debe seleccionar una fecha'),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
+    fields.append(Field('lugar','string',label="Lugar (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(50)]))
 
     for row in campos_id:
         rows_campo = db(db.CAMPO.id_campo == row.id_campo).select().first()
@@ -163,7 +163,7 @@ def agregar():
 
     
     for i in range(5):
-        fields.append(Field("c0mpr0bant3_"+str(i+1), 'upload', autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), label='Archivo'))  
+        fields.append(Field("c0mpr0bant3_"+str(i+1), 'upload', autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), label=''))  
         fields.append(Field("d3scr1pc10n_comprobante_"+str(i+1), 'string', label="Descripcion")) 
 
 
@@ -192,28 +192,32 @@ def agregar():
                         nombre = getattr(form.vars ,var)
                         if nombre!='':
                             db.COMPROBANTE.insert(archivo=nombre,descripcion=descripcion,producto=id_producto)
+                        continue
 
 
                     elif (var[0:11]=="d3scr1pc10n"):
-                        pass
-
-                    else:
-
-                        if (var[0:6]=="c4mp0_"):
-                            campo = var[6:]
-                        else:
-                            campo = var
-
-                        campo = campo.replace("_"," ")
-                        print "Lo imprimes: " + campo
-                        id_camp = db(db.CAMPO.nombre==campo).select().first().id_campo
-                        print id_camp
-                        valor = getattr(form.vars ,var)
-                        db.PRODUCTO_TIENE_CAMPO.insert(id_prod=id_producto,id_campo=id_camp,valor_campo= valor)
-
+                        continue
+  
                 except Exception, e:
                     print "Exception: "
                     print e
+
+                try:
+                    if (var[0:6]=="c4mp0_"):
+                        campo = var[6:]
+                    else:
+                        campo = var
+                except Exception, e:
+                    print "Exception: "
+                    print e
+                    campo = var
+
+                campo = campo.replace("_"," ")
+                print "Lo imprimes: " + campo
+                id_camp = db(db.CAMPO.nombre==campo).select().first().id_campo
+                print id_camp
+                valor = getattr(form.vars ,var)
+                db.PRODUCTO_TIENE_CAMPO.insert(id_prod=id_producto,id_campo=id_camp,valor_campo= valor)
 
 
         redirect(URL('gestionar'))
@@ -251,8 +255,12 @@ def modificar():
     fecha_max = str(now.year) + mes + dia
 
     # Obtenemos la actividad para mostrarla en el html
-    producto = db(db.PRODUCTO.id_producto==id_producto).select().first()    
+    producto = db(db.PRODUCTO.id_producto==id_producto).select().first()
+    query = "SELECT id_comprobante, descripcion FROM COMPROBANTE WHERE producto="+str(id_producto)+";"
+    comprobantes = db.executesql(query)
+
     tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == producto.id_tipo).select().first()
+
     
     nombre_actividad = tipo_actividad.nombre
     descripcion_actividad = tipo_actividad.descripcion
@@ -285,13 +293,13 @@ def modificar():
         tipo_campo = rows_campo.tipo_campo
 
         if obligatorio:
-            if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',label=nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
-            elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string',label=nombre+" (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
-            elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',label=nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX')]))
-            elif tipo_campo in ['Documento']:         fields.append(Field(nombre,'upload',label=nombre+" (*)",uploadfolder=os.path.join(request.folder,'uploads'),requires=[IS_NOT_EMPTY(error_message='Debe subirse un archivo')]))
-            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',label=nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{2}-\d{2}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx')]))
-            elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',label=nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
-            elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',label=nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
+            if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
+            elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
+            elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX')]))
+            elif tipo_campo in ['Documento']:         fields.append(Field(nombre,'upload',label=rows_campo.nombre+" (*)",uploadfolder=os.path.join(request.folder,'uploads'),requires=[IS_NOT_EMPTY(error_message='Debe subirse un archivo')]))
+            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{2}-\d{2}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx')]))
+            elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
+            elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
             elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',label=nombre+" (*)",requires=IS_NOT_EMPTY()))
                 
         else:
@@ -306,31 +314,11 @@ def modificar():
 
         valores[nombre]=row.valor_campo
 
-    # Permite asignarle nombre a los input de comprobantes
-    grid = SQLFORM.grid(db.COMPROBANTE.producto == id_producto, onvalidation=validate, upload=upload)
+    for i in range(5):
+        fields.append(Field("c0mpr0bant3_"+str(i+1), 'upload', autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), label=''))  
+        fields.append(Field("d3scr1pc10n_comprobante_"+str(i+1), 'string', label="Descripcion")) 
 
-    '''name_comprobante = 0
-    for comprobante in comprobantes:
-        name_comprobante += 1
-        nombre = "c0mpr0bant3_"+str(name_comprobante)
-        descripcion = "d3scr1pc10n_comprobante_"+str(name_comprobante)
-
-        fields.append(Field(nombre, 'upload', autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), label='Comprobante '+str(name_comprobante)))  
-        fields.append(Field(descripcion, 'string', label="Descripcion")) 
-
-        valores[nombre]=comprobante.archivo
-        valores[descripcion]=comprobante.descripcion
-
-    while (name_comprobante < 5):
-        name_comprobante += 1
-        nombre = "c0mpr0bant3_"+str(name_comprobante)
-        descripcion = "d3scr1pc10n_comprobante_"+str(name_comprobante)
-
-        fields.append(Field(nombre, 'upload', autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), label='Comprobante '+str(name_comprobante)))  
-        fields.append(Field(descripcion, 'string', label="Descripcion")) '''
-
-
-
+    
     form=SQLFORM.factory(*fields, uploads=URL('download'))
     form.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
     form.element(_type='submit')['_value']="Modificar"
@@ -354,19 +342,42 @@ def modificar():
         print "listo 2"
 
         for var in form.vars:
+            try:
+                if (var[0:11]=="c0mpr0bant3"):
+                    numero_comprobante = var[12:13]
+                    descripcion = getattr(form.vars ,'d3scr1pc10n_comprobante_'+ numero_comprobante)
+                    nombre = getattr(form.vars ,var)
+                    if nombre!='':
+                        db.COMPROBANTE.insert(archivo=nombre,descripcion=descripcion,producto=id_producto)
+                    continue
+
+
+                elif (var[0:11]=="d3scr1pc10n"):
+                    continue
+
+            except Exception, e:
+                print "Exception: "
+                print e
+
             print "trabajare con: " + var
             valor_anterior = valores[var]
             print "valor anterior: " + str(valor_anterior)
             print "entrara " + str(not(var in no))
             if not(var in no):
+
                 try:
                     if (var[0:6]=="campo_"):
                         campo = var[6:]
-                except:
-                    pass
+                    else:
+                        campo = var
+                except Exception,e:
+                    print "Exception: "
+                    print e
+                    campo = var
+
                 print "var:" + var
                 valor_nuevo = getattr(form.vars ,var)
-                print "El valor es: " + valor_nuevo
+                print "El valor es: " + str(valor_nuevo)
                 if valor_nuevo != valor_anterior:
                     campo = campo.replace("_"," ")
                     id_campo = db(db.CAMPO.nombre==campo).select().first().id_campo
@@ -387,44 +398,9 @@ def modificar():
                 else:
                     print "next "+ str(var)
 
-
         redirect(URL('gestionar'))
 
     return locals()
-
-def download():
-    if not request.args:
-        raise HTTP(404)
-    name = request.args[-1]
-    field = db["comprobante"]["archivo"]
-    try:
-        (filename, archivo) = field.retrieve(name)
-    except IOError:
-        raise HTTP(404)
-    response.headers["Content-Type"] = c.contenttype(name)
-    response.headers["Content-Disposition"] = "attachment; filename=%s" % name
-    stream = response.stream(archivo, chunk_size=64*1024, request=request)
-    raise HTTP(200, stream, **response.headers)
-
-def link(): 
-    return response.download(request,db,attachment=False)
-
-def store_file(file, filename=None, path=None):
-    path = "applications/SiraDex/uploads"
-    if not os.path.exists(path):
-         os.makedirs(path)
-    pathfilename = os.path.join(path, filename)
-    dest_file = open(pathfilename, 'wb')
-    try:
-            shutil.copyfileobj(file, dest_file)
-    finally:
-            dest_file.close()
-    return filename
-
-def retrieve_file(filename, path=None):
-    path = "applications/SiraDex/uploads"
-    return (filename, open(os.path.join(path, filename), 'rb'))
-
 
 def eliminar():
     id_act = int(request.args(0))
@@ -507,52 +483,121 @@ def seleccion_actividad():
 
     return respuesta
 
+def get_comprobante():
+    if not request.args:
+        raise HTTP(404)
+    query = "SELECT archivo FROM COMPROBANTE WHERE id_comprobante="+request.args(0)+";"
+    comprobante = db.executesql(query)
 
-'''
-def agregar():
-    if session.usuario != None:
-        if(session.usuario["tipo"] == "DEX"):
-            admin = 2
-        elif(session.usuario["tipo"] == "Administrador"):
-            admin = 1
-        else:
-            admin = 0
-    else:
-        redirect(URL(c ="default",f="index"))
+    pdf = os.path.join(request.folder,'uploads',comprobante[0][0][0:22],comprobante[0][0][23:25],comprobante[0][0])
+    data = open(pdf,"rb").read()
 
-    # Para la fecha maxima de realizacion
-    now = datetime.datetime.now()
-    if now.month < 10 :
-        mes = "-0" +  str(now.month)
-    else:
-        mes = "-" +  str(now.month)
-    if now.day < 10 :
-        dia = "-0" +  str(now.day)
-    else:
-        dia = "-" +  str(now.month)
-    fecha_max = str(now.year) + mes + dia
+    response.headers['Content-Type']='application/pdf'
+    return data
 
-    # Lista de programas para listarlos en el select
-    programas =  db(db.PROGRAMA).select(db.PROGRAMA.nombre,db.PROGRAMA.id_programa).as_list()
-    
-    
-    formulario = SQLFORM(db.PRODUCTO)
-    if formulario.process(session=None, formname='crear_tipo').accepted:
-        print formulario.vars
-        redirect(URL('gestionar'))
-        id = db.PRODUCTO.insert(**db.PRODUCTO._filter_fields(formulario.vars))
-        formulario.vars.PRODUCTO=id
-        id = db.PRODUCTO_TIENE_CAMPO.insert(**db.PRODUCTO_TIENE_CAMPO._filter_fields(formulario.vars))
-    elif formulario.errors:
-        print "error"
-        formulario.errors.fecha = T('mala fecha')
-        print formulario.errors
-    else:
-        print "fatal"
+def descargar_comprobante():
+    if not request.args:
+        raise HTTP(404)
+    query = "SELECT archivo FROM COMPROBANTE WHERE id_comprobante="+request.args(0)+";"
+    comprobante = db.executesql(query)
 
-  
-    return locals()
-'''
+    pdf = os.path.join(request.folder,'uploads',comprobante[0][0][0:22],comprobante[0][0][23:25],comprobante[0][0])
+    data = open(pdf,"rb").read()
+
+    response.headers['Content-Type']='application/pdf'
+    response.headers["Content-Disposition"] = "attachment; filename=%s" % comprobante[0][0]
+    return data
+
+#Funcion para exportar PDF de un producto
+def get_pdf():
+
+    producto = db.PRODUCTO(request.args(0))
+    creador= db(db.USUARIO.ci == producto .ci_usu_creador).select()[0]
+    tmpfilename = os.path.join(request.folder,'private',str(uuid4()))
+    doc = SimpleDocTemplate(tmpfilename)
+    elements = []
+
+    # Definimos los estilos para el documento
+    estilo = getSampleStyleSheet()
+
+    estilo_titulo = estilo["Normal"]
+    estilo_titulo.alignment = TA_CENTER
+    estilo_titulo.fontName = "Helvetica"
+    estilo_titulo.fontSize = 12
+    estilo_titulo.leading = 15
+
+    estilo_tabla = estilo["BodyText"]
+    estilo_tabla.alignment = TA_LEFT
+    estilo_tabla.fontName = "Helvetica"
+    estilo_tabla.fontSize = 10
+    estilo_tabla.leading = 12
+
+    estilo_footer = estilo["Italic"]
+    estilo_footer.alignment = TA_CENTER
+    estilo_footer.fontName = "Helvetica"
+    estilo_footer.fontSize = 10
+    estilo_footer.leading = 12
+
+    # Agrega el footer al documento
+    def addFooter(canvas, doc):
+
+        footer1 = Paragraph('''<br/>Sartenejas, Baruta, Edo. Miranda - Apartado 89000 Cable Unibolivar Caracas Venezuela. Teléfono +58 0212-9063111
+                               <br/>Litoral. Camurí Grande, Edo. Vargas Parroquia Naiguatá. Teléfono +58 0212-9069000   ''', estilo_footer)
+        w, h = footer1.wrap(doc.width, doc.bottomMargin)
+        footer1.drawOn(canvas, doc.leftMargin, h)
+
+
+    usb_logo_url = os.path.join(request.folder, 'static/images','usblogo.png')
+    usblogo = Image(usb_logo_url)
+    usblogo.drawHeight = 70
+    usblogo.drawWidth  = 100
+
+    elements.append(usblogo)
+    elements.append(Paragraph('Universidad Simón Bolívar' , estilo_titulo))
+    elements.append(Paragraph('Deacanato de Extensión' , estilo_titulo))
+    elements.append(Paragraph('Sistema de Registro de Actividades de Extensión (SIRADEX)' , estilo_titulo))
+    elements.append(Paragraph('<br/><br/>DATOS DEL PRODUCTO' , estilo_titulo))
+
+    data = [
+    [''],
+    ['', Paragraph('<b>NOMBRE DEL PRODUCTO:</b> ', estilo_tabla),  str(producto.nombre), ''],
+    ['', Paragraph('<b>REALIZADO POR: </b>' , estilo_tabla),  str(creador.nombres +' '+ creador.apellidos),''],
+    ['', Paragraph('<b>CI:</b> ' , estilo_tabla),  str(creador.ci),''],
+    ['', Paragraph('<b>DESCRIPCIÓN:</b> ', estilo_tabla) ,  str (producto.descripcion), ''],
+    ['', Paragraph('<b>LUGAR DE REALIZACIÓN:</b>', estilo_tabla),  str (producto.lugar), ''],
+    ['', Paragraph('<b>FECHA DE CREACIÓN:</b> ', estilo_tabla) ,  str (producto.fecha_realizacion), ''],
+    ['', Paragraph('<b>ÚLTIMA FECHA DE MODIFICACIÓN: </b>' , estilo_tabla) ,  str (producto.fecha_modificacion), ''],
+    ['', Paragraph('<b>STATUS DEL PRODUCTO: </b>', estilo_tabla) ,  str (producto.estado), '']
+    ]
+
+    t=Table(data, colWidths=(2*inch))
+
+    elements.append(t)
+
+    # construimos el documento
+    doc.build(elements, onFirstPage=addFooter)
+    data = open(tmpfilename,"rb").read()
+    os.unlink(tmpfilename)
+    response.headers['Content-Type']='application/pdf'
+
+    return dat
+
+def eliminar_comprobante():
+    if not request.args:
+        raise HTTP(404)
+    id_comprobante = request.args(0)
+    query = "SELECT archivo FROM COMPROBANTE WHERE id_comprobante="+id_comprobante+";"
+    comprobante = db.executesql(query)
+
+    pdf = os.path.join(request.folder,'uploads','no_table.c0mpr0bant3_1',comprobante[0][0][23:25],comprobante[0][0])
+    try:
+        os.unlink(pdf)
+    except Exception,e:
+        print "Exception: "
+        print e
+
+
+    db(db.COMPROBANTE.id_comprobante == id_comprobante).delete()
 
 
 #Funcion para exportar PDF de un producto

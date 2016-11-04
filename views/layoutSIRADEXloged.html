@@ -17,25 +17,42 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
-      <form class="navbar-form navbar-left" role="search">
+
+            <!--Opciones administrador-->
+            {{if admin == -1:}}
+      <ul class="nav navbar-nav navbar-right">
+               <li class="activo">
+                <!-- EN SERVIDOR -->
+                   <a  id = login 
+                            class ='btn btn-xs' 
+                            href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas'>
+                <!-- EN DESARROLLO -->
+<!--                        <a  class ='btn btn-xs ' 
+                            href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas'>-->
+                        Iniciar Sesión
+                    </a>
+                </li>            
+            {{else:}}
+      <form class="navbar-form navbar-left" role="search" action="{{=URL(c='busq_val',f='busqueda')}}" method="post">
         <div class="input-group">
           <input    type="text"
                     class="form-control"
                     id="form-busqueda"
-                    placeholder="Divierte con nuestro buscador">
+                    placeholder="Divierte con nuestro buscador"
+                    name="Producto">
 
         <span class="input-group-btn">
         <button type="submit"
-                class="btn btn-default"
-                id="btn-lupa">
-                O
+                class="btn btn-default glyphicon glyphicon-search"
+                id="btn-lupa"
+                style="top:0px !important;">
         </button>
         </span>
         </div>
       </form>
 
       <ul class="nav navbar-nav navbar-right">
-            <!--Opciones administrador-->
+
             {{ if admin in [1,2]: }}
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="{{=URL(c='default', f='setVista', args=[2])}}"> Sistema</a>
@@ -90,32 +107,9 @@
                         </li>
                     </ul>
             </li>
+            {{ pass }}
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-{{end}}
-
-{{block footer}}
-<!--         <div class="row">
-    <div class="col-md-3 col-md-offset-1">
-        AQUI VA OPCIONES DE COLORES
-            <div class="btn-group dropup">
-              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Tema <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu">
-                <li><a href="#">Default</a></li>
-                <li role="separator" class="divider"></li>
-                <li><a href="#">Amarillo</a></li>
-                <li><a href="#">Rosa</a></li>
-                <li><a href="#">Verde</a></li>
-              </ul>
-            </div>
-    </div>
-    <div class="col-md-7"> -->
-
-    <div id="footer" class="container-fluid">
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1">
 {{end}}
