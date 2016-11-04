@@ -8,23 +8,31 @@ def busqueda():
     if request.vars.Programa == "all" and request.vars.TipoActividad == "all":
         sql = "SELECT descripcion,nombre,id_tipo FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
          + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor + "%\') AND estado=\'Validada\';"
-
         productos = db.executesql(sql)
 
     elif request.vars.Programa != "all" and request.vars.TipoActividad == "all":
         sql = "SELECT descripcion,nombre,id_tipo FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
          + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
-         + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + request.vars.Programa + ") AND estado=\'Validada\';"
+         + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + str(request.vars.Programa)+ ") AND estado=\'Validada\';"
 
         productos = db.executesql(sql)
 
     elif request.vars.Programa == "all" and request.vars.TipoActividad != "all":
         sql = "SELECT descripcion,nombre,id_tipo FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
          + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
-         + "%\') AND id_tipo=\'" + request.vars.TipoActividad + "\' AND estado=\'Validada\';"
+         + "%\') AND id_tipo=\'" + str(request.vars.TipoActividad) + "\' AND estado=\'Validada\';"
 
         productos = db.executesql(sql)
 
+    elif request.vars.Programa == None and request.vars.TipoActividad == None:
+        if (session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador"):
+          sql = "SELECT descripcion,nombre,id_tipo FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
+           + "%\' ;"
+        elif (session.usuario["tipo"] == "Usuario"):
+          sql = "SELECT descripcion,nombre,id_tipo FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
+          + "%\' AND estado=\'Validada\';"
+
+        productos = db.executesql(sql)
     else:
         sql = "SELECT descripcion,nombre,id_tipo FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
          + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\

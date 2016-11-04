@@ -17,12 +17,13 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
-      <form class="navbar-form navbar-left" role="search">
+      <form class="navbar-form navbar-left" role="search" action="{{=URL(c='busq_val',f='busqueda')}}" method="post">
         <div class="input-group">
           <input    type="text"
                     class="form-control"
                     id="form-busqueda"
-                    placeholder="Divierte con nuestro buscador">
+                    placeholder="Divierte con nuestro buscador"
+                    name="Producto">
 
         <span class="input-group-btn">
         <button type="submit"
