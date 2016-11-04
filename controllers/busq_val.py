@@ -56,15 +56,12 @@ def busqueda():
 # Mostrar productos
 def ver_producto():
   if session.usuario != None:
-    if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
-      if(session.usuario["tipo"] == "DEX"):
-        admin = 2
-      elif(session.usuario["tipo"] == "Administrador"):
-        admin = 1
-      else:
-        admin = 0
+    if(session.usuario["tipo"] == "DEX"):
+      admin = 2
+    elif(session.usuario["tipo"] == "Administrador"):
+      admin = 1
     else:
-      redirect(URL(c ="default",f="vMenuPrincipal"))
+      admin = 0
   else:
     redirect(URL(c ="default",f="index"))
 
@@ -163,15 +160,12 @@ def ver_producto():
 def gestionar_validacion():
 
     if session.usuario != None:
-        if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
-            if(session.usuario["tipo"] == "DEX"):
-                admin = 2
-            elif(session.usuario["tipo"] == "Administrador"):
-                admin = 1
-            else:
-                admin = 0
-        else:
-            redirect(URL(c ="default",f="vMenuPrincipal"))
+      if(session.usuario["tipo"] == "DEX"):
+          admin = 2
+      elif(session.usuario["tipo"] == "Administrador"):
+          admin = 1
+      else:
+          admin = 0
     else:
         redirect(URL(c ="default",f="index"))
 
