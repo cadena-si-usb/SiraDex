@@ -62,8 +62,13 @@
                 {{if producto.estado=='En espera':}}
                 <center>
 
-                    <a href="{{=URL(f='validar', args=[producto.id_producto])}}">
-                        <button id="button_validar" type="button" class="btn btn-default btn-border" style="color:#7CB342" >
+                    <a href="#">
+                        <button id="button_validar" type="button" class="btn btn-default btn-border"
+                                                    data-toggle="modal"
+                                                    data-target="#modalValidarProducto"
+                                                    data-nombre="{{=producto.nombre}}"
+                                                    data-id-producto="{{=producto.id_producto}}"
+                                                    style="color:#7CB342">
                             Validar <span class="glyphicon glyphicon-ok" aria-hidden="true" ></span>
                         </button>
                     </a>
@@ -88,6 +93,28 @@
             </div>
         </div>
     </div>
+
+  <!-- Modal Validar-->
+  <div id="modalValidarProducto" class="modal fade" role="dialog"  data-hayErrores="{{=hayErrores}}">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <center><h4 class="modal-title">Validar Producto</h4><center>
+        </div>
+        <div class="modal-body">
+            <center>
+                <p>  Usted esta a punto de validar este producto. </p>
+                <p>  Puede modificar el nombre del producto por uno mas adecuado si lo desea. Este nombre
+                     Sera almacenado permanentemente en el sistema y sera el visible en las busquedas.
+                </p>
+                <p>  {{=formulario_validar}} </p>
+            </center>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Modal Rechazar-->
   <div id="modalRechazarProducto" class="modal fade" role="dialog">
@@ -114,11 +141,21 @@
 
 {{block script}}
     <script>
-        /*$(document).ready(function(){
-            $("#button_validar").on("click", function(){
-                $("#div_validar").removeClass("hidden");
-            });
-        });*/
+
+        var hayErrores = $("#modalValidarProducto").attr("data-hayErrores");
+        hayErrores = hayErrores.replace(/<Storage |>/gi, "").replace(/'/g, '"')
+
+        if (hayErrores != '{}') {
+          $('#modalValidarProducto').modal('show');
+        }
+
+        // Pasamos los argumentos para validar el producto
+        $('#modalValidarProducto').on('show.bs.modal', function(e){
+            var id_producto = $(e.relatedTarget).data('id-producto');
+            var nombre       = $(e.relatedTarget).data('nombre');
+            $(e.currentTarget).find('input[name="id_producto"]').val(id_producto);
+            $(e.currentTarget).find('input[name="nombre"]').val(nombre);
+        });
 
         // Pasamos los argumentos para rechazar el producto
         $('#modalRechazarProducto').on('show.bs.modal', function(e){
