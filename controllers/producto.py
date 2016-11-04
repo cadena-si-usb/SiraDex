@@ -122,10 +122,10 @@ def agregar():
     descripcion_actividad = tipo_actividad.descripcion
 
     fields = []
-    fields.append(Field('nombre','string',label="Nombre (*)",requires=[IS_NOT_EMPTY(),IS_LENGTH(50)]))
-    fields.append(Field('descripcion','string',label="Descripcion (*)",requires=[IS_NOT_EMPTY(),IS_LENGTH(250)]))
-    fields.append(Field('fecha_realizacion','date',label="Fecha de Realizacion (*)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
-    fields.append(Field('lugar','string',label="Lugar (*)",requires=[IS_NOT_EMPTY(),IS_LENGTH(50)]))
+    fields.append(Field('nombre','string',label="Nombre (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(50)]))
+    fields.append(Field('descripcion','string',label="Descripcion (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(250)]))
+    fields.append(Field('fecha_realizacion','date',label="Fecha de Realizacion (*)",requires=[IS_NOT_EMPTY(error_message='Debe seleccionar una fecha'),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
+    fields.append(Field('lugar','string',label="Lugar (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(50)]))
 
     for row in campos_id:
         rows_campo = db(db.CAMPO.id_campo == row.id_campo).select().first()
@@ -163,7 +163,7 @@ def agregar():
 
     
     for i in range(5):
-        fields.append(Field("c0mpr0bant3_"+str(i+1), 'upload', autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), label='Archivo'))  
+        fields.append(Field("c0mpr0bant3_"+str(i+1), 'upload', autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), label=''))  
         fields.append(Field("d3scr1pc10n_comprobante_"+str(i+1), 'string', label="Descripcion")) 
 
 
@@ -315,7 +315,7 @@ def modificar():
         valores[nombre]=row.valor_campo
 
     for i in range(5):
-        fields.append(Field("c0mpr0bant3_"+str(i+1), 'upload', autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), label='Archivo'))  
+        fields.append(Field("c0mpr0bant3_"+str(i+1), 'upload', autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), label=''))  
         fields.append(Field("d3scr1pc10n_comprobante_"+str(i+1), 'string', label="Descripcion")) 
 
     

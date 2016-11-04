@@ -22,6 +22,13 @@
 {{block script}}
 	<script type="text/javascript">
 		$(document).ready(function () {
+			$(":file").filestyle({
+		    buttonBefore: true,
+		    buttonName: "btn-primary",
+		    placeholder: "Sin Archivo",
+		    buttonText: "  Adjuntar",
+		  });
+
 			var comprobante_mostrado = {{=len(comprobantes)}};
 			var error_comprobante = 0;
 			var error_descripcion = 0;
