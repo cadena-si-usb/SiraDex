@@ -76,12 +76,24 @@ def enviar_correo_rechazo(mail, usuario, producto, razon):
 									</p>
 									<p> Saludos cordiales.</p>
 								'''
-								
+
 		body   =  get_plantilla_html(mensaje)
 
 		mail.send(email, asunto, body)
 
 
+def enviar_correo_contacto(mail, usuario, asunto, mensaje):
+		email  = usuario['email']
+		asunto = '[SIRADEX] ' + asunto
+
+		# Mensaje del Correo
+		mensaje  = '''<h1>Estimado/a %(nombres)s:</h1>
+									<p>%(mensaje)s
+									</p>''' % {'nombres': usuario['nombres'], 'mensaje' : mensaje}
+
+		body   =  get_plantilla_html(mensaje)
+
+		mail.send(email, asunto, body)
 
 '''
 		Envia un correo de Bienvenida a SiraDex.
@@ -100,7 +112,7 @@ def enviar_correo_bienvenida(mail, usuario):
 								</p>''' % {'nombres': usuario['nombres']}
 
 	mensaje +=  '''
-								<p> 
+								<p>
 									Ahora podrá subir sus productos y esperar la validación por parte de los miembros de la DEX.
 								</p>
 								<p>
@@ -109,7 +121,7 @@ def enviar_correo_bienvenida(mail, usuario):
 								</p>
 								<p> Saludos cordiales.</p>
 							'''
-								
+
 	body   =  get_plantilla_html(mensaje)
 
 	mail.send(email, asunto, body)

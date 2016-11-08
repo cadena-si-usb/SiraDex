@@ -61,6 +61,7 @@ def gestionar():
 	formulario = SQLFORM.factory(
 		Field('programa', requires=IS_NOT_EMPTY()),
 		Field('id_tipo',  requires=IS_NOT_EMPTY()))
+
 	if formulario.process(session=None, formname='crear_tipo').accepted:
 		redirect(URL(agregar,args=[formulario.vars.id_tipo]))
 	elif formulario.errors:
@@ -187,8 +188,6 @@ def agregar():
 
 
 	return locals()
-
-
 
 def modificar():
 	if session.usuario != None:
