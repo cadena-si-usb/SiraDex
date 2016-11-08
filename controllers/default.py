@@ -53,7 +53,7 @@ def login_cas():
         pass
     try:
         import urllib2, ssl
-        #ssl._create_default_https_context = ssl._create_unverified_context
+        ssl._create_default_https_context = ssl._create_unverified_context
 
         url = "https://secure.dst.usb.ve/validate?ticket="+\
         request.vars.getfirst('ticket') +\
@@ -117,10 +117,10 @@ def login_cas():
             correo_alter= None,
             telefono=session.usuario["phone"],
             tipo = "Usuario")
-            
+
             # Se envia correo de bienvenida al usuario
             enviar_correo_bienvenida(mail,datos_usuario)
-            
+
             redirect(URL('vRegistroUsuario'))
 
 
