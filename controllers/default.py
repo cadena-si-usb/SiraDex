@@ -12,6 +12,7 @@ import datetime
 import re
 from usbutils import get_ldap_data, random_key
 import urllib2
+from notificaciones import *
 ### required - do no delete
 def user(): return dict(form=auth())
 def download(): return response.download(request,db)
@@ -52,7 +53,7 @@ def login_cas():
         pass
     try:
         import urllib2, ssl
-        ssl._create_default_https_context = ssl._create_unverified_context
+        #ssl._create_default_https_context = ssl._create_unverified_context
 
         url = "https://secure.dst.usb.ve/validate?ticket="+\
         request.vars.getfirst('ticket') +\
@@ -100,8 +101,13 @@ def login_cas():
             else:
                 redirect(URL('perfil'))
         else:
+
             session.usuario['tipo'] = "Usuario"
             session.usuario['alternativo'] = None
+           # Para el envio de notificacion
+            datos_usuario = {'nombres' : session.usuario['first_name']}
+            datos_usuario['email'] = session.usuario['email']
+
 
             db.USUARIO.insert(ci=session.usuario["cedula"],  # Lo insertamos en la base de datos.
             usbid=session.usuario["usbid"],
@@ -111,6 +117,10 @@ def login_cas():
             correo_alter= None,
             telefono=session.usuario["phone"],
             tipo = "Usuario")
+            
+            # Se envia correo de bienvenida al usuario
+            enviar_correo_bienvenida(mail,datos_usuario)
+            
             redirect(URL('vRegistroUsuario'))
 
 
