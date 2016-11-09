@@ -18,19 +18,19 @@ def busqueda():
 
     if request.vars.Programa == "all" and request.vars.TipoActividad == "all":
         sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
-         + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor + "%\') AND estado=\'Validada\';"
+         + "%\' AND usbid_usu_creador IN (SELECT usbid FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor + "%\') AND estado=\'Validada\';"
         productos = db.executesql(sql)
 
     elif request.vars.Programa != "all" and request.vars.TipoActividad == "all":
         sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
-         + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
+         + "%\' AND usbid_usu_creador IN (SELECT usbid FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
          + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + str(request.vars.Programa)+ ") AND estado=\'Validada\';"
 
         productos = db.executesql(sql)
 
     elif request.vars.Programa == "all" and request.vars.TipoActividad != "all":
         sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
-         + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
+         + "%\' AND usbid_usu_creador IN (SELECT usbid FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
          + "%\') AND id_tipo=\'" + str(request.vars.TipoActividad) + "\' AND estado=\'Validada\';"
 
         productos = db.executesql(sql)
@@ -46,7 +46,7 @@ def busqueda():
         productos = db.executesql(sql)
     else:
         sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
-         + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
+         + "%\' AND usbid_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
          + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + str(request.vars.Programa)\
          + ") AND id_tipo=\'" + str(request.vars.TipoActividad) + "\' AND estado=\'Validada\';"
 
@@ -67,7 +67,7 @@ def ver_producto():
 
   id_producto = int(request.args(0))
   producto = db(db.PRODUCTO.id_producto == id_producto).select().first()
-  usuario_producto = db(db.USUARIO.ci == producto.ci_usu_creador).select().first()
+  usuario_producto = db(db.USUARIO.usbid == producto.usbid_usu_creador).select().first()
   usuario_nombre = usuario_producto.nombres + " " + usuario_producto.apellidos
   tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == producto.id_tipo).select().first()
   programa_nombre = db(db.PROGRAMA.id_programa == tipo_actividad.id_programa).select().first().nombre
@@ -128,7 +128,7 @@ def ver_producto():
       producto =  db(db.PRODUCTO.id_producto == id_producto).select().first()
 
       # obtenemos el usuario que realizo el producto
-      usuario = db(db.USUARIO.ci == producto.ci_usu_creador).select().first()
+      usuario = db(db.USUARIO.usbid == producto.usbid_usu_creador).select().first()
 
       # parseamos los datos para la notificacion
       datos_usuario = {'nombres' : usuario.nombres}
@@ -220,7 +220,7 @@ def validar():
     producto =  db(db.PRODUCTO.id_producto == id_act).select().first()
 
     # obtenemos el usuario que realizo el producto
-    usuario = db(db.USUARIO.ci == producto.ci_usu_creador).select().first()
+    usuario = db(db.USUARIO.usbid == producto.usbid_usu_creador).select().first()
 
     # parseamos los datos para la notificacion
     datos_usuario = {'nombres' : usuario.nombres}

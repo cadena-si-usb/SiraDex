@@ -175,7 +175,7 @@ def perfil():
             Field('Correo_Alternativo', default=session.usuario["alternativo"],writable=False),
             readonly=True)
 
-        rows = db(db.PRODUCTO.ci_usu_creador==session.usuario['cedula']).select()
+        rows = db(db.PRODUCTO.usbid_usu_creador==session.usuario['usbid']).select()
         productos = {
                     "Validados":[],
                     "Rechazados":[],
@@ -200,10 +200,10 @@ def grafica():
 
         query = "select programa.nombre, programa.abreviacion, count(producto.nombre)" + \
         " from ((programa inner join tipo_actividad on programa.id_programa=tipo_actividad.id_programa)" + \
-        " inner join producto on producto.id_tipo=tipo_actividad.id_tipo and producto.ci_usu_creador=\'"+ session.usuario["cedula"] +\
+        " inner join producto on producto.id_tipo=tipo_actividad.id_tipo and producto.usbid_usu_creador=\'"+ session.usuario["usbid"] +\
         "\' and producto.estado=\'Validada\') group by programa.nombre, programa.abreviacion;"
 
-        query2 = "select count(producto.nombre) from producto where producto.ci_usu_creador=\'"+ session.usuario["cedula"]+"\' and producto.estado=\'Validada\';"
+        query2 = "select count(producto.nombre) from producto where producto.usbid_usu_creador=\'"+ session.usuario["usbid"]+"\' and producto.estado=\'Validada\';"
 
         datos = db.executesql(query)
         num_productos = db.executesql(query2)[0][0]
