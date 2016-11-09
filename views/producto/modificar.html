@@ -40,8 +40,9 @@
 		    placeholder: "Sin Archivo",
 		    buttonText: "  Adjuntar",
 		  });
-
-			var comprobante_mostrado = {{=len(comprobantes)}};
+			var comprobantes_eliminados = 0;
+			var comprobantes_bd = {{=len(comprobantes)}};
+			var comprobante_mostrado = comprobantes_bd;
 			var error_comprobante = 0;
 			var error_descripcion = 0;
 			var cantidad_comprobantes = 5;
@@ -70,7 +71,8 @@
 						    					</td>\
 						    					<td class="center-vertically">\
 	                                    			<center>\
-	                                   					<a onClick = "if(confirm(\'¿Está seguro de que desea eliminar este comprobante?\')) {window.location.href=\'{{=URL(f="eliminar_comprobante", args=[comprobante[0], id_producto])}}\';comprobante_mostrado=comprobante_mostrado-1}">\
+	                                   					<a onClick = "if(confirm(\'¿Está seguro de que desea eliminar este comprobante?\')) {window.location.href=\'{{=URL(f="eliminar_comprobante", args=[comprobante[0], id_producto])}}\';comprobante_mostrado=comprobante_mostrado-1\
+	                                   						;comprobantes_eliminados += 1;}">\
 	                                                        <span class="glyphicon glyphicon-remove red"></span>\
 	                                    				</a>\
 	                                    			</center>\
@@ -144,6 +146,7 @@
 				if(ext != 'pdf') {
 				    alert('solo se permite cargar archivos PDF');
 				    $(this).val('');
+				    $(this).filestyle('clear');
 				}
 			});
 
@@ -159,12 +162,10 @@
 			    			return false;
 			    		}
 			    		infor_cargada = true;
-			    		console.log('#no_table_c0mpr0bant3_'+i+'= '+ $('#no_table_c0mpr0bant3_'+i).val());
-			    		console.log('##no_table_d3scr1pc10n_comprobante_'+i+'= '+ $('#no_table_d3scr1pc10n_comprobante_'+i).val());
 					}
 				}
 
-				if (!infor_cargada || comprobante_mostrado==0){
+				if (!infor_cargada && comprobantes_eliminados==comprobantes_bd){
 					alert("Tiene que adjuntar al menos un comprobante");
 					return false;
 				}

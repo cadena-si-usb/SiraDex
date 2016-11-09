@@ -405,6 +405,17 @@ def modificar():
 def eliminar():
     id_act = int(request.args(0))
 
+    query = "SELECT archivo FROM COMPROBANTE WHERE producto="+str(id_act)+";"
+    comprobantes = db.executesql(query)
+
+    for  i in range (len(comprobantes)):
+        pdf = os.path.join(request.folder,'uploads',comprobantes[i][0][0:22],comprobantes[i][0][23:25],comprobantes[i][0])
+        try:
+            os.unlink(pdf)
+        except Exception,e:
+            print "Exception: "
+            print e
+    
 
     set_tiene_campo = db(db.PRODUCTO_TIENE_CAMPO.id_prod == id_act)
     set_tiene_campo.delete()
@@ -589,7 +600,7 @@ def eliminar_comprobante():
     query = "SELECT archivo FROM COMPROBANTE WHERE id_comprobante="+id_comprobante+";"
     comprobante = db.executesql(query)
 
-    pdf = os.path.join(request.folder,'uploads','no_table.c0mpr0bant3_1',comprobante[0][0][23:25],comprobante[0][0])
+    pdf = os.path.join(request.folder,'uploads',comprobante[0][0][0:22],comprobante[0][0][23:25],comprobante[0][0])
     try:
         os.unlink(pdf)
     except Exception,e:
