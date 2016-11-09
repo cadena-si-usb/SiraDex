@@ -59,28 +59,21 @@
                 <ul class="dropdown-menu" style="right:auto">
                     {{if admin == 1:}}
                     <li><a href="#">Consultar Log</a></li>
-
-                    <li class="dropdown-submenu">
-                        <a href="{{=URL(c='backup', f='index')}}" class="dropdown-toggle" data-toggle="dropdown">Backup</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Ver Backup</a></li>
-                            <li><a href="#">Crear Backup</a></li>
-                        </ul>
-                    </li>
+                    <li><a href="{{=URL(c='backup', f='index')}}">BackUp</a></li>
                     <li><a href="{{=URL(c='usuarios', f='gestionar')}}">Usuarios</a></li>
                     <li><a href="#">Notificaciones</a></li>
                     <li role="separator" class="divider"></li>
                     {{pass}}
 		                <li><a href="{{=URL(c='tipo_actividad', f='gestionar')}}">Tipos de Actividad</a></li>
                     <li><a href="{{=URL(c='catalogo', f='vGestionarCatalogos')}}">Catálogos</a></li>
-                    <li><a href="{{=URL(c='archivo_historico', f='gestionar')}}">Papelera</a></li>
+                    <li><a href="{{=URL(c='archivo_historico', f='gestionar') }}">Papelera</a></li>
                 </ul>
             </li>
-            <li><a href="{{=URL(c='busq_val', f='gestionar_validacion.html')}}">
+            <li><a href="{{=URL(c='busq_val', f='gestionar_validacion')}}">
                 Solicitudes
             </a></li>
 
-            <li><a href="{{=URL(c='programas', f='gestionar_programas.html')}}">
+            <li><a href="{{=URL(c='programas', f='gestionar_programas')}}">
                 Programas
             </a></li>
 
