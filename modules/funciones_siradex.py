@@ -22,7 +22,7 @@ def get_tipo_usuario():
             else:
                 admin = 0
         else:
-            redirect(URL(c ="default",f="vMenuPrincipal"))
+            redirect(URL(c ="default",f="perfil"))
     else:
         redirect(URL(c ="default",f="index"))
 

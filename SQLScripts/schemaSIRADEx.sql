@@ -257,3 +257,12 @@ CREATE TABLE LOG_SIRADEX(
              FOREIGN KEY (ci_usuario)
              REFERENCES  USUARIO(ci)
 );
+
+CREATE TABLE BACKUP(
+  id_backup INT,
+  descripcion VARCHAR(256),
+  fecha DATE
+
+  CONSTRAINT PK_BACKUP
+              PRIMARY KEY (id_backup)
+);

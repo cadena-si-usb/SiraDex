@@ -311,3 +311,11 @@ db.define_table('LOG_SIRADEX',
     primarykey=['accion','accion_fecha','accion_ip'],
     migrate=False
 );
+
+db.define_table('BACKUP',
+    Field('id_backup', type='id'),
+    Field('descripcion', type='string', lenght=256),
+    Field('fecha', type='date'),
+    primarykey=['id_backup'],
+    migrate=False
+);
