@@ -1,28 +1,9 @@
 import os
 import datetime
-from gluon import *
-
-
-def get_tipo_usuario():
-
-    # Session Actual
-    if session.usuario != None:
-      if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
-        if(session.usuario["tipo"] == "DEX"):
-          admin = 2
-        elif(session.usuario["tipo"] == "Administrador"):
-          admin = 1
-        else:
-          admin = 0
-      else:
-        admin = -10
-    else:
-      admin = -1
-    return admin
-
+from funciones_siradex import get_tipo_usuario
 
 def index():
-	admin = get_tipo_usuario()
+	admin = get_tipo_usuario(session)
 	backups = db(db.BACKUP).select()
 
 	return locals()
@@ -43,7 +24,6 @@ def generar_backup():
 
 		comando = "pg_dump -d Siradex -U Siradex -h localhost -w > " + archivo
 		resp = os.system(comando)
-
 
 def restaurar_backup():
 

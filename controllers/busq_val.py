@@ -1,20 +1,10 @@
 # -*- coding: utf-8 -*-
 from notificaciones import *
+from funciones_siradex import get_tipo_usuario,get_tipo_usuario_not_loged
 
 # Funcion para busquedas publicas
 def busqueda():
-    if session.usuario != None:
-      if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
-        if(session.usuario["tipo"] == "DEX"):
-          admin = 2
-        elif(session.usuario["tipo"] == "Administrador"):
-          admin = 1
-        else:
-          admin = 0
-      else:
-        admin = -10
-    else:
-      admin = -1
+    admin = get_tipo_usuario_not_loged(session)
 
     if request.vars.Programa == "all" and request.vars.TipoActividad == "all":
         sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
@@ -55,15 +45,7 @@ def busqueda():
 
 # Mostrar productos
 def ver_producto():
-  if session.usuario != None:
-    if(session.usuario["tipo"] == "DEX"):
-      admin = 2
-    elif(session.usuario["tipo"] == "Administrador"):
-      admin = 1
-    else:
-      admin = 0
-  else:
-    redirect(URL(c ="default",f="index"))
+  admin = get_tipo_usuario(session)
 
   id_producto = int(request.args(0))
   producto = db(db.PRODUCTO.id_producto == id_producto).select().first()
@@ -177,16 +159,7 @@ def ver_producto():
 # Vista de validaciones
 def gestionar_validacion():
 
-    if session.usuario != None:
-      if(session.usuario["tipo"] == "DEX"):
-          admin = 2
-      elif(session.usuario["tipo"] == "Administrador"):
-          admin = 1
-      else:
-          admin = 0
-    else:
-        redirect(URL(c ="default",f="index"))
-
+    admin = get_tipo_usuario(session)
 
     # Hago el query Espera
 

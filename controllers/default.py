@@ -11,6 +11,7 @@ import os
 import datetime
 import re
 from usbutils import get_ldap_data, random_key
+from funciones_siradex import get_tipo_usuario,get_tipo_usuario_not_loged
 import urllib2
 ### required - do no delete
 def user(): return dict(form=auth())
@@ -19,34 +20,12 @@ def call(): return service()
 ### end requires
 
 ## URLS DE RETORNO PARA EL CAS ##
-## Solo descomentar segun sea el caso.
-## PARA EL SERVIDOR:
-#URL_RETORNO = "http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas"
-## PARA DESSARROLLO. Cambiar el puerto 8000 si es necesario.
+# PARA EL SERVIDOR:
+# URL_RETORNO = "http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas"
+# PARA DESSARROLLO. Cambiar el puerto 8000 si es necesario.
 URL_RETORNO = "http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas"
 
-########################################################################################################
-############################################# FUNCIONES USUARIO ########################################
-########################################################################################################
-from gluon import *
-
-
-def get_tipo_usuario():
-
-    # Session Actual
-    if session.usuario != None:
-      if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
-        if(session.usuario["tipo"] == "DEX"):
-          admin = 2
-        elif(session.usuario["tipo"] == "Administrador"):
-          admin = 1
-        else:
-          admin = 0
-      else:
-        admin = 0
-    else:
-      admin = -1
-    return admin
+# FUNCIONES USUARIO
 
 def login_cas():
     if not request.vars.getfirst('ticket'):
@@ -120,51 +99,9 @@ def logout_cas():
     session.usuario = None
     return response.render()
 
-# Controlador para el registro del usuario
-def vRegistroUsuario():
-    if session.usuario != None:
-        # Se usa un formulario que muestre los datos no modificables.
-        form = SQLFORM.factory(
-            Field("USBID", default=session.usuario["usbid"],writable = False),
-            Field('Nombres',default=session.usuario["first_name"],writable = False),
-            Field('Apellidos', default=session.usuario["last_name"],writable=False),
-            readonly=True)
-
-        #Realiza las modificaciones sobre la base de datos en funcion de lo que introduzca el usuario.
-        usuarios = db(db.USUARIO).select()
-        for raw in usuarios:
-            if raw.ci == session.usuario["cedula"]:
-                forma=SQLFORM(
-                    db.USUARIO,
-                    raw,
-                    button=['Registrarse'],
-                    fields=['telefono','correo_alter'],
-                    submit_button='Registrarse',
-                    labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'})
-                break
-        if len(request.vars)!=0:
-            nuevoTelefono = request.vars.telefono
-            nuevoCorreoAlter = request.vars.correo_alter
-            db(db.USUARIO.ci == session.usuario["cedula"]).update(telefono=nuevoTelefono, correo_alter=nuevoCorreoAlter)
-            redirect(URL('perfil'))        # Redirige al usuario al menu principal.
-        return dict(form1 = form, form = forma, admin=get_tipo_usuario())
-    else:
-        redirect(URL("index"))
-
 def perfil():
     if session.usuario != None:
-
-    	if session.usuario["tipo"] == "Bloqueado":
-    	    redirect(URL("index"))
-
-        print session.usuario
-        admin = 4
-        if(session.usuario["tipo"] == "DEX"):
-            admin = 2
-        elif(session.usuario["tipo"] == "Administrador"):
-            admin = 1
-        else:
-            admin = 0
+        admin = get_tipo_usuario(session)
 
         correo_i = session.usuario["usbid"]+"@usb.ve"
 
@@ -218,34 +155,10 @@ def grafica():
             pie_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])
         return pie_chart.render()
 
-def vMenuDex():
-    if session.usuario != None:
-        if session.usuario["tipo"] == "Bloqueado":
-            redirect(URL("index"))
-        if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
-            admin = 4
-            if(session.usuario["tipo"] == "DEX"):
-                admin = 2
-            elif(session.usuario["tipo"] == "Administrador"):
-                admin = 1
-            else:
-                admin = 0
-            return dict(admin = admin)
-        else:
-            redirect(URL("perfil"))
-    else:
-        redirect(URL("index"))
-
 def EditarPerfil():
     if session.usuario != None:
-        if session.usuario["tipo"] == "Bloqueado":
-            redirect(URL("index"))
-        if(session.usuario["tipo"] == "DEX"):
-            admin = 2
-        elif(session.usuario["tipo"] == "Administrador"):
-            admin = 1
-        else:
-            admin = 0
+        admin = get_tipo_usuario(session)
+
         form = SQLFORM.factory(
             Field("USBID", default=session.usuario["usbid"],writable = False),
             Field('Nombres',default=session.usuario["first_name"],writable = False),
@@ -288,35 +201,9 @@ def EditarPerfil():
     else:
         redirect(URL("index"))
 
-##########################################################################################################
-###################################  FUNCIONES GESTIONAR USUARIO  ########################################
-##########################################################################################################
-
-def vMenuAdmin():
-    if session.usuario != None:
-        if session.usuario["tipo"] == "Bloqueado":
-            redirect(URL("index"))
-        if session.usuario["tipo"] == "Administrador":
-            session.message = ""
-            return response.render(admin = get_tipo_usuario())
-        else:
-            redirect(URL("perfil"))
-    else:
-        redirect(URL("index"))
-
+#  FUNCIONES GESTIONAR USUARIO
 def index():
-    if session.usuario != None:
-      if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
-        if(session.usuario["tipo"] == "DEX"):
-          admin = 2
-        elif(session.usuario["tipo"] == "Administrador"):
-          admin = 1
-        else:
-          admin = 0
-      else:
-        admin = -10
-    else:
-      admin = -1
+    admin = get_tipo_usuario_not_loged(session)
 
     now = datetime.datetime.now()
     if now.month < 10 :
@@ -347,3 +234,67 @@ def obtener_actividades():
 
     return "jQuery('#lista_tipos').empty().append('"+concat+"')"
 
+##########################################################################################################
+####################################### REVISAR SI SE PUEDEN BORRAR ######################################
+##########################################################################################################
+
+def vMenuAdmin():
+    if session.usuario != None:
+        if session.usuario["tipo"] == "Bloqueado":
+            redirect(URL("index"))
+        if session.usuario["tipo"] == "Administrador":
+            session.message = ""
+            return response.render(admin = get_tipo_usuario())
+        else:
+            redirect(URL("perfil"))
+    else:
+        redirect(URL("index"))
+
+def vMenuDex():
+    if session.usuario != None:
+        if session.usuario["tipo"] == "Bloqueado":
+            redirect(URL("index"))
+        if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
+            admin = 4
+            if(session.usuario["tipo"] == "DEX"):
+                admin = 2
+            elif(session.usuario["tipo"] == "Administrador"):
+                admin = 1
+            else:
+                admin = 0
+            return dict(admin = admin)
+        else:
+            redirect(URL("perfil"))
+    else:
+        redirect(URL("index"))
+
+# Controlador para el registro del usuario
+def vRegistroUsuario():
+    if session.usuario != None:
+        # Se usa un formulario que muestre los datos no modificables.
+        form = SQLFORM.factory(
+            Field("USBID", default=session.usuario["usbid"],writable = False),
+            Field('Nombres',default=session.usuario["first_name"],writable = False),
+            Field('Apellidos', default=session.usuario["last_name"],writable=False),
+            readonly=True)
+
+        #Realiza las modificaciones sobre la base de datos en funcion de lo que introduzca el usuario.
+        usuarios = db(db.USUARIO).select()
+        for raw in usuarios:
+            if raw.ci == session.usuario["cedula"]:
+                forma=SQLFORM(
+                    db.USUARIO,
+                    raw,
+                    button=['Registrarse'],
+                    fields=['telefono','correo_alter'],
+                    submit_button='Registrarse',
+                    labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'})
+                break
+        if len(request.vars)!=0:
+            nuevoTelefono = request.vars.telefono
+            nuevoCorreoAlter = request.vars.correo_alter
+            db(db.USUARIO.ci == session.usuario["cedula"]).update(telefono=nuevoTelefono, correo_alter=nuevoCorreoAlter)
+            redirect(URL('perfil'))        # Redirige al usuario al menu principal.
+        return dict(form1 = form, form = forma, admin=get_tipo_usuario())
+    else:
+        redirect(URL("index"))
