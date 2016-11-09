@@ -21,30 +21,32 @@ def call(): return service()
 ## URLS DE RETORNO PARA EL CAS ##
 ## Solo descomentar segun sea el caso.
 ## PARA EL SERVIDOR:
-# URL_RETORNO = "http%3A%2F%2Fsiradex.dex.usb.ve%2FSiraDex%2Fdefault%2Flogin_cas"
+#URL_RETORNO = "http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas"
 ## PARA DESSARROLLO. Cambiar el puerto 8000 si es necesario.
 URL_RETORNO = "http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas"
 
 ########################################################################################################
 ############################################# FUNCIONES USUARIO ########################################
 ########################################################################################################
+from gluon import *
+
+
 def get_tipo_usuario():
+
+    # Session Actual
     if session.usuario != None:
-        if session.usuario["tipo"] == "Bloqueado":
-            redirect(URL(c = "default",f="index"))
-        if session.usuario["tipo"] == "Administrador":
-            if(session.usuario["tipo"] == "DEX"):
-                admin = 2
-            elif(session.usuario["tipo"] == "Administrador"):
-                admin = 1
-            elif(session.usuario["tipo"] == "Bloqueado"):
-                admin = -1
-            else:
-                admin = 0
+      if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
+        if(session.usuario["tipo"] == "DEX"):
+          admin = 2
+        elif(session.usuario["tipo"] == "Administrador"):
+          admin = 1
         else:
-            redirect(URL(c ="default",f="perfil"))
+          admin = 0
+      else:
+        admin = 0
     else:
-        redirect(URL(c ="default",f="index"))
+      admin = -1
+    return admin
 
 def login_cas():
     if not request.vars.getfirst('ticket'):
@@ -112,7 +114,7 @@ def login_cas():
             correo_alter= None,
             telefono=session.usuario["phone"],
             tipo = "Usuario")
-            redirect(URL('vRegistroUsuario'))
+            redirect(URL('perfil'))
 
 def logout_cas():
     session.usuario = None

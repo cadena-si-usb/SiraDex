@@ -18,12 +18,12 @@
 {{end}}
 
 {{block contenido}}
-	
+
 <div class="row">
 	<div class="col-md-12">
 		<div class="card">
 			<div class="tab-pane">
-            	{{=form}}           
+            	{{=form}}
 
 			</div>
 		</div>
@@ -68,7 +68,7 @@ $(document).ready(function () {
 	    placeholder: "Sin Archivo",
 	    buttonText: "  Adjuntar",
 	  });
-	
+
 	var maxLongNombre  = 256;    // Longitud máxima que tendrá el campo nombre.
 	var maxLongDescrip = 2048;   // Longitud máxima que tendrá el campo descripción.
 	var comprobante_mostrado = 0;
@@ -84,11 +84,7 @@ $(document).ready(function () {
 
 	$('#no_table_c0mpr0bant3_1__row').before('	<div id="comprobantes__row" class="form-group">\
 													<hr class="col-sm-offset-3 col-sm-8">\
-													<h3 id = "comprobantes" class="col-sm-offset-3 col-sm-3">Comprobantes</h3>\
-													<span class="col-sm-offset-3 col-sm-6" id="cant_restante">\
-														Puedes subir <b>'+(5-comprobante_mostrado)+'</b> comprobantes mas <br>\
-														Solo puedes subir documentos PDF\
-													</span>\
+													<h3 class="col-sm-offset-3 col-sm-3">Comprobantes</h3>\
 													<a id="agregar_comprobante" href="#" onclick="return false;">\
 														<img alt="Agregar Comprobante" src="/SiraDex/static/icon/i_add.png" height="55">\
 													</a>\

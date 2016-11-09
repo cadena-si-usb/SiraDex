@@ -23,9 +23,9 @@
       <ul class="nav navbar-nav navbar-right">
                <li class="activo">
                 <!-- EN SERVIDOR -->
-                   <!-- <a  id = login 
+                <!--   <a  id = login 
                             class ='btn btn-xs' 
-                            href='http://secure.dst.usb.ve/login?service=http%3A%2F%2F159.90.211.179%2FSiraDex%2Fdefault%2Flogin_cas'> -->
+                            href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas'> -->
                 <!-- EN DESARROLLO -->
                         <a  class ='btn btn-xs ' 
                             href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas'>
@@ -59,28 +59,21 @@
                 <ul class="dropdown-menu" style="right:auto">
                     {{if admin == 1:}}
                     <li><a href="#">Consultar Log</a></li>
-
-                    <li class="dropdown-submenu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Backup</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Ver Backup</a></li>
-                            <li><a href="#">Crear Backup</a></li>
-                        </ul>
-                    </li>
+                    <li><a href="{{=URL(c='backup', f='index')}}">BackUp</a></li>
                     <li><a href="{{=URL(c='usuarios', f='gestionar')}}">Usuarios</a></li>
                     <li><a href="#">Notificaciones</a></li>
                     <li role="separator" class="divider"></li>
                     {{pass}}
 		                <li><a href="{{=URL(c='tipo_actividad', f='gestionar')}}">Tipos de Actividad</a></li>
                     <li><a href="{{=URL(c='catalogo', f='vGestionarCatalogos')}}">Catálogos</a></li>
-                    <li><a href="{{=URL(c='archivo_historico', f='gestionar')}}">Papelera</a></li>
+                    <li><a href="{{=URL(c='archivo_historico', f='gestionar') }}">Papelera</a></li>
                 </ul>
             </li>
-            <li><a href="{{=URL(c='busq_val', f='gestionar_validacion.html')}}">
+            <li><a href="{{=URL(c='busq_val', f='gestionar_validacion')}}">
                 Solicitudes
             </a></li>
 
-            <li><a href="{{=URL(c='programas', f='gestionar_programas.html')}}">
+            <li><a href="{{=URL(c='programas', f='gestionar_programas')}}">
                 Programas
             </a></li>
 

@@ -246,3 +246,12 @@ CREATE TABLE LOG_SIRADEX(
              FOREIGN KEY (usbid_usuario)
              REFERENCES  USUARIO(usbid)
 );
+
+CREATE TABLE BACKUP(
+  id_backup INT,
+  descripcion VARCHAR(256),
+  fecha DATE,
+
+  CONSTRAINT PK_BACKUP
+              PRIMARY KEY (id_backup)
+);

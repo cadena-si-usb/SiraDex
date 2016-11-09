@@ -21,9 +21,9 @@
 <div class="row">
 	<div class="col-md-12">
 		<div class="card">
-			
+
 			<div id="id_comprobante" class="tab-content" data-producto='{{=request.args(0)}}'>
-					
+
 					{{=form}}
 			</div>
 		</div>
@@ -101,7 +101,7 @@
 
 			$('#agregar_comprobante').click(function(){
 				if (comprobante_mostrado<cantidad_comprobantes){
-					
+
 					if($('#no_table_c0mpr0bant3_'+agregados_aqui).val()=="" ){
 						if (!error_comprobante){
 							$('#no_table_c0mpr0bant3_'+agregados_aqui).parent().append('<span id="error_archivo_'+agregados_aqui+'" class="help-block error">Primero debes cargar el comprobante</span>');

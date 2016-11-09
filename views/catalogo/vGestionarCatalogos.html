@@ -17,12 +17,17 @@
 </div>
 <br>
 <div class="card">
-  <ul class="nav nav-tabs" role="tablist">
-  {{for catalogo in catalogos:}}
-    <li class="nav-item {{='active' if catalogo[0].id_catalogo == catalogo_actual else ''}}">
-      <a class="nav-link" data-toggle="tab" href="#{{ = catalogo[0].id}}" role="tab" id="Cat{{= catalogo[0].id}}">{{= catalogo[0].nombre}}</a>
-    </li>
-   {{pass}}
+  {{if len(catalogos) == 0:}}
+    <p> Actualmente no existen catálogos en el sistemas. Pruebe agregar
+        un nuevo catálogo usando el boton "Agregar Catálogo" </p>
+  {{else:}}
+    <ul class="nav nav-tabs" role="tablist">
+    {{for catalogo in catalogos:}}
+      <li class="nav-item {{='active' if catalogo[0].id_catalogo == catalogo_actual else ''}}">
+        <a class="nav-link" data-toggle="tab" href="#{{ = catalogo[0].id}}" role="tab" id="Cat{{= catalogo[0].id}}">{{= catalogo[0].nombre}}</a>
+      </li>
+     {{pass}}
+  {{pass}}
   </ul>
 
   <div class="tab-content">
@@ -86,12 +91,20 @@
               </ul>
               <div class="row">
                   <center>
-                    <div class="col-sm-2 col-sm-offset-4">
+                    <div class="col-sm-2 col-sm-offset-3">
                         <button type="button" class="btn btn-default green btn-border"
                                 data-toggle="modal" data-target="#modalAgregarCampo"
                                 data-id-catalogo="{{=catalogo[0].id}}">
                             <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Campo
                         </button>
+                    </div>
+                    <div class="col-sm-2">
+                      <button type="button" class="btn btn-default green btn-border"
+                              data-toggle="modal" data-target="#modalCambiarNombre"
+                              data-id-catalogo = "{{=catalogo[0].id}}"
+                              data-nombre = "{{=catalogo[0].nombre}}">
+                          <span class="glyphicon glyphicon-edit " aria-hidden="true"></span> Renombrar
+                      </button>
                     </div>
                     <div class="col-sm-2">
                       <button type="button" class="btn btn-default btn-block red-trash btn-border"
@@ -118,6 +131,21 @@
       </div>
       <div class="modal-body">
           <p>{{ = formulario_agregar_catalogo}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Cambiar Nombre Catalogo-->
+<div id="modalCambiarNombre" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <center><h4 class="modal-title"> Renombrar Catalogo </h4><center>
+      </div>
+      <div class="modal-body">
+          <p>{{ = formulario_cambiar_nombre }}</p>
       </div>
     </div>
   </div>
@@ -254,6 +282,15 @@
   // Pasamos los argumentos para editar el catalogo.
   $('#modalAgregarCampo').on('show.bs.modal', function(e){
       var id_catalogo = $(e.relatedTarget).data('id-catalogo');
+      $(e.currentTarget).find('input[name="id_catalogo"]').val(id_catalogo);
+  });
+
+  // Pasamos los argumentos para editar el catalogo.
+  $('#modalCambiarNombre').on('show.bs.modal', function(e){
+      var id_catalogo = $(e.relatedTarget).data('id-catalogo');
+      var nombre       = $(e.relatedTarget).data('nombre');
+      $("#no_table_id_catalogo__row").hide();
+      $(e.currentTarget).find('input[name="nombre"]').val(nombre);
       $(e.currentTarget).find('input[name="id_catalogo"]').val(id_catalogo);
   });
 

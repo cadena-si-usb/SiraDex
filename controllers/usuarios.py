@@ -8,7 +8,26 @@ def user(): return dict(form=auth())
 def download(): return response.download(request,db)
 def call(): return service()
 ### end requires
+from gluon import *
 
+
+def get_tipo_usuario():
+
+    # Session Actual
+    if session.usuario != None:
+      if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
+        if(session.usuario["tipo"] == "DEX"):
+          admin = 2
+        elif(session.usuario["tipo"] == "Administrador"):
+          admin = 1
+        else:
+          admin = 0
+      else:
+        admin = -10
+    else:
+      admin = -1
+    return admin
+    
 def gestionar():
     if session.usuario != None:
         if session.usuario["tipo"] == "Bloqueado":

@@ -145,40 +145,38 @@
                         <tbody id="actividades">
                             {{for x in rows:}}
                                 {{if x.estado == 'En espera':}}
-                                <tr>
-                                    <!-- Nombre Producto -->
-                                        
-                                    <td class="center-vertically detalles"> 
-                                    {{=x.nombre}}
-                                    </td>
-                                    <!-- Nombre Actividad -->
-                                    <td class="center-vertically detalles"> {{=nombres[x]}}</td>
-                                    <!-- Modificacion -->
-                                    <td class="center-vertically"> {{=x.fecha_realizacion}}</td>
-                                    <!-- Realizacion  -->
-                                    <td class="center-vertically"> {{=x.fecha_modificacion}}</td>
-                                    <!-- Boton Modificar -->
-                                    <td class="center-vertically"> 
-                                    <center>
-                                    <span class="glyphicon glyphicon-edit" style="color:#9E9E9E"></span>
-                                    </center>
-                                    </td>
-                                    <!-- Boton Descargar -->
-                                    <td class="center-vertically">
-                                    <center>
-                                    <!-- {{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }} -->
-                                     <a href='/{{=request.application}}/{{=request.controller}}/get_pdf/{{=x.id_producto}}'
-                                    class="glyphicon glyphicon-save blue" target="blanck" title="Imprimir Producto {{=x.id_producto}}"></a>
-                        
-                                    </center>
-                                    </td>
-                                    <!-- Boton Eliminar -->
-                                    <td class="center-vertically">
-                                    <center>
-                                    <span class="glyphicon glyphicon-remove" style="color:#9E9E9E"></span>
-                                    </center>
-                                    </td>
-                                </tr>                             
+                                    <tr>
+                                        <!-- Nombre Producto -->
+                                            
+                                        <td class="center-vertically detalles"> 
+                                        {{=x.nombre}}
+                                        </td>
+                                        <!-- Nombre Actividad -->
+                                        <td class="center-vertically detalles"> {{=nombres[x]}}</td>
+                                        <!-- Modificacion -->
+                                        <td class="center-vertically"> {{=x.fecha_realizacion}}</td>
+                                        <!-- Realizacion  -->
+                                        <td class="center-vertically"> {{=x.fecha_modificacion}}</td>
+                                        <!-- Boton Modificar -->
+                                        <td class="center-vertically"> 
+                                        <center>
+                                        <span class="glyphicon glyphicon-edit" style="color:#9E9E9E"></span>
+                                        </center>
+                                        </td>
+                                        <!-- Boton Descargar -->
+                                        <td class="center-vertically">
+                                        <center>
+                                        <a href='/{{=request.application}}/{{=request.controller}}/get_pdf/{{=x.id_producto}}'
+                                    class="glyphicon glyphicon-save blue" title="Imprimir Producto {{=x.id_producto}}"></a>
+                                        </center>
+                                        </td>
+                                        <!-- Boton Eliminar -->
+                                        <td class="center-vertically">
+                                            <center>
+                                                <span class="glyphicon glyphicon-remove" style="color:#9E9E9E"></span>
+                                            </center>
+                                        </td>
+                                    </tr>                             
                                 {{pass}}
                             {{pass}}
                         </tbody>
