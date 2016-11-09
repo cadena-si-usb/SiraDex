@@ -15,7 +15,7 @@ def gestionar():
     else:
         redirect(URL(c ="default",f="index"))
 
-    rows = db(db.ACTIVIDAD.ci_usuario_crea==session.usuario['cedula']).select()
+    rows = db(db.ACTIVIDAD.usbid_usuario_crea==session.usuario['usbid']).select()
     detalles = {}
     cant_esp = 0
     cant_val = 0
@@ -104,7 +104,7 @@ def agregar():
     form=SQLFORM.factory(*fields)
 
     if form.process().accepted:
-        dicc_act = db.ACTIVIDAD.insert(id_tipo = tipo,ci_usuario_crea= session.usuario['cedula'])
+        dicc_act = db.ACTIVIDAD.insert(id_tipo = tipo,usbid_usuario_crea= session.usuario['usbid'])
         id_act = dicc_act['id_actividad']
         for var in form.vars:
             campo = var.replace("_"," ")
@@ -178,7 +178,7 @@ def modificar():
             sql = sql + "' WHERE id_actividad = '" + str(id_act) + "' AND id_campo = '" + str(id_cam) + "';"
             db.executesql(sql)
 
-            update_act = "UPDATE ACTIVIDAD SET ci_usuario_modifica = '" + str(session.usuario['cedula'])
+            update_act = "UPDATE ACTIVIDAD SET usbid_usuario_modifica = '" + str(session.usuario['usbid'])
             update_act = update_act + "' WHERE id_actividad = '" + str(id_act) + "';"
             db.executesql(update_act)
 

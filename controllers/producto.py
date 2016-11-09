@@ -46,7 +46,7 @@ def gestionar():
     else:
         redirect(URL(c ="default",f="index"))
 
-    rows = db(db.PRODUCTO.ci_usu_creador==session.usuario['cedula']).select()
+    rows = db(db.PRODUCTO.usbid_usu_creador==session.usuario['usbid']).select()
 
     detalles = {}
     nombres = {}
@@ -198,7 +198,7 @@ def agregar():
         no = ['nombre','descripcion','fecha_realizacion','lugar']
         dicc_producto = db.PRODUCTO.insert(id_tipo = tipo,nombre=form.vars.nombre, descripcion=form.vars.descripcion,\
                                       estado='En espera',fecha_realizacion=form.vars.fecha_realizacion, fecha_modificacion=now, \
-                                      lugar = form.vars.lugar, ci_usu_creador= session.usuario['cedula'])
+                                      lugar = form.vars.lugar, usbid_usu_creador= session.usuario['usbid'])
         id_producto = dicc_producto['id_producto']
         for var in form.vars:
             if not(var in no):
@@ -538,7 +538,7 @@ def descargar_comprobante():
 def get_pdf():
 
     producto = db.PRODUCTO(request.args(0))
-    creador= db(db.USUARIO.ci == producto .ci_usu_creador).select()[0]
+    creador= db(db.USUARIO.usbid == producto .usbid_usu_creador).select()[0]
     tmpfilename = os.path.join(request.folder,'private',str(uuid4()))
     doc = SimpleDocTemplate(tmpfilename)
     elements = []
