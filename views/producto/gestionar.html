@@ -16,21 +16,30 @@
 
 {{block descripcion}}
     <div class="row"> 
-        <div class="col-lg-12">
+        <div class="col-md-3 col-md-offset-9">
         <!-- Datos del usuario -->
-            <p class="text-justify">                          
-            </p>
+                <div style="margin-bottom: 0em;">
+                  <button type="button" id="agregarProgBtn" class="btn btn-default green btn-border" data-toggle="modal" data-target="#myModalAgregar">
+                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Producto
+                  </button>
+                </div>
+            <!-- <p class="text-justify">
+            </p> -->
         </div>
     </div>
 {{end}}
 
 {{block contenido}}
-    <!-- <div class="container"> -->
+    <!-- <div class="container">  -->
+
+    <br>
+    
     <div class="row">
         <div class="col-md-12">
         <!-- Nav tabs -->
         <div class="card">
         <ul class="nav nav-tabs" role="tablist">
+        
         <!-- Activas -->
         <li role="presentation" class="active act">
             <a  href="#activas" 
@@ -60,6 +69,7 @@
                 Rechazadas
             </a>
         </li>
+
         </ul>
 
         <!-- Tab panes -->
@@ -119,9 +129,10 @@
                             {{pass}}
                         </tbody>
                     </table>
-                          <div class="text-center">
-      <ul class="pagination pagination-lg pager" id="myPager"></ul>
-      </div>
+        
+        <div class="text-center">
+          <ul class="pagination pagination-lg pager" id="myPager"></ul>
+        </div>
             <!-- ESTABA AL FINAL PARA LA PAGINACION -->
                 {{pass}}
      
@@ -250,13 +261,6 @@
         </div>
         </div>
 
-
-    <a href ="#" id="sombra" data-toggle="modal" data-target="#myModalAgregar"> 
-    {{=IMG(_src=URL('static', 'icon/i_add.png'),_height='55',_alt='Agregar Producto') }}
-    </a>
-
-
-
     <!-- Modal -->
     <div id="myModalAgregar" class="modal fade" role="dialog">
       <div class="modal-dialog">
@@ -305,28 +309,28 @@
       </div>
     </div>
 
-<!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
 
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"><center>Detalles de Producto</center></h4>
-      </div>
-      <div class="modal-body">
-        <p>Some text in the modal.</p>
-      </div>
-      <div class="modal-footer">
-      <center>
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-        </center>
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title"><center>Detalles de Producto</center></h4>
+          </div>
+          <div class="modal-body">
+            <p>Some text in the modal.</p>
+          </div>
+          <div class="modal-footer">
+          <center>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </center>
+          </div>
+        </div>
+
       </div>
     </div>
-
-  </div>
-</div>
 
 {{end}}
 

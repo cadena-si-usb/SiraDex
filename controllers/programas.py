@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#import funciones_siradex
+from funciones_siradex import get_tipo_usuario
 #import imp  
 #foo = imp.load_source('module.funciones_siradex', 'funciones_siradex.py') 
 '''
@@ -9,29 +9,9 @@ Vista de Gestionar Programas tiene las opciones:
 - Por ahora, no se pueden eliminar programas.
 '''
 
-from gluon import *
-
-def get_tipo_usuario():
-
-    # Session Actual
-    if session.usuario != None:
-      if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
-        if(session.usuario["tipo"] == "DEX"):
-          admin = 2
-        elif(session.usuario["tipo"] == "Administrador"):
-          admin = 1
-        else:
-          admin = 0
-      else:
-        admin = -10
-    else:
-      admin = -1
-    return admin
-
-
 def agregar_programa():
+    admin = get_tipo_usuario(session)
 
-    admin = get_tipo_usuario
     formulario = SQLFORM.factory(
                         Field('Nombre',
                               requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacio.'),
@@ -64,15 +44,11 @@ def agregar_programa():
 
     return dict(formulario=formulario, admin = admin)
 
-
 # Permitiria Modificar o Desactivar Programas
 # del sistema Siradex.
 def gestionar_programas():
 
-    print(':::>'+session.usuario["tipo"])
-    #admin = foo.get_tipo_usuario()
-    admin = get_tipo_usuario()
-    print('>>>>'+session.usuario["tipo"])
+    admin = get_tipo_usuario(session)
 
     # Obtengo todos los programas almacenados en la base de datos.
     programas = db(db.PROGRAMA.papelera == False).select()
@@ -154,9 +130,9 @@ def gestionar_programas():
                 hayErroresEditar=formulario_editar.errors, formulario=formulario,
                 formulario_editar=formulario_editar)
 
-
 def eliminar_programa():
-    admin = get_tipo_usuario()
+    admin = get_tipo_usuario(session)
+
 
     id_programa = request.args[0]
 
@@ -170,7 +146,7 @@ def eliminar_programa():
 
 def editar_programa():
 
-    admin = get_tipo_usuario()  # Obtengo el tipo del usuario actual.
+    admin = get_tipo_usuario(session) # Obtengo el tipo del usuario actual.
     id = request.args[0]        # Se identifica cual programa se identificará.
 
     # Se busca el programa en la base de datos.

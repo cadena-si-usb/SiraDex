@@ -83,13 +83,28 @@ $(document).ready(function () {
 	textoRestante1(maxLongNombre, $("#no_table_lugar"));
 
 	$('#no_table_c0mpr0bant3_1__row').before('	<div id="comprobantes__row" class="form-group">\
-													<hr class="col-sm-offset-3 col-sm-8">\
-													<h3 class="col-sm-offset-3 col-sm-3">Comprobantes</h3>\
-													<a id="agregar_comprobante" href="#" onclick="return false;">\
-														<img alt="Agregar Comprobante" src="/SiraDex/static/icon/i_add.png" height="55">\
-													</a>\
-													<br>\
-												</div>'
+													<h3 class="col-sm-offset-3">Comprobantes</h3>\
+													\
+													<div class="row">\
+														<div class="col-sm-10 col-sm-offset-2" style="margin-left:15em;">\
+											    	\
+											    	<span class="col-sm-6">\
+															Puedes subir <span id="cant_restante"><b id="num_cant">5</b></span> comprobantes mas\
+															<br>\
+															Solo puedes subir documentos PDF\
+														</span>\
+														\
+														<div class="col-md-offset-3">\
+															<div style="margin-bottom: 0em;">\
+															  <button type="button" id="agregar_comprobante" class="btn btn-default green btn-border" onclick="return false;">\
+															    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Comprobante\
+															  </button>\
+															</div>\
+										        </div>\
+										        \
+														</div>\
+													</div>\
+													<br>'
 										);
 	for (i = 1; i <= cantidad_comprobantes; i++) {
     	$('#no_table_c0mpr0bant3_'+i+'__row').addClass("hidden");
@@ -128,11 +143,8 @@ $(document).ready(function () {
 		if (comprobante_mostrado==cantidad_comprobantes){
 			$('#agregar_comprobante').addClass("hidden");
 		}
-		$('#cant_restante').remove();
-		$('#comprobantes__row').append('<span class="col-sm-offset-3 col-sm-6" id="cant_restante">\
-													Puedes subir <b>'+(5-comprobante_mostrado)+'</b> comprobantes mas\
-													<br>\
-													Solo puedes subir documentos PDF</span>');
+		$('#num_cant').remove();
+		$('#cant_restante').append('<b id="num_cant">'+(5-comprobante_mostrado )+'</b>');
 	});
 
 	$('.upload').change(function(){
