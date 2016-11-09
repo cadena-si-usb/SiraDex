@@ -448,7 +448,7 @@ def obtener_actividades():
     
     programa = db(db.PROGRAMA.nombre==request.vars.programa).select().first()
     tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa.id_programa).select(db.TIPO_ACTIVIDAD.nombre,
-        db.TIPO_ACTIVIDAD.id_tipo).as_list()
+        db.TIPO_ACTIVIDAD.id_tipo, ).as_list()
     
     concat = '<option></option>'
 
@@ -456,8 +456,9 @@ def obtener_actividades():
 
         concat += '<option value='+str(tipo['id_tipo'])+'>'+tipo['nombre']+'</option>'
 
-
-    return "jQuery('#lista_tipos').empty().append('"+concat+"')"
+    descripcion = "<div class=\"col-sm-offset-1\"><br><h4>Descripcion del Programa:</h4><p>"+programa.descripcion+"</p></div>"
+    html = "jQuery('#lista_tipos').empty().append('"+concat+"');jQuery('#descripcion_programa').empty().append('"+descripcion+"')"
+    return html
 
 # Funcion utilizada para el ajax cuando se elige la actividad para que aparezcan los campos
 def seleccion_actividad():
