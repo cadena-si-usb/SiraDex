@@ -56,3 +56,4 @@ def get_tipo_usuario_not_loged(session):
         admin = -1
 
     return admin
+    
