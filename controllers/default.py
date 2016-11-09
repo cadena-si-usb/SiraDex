@@ -19,7 +19,7 @@ def download(): return response.download(request,db)
 def call(): return service()
 ### end requires
 
-## URLS DE RETORNO PARA EL CAS ##
+# URLS DE RETORNO PARA EL CAS ##
 # PARA EL SERVIDOR:
 # URL_RETORNO = "http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas"
 # PARA DESSARROLLO. Cambiar el puerto 8000 si es necesario.
@@ -54,16 +54,13 @@ def login_cas():
         # session.casticket = request.vars.getfirst('ticket')
         data  = the_page.split()
         usbid = data[1]
-        print '~~>',usbid
 
         usuario = get_ldap_data(usbid) #Se leen los datos del CAS
-        print '~~>',usuario
 
         tablaUsuarios = db.USUARIO
 
         session.usuario = usuario
         session.usuario['usbid'] = usbid
-        #print '~>',usuario['tipo']
         try:
             print usuario['carrera']
         except:

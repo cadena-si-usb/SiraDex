@@ -7,15 +7,6 @@ from funciones_siradex import get_tipo_usuario
 
 def gestionar():
     admin = get_tipo_usuario(session)
-    # if session.usuario != None:
-    #     if(session.usuario["tipo"] == "DEX"):
-    #         admin = 2
-    #     elif(session.usuario["tipo"] == "Administrador"):
-    #         admin = 1
-    #     else:
-    #         admin = 0
-    # else:
-    #     redirect(URL(c ="default",f="index"))
 
     rows = db(db.ACTIVIDAD.usbid_usuario_crea==session.usuario['usbid']).select()
     detalles = {}
