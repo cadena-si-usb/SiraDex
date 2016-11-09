@@ -97,11 +97,7 @@ $(document).ready(function () {
 	}
 
 	$('#agregar_comprobante').click(function(){
-		$('#cant_restante').remove();
-		$('#comprobantes__row').append('<span class="col-sm-offset-3 col-sm-6" id="cant_restante">\
-													Puedes subir <b>'+(5-comprobante_mostrado)+'</b> comprobantes mas\
-													<br>\
-													Solo puedes subir documentos PDF</span>');
+		
 		if (comprobante_mostrado<cantidad_comprobantes){
 			if($('#no_table_c0mpr0bant3_'+comprobante_mostrado).val()=="" ){
 				if (!error_comprobante){
@@ -132,18 +128,45 @@ $(document).ready(function () {
 		if (comprobante_mostrado==cantidad_comprobantes){
 			$('#agregar_comprobante').addClass("hidden");
 		}
-
+		$('#cant_restante').remove();
+		$('#comprobantes__row').append('<span class="col-sm-offset-3 col-sm-6" id="cant_restante">\
+													Puedes subir <b>'+(5-comprobante_mostrado)+'</b> comprobantes mas\
+													<br>\
+													Solo puedes subir documentos PDF</span>');
 	});
 
 	$('.upload').change(function(){
 		var ext = $(this).val().split('.').pop().toLowerCase();
 		if(ext != 'pdf') {
 		    alert('solo se permite cargar archivos PDF');
-		    $(this).attr("placeholder", "Sin Archivo");
+		    $(this).val('');
+		    $(this).filestyle('clear');
+
 		}
 	});
 
-  });
+
+	$('.form-horizontal').submit(function(){
+
+		// Verificamos los comprobantes
+		var infor_cargada = false;
+		for (i = 1; i <= cantidad_comprobantes; i++) {
+	    	if($('#no_table_c0mpr0bant3_'+i).val() !="" ){
+	    		if($('#no_table_d3scr1pc10n_comprobante_'+i).val()==""){
+	    			alert("La descripción de los comprobantes cargados no puede ser vacia");
+	    			return false;
+	    		}
+	    		infor_cargada = true;
+			}
+		}
+
+		if (!infor_cargada){
+			alert("Tiene que adjuntar al menos un comprobante");
+			return false;
+		}
+	});
+
+});
 </script>
 
 {{end}}
