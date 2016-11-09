@@ -43,7 +43,7 @@ def get_tipo_usuario():
         else:
           admin = 0
       else:
-        admin = -10
+        admin = 0
     else:
       admin = -1
     return admin
@@ -114,7 +114,7 @@ def login_cas():
             correo_alter= None,
             telefono=session.usuario["phone"],
             tipo = "Usuario")
-            redirect(URL('vRegistroUsuario'))
+            redirect(URL('perfil'))
 
 def logout_cas():
     session.usuario = None

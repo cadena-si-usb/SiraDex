@@ -27,7 +27,7 @@ def get_tipo_usuario():
       else:
         admin = -10
     else:
-      admin = -1
+      redirect(URL(c="default",f="index"))
     return admin
 
 #. --------------------------------------------------------------------------- .
