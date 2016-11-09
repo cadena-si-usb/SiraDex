@@ -27,9 +27,9 @@ def enviar_correo_validacion(mail, usuario, producto):
 		# Mensaje del Correo
 
 		mensaje  = '''<h1>Estimado/a %(nombres)s:</h1>
-									<p>Nos complace indicarle que su Producto de Extensión
+									<p>Nos complace comunicarle que su Producto de Extensión
 												<b> %(nombreProducto)s</b>
-												fue aprobado satisfactoriamente por el Decanato de Extensión.
+												fue validado satisfactoriamente por el Comité de Evaluación del Decanato de Extensión.
 									</p>
 									<p>
 										 Recuerde que siempre puede ver el estado de este y sus otros productos
@@ -56,13 +56,13 @@ def enviar_correo_rechazo(mail, usuario, producto, razon):
 		# Mensaje del Correo
 
 		mensaje  = '''<h1>Estimado/a %(nombres)s:</h1>
-									<p>Debemos indicarle que su Producto de Extensión
+									<p>Cumplimos con comunicarle que su Producto de Extensión
 												<b> %(nombreProducto)s</b>
-												no pudo ser aprobado por el Decanato de Extensión.
+												no fue validado por el Comité de Evaluación del Decanato de Extensión.
 									</p>''' % {'nombres': usuario['nombres'], 'nombreProducto' : producto['nombre']}
 
 		if razon != "":
-				mensaje += '''<p> Las razones del rechazo de su producto son las siguientes: </p>
+				mensaje += '''<p> Las razones por las cuales no fue validado son las siguientes: </p>
 											<center>%(razon)s</center>
 											<br>
 									''' % {'razon':razon}
@@ -113,7 +113,7 @@ def enviar_correo_bienvenida(mail, usuario):
 
 	mensaje +=  '''
 								<p>
-									Ahora podrá subir sus productos y esperar la validación por parte de los miembros de la DEX.
+									Ahora podrá subir sus productos y esperar la validación por parte del Comité de Evaluación del Decanato de Extensión.
 								</p>
 								<p>
 									Lo primero que debe realizar es ingresar al <a href="https://siradex.dex.usb.ve/EditarPerfil">SIDADEX</a>
@@ -131,7 +131,7 @@ def enviar_correo_bienvenida(mail, usuario):
 # con el campo mensaje dependiendo del tipo sdel correo que se quiere.
 def get_plantilla_html(mensaje):
 
-		usb_logo_url = os.path.join(current.request.folder, 'static/images','usblogo.png')
+		usb_logo_url = 'https://siradex.dex.usb.ve/static/images/usblogo.png'
 
 		plantilla = '''
 				<html>
@@ -155,7 +155,7 @@ def get_plantilla_html(mensaje):
 
 							img {
 									float: none;
-									width: 100px;
+									width: 135px;
 							 }
 							 h1 {
 								 font-size: 20px;
@@ -184,8 +184,9 @@ def get_plantilla_html(mensaje):
 
 					<header>
 						<center>
-							<img src='%(urlimg)s'>
+							<img src='%(urlimg)s' alt="Logo" title="Logo" style="display:block" width="135px" height="90px">
 							<h1>Universidad Simón Bolívar</h1>
+							<h2>Vicerrectorado Académico</h2>
 							<h2>Decanato de Extensión</h2>
 							<h2>Sistema de Registro de Actividades de Extensión SIRADEX</h2>
 						</center>
