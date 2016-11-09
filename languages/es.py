@@ -67,6 +67,7 @@
 'cache': 'caché',
 'Cache Keys': 'Llaves de la Caché',
 'cache, errors and sessions cleaned': 'caché, errores y sesiones eliminados',
+'Cambiar Nombre': 'Cambiar Nombre',
 'campo1': 'campo1',
 'campo2': 'campo2',
 'campo3': 'campo3',

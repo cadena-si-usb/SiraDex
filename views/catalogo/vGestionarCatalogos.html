@@ -18,9 +18,6 @@
 <br>
 <div class="card">
   {{if len(catalogos) == 0:}}
-    <p> Actualmente no existen catálogos en el sistemas. Pruebe agregar
-        un nuevo catálogo usando el boton "Agregar Catálogo" </p>
-  {{else:}}
     <ul class="nav nav-tabs" role="tablist">
     {{for catalogo in catalogos:}}
       <li class="nav-item {{='active' if catalogo[0].id_catalogo == catalogo_actual else ''}}">
@@ -31,6 +28,11 @@
   </ul>
 
   <div class="tab-content">
+    {{if len(catalogos) == 0:}}
+    <p> Actualmente no existen catálogos en el sistemas. Pruebe agregar
+        un nuevo catálogo usando el boton "Agregar Catálogo" </p>
+    {{pass}}
+
     {{for catalogo in catalogos:}}
       <div class="tab-pane {{='active' if catalogo[0].id_catalogo == catalogo_actual else ''}}" id="{{= catalogo[0].id}}" role="tabpanel">
             <ul class="list-group">
