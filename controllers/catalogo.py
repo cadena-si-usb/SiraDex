@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from funciones_siradex import get_tipo_usuario
+#from funciones_siradex import get_tipo_usuario
 
 tipo_campos = ['Fecha', 'Telefono', 'Texto Corto','Documento','Cantidad Entera','Cantidad Decimal', 'Texto Largo', 'Cedula']
 
@@ -7,6 +7,26 @@ tipo_campos = ['Fecha', 'Telefono', 'Texto Corto','Documento','Cantidad Entera',
 Funcion que se encarga de obtener los datos para mostrar los catalogos
 que existen en el sistema.
 '''
+from gluon import *
+
+
+def get_tipo_usuario():
+
+    # Session Actual
+    if session.usuario != None:
+      if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
+        if(session.usuario["tipo"] == "DEX"):
+          admin = 2
+        elif(session.usuario["tipo"] == "Administrador"):
+          admin = 1
+        else:
+          admin = 0
+      else:
+        admin = -10
+    else:
+      admin = -1
+    return admin
+
 def vGestionarCatalogos():
     admin = get_tipo_usuario()
 

@@ -15,6 +15,25 @@ from reportlab.lib.units  import *
 from reportlab.lib        import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.enums  import *
+from gluon import *
+
+
+def get_tipo_usuario():
+
+    # Session Actual
+    if session.usuario != None:
+      if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
+        if(session.usuario["tipo"] == "DEX"):
+          admin = 2
+        elif(session.usuario["tipo"] == "Administrador"):
+          admin = 1
+        else:
+          admin = 0
+      else:
+        admin = -10
+    else:
+      admin = -1
+    return admin
 
 def gestionar():
     if session.usuario != None:
@@ -87,7 +106,6 @@ def tipos():
 
     rows = db(db.TIPO_ACTIVIDAD.papelera==False).select()
     return locals()
-
 
 def agregar():
     if session.usuario != None:
@@ -227,8 +245,6 @@ def agregar():
              
 
     return locals()
-
-
 
 def modificar():
     if session.usuario != None:
@@ -416,7 +432,6 @@ def eliminar():
     #return "producto {} eliminada".format(producto)
     return locals()
 
-
 # Funcion utilizada para el ajax en el agregar
 def obtener_actividades():
     
@@ -598,7 +613,6 @@ def eliminar_comprobante():
 
 
     db(db.COMPROBANTE.id_comprobante == id_comprobante).delete()
-
 
 #Funcion para exportar PDF de un producto
 def get_pdf():

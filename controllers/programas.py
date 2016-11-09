@@ -1,12 +1,32 @@
 # -*- coding: utf-8 -*-
-from funciones_siradex import get_tipo_usuario
-
+#import funciones_siradex
+#import imp  
+#foo = imp.load_source('module.funciones_siradex', 'funciones_siradex.py') 
 '''
 Vista de Gestionar Programas tiene las opciones:
 - Agregar Programa
 - Editar  Programa
 - Por ahora, no se pueden eliminar programas.
 '''
+
+from gluon import *
+
+def get_tipo_usuario():
+
+    # Session Actual
+    if session.usuario != None:
+      if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
+        if(session.usuario["tipo"] == "DEX"):
+          admin = 2
+        elif(session.usuario["tipo"] == "Administrador"):
+          admin = 1
+        else:
+          admin = 0
+      else:
+        admin = -10
+    else:
+      admin = -1
+    return admin
 
 
 def agregar_programa():
@@ -48,7 +68,11 @@ def agregar_programa():
 # Permitiria Modificar o Desactivar Programas
 # del sistema Siradex.
 def gestionar_programas():
+
+    print(':::>'+session.usuario["tipo"])
+    #admin = foo.get_tipo_usuario()
     admin = get_tipo_usuario()
+    print('>>>>'+session.usuario["tipo"])
 
     # Obtengo todos los programas almacenados en la base de datos.
     programas = db(db.PROGRAMA.papelera == False).select()
