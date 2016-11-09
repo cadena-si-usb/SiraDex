@@ -3,7 +3,19 @@
 {{block titulo}}
 	Modificar Producto
 {{end}}
+{{block subtitulo}}
+	{{="Actividad: "+nombre_actividad}}
+{{end}}
 
+{{block descripcion}}
+<div class="col-lg-12">
+	<p>{{="Descripcion: "+descripcion_actividad}}</p>
+	<h4> Formulario </h4>
+    <p class="text-justify">
+		Los campos con asteriscos <span style="color:red">*</span> son obligatorios
+    </p>
+</div>
+{{end}}
 
 {{block contenido}}
 <div class="row">
@@ -38,7 +50,11 @@
 
 			var html='<div id="comprobantes__row" class="form-group">\
 							<hr class="col-sm-offset-3 col-sm-8">\
-							<h3 class="col-sm-offset-3 col-sm-3">Comprobantes</h3>\
+							<h3 id = "comprobantes" class="col-sm-offset-3 col-sm-3">Comprobantes</h3>\
+							<span class="col-sm-offset-3 col-sm-6" id="cant_restante">\
+								Puedes subir <b>'+(cantidad_comprobantes-comprobante_mostrado)+'</b> comprobantes mas <br>\
+								Solo puedes subir documentos PDF\
+							</span>\
 							<div class="row">\
 								<div class="col-sm-offset-3 col-sm-8 content"><br>\
 									{{if (len(comprobantes)==0): }}\
@@ -115,6 +131,12 @@
 					$('#agregar_comprobante').addClass("hidden");
 				}
 
+				$('#cant_restante').remove();
+				$('#comprobantes').after('<span class="col-sm-offset-3 col-sm-6" id="cant_restante">\
+													Puedes subir <b>'+(cantidad_comprobantes-comprobante_mostrado)+'</b> comprobantes mas\
+													<br>\
+													Solo puedes subir documentos PDF</span>');
+
 			});
 
 			$('.upload').change(function(){
@@ -125,9 +147,28 @@
 				}
 			});
 
-			if (comprobante_mostrado==cantidad_comprobantes){
-				$('#agregar_comprobante').addClass("hidden");
-			};
+			
+			$('.form-horizontal').submit(function(){
+
+				// Verificamos los comprobantes
+				var infor_cargada = false;
+				for (i = 1; i <= cantidad_comprobantes; i++) {
+			    	if($('#no_table_c0mpr0bant3_'+i).val() !="" ){
+			    		if($('#no_table_d3scr1pc10n_comprobante_'+i).val()==""){
+			    			alert("La descripción de los comprobantes cargados no puede ser vacia");
+			    			return false;
+			    		}
+			    		infor_cargada = true;
+			    		console.log('#no_table_c0mpr0bant3_'+i+'= '+ $('#no_table_c0mpr0bant3_'+i).val());
+			    		console.log('##no_table_d3scr1pc10n_comprobante_'+i+'= '+ $('#no_table_d3scr1pc10n_comprobante_'+i).val());
+					}
+				}
+
+				if (!infor_cargada || comprobante_mostrado==0){
+					alert("Tiene que adjuntar al menos un comprobante");
+					return false;
+				}
+			});
 
 		});
 	</script>
