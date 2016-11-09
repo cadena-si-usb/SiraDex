@@ -140,7 +140,7 @@ def eliminar_programa():
 
     programa.papelera           = True
     programa.modif_fecha        = request.now
-    programa.ci_usu_modificador = session.usuario['cedula']
+    programa.usbid_usu_modificador = session.usuario['usbid']
     programa.update_record()
     redirect(URL('gestionar_programas.html'))
 

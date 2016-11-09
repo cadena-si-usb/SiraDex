@@ -27,7 +27,7 @@ def gestionar():
     else:
         redirect(URL(c ="default",f="index"))
 
-    rows = db(db.PRODUCTO.ci_usu_creador==session.usuario['cedula']).select()
+    rows = db(db.PRODUCTO.usbid_usu_creador==session.usuario['usbid']).select()
 
     detalles = {}
     nombres = {}
@@ -180,7 +180,7 @@ def agregar():
         no = ['nombre','descripcion','fecha_realizacion','lugar']
         dicc_producto = db.PRODUCTO.insert(id_tipo = tipo,nombre=form.vars.nombre, descripcion=form.vars.descripcion,\
                                       estado='En espera',fecha_realizacion=form.vars.fecha_realizacion, fecha_modificacion=now, \
-                                      lugar = form.vars.lugar, ci_usu_creador= session.usuario['cedula'])
+                                      lugar = form.vars.lugar, usbid_usu_creador= session.usuario['usbid'])
         id_producto = dicc_producto['id_producto']
         for var in form.vars:
             if not(var in no):
@@ -405,6 +405,17 @@ def modificar():
 def eliminar():
     id_act = int(request.args(0))
 
+    query = "SELECT archivo FROM COMPROBANTE WHERE producto="+str(id_act)+";"
+    comprobantes = db.executesql(query)
+
+    for  i in range (len(comprobantes)):
+        pdf = os.path.join(request.folder,'uploads',comprobantes[i][0][0:22],comprobantes[i][0][23:25],comprobantes[i][0])
+        try:
+            os.unlink(pdf)
+        except Exception,e:
+            print "Exception: "
+            print e
+    
 
     set_tiene_campo = db(db.PRODUCTO_TIENE_CAMPO.id_prod == id_act)
     set_tiene_campo.delete()
@@ -512,7 +523,7 @@ def descargar_comprobante():
 def get_pdf():
 
     producto = db.PRODUCTO(request.args(0))
-    creador= db(db.USUARIO.ci == producto .ci_usu_creador).select()[0]
+    creador= db(db.USUARIO.usbid == producto .usbid_usu_creador).select()[0]
     tmpfilename = os.path.join(request.folder,'private',str(uuid4()))
     doc = SimpleDocTemplate(tmpfilename)
     elements = []
@@ -589,7 +600,7 @@ def eliminar_comprobante():
     query = "SELECT archivo FROM COMPROBANTE WHERE id_comprobante="+id_comprobante+";"
     comprobante = db.executesql(query)
 
-    pdf = os.path.join(request.folder,'uploads','no_table.c0mpr0bant3_1',comprobante[0][0][23:25],comprobante[0][0])
+    pdf = os.path.join(request.folder,'uploads',comprobante[0][0][0:22],comprobante[0][0][23:25],comprobante[0][0])
     try:
         os.unlink(pdf)
     except Exception,e:
