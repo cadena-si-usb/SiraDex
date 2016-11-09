@@ -250,7 +250,7 @@ CREATE TABLE LOG_SIRADEX(
 CREATE TABLE BACKUP(
   id_backup INT,
   descripcion VARCHAR(256),
-  fecha DATE
+  fecha DATE,
 
   CONSTRAINT PK_BACKUP
               PRIMARY KEY (id_backup)

@@ -1,4 +1,5 @@
 import os
+import datetime
 
 def index():
 
@@ -8,14 +9,20 @@ def index():
 
 def generar_backup():
 
-	id_backup = db.BACKUP.insert(nombre=archivo,
-						fecha=,
-						descripcion=)
-
+	formulario_generar_backup = construir_formulario_generar_backup()
 
 	archivo = "backup_" + id_backup + ".sql"
-	comando = "pg_dump -d Siradex -U Siradex -h localhost -w > " + archivo
-	resp = os.system(comando)
+
+	if formulario_generar_backup.accepts(request.vars, session,formname="formulario_generar_backup"):
+
+		id_backup = db.BACKUP.insert(nombre=archivo,
+						fecha=datetime.date.today(),
+						descripcion=request.vars.Descripcion)
+
+
+
+		comando = "pg_dump -d Siradex -U Siradex -h localhost -w > " + archivo
+		resp = os.system(comando)
 
 
 def restaurar_backup():
@@ -27,5 +34,14 @@ def restaurar_backup():
 	comando = "pg_dump -d Siradex -U Siradex -h localhost -w < " + archivo
 
 	resp = os.system(comando)
-	
 
+def construir_formulario_generar_backup():
+
+    formulario_generar_backup = SQLFORM.factory(
+                        Field('Descripcion', type="text",
+                              requires = [IS_NOT_EMPTY(error_message='La descripción del backup no puede quedar vacía.'),
+                                          IS_LENGTH(256)]),
+                        submit_button = 'Agregar',
+                        labels = {'Descripcion' : 'Descripción'}
+                )
+    return formulario_generar_backup
