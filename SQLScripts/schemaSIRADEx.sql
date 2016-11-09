@@ -248,7 +248,7 @@ CREATE TABLE LOG_SIRADEX(
 );
 
 CREATE TABLE BACKUP(
-  id_backup INT,
+  id_backup SERIAL NOT NULL,
   descripcion VARCHAR(256),
   fecha DATE,
 
