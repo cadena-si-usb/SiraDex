@@ -274,7 +274,7 @@
 
                     <!--Seleccion de Programa-->
                     <div class="form-group">
-                        <label for="programa" class = "control-label col-sm-3"> Programa(*)</label>
+                        <label for="programa" class = "control-label col-sm-4"> Programa(*)</label>
                         <div class="col-sm-8">
                             <select class= "form-control" name="programa" onchange="ajax('obtener_actividades', ['programa'], ':eval')">
                                 <option selected=""></option>
@@ -284,11 +284,12 @@
                                 {{pass}}
                             </select>
                         </div>
+                        <div id="descripcion_programa"></div>
                     </div>
 
                     <!-- Filtro de Tipo de Actividad -->
                     <div class="form-group">
-                        <label for="id_tipo" class = "control-label col-sm-3">
+                        <label for="id_tipo" class = "control-label col-sm-4">
                             Tipo Actividad (*)
                         </label>
                         <div class="col-sm-8 ">
