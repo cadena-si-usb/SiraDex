@@ -39,6 +39,7 @@
 	    border: 2px solid #E6EAED;
 	    padding: 5px;
 	    color: #fff;
+	    height: auto;
 	}
 
 	img{
@@ -508,3 +509,28 @@ a: hover {
 	.form-horizontal{
 		padding: 6px 20px !important;
 	}
+
+
+/* --------------------------- PRUEBA ------------ */
+@media screen and (max-width: 768px) {
+
+	.container {
+        width: 100% !important;
+        display: block !important;  /* Cuando el ancho sea inferior a 600px el elemento será un bloque */
+        margin: auto !important;
+        position: static !important;
+        float: none !important;
+    }
+     
+	#degradado{
+	    -moz-border-radius: 8px 8px 8px 10px;
+	    margin-top: 20px;
+	    margin-bottom: 20px;
+	    background-color: #FFFFFF;
+	    border: 2px solid #E6EAED;
+	    padding: 5px;
+	    color: #fff;
+	}
+
+
+}
