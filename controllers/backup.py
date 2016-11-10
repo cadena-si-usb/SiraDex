@@ -19,20 +19,17 @@ def index():
 
 	form = construir_formulario_generar_backup()
 
-
 	if form.accepts(request.vars, session,formname="form"):
-		
-		print("date:"+str(datetime.date.today()))
-		print("descr:"+request.vars.Descripcion)
 
 		id_backup = db.BACKUP.insert(fecha=str(datetime.date.today()),
 						descripcion=request.vars.Descripcion)
-		print(id_backup)
 		archivo = "backup_" + str(id_backup["id_backup"]) + ".sql"
 
 
 
-		comando = "pg_dump -d Siradex -U Siradex -h localhost -w > ../backup/" + archivo
+		comando = "pg_dump -d Siradex -U Siradex -h localhost -w > ./applications/SiraDex/backup/" + archivo
+		comando2 = "pwd"
+		resp2 = os.system(comando2)
 		resp = os.system(comando)
 
 	return locals()
