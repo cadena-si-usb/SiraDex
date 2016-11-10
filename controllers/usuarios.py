@@ -50,9 +50,6 @@ def gestionar():
 
                 ## Enviamos la notificacion
                 enviar_correo_contacto(mail, datos_usuario, asunto, mensaje)
-                #
-                # # rechazamos efectimavamente el producto.
-                # rechazar(id_producto)
 
                 redirect(URL('gestionar'))
 
