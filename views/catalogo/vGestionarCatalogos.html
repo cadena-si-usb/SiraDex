@@ -17,7 +17,7 @@
 </div>
 <br>
 <div class="card">
-  {{if len(catalogos) == 0:}}
+  {{if len(catalogos) != 0:}}
     <ul class="nav nav-tabs" role="tablist">
     {{for catalogo in catalogos:}}
       <li class="nav-item {{='active' if catalogo[0].id_catalogo == catalogo_actual else ''}}">
@@ -48,16 +48,16 @@
                     <li class="list-group-item">
                         <div class="row">
                             <div class="col-sm-4">
-                                <b>Nombre del Campo</b>
+                                <center><b>Nombre del Campo</b></center>
                             </div>
                             <div class="col-sm-4">
-                                <b>Tipo</b>
+                                <center><b>Tipo</b></center>
                             </div>
                             <div class="col-sm-2">
-                                <b>Obligatorio</b>
+                                <center><b>Obligatorio</b></center>
                             </div>
                             <div class="col-sm-2">
-                                <b>Acciones</b>
+                                <center><b>Acciones</b></center>
                             </div>
                         </div>
                      </li>
@@ -65,15 +65,16 @@
                       <li class="list-group-item">
                           <div class="row">
                               <div class="col-sm-4">
-                                  {{= campo.nombre}}
+                                  <center>{{= campo.nombre}}</center>
                               </div>
                               <div class="col-sm-4">
-                                  {{= campo.tipo_campo}}
+                                  <center>{{= campo.tipo_campo}}</center>
                               </div>
                               <div class="col-sm-2">
-                                  {{= 'Si' if campo.obligatorio else 'No'}}
+                                  <center>{{= 'Si' if campo.obligatorio else 'No'}}</center>
                               </div>
                               <div class="col-sm-1">
+                                <center>
                                   <span class="glyphicon glyphicon-edit blue"
                                         data-toggle="modal" data-target="#modalEditarCampo"
                                         data-id-campo-cat="{{=campo.id_campo_cat}}"
@@ -82,9 +83,12 @@
                                         data-tipo-campo="{{=campo.tipo_campo}}"
                                         data-obligatorio="{{=campo.obligatorio}}">
                                   </span>
+                                </center>
                               </div>
                               <div class="col-sm-1">
+                                <center>
                                   <span class="glyphicon glyphicon-remove red" data-link-eliminar-campo="{{=URL(f='eliminarCampos', args=[campo.id_campo_cat])}}" data-toggle="modal" data-target="#modalEliminarCampo"></span>
+                                </center>
                               </div>
                           </div>
                       </li>
@@ -94,14 +98,14 @@
               <div class="row">
                   <center>
                     <div class="col-sm-2 col-sm-offset-3">
-                        <button type="button" class="btn btn-default green btn-border"
+                        <button type="button" class="btn btn-default btn-block green btn-border"
                                 data-toggle="modal" data-target="#modalAgregarCampo"
                                 data-id-catalogo="{{=catalogo[0].id}}">
-                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Campo
+                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Campo
                         </button>
                     </div>
                     <div class="col-sm-2">
-                      <button type="button" class="btn btn-default green btn-border"
+                      <button type="button" class="btn btn-default btn-block renombrar btn-border"
                               data-toggle="modal" data-target="#modalCambiarNombre"
                               data-id-catalogo = "{{=catalogo[0].id}}"
                               data-nombre = "{{=catalogo[0].nombre}}">
