@@ -370,6 +370,10 @@ a: hover {
     color: #43A047 !important;
 }
 
+.right {
+	text-align: right !important;
+}
+
 /**********************************/
 /*                                */
 /*              Tabla             */
