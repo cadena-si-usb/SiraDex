@@ -787,6 +787,8 @@ COPY backup (id_backup, descripcion, fecha) FROM stdin;
 16	sdcdass	2016-11-09
 17	asdsadas	2016-11-09
 18	dadadaad	2016-11-09
+19	dsssd	2016-11-09
+20	holk	2016-11-10
 \.
 
 
@@ -794,7 +796,7 @@ COPY backup (id_backup, descripcion, fecha) FROM stdin;
 -- Name: backup_id_backup_seq; Type: SEQUENCE SET; Schema: public; Owner: Siradex
 --
 
-SELECT pg_catalog.setval('backup_id_backup_seq', 19, true);
+SELECT pg_catalog.setval('backup_id_backup_seq', 20, true);
 
 
 --
@@ -940,6 +942,7 @@ COPY producto_tiene_campo (id_prod, id_campo, valor_campo) FROM stdin;
 --
 
 COPY programa (id_programa, nombre, abreviacion, descripcion, papelera, modif_fecha, usbid_usu_modificador) FROM stdin;
+1	sdada	dasdas	dasda	f	\N	\N
 \.
 
 
@@ -947,7 +950,7 @@ COPY programa (id_programa, nombre, abreviacion, descripcion, papelera, modif_fe
 -- Name: programa_id_programa_seq; Type: SEQUENCE SET; Schema: public; Owner: Siradex
 --
 
-SELECT pg_catalog.setval('programa_id_programa_seq', 1, false);
+SELECT pg_catalog.setval('programa_id_programa_seq', 1, true);
 
 
 --
@@ -955,6 +958,7 @@ SELECT pg_catalog.setval('programa_id_programa_seq', 1, false);
 --
 
 COPY tipo_actividad (id_tipo, nombre, tipo_p_r, descripcion, id_programa, validacion, producto, nro_campos, id_jefe_creador, usbid_usuario_propone, papelera, modif_fecha) FROM stdin;
+1	asda	R	dsasa	1	True	\N	\N	\N	\N	f	\N
 \.
 
 
@@ -962,7 +966,7 @@ COPY tipo_actividad (id_tipo, nombre, tipo_p_r, descripcion, id_programa, valida
 -- Name: tipo_actividad_id_tipo_seq; Type: SEQUENCE SET; Schema: public; Owner: Siradex
 --
 
-SELECT pg_catalog.setval('tipo_actividad_id_tipo_seq', 1, false);
+SELECT pg_catalog.setval('tipo_actividad_id_tipo_seq', 1, true);
 
 
 --
@@ -970,6 +974,8 @@ SELECT pg_catalog.setval('tipo_actividad_id_tipo_seq', 1, false);
 --
 
 COPY usuario (ci, usbid, nombres, apellidos, telefono, correo_inst, correo_alter, tipo) FROM stdin;
+20975940	11-11020	Sergio Alejandro	Teran Zambrano	\N	11-11020@usb.ve	\N	Administrador
+24272072	12-10941	 Norelys Marian\n	 Rumbos Carrasco\n		12-10941@usb.ve		Administrador
 \.
 
 
