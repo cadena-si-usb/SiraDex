@@ -34,32 +34,29 @@
           <table class="table table-striped table-condensed table-hover sortable">
             <thead>
               <tr>
-              <th>Descripción</th>
-              <!-- <th>Descripcion</th> -->
-              <th>Fecha Backup</th>
+              <th>Backup</th>
               <th><center>Restaurar</center></th>
               </tr>
             </thead>
             <tbody>
                 {{for backup in backups: }}
-                  <tr>
-                  <td class="detalles">
-                      {{=backup["descripcion"]}}
-                  </td>
 
-                   <td class="detalles">
-                      {{=backup["fecha"]}}
-                  </td>                                           
-                      
-                  <td class="center-vertically">
-                  <a href="#">
-                        <center>
-                    <span class="glyphicon glyphicon-refresh"></span>
+                  {{if backup.endswith(".sql"):}}
+                    <tr>
+                    <td class="detalles">
+                        {{=backup}}
+                    </td>                                       
+                        
+                    <td class="center-vertically">
+                    <a href="{{=URL(c='backup',f='restaurar_backup',args=[ backup ] )}}">
+                          <center>
+                      <span class="glyphicon glyphicon-refresh"></span>
 
-                        <center>
-                  </a>
-                  </td>
-                  </tr>
+                          <center>
+                    </a>
+                    </td>
+                    </tr>
+                  {{pass}}
                 {{pass}}
             </tbody>
           </table>

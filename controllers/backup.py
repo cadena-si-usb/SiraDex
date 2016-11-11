@@ -5,22 +5,22 @@ import time
 
 def index():
 	admin = get_tipo_usuario(session)
-	backups = db(db.BACKUP).select()
+	backups = os.listdir("./applications/SiraDex/backup")
 
-	form = restaurar_backup()
+	form = formulario_restaurar_backup()
 
 	if form.process().accepted:
 
 		print form.vars.backup
+#		comando = "psql -d Siradex -U Siradex -h localhost -w < ./applications/SiraDex/backup/" + archivo
+
+#		resp = os.system(comando)
 
 		redirect(URL('index'))
 
 	elif form.errors:
 		response.flash = 'el formulario tiene errores'
 
-#		comando = "psql -d Siradex -U Siradex -h localhost -w < ./applications/SiraDex/backup/" + archivo
-
-#		resp = os.system(comando)
 
 	return locals()
 
@@ -33,7 +33,7 @@ def generar_backup():
 	comando = "pg_dump -d Siradex -U Siradex -h localhost -w ./applications/SiraDex/backup/ > " + archivo
 	resp = os.system(comando)
 
-def restaurar_backup():
+def formulario_restaurar_backup():
 
 	fields = []
 
@@ -43,15 +43,23 @@ def restaurar_backup():
 	form.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
 	form.element(_type='submit')['_value']="Agregar"
 
+	return form
 
+def restaurar_backup():
 
-		#archivo = "backup_" + id_backup + ".sql"
+		archivo = request.args[0]
 
 		#comando = "psql -d Siradex -U Siradex -h localhost -w < " + archivo
 
 		#resp = os.system(comando)
+		resp = 0
+		if (resp == 0):
+			response.flash="Restaurado."
+		else:
+			response.flash="No se pudo restaurar."
 
-	return form
+		redirect(URL('index'))
+
 
 def download():
     return response.download(request, db)
