@@ -100,7 +100,7 @@ def login_cas():
             # Se envia correo de bienvenida al usuario
             enviar_correo_bienvenida(mail,datos_usuario)
 
-            redirect(URL('vRegistroUsuario'))
+            redirect(URL('perfil'))
 
 def logout_cas():
     session.usuario = None
