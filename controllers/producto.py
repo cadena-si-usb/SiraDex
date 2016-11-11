@@ -15,19 +15,14 @@ from reportlab.lib.units  import *
 from reportlab.lib        import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.enums  import *
+from funciones_siradex import get_tipo_usuario
+
 
 def gestionar():
-    if session.usuario != None:
-        if(session.usuario["tipo"] == "DEX"):
-            admin = 2
-        elif(session.usuario["tipo"] == "Administrador"):
-            admin = 1
-        else:
-            admin = 0
-    else:
-        redirect(URL(c ="default",f="index"))
+    admin = get_tipo_usuario(session)
 
-    rows = db(db.PRODUCTO.ci_usu_creador==session.usuario['cedula']).select()
+
+    rows = db(db.PRODUCTO.usbid_usu_creador==session.usuario['usbid']).select()
 
     detalles = {}
     nombres = {}
@@ -47,18 +42,18 @@ def gestionar():
 
         detalles[row] = dict_campos
 
-        nombres_act = db((db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo)
+        nombres_act = db((db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo) 
                     & (db.PRODUCTO.id_producto == row.id_producto)).select()
-
+        
         for nombre in nombres_act:
             print nombre.TIPO_ACTIVIDAD.nombre
             nombres[row] = nombre.TIPO_ACTIVIDAD.nombre
 
-        if row["estado"] == "En espera":
+        if row["estado"] == "Por Validar":
             cant_esp += 1
-        elif row["estado"] == "Validada":
-            cant_val += 1
-        elif row["estado"] == "Rechazada":
+        elif row["estado"] == "Validado":
+            cant_val += 1 
+        elif row["estado"] == "No Validado":
             cant_rec += 1
 
 
@@ -75,30 +70,12 @@ def gestionar():
     return locals()
 
 def tipos():
-    if session.usuario != None:
-        if(session.usuario["tipo"] == "DEX"):
-            admin = 2
-        elif(session.usuario["tipo"] == "Administrador"):
-            admin = 1
-        else:
-            admin = 0
-    else:
-        redirect(URL(c ="default",f="index"))
-
     rows = db(db.TIPO_ACTIVIDAD.papelera==False).select()
     return locals()
 
-
 def agregar():
-    if session.usuario != None:
-        if(session.usuario["tipo"] == "DEX"):
-            admin = 2
-        elif(session.usuario["tipo"] == "Administrador"):
-            admin = 1
-    	else:
-    		admin = 0
-    else:
-        redirect(URL(c ="default",f="index"))
+
+    admin = get_tipo_usuario(session)
 
     # Para la fecha maxima de realizacion
     now = datetime.datetime.now()
@@ -126,7 +103,8 @@ def agregar():
     fields.append(Field('descripcion','string',label="Descripcion (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(250)]))
     fields.append(Field('fecha_realizacion','date',label="Fecha de Realizacion (*)",requires=[IS_NOT_EMPTY(error_message='Debe seleccionar una fecha'),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
     fields.append(Field('lugar','string',label="Lugar (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(50)]))
-
+    obl = {} 
+    no_obl = {}
     for row in campos_id:
         rows_campo = db(db.CAMPO.id_campo == row.id_campo).select().first()
         nombre = rows_campo.nombre.replace(" ", "_")
@@ -140,7 +118,9 @@ def agregar():
         print URL('static/archivos')
         obligatorio = rows_campo.obligatorio
         tipo_campo = rows_campo.tipo_campo
+
         if obligatorio:
+            obl[nombre]= tipo_campo
             if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
             elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
             elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX')]))
@@ -151,6 +131,7 @@ def agregar():
             elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',label=rows_campo.nombre+" (*)",requires=IS_NOT_EMPTY()))
 
         else:
+            no_obl[nombre] = tipo_campo
             if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',requires=IS_EMPTY_OR(IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD'))))
             elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string'))
             elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX'))))
@@ -159,8 +140,7 @@ def agregar():
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807))))
             elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807'))))
             elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',requires=IS_NOT_EMPTY()))
-
-
+        
 
     for i in range(5):
         fields.append(Field("c0mpr0bant3_"+str(i+1), 'upload', autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), label=''))
@@ -172,15 +152,28 @@ def agregar():
     print url
 
 
-    form=SQLFORM.factory(*fields, upload=url)
-    form.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
-    form.element(_type='submit')['_value']="Agregar"
+    form=SQLFORM.factory(*fields, upload=url) 
+    form.element(_type='submit')['_class']="btn blue-add btn-block btn-border "
+    form.element(_type='submit')['_value']="Agregar"  
+    form.element()
+
+    for i in obl.keys():
+        
+        form.element(_name=i)['_class']="form-control obligatoria "+ obl[i]
+
+    for i in no_obl.keys():
+        
+        form.element(_name=i)['_class']="form-control "+ no_obl[i]
+
+    for f in form.elements("input"):
+        print f 
+
 
     if form.process().accepted:
         no = ['nombre','descripcion','fecha_realizacion','lugar']
         dicc_producto = db.PRODUCTO.insert(id_tipo = tipo,nombre=form.vars.nombre, descripcion=form.vars.descripcion,\
-                                      estado='En espera',fecha_realizacion=form.vars.fecha_realizacion, fecha_modificacion=now, \
-                                      lugar = form.vars.lugar, ci_usu_creador= session.usuario['cedula'])
+                                      estado='Por Validar',fecha_realizacion=form.vars.fecha_realizacion, fecha_modificacion=now, \
+                                      lugar = form.vars.lugar, usbid_usu_creador= session.usuario['usbid'])
         id_producto = dicc_producto['id_producto']
         for var in form.vars:
             if not(var in no):
@@ -228,16 +221,10 @@ def agregar():
 
     return locals()
 
+
+
 def modificar():
-    if session.usuario != None:
-        if(session.usuario["tipo"] == "DEX"):
-            admin = 2
-        elif(session.usuario["tipo"] == "Administrador"):
-            admin = 1
-        else:
-            admin = 0
-    else:
-        redirect(URL(c ="default",f="index"))
+    admin = get_tipo_usuario(session)
 
     id_producto = int(request.args(0))
 
@@ -276,8 +263,9 @@ def modificar():
     valores['descripcion'] = producto.descripcion
     valores['fecha_realizacion'] = producto.fecha_realizacion
     valores['lugar'] = producto.lugar
-
-
+    
+    # Los tipos documento tienen que ser tratados diferente y cargados los enlaces con js
+    hay_uploads = False
     for row in rows:
         rows_campo = db(db.CAMPO.id_campo == row.id_campo).select().first()
         nombre = rows_campo.nombre.replace(" ", "_")
@@ -329,7 +317,7 @@ def modificar():
     # Al aceptar el formulario
     if form.process().accepted:
         no = ['nombre','descripcion','fecha_realizacion','fecha_modificacion','lugar']
-        sql = "UPDATE PRODUCTO SET estado = 'En espera' WHERE id_producto = '"+str(id_producto)+"';"
+        sql = "UPDATE PRODUCTO SET estado = 'Por Validar' WHERE id_producto = '"+str(id_producto)+"';"
 
         sql2 = "UPDATE PRODUCTO SET fecha_modificacion='"+str(now.date())+"' WHERE id_producto = '"+str(id_producto)+"';"
         print "\n\nel sql quedo:" +sql
@@ -403,6 +391,17 @@ def modificar():
 def eliminar():
     id_act = int(request.args(0))
 
+    query = "SELECT archivo FROM COMPROBANTE WHERE producto="+str(id_act)+";"
+    comprobantes = db.executesql(query)
+
+    for  i in range (len(comprobantes)):
+        pdf = os.path.join(request.folder,'uploads',comprobantes[i][0][0:22],comprobantes[i][0][23:25],comprobantes[i][0])
+        try:
+            os.unlink(pdf)
+        except Exception,e:
+            print "Exception: "
+            print e
+    
 
     set_tiene_campo = db(db.PRODUCTO_TIENE_CAMPO.id_prod == id_act)
     set_tiene_campo.delete()
@@ -413,7 +412,6 @@ def eliminar():
 
     #return "producto {} eliminada".format(producto)
     return locals()
-
 
 # Funcion utilizada para el ajax en el agregar
 def obtener_actividades():
@@ -428,8 +426,9 @@ def obtener_actividades():
 
         concat += '<option value='+str(tipo['id_tipo'])+'>'+tipo['nombre']+'</option>'
 
-
-    return "jQuery('#lista_tipos').empty().append('"+concat+"')"
+    descripcion = "<div class=\"col-sm-offset-1\"><br><h4>Descripcion del Programa:</h4><p>"+programa.descripcion+"</p></div>"
+    html = "jQuery('#lista_tipos').empty().append('"+concat+"');jQuery('#descripcion_programa').empty().append('"+descripcion+"')"
+    return html
 
 # Funcion utilizada para el ajax cuando se elige la actividad para que aparezcan los campos
 def seleccion_actividad():
@@ -510,7 +509,7 @@ def descargar_comprobante():
 def get_pdf():
 
     producto = db.PRODUCTO(request.args(0))
-    creador= db(db.USUARIO.ci == producto .ci_usu_creador).select()[0]
+    creador= db(db.USUARIO.usbid == producto .usbid_usu_creador).select()[0]
     tmpfilename = os.path.join(request.folder,'private',str(uuid4()))
     doc = SimpleDocTemplate(tmpfilename)
     elements = []
@@ -578,7 +577,7 @@ def get_pdf():
     os.unlink(tmpfilename)
     response.headers['Content-Type']='application/pdf'
 
-    return dat
+    return data
 
 def eliminar_comprobante():
     if not request.args:
@@ -587,7 +586,7 @@ def eliminar_comprobante():
     query = "SELECT archivo FROM COMPROBANTE WHERE id_comprobante="+id_comprobante+";"
     comprobante = db.executesql(query)
 
-    pdf = os.path.join(request.folder,'uploads','no_table.c0mpr0bant3_1',comprobante[0][0][23:25],comprobante[0][0])
+    pdf = os.path.join(request.folder,'uploads',comprobante[0][0][0:22],comprobante[0][0][23:25],comprobante[0][0])
     try:
         os.unlink(pdf)
     except Exception,e:
@@ -596,80 +595,3 @@ def eliminar_comprobante():
 
 
     db(db.COMPROBANTE.id_comprobante == id_comprobante).delete()
-
-
-#Funcion para exportar PDF de un producto
-def get_pdf():
-
-	producto = db.PRODUCTO(request.args(0))
-	creador= db(db.USUARIO.ci == producto .ci_usu_creador).select()[0]
-	tmpfilename = os.path.join(request.folder,'private',str(uuid4()))
-	doc = SimpleDocTemplate(tmpfilename)
-	elements = []
-
-	# Definimos los estilos para el documento
-	estilo = getSampleStyleSheet()
-
-	estilo_tabla = estilo["BodyText"]
-	estilo_tabla.alignment = TA_LEFT
-	estilo_tabla.fontName = "Helvetica"
-	estilo_tabla.fontSize = 10
-	estilo_tabla.leading = 12
-
-	estilo_titulo = estilo["Normal"]
-	estilo_titulo.alignment = TA_CENTER
-	estilo_titulo.fontName = "Helvetica"
-	estilo_titulo.fontSize = 12
-	estilo_titulo.leading = 15
-
-	estilo_footer = estilo["Italic"]
-	estilo_footer.alignment = TA_CENTER
-	estilo_footer.fontName = "Helvetica"
-	estilo_footer.fontSize = 10
-	estilo_footer.leading = 12
-
-	# Agrega el footer al documento
-	def addFooter(canvas, doc):
-
-		footer1 = Paragraph('''<br/>Sartenejas, Baruta, Edo. Miranda - Apartado 89000 Cable Unibolivar Caracas Venezuela. Teléfono +58 0212-9063111
-		 					   <br/>Litoral. Camurí Grande, Edo. Vargas Parroquia Naiguatá. Teléfono +58 0212-9069000	''', estilo_footer)
-		w, h = footer1.wrap(doc.width, doc.bottomMargin)
-		footer1.drawOn(canvas, doc.leftMargin, h)
-
-
-	usb_logo_url = os.path.join(request.folder, 'static/images','usblogo.png')
-	usblogo = Image(usb_logo_url)
-	usblogo.drawHeight = 70
-	usblogo.drawWidth  = 100
-
-	elements.append(usblogo)
-	elements.append(Paragraph('Universidad Simón Bolívar' , estilo_titulo))
-	elements.append(Paragraph('Vicerrectorado Académico' , estilo_titulo))
-	elements.append(Paragraph('Deacanato de Extensión' , estilo_titulo))
-	elements.append(Paragraph('Sistema de Registro de Actividades de Extensión (SIRADEX)' , estilo_titulo))
-	elements.append(Paragraph('<br/><br/>DATOS DEL PRODUCTO' , estilo_titulo))
-
-	data = [
-	[''],
-	['', Paragraph('<b>NOMBRE DEL PRODUCTO:</b> ', estilo_tabla),  Paragraph(str(producto.nombre), estilo_tabla), ''],
-	['', Paragraph('<b>REGISTRADO POR: </b>' , estilo_tabla),  Paragraph(str(creador.nombres +' '+ creador.apellidos), estilo_tabla),''],
-	['', Paragraph('<b>CI:</b> ' , estilo_tabla),  Paragraph(str(creador.ci), estilo_tabla),''],
-	['', Paragraph('<b>DESCRIPCIÓN:</b> ', estilo_tabla) ,  Paragraph(str (producto.descripcion), estilo_tabla), ''],
-	['', Paragraph('<b>LUGAR DE REALIZACIÓN:</b>', estilo_tabla),  Paragraph(str (producto.lugar), estilo_tabla), ''],
-	['', Paragraph('<b>FECHA DE CREACIÓN:</b> ', estilo_tabla) ,  Paragraph(str (producto.fecha_realizacion), estilo_tabla), ''],
-	['', Paragraph('<b>ÚLTIMA FECHA DE MODIFICACIÓN: </b>' , estilo_tabla) ,  Paragraph(str (producto.fecha_modificacion), estilo_tabla), ''],
-	['', Paragraph('<b>STATUS DE VALIDACION: </b>', estilo_tabla) ,  Paragraph(str (producto.estado), estilo_tabla), '']
-	]
-
-	t=Table(data, colWidths=(2*inch))
-	t.setStyle(TableStyle([('VALIGN',(1,0),(1,8),'MIDDLE')]))
-
-	elements.append(t)
-
-	# construimos el documento
-	doc.build(elements, onFirstPage=addFooter)
-	data = open(tmpfilename,"rb").read()
-	os.unlink(tmpfilename)
-	response.headers['Content-Type']='application/pdf'
-
-	return data

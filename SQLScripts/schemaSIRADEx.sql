@@ -10,29 +10,18 @@ CREATE TABLE USUARIO(
   tipo           VARCHAR(15),
 
   CONSTRAINT PK_USUARIO
-             PRIMARY KEY (ci)
-);
-
-CREATE TABLE USBID(
-  ci_usuario  VARCHAR(10) NOT NULL,
-  usbid       VARCHAR(20) NOT NULL,
-
-  CONSTRAINT PK_USBID
-             PRIMARY KEY (ci_usuario),
-  CONSTRAINT FK_USBID_CI_USUARIO
-             FOREIGN KEY (ci_usuario)
-             REFERENCES  USUARIO(ci)
+             PRIMARY KEY (usbid)
 );
 
 CREATE TABLE JEFE_DEPENDENCIA(
   id_jefe      SERIAL      NOT NULL,
-  ci_usuario   VARCHAR(10) NOT NULL,
+  usbid_usuario   VARCHAR(20) NOT NULL,
 
   CONSTRAINT PK_JEFE_DEPENDENCIA
              PRIMARY KEY (id_jefe),
-  CONSTRAINT FK_JEFE_DEPENDENCIA_CI_USUARIO
-             FOREIGN KEY (ci_usuario)
-             REFERENCES  USUARIO(ci)
+  CONSTRAINT FK_JEFE_DEPENDENCIA_USBID_USUARIO
+             FOREIGN KEY (usbid_usuario)
+             REFERENCES  USUARIO(usbid)
 );
 
 CREATE TABLE PROGRAMA(
@@ -42,13 +31,13 @@ CREATE TABLE PROGRAMA(
   descripcion         Varchar(2048) NOT NULL,
   papelera            BOOLEAN       NOT NULL DEFAULT FALSE,
   modif_fecha         DATE,
-  ci_usu_modificador  VARCHAR(10),
+  usbid_usu_modificador  VARCHAR(20),
 
   CONSTRAINT PK_PROGRAMA
              PRIMARY KEY (id_programa),
-  CONSTRAINT FK_PROGRAMA_CI_USU_MODIFICADOR
-             FOREIGN KEY (ci_usu_modificador)
-             REFERENCES USUARIO(ci)
+  CONSTRAINT FK_PROGRAMA_USBID_USU_MODIFICADOR
+             FOREIGN KEY (usbid_usu_modificador)
+             REFERENCES USUARIO(usbid)
 
 );
 
@@ -62,15 +51,15 @@ CREATE TABLE TIPO_ACTIVIDAD(
   producto            VARCHAR(256),
   nro_campos          INT,
   id_jefe_creador     INT,
-  ci_usuario_propone  VARCHAR(10),
+  usbid_usuario_propone  VARCHAR(20),
   papelera            BOOLEAN NOT NULL DEFAULT FALSE,
   modif_fecha         DATE,
 
   CONSTRAINT PK_TIPO_ACTIVIDAD
              PRIMARY KEY (id_tipo),
-  CONSTRAINT FK_TIPO_ACTIVIDAD_CI_USUARIO_PROPONE
-             FOREIGN KEY (ci_usuario_propone)
-             REFERENCES  USUARIO(ci),
+  CONSTRAINT FK_TIPO_ACTIVIDAD_USBID_USUARIO_PROPONE
+             FOREIGN KEY (usbid_usuario_propone)
+             REFERENCES  USUARIO(usbid),
   CONSTRAINT FK_TIPO_ACTIVIDAD_ID_JEFE_CREADOR
              FOREIGN KEY (id_jefe_creador)
              REFERENCES  JEFE_DEPENDENCIA(id_jefe),
@@ -84,23 +73,23 @@ CREATE TABLE PRODUCTO(
   id_tipo             INT,
   nombre              VARCHAR(128),
   descripcion         VARCHAR(256),
-  estado          VARCHAR DEFAULT 'En Espera',
+  estado          VARCHAR DEFAULT 'Por Validar',
   evaluacion_criterio VARCHAR(256),
   evaluacion_valor    VARCHAR(256),
   fecha_realizacion   DATE,
   fecha_modificacion  DATE,
   lugar               VARCHAR(50),
-  ci_usu_modificador  VARCHAR(10),
-  ci_usu_creador      VARCHAR(10),
+  usbid_usu_modificador  VARCHAR(20),
+  usbid_usu_creador      VARCHAR(20),
 
   CONSTRAINT PK_PRODUCTO
              PRIMARY KEY (id_producto),
-  CONSTRAINT FK_PRODUCTO_CI_USU_CREADOR
-             FOREIGN KEY (ci_usu_creador)
-             REFERENCES  USUARIO(ci),
-  CONSTRAINT FK_PRODUCTO_CI_USU_MODIFICADOR
-             FOREIGN KEY (ci_usu_modificador)
-             REFERENCES USUARIO(ci),
+  CONSTRAINT FK_PRODUCTO_USBID_USU_CREADOR
+             FOREIGN KEY (usbid_usu_creador)
+             REFERENCES  USUARIO(usbid),
+  CONSTRAINT FK_PRODUCTO_USBID_USU_MODIFICADOR
+             FOREIGN KEY (usbid_usu_modificador)
+             REFERENCES USUARIO(usbid),
   CONSTRAINT FK_PRODUCTO_ID_TIPO
              FOREIGN KEY (id_tipo)
              REFERENCES  TIPO_ACTIVIDAD(id_tipo)
@@ -203,14 +192,14 @@ CREATE TABLE PRODUCTO_TIENE_CAMPO(
 
 
 CREATE TABLE PARTICIPA_PRODUCTO(
-  ci_usuario    VARCHAR(10),
+  usbid_usuario    VARCHAR(20),
   id_producto   INT,
 
   CONSTRAINT PK_PARTICIPA_ACT
-             PRIMARY KEY (ci_usuario,id_producto),
-  CONSTRAINT FK_PARTICIPA_ACT_CI_USUARIO
-             FOREIGN KEY (ci_usuario)
-             REFERENCES  USUARIO(ci),
+             PRIMARY KEY (usbid_usuario,id_producto),
+  CONSTRAINT FK_PARTICIPA_ACT_USBID_USUARIO
+             FOREIGN KEY (usbid_usuario)
+             REFERENCES  USUARIO(usbid),
   CONSTRAINT FK_PARTICIPA_ACT_ID_PRODUCTO
              FOREIGN KEY (id_producto )
              REFERENCES  PRODUCTO(id_producto)
@@ -249,11 +238,20 @@ CREATE TABLE LOG_SIRADEX(
   accion_fecha  DATE,
   accion_ip     VARCHAR(256),
   descripcion   TEXT,
-  ci_usuario    VARCHAR(10),
+  usbid_usuario    VARCHAR(20),
 
   CONSTRAINT PK_LOG
              PRIMARY KEY (accion,accion_fecha,accion_ip),
-  CONSTRAINT FK_LOG_CI_USUARIO
-             FOREIGN KEY (ci_usuario)
-             REFERENCES  USUARIO(ci)
+  CONSTRAINT FK_LOG_USBID_USUARIO
+             FOREIGN KEY (usbid_usuario)
+             REFERENCES  USUARIO(usbid)
+);
+
+CREATE TABLE BACKUP(
+  id_backup SERIAL NOT NULL,
+  descripcion VARCHAR(256),
+  fecha DATE,
+
+  CONSTRAINT PK_BACKUP
+              PRIMARY KEY (id_backup)
 );

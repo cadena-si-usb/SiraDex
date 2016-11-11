@@ -7,8 +7,9 @@ tipo_campos = ['Fecha', 'Telefono', 'Texto Corto','Documento','Cantidad Entera',
 Funcion que se encarga de obtener los datos para mostrar los catalogos
 que existen en el sistema.
 '''
+
 def vGestionarCatalogos():
-    admin = get_tipo_usuario()
+    admin = get_tipo_usuario(session)
 
     #Si hay que agregar un campo a un catalogo
 

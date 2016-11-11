@@ -46,7 +46,7 @@
                                       <span class="glyphicon glyphicon-refresh restaurar"
                                             data-toggle="modal"
                                             data-target="#ModalRestaurarTipoActividad"
-                                            data-link-restaurar='{{=URL(f='restaurar_tipo', args=[tipoActividad.id_tipo])}}'
+                                            data-link-restaurar='{{=URL(f="restaurar_tipo", args=[tipoActividad.id_tipo])}}'
                                             >
                                       </span>
                                   </a>
@@ -58,7 +58,7 @@
                                       <span class="glyphicon glyphicon-remove red"
                                             data-toggle="modal"
                                             data-target="#ModalEliminarTipoActividad"
-                                            data-link-eliminar='{{=URL(f='eliminar_tipo_papelera', args=[tipoActividad.id_tipo])}}'>
+                                            data-link-eliminar='{{=URL(f="eliminar_tipo_papelera", args=[tipoActividad.id_tipo])}}'>
                                       </span>
                                   </a>
                               <center>
@@ -91,7 +91,7 @@
                 {{for programa in listaProgramas:}}
                     <tr>
                         <td> <center> {{=programa.nombre}} </center> </td>
-                        <td> <center> {{=programa.ci_usu_modificador}} </center> </td>
+                        <td> <center> {{=programa.usbid_usu_modificador}} </center> </td>
                         <td> <center> {{=programa.modif_fecha}} </center> </td>
                         <td class="center-vertically">
                             <center>

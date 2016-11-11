@@ -69,39 +69,68 @@ $(document).ready(function () {
 	    buttonText: "  Adjuntar",
 	  });
 
-	var maxLongNombre  = 256;    // Longitud máxima que tendrá el campo nombre.
+	var maxLongNombre  = 50;    // Longitud máxima que tendrá el campo nombre.
 	var maxLongDescrip = 2048;   // Longitud máxima que tendrá el campo descripción.
 	var comprobante_mostrado = 0;
 	var error_comprobante = 0;
 	var error_descripcion = 0;
 	var cantidad_comprobantes = 5;
+
 	// Muestra la cantidad de caracteres disponible en el textfield de nombre.
+
+
+	$("#no_table_fecha_realizacion").siblings(".help-block").html( "                                         El formato para la fecha es de YYYY-MM-DD");	
+
+
+	$(".Cedula").click(function(){
+
+		$(".Cedula").siblings(".help-block").html( "el formato de la cedula es XX.XXX.XXX");	
+
+	});
+
+	$(".Telefono").click(function(){
+
+		$(".Telefono").siblings(".help-block").html( "el formato de telefono es (0xxx)XXX-XXXX");	
+
+	});
+
 	textoRestante1(maxLongNombre, $("#no_table_nombre" ));
 
 	textoRestante1(maxLongDescrip, $("#no_table_descripcion"));
 
 	textoRestante1(maxLongNombre, $("#no_table_lugar"));
 
+
 	$('#no_table_c0mpr0bant3_1__row').before('	<div id="comprobantes__row" class="form-group">\
-													<hr class="col-sm-offset-3 col-sm-8">\
-													<h3 class="col-sm-offset-3 col-sm-3">Comprobantes</h3>\
-													<a id="agregar_comprobante" href="#" onclick="return false;">\
-														<img alt="Agregar Comprobante" src="/SiraDex/static/icon/i_add.png" height="55">\
-													</a>\
-													<br>\
-												</div>'
+													<h3 class="col-sm-offset-3">Comprobantes</h3>\
+													\
+													<div class="row">\
+														<div class="col-sm-10 col-sm-offset-2" style="margin-left:15em;">\
+											    	\
+											    	<span class="col-sm-6">\
+															Puedes subir <span id="cant_restante"><b id="num_cant">5</b></span> comprobantes mas\
+															<br>\
+															Solo puedes subir documentos PDF\
+														</span>\
+														\
+														<div class="col-md-offset-3">\
+															<div style="margin-bottom: 0em;">\
+															  <button type="button" id="agregar_comprobante" class="btn btn-default green btn-border" onclick="return false;">\
+															    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Comprobante\
+															  </button>\
+															</div>\
+										        </div>\
+										        \
+														</div>\
+													</div>\
+													<br>'
 										);
 	for (i = 1; i <= cantidad_comprobantes; i++) {
     	$('#no_table_c0mpr0bant3_'+i+'__row').addClass("hidden");
     	$('#no_table_d3scr1pc10n_comprobante_'+i+'__row').addClass("hidden");
 	}
-
 	$('#agregar_comprobante').click(function(){
-		$('#cant_restante').remove();
-		$('#comprobantes__row').append('<span class="col-sm-offset-3 col-sm-6" id="cant_restante">\
-													Puedes subir <b>'+(5-comprobante_mostrado)+'</b> comprobantes mas\
-													<br>\
-													Solo puedes subir documentos PDF</span>');
+		
 		if (comprobante_mostrado<cantidad_comprobantes){
 			if($('#no_table_c0mpr0bant3_'+comprobante_mostrado).val()=="" ){
 				if (!error_comprobante){
@@ -132,18 +161,107 @@ $(document).ready(function () {
 		if (comprobante_mostrado==cantidad_comprobantes){
 			$('#agregar_comprobante').addClass("hidden");
 		}
-
+		$('#num_cant').remove();
+		$('#cant_restante').append('<b id="num_cant">'+(5-comprobante_mostrado )+'</b>');
 	});
 
 	$('.upload').change(function(){
 		var ext = $(this).val().split('.').pop().toLowerCase();
 		if(ext != 'pdf') {
 		    alert('solo se permite cargar archivos PDF');
-		    $(this).attr("placeholder", "Sin Archivo");
+		    $(this).val('');
+		    $(this).filestyle('clear');
+
 		}
 	});
 
-  });
+
+	$('.form-horizontal').submit(function(){
+		var infor_cargada = false;
+
+		if($('#no_table_nombre').val()=="" ){
+			alert("El nombre del producto no puede estar vacio ");
+			return false;
+		}
+
+		if($('#no_table_descripcion').val()=="" ){
+			alert("La descripcion del producto no puede estar vacio ");
+			return false;
+		}
+
+		if($('#no_table_fecha_realizacion').val()=="" ){
+			alert("La fecha del producto no puede estar vacio ");
+			return false;
+		}
+
+		if($('#no_table_lugar').val()=="" ){
+			alert("El lugar de la actividad no puede estar vacio ");
+			return false;
+		}
+
+		if($('.obligatoria').val()==""){
+			alert("Todos los campos obligatorios  ");
+			return false; 
+		}
+
+		if($('.Cedula').val()!=""){
+			if($('.Cedula').val()!=null){
+				var Var = $('.Cedula').val();
+				if (/\d{2}.\d{3}.\d{3}$/.test(Var)== false){
+					alert("No es el formato del numero de cedula adecuado  ");
+					return false;
+				}
+			}
+		}
+
+		if($('.Telefono').val()!=""){
+			if($('.Cedula').val()!=null){
+				var Var = $('.Telefono').val();
+				if (/\(0\d{3}\)\d{3}-\d{2}-\d{2}$/.test(Var)== false){
+					alert("No es el formato del numero de telefono adecuado ");
+					return false;
+				}
+			}	
+		}
+
+
+		if($('.Decimal ').val()!=""){
+			if($('.Decimal').val()!=null){
+				var Var = $('.Decimal').val();
+				if (/\d\.\d/.test(Var)== false){
+					alert("No es un numero Decimal  ");
+					return false;
+				}
+			}
+		}
+
+		if($('.Entero ').val()!=""){
+			if($('.Entero').val()!=null){
+				var Var = $('.Entero').val();
+				if (/\d\.\d/.test(Var)== false){
+					alert("No es un numero Entero  ");
+					return false;
+				}
+			}
+		}
+		// Verificamos los comprobantes
+		for (i = 1; i <= cantidad_comprobantes; i++) {
+	    	if($('#no_table_c0mpr0bant3_'+i).val() !="" ){
+	    		if($('#no_table_d3scr1pc10n_comprobante_'+i).val()==""){
+	    			alert("La descripción de los comprobantes cargados no puede ser vacia");
+	    			return false;
+	    		}
+	    		infor_cargada = true;
+			}
+		}
+
+		if (!infor_cargada){
+			alert("Tiene que adjuntar al menos un comprobante");
+			return false;
+		}
+	});
+
+});
 </script>
 
 {{end}}

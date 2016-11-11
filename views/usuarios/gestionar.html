@@ -8,6 +8,21 @@
     <div id = "error">
         {{=message}}
     </div>
+
+    <div class="row"> 
+        <div class="col-md-3 col-md-offset-9">
+        <!-- Datos del usuario -->
+                <div style="margin-bottom: 0em;">
+                  <a href="{{=URL(c='usuarios',f ='agregar')}}">
+                  <button type="button" id="agregarProgBtn" class="btn btn-default green btn-border">
+                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Usuario
+                  </button>
+                  </a>
+                </div>
+            <!-- <p class="text-justify">
+            </p> -->
+        </div>
+    </div>    
 {{end}}
 
 {{block contenido}}
@@ -359,9 +374,6 @@
         </div>
         </div>
     </div>
-    <a href ="{{=URL(c='usuarios',f ='agregar')}}" id="sombra">
-    {{=IMG(_src=URL('static', 'icon/i_add.png'),_height='55',_alt='Agregar Producto') }}
-    </a>
 
 <!-- Modal Eliminar-->
   <div id="modalEliminarUsuario" class="modal fade" role="dialog">

@@ -16,50 +16,60 @@
 
 {{block descripcion}}
     <div class="row"> 
-        <div class="col-lg-12">
+        <div class="col-md-3 col-md-offset-9">
         <!-- Datos del usuario -->
-            <p class="text-justify">                          
-            </p>
+                <div style="margin-bottom: 0em;">
+                  <button type="button" id="agregarProgBtn" class="btn btn-default green btn-border" data-toggle="modal" data-target="#myModalAgregar">
+                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Producto
+                  </button>
+                </div>
+            <!-- <p class="text-justify">
+            </p> -->
         </div>
     </div>
 {{end}}
 
 {{block contenido}}
-    <!-- <div class="container"> -->
+    <!-- <div class="container">  -->
+
+    <br>
+    
     <div class="row">
         <div class="col-md-12">
         <!-- Nav tabs -->
         <div class="card">
         <ul class="nav nav-tabs" role="tablist">
-        <!-- Activas -->
+        
+        <!-- Validados -->
         <li role="presentation" class="active act">
             <a  href="#activas" 
                 aria-controls="activas" 
                 role="tab" 
                 data-toggle="tab">
-                Validadas
+                Validados
             </a>
         </li>
         
-        <!-- Espera -->
+        <!-- Por Validar -->
         <li role="presentation" class="esp">
             <a  href="#espera" 
                 aria-controls="espera" 
                 role="tab" 
                 data-toggle="tab">
-                En Espera
+                Por Validar
             </a>
         </li>
 
-        <!-- Rechazadas -->
+        <!-- No Validados -->
         <li role="presentation" class="rec">
             <a  href="#rechazadas" 
                 aria-controls="rechazadas" 
                 role="tab" 
                 data-toggle="tab">
-                Rechazadas
+                No Validados
             </a>
         </li>
+
         </ul>
 
         <!-- Tab panes -->
@@ -79,7 +89,7 @@
                         </thead>                
                         <tbody id="actividades">
                             {{for x in rows:}}
-                                {{if x.estado == 'Validada':}}
+                                {{if x.estado == 'Validado':}}
                                 <tr >
                                     <!-- Nombre 
 
@@ -119,17 +129,21 @@
                             {{pass}}
                         </tbody>
                     </table>
-                          <div class="text-center">
-      <ul class="pagination pagination-lg pager" id="myPager"></ul>
-      </div>
+        
+        <div class="text-center">
+          <ul class="pagination pagination-lg pager" id="myPager"></ul>
+        </div>
             <!-- ESTABA AL FINAL PARA LA PAGINACION -->
-                {{pass}}
+            <div class="text-center">
+              <ul class="pagination pagination-lg pager" id="myPager"></ul>
+            </div>
+          {{pass}}
      
         </div>
-        <!-- Espera -->
+        <!-- Por Validar -->
         <div role="tabpanel" class="tab-pane" id="espera">
                 {{if cant_esp == 0:}}
-                    No tienes productos en espera
+                    No tienes productos por validar
                 {{else:}}
                     <table class="table table-striped table-condensed table-hover sortable">
                         <thead>
@@ -144,7 +158,7 @@
                         </thead>
                         <tbody id="actividades">
                             {{for x in rows:}}
-                                {{if x.estado == 'En espera':}}
+                                {{if x.estado == 'Por Validar':}}
                                     <tr>
                                         <!-- Nombre Producto -->
                                             
@@ -184,10 +198,10 @@
                 {{pass}}
         </div>
 
-        <!-- Rechazadas -->
+        <!-- No Validados -->
         <div role="tabpanel" class="tab-pane" id="rechazadas">
                 {{if cant_rec == 0:}}
-                    No tienes productos rechazados
+                    No tienes productos no validados
                 {{else:}}
                     <table class="table table-striped table-condensed table-hover sortable">
                         <thead>
@@ -202,7 +216,7 @@
                         </thead>                
                         <tbody id="actividades">
                             {{for x in rows:}}
-                                {{if x.estado == 'Rechazada':}}
+                                {{if x.estado == 'No Validado':}}
                                 <tr>
                                     <td class="center-vertically detalles"> {{=x.nombre}}</td>
                                     <td class="center-vertically detalles"> {{=nombres[x]}}</td>
@@ -250,13 +264,6 @@
         </div>
         </div>
 
-
-    <a href ="#" id="sombra" data-toggle="modal" data-target="#myModalAgregar"> 
-    {{=IMG(_src=URL('static', 'icon/i_add.png'),_height='55',_alt='Agregar Producto') }}
-    </a>
-
-
-
     <!-- Modal -->
     <div id="myModalAgregar" class="modal fade" role="dialog">
       <div class="modal-dialog">
@@ -270,7 +277,7 @@
 
                     <!--Seleccion de Programa-->
                     <div class="form-group">
-                        <label for="programa" class = "control-label col-sm-3"> Programa(*)</label>
+                        <label for="programa" class = "control-label col-sm-4"> Programa(*)</label>
                         <div class="col-sm-8">
                             <select class= "form-control" name="programa" onchange="ajax('obtener_actividades', ['programa'], ':eval')">
                                 <option selected=""></option>
@@ -280,11 +287,12 @@
                                 {{pass}}
                             </select>
                         </div>
+                        <div id="descripcion_programa"></div>
                     </div>
 
                     <!-- Filtro de Tipo de Actividad -->
                     <div class="form-group">
-                        <label for="id_tipo" class = "control-label col-sm-3">
+                        <label for="id_tipo" class = "control-label col-sm-4">
                             Tipo Actividad (*)
                         </label>
                         <div class="col-sm-8 ">
@@ -304,28 +312,28 @@
       </div>
     </div>
 
-<!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
 
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"><center>Detalles de Producto</center></h4>
-      </div>
-      <div class="modal-body">
-        <p>Some text in the modal.</p>
-      </div>
-      <div class="modal-footer">
-      <center>
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-        </center>
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title"><center>Detalles de Producto</center></h4>
+          </div>
+          <div class="modal-body">
+            <p>Some text in the modal.</p>
+          </div>
+          <div class="modal-footer">
+          <center>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </center>
+          </div>
+        </div>
+
       </div>
     </div>
-
-  </div>
-</div>
 
 {{end}}
 

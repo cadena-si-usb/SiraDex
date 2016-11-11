@@ -3,19 +3,12 @@
 
 from pprint import pprint
 from datetime import time
+from funciones_siradex import get_tipo_usuario
 
 def gestionar():
-    if session.usuario != None:
-        if(session.usuario["tipo"] == "DEX"):
-            admin = 2
-        elif(session.usuario["tipo"] == "Administrador"):
-            admin = 1
-        else:
-            admin = 0
-    else:
-        redirect(URL(c ="default",f="index"))
+    admin = get_tipo_usuario(session)
 
-    rows = db(db.ACTIVIDAD.ci_usuario_crea==session.usuario['cedula']).select()
+    rows = db(db.ACTIVIDAD.usbid_usuario_crea==session.usuario['usbid']).select()
     detalles = {}
     cant_esp = 0
     cant_val = 0
@@ -31,40 +24,22 @@ def gestionar():
 
         detalles[row] = dict_campos
 
-        if row["validacion"] == "En espera":
+        if row["validacion"] == "Por Validar":
             cant_esp += 1
-        elif row["validacion"] == "Validada":
+        elif row["validacion"] == "Validado":
             cant_val += 1 
-        elif row["validacion"] == "Rechazada":
+        elif row["validacion"] == "No Validado":
             cant_rec += 1
 
     return locals()
 
 def tipos():
-    if session.usuario != None:
-        if(session.usuario["tipo"] == "DEX"):
-            admin = 2
-        elif(session.usuario["tipo"] == "Administrador"):
-            admin = 1
-        else:
-            admin = 0
-    else:
-        redirect(URL(c ="default",f="index"))
 
     rows = db(db.TIPO_ACTIVIDAD.papelera=='False').select()
     return locals()
 
-
 def agregar():
-    if session.usuario != None:
-    	if(session.usuario["tipo"] == "DEX"):
-            admin = 2
-        elif(session.usuario["tipo"] == "Administrador"):
-            admin = 1
-	else:
-		admin = 0
-    else:
-        redirect(URL(c ="default",f="index"))
+    admin = get_tipo_usuario(session)
 
     tipo = int(request.args(0))
     rows = db(db.ACT_POSEE_CAMPO.id_tipo_act == tipo).select()
@@ -79,7 +54,7 @@ def agregar():
         obligatorio = rows_campo.obligatorio
         tipo_campo = ''
         tipo_campo = rows_campo.lista
-# tipo_campos = ['fecha', 'participante', 'ci', 'comunidad', 'telefono', 'texto','documento', 'cantidad entera', 'cantidad decimal']
+    # tipo_campos = ['fecha', 'participante', 'ci', 'comunidad', 'telefono', 'texto','documento', 'cantidad entera', 'cantidad decimal']
         if obligatorio:
             if tipo_campo in   ['fecha']:             fields.append(Field(nombre,'date',requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
             elif tipo_campo in ['participante,texto']:fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
@@ -104,7 +79,7 @@ def agregar():
     form=SQLFORM.factory(*fields)
 
     if form.process().accepted:
-        dicc_act = db.ACTIVIDAD.insert(id_tipo = tipo,ci_usuario_crea= session.usuario['cedula'])
+        dicc_act = db.ACTIVIDAD.insert(id_tipo = tipo,usbid_usuario_crea= session.usuario['usbid'])
         id_act = dicc_act['id_actividad']
         for var in form.vars:
             campo = var.replace("_"," ")
@@ -118,15 +93,7 @@ def agregar():
     return locals()
 
 def modificar():
-    if session.usuario != None:
-        if(session.usuario["tipo"] == "DEX"):
-            admin = 2
-        elif(session.usuario["tipo"] == "Administrador"):
-            admin = 1
-        else:
-            admin = 0
-    else:
-        redirect(URL(c ="default",f="index"))
+    admin = get_tipo_usuario(session)
 
     id_act = int(request.args(0))
     rows = db(db.TIENE_CAMPO.id_actividad == id_act).select()
@@ -139,7 +106,7 @@ def modificar():
         obligatorio = rows_campo.obligatorio
         tipo_campo = ''
         tipo_campo = rows_campo.lista
-# tipo_campos = ['fecha', 'participante', 'ci', 'comunidad', 'telefono', 'texto','documento', 'cantidad entera', 'cantidad decimal']
+    # tipo_campos = ['fecha', 'participante', 'ci', 'comunidad', 'telefono', 'texto','documento', 'cantidad entera', 'cantidad decimal']
         if obligatorio:
             if tipo_campo in   ['fecha']:             fields.append(Field(nombre,'date',requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
             elif tipo_campo in ['participante,texto']:fields.append(Field(nombre,'string',requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
@@ -178,14 +145,13 @@ def modificar():
             sql = sql + "' WHERE id_actividad = '" + str(id_act) + "' AND id_campo = '" + str(id_cam) + "';"
             db.executesql(sql)
 
-            update_act = "UPDATE ACTIVIDAD SET ci_usuario_modifica = '" + str(session.usuario['cedula'])
+            update_act = "UPDATE ACTIVIDAD SET usbid_usuario_modifica = '" + str(session.usuario['usbid'])
             update_act = update_act + "' WHERE id_actividad = '" + str(id_act) + "';"
             db.executesql(update_act)
 
         redirect(URL('gestionar'))
 
     return locals()
-
 
 def eliminar():
     id_act = int(request.args(0))

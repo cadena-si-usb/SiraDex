@@ -1,37 +1,27 @@
 # -*- coding: utf-8 -*-
 from notificaciones import *
+from funciones_siradex import get_tipo_usuario,get_tipo_usuario_not_loged
 
 # Funcion para busquedas publicas
 def busqueda():
-    if session.usuario != None:
-      if session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador":
-        if(session.usuario["tipo"] == "DEX"):
-          admin = 2
-        elif(session.usuario["tipo"] == "Administrador"):
-          admin = 1
-        else:
-          admin = 0
-      else:
-        admin = -10
-    else:
-      admin = -1
+    admin = get_tipo_usuario_not_loged(session)
 
     if request.vars.Programa == "all" and request.vars.TipoActividad == "all":
         sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
-         + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor + "%\') AND estado=\'Validada\';"
+         + "%\' AND usbid_usu_creador IN (SELECT usbid FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor + "%\') AND estado=\'Validado\';"
         productos = db.executesql(sql)
 
     elif request.vars.Programa != "all" and request.vars.TipoActividad == "all":
         sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
-         + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
-         + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + str(request.vars.Programa)+ ") AND estado=\'Validada\';"
+         + "%\' AND usbid_usu_creador IN (SELECT usbid FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
+         + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + str(request.vars.Programa)+ ") AND estado=\'Validado\';"
 
         productos = db.executesql(sql)
 
     elif request.vars.Programa == "all" and request.vars.TipoActividad != "all":
         sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
-         + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
-         + "%\') AND id_tipo=\'" + str(request.vars.TipoActividad) + "\' AND estado=\'Validada\';"
+         + "%\' AND usbid_usu_creador IN (SELECT usbid FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
+         + "%\') AND id_tipo=\'" + str(request.vars.TipoActividad) + "\' AND estado=\'Validado\';"
 
         productos = db.executesql(sql)
 
@@ -41,33 +31,25 @@ def busqueda():
            + "%\' ;"
         elif (session.usuario["tipo"] == "Usuario"):
           sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
-          + "%\' AND estado=\'Validada\';"
+          + "%\' AND estado=\'Validado\';"
 
         productos = db.executesql(sql)
     else:
         sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
-         + "%\' AND ci_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
+         + "%\' AND usbid_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
          + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + str(request.vars.Programa)\
-         + ") AND id_tipo=\'" + str(request.vars.TipoActividad) + "\' AND estado=\'Validada\';"
+         + ") AND id_tipo=\'" + str(request.vars.TipoActividad) + "\' AND estado=\'Validado\';"
 
         productos = db.executesql(sql)
     return locals()
 
 # Mostrar productos
 def ver_producto():
-  if session.usuario != None:
-    if(session.usuario["tipo"] == "DEX"):
-      admin = 2
-    elif(session.usuario["tipo"] == "Administrador"):
-      admin = 1
-    else:
-      admin = 0
-  else:
-    redirect(URL(c ="default",f="index"))
+  admin = get_tipo_usuario(session)
 
   id_producto = int(request.args(0))
   producto = db(db.PRODUCTO.id_producto == id_producto).select().first()
-  usuario_producto = db(db.USUARIO.ci == producto.ci_usu_creador).select().first()
+  usuario_producto = db(db.USUARIO.usbid == producto.usbid_usu_creador).select().first()
   usuario_nombre = usuario_producto.nombres + " " + usuario_producto.apellidos
   tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == producto.id_tipo).select().first()
   programa_nombre = db(db.PROGRAMA.id_programa == tipo_actividad.id_programa).select().first().nombre
@@ -152,7 +134,7 @@ def ver_producto():
       producto =  db(db.PRODUCTO.id_producto == id_producto).select().first()
 
       # obtenemos el usuario que realizo el producto
-      usuario = db(db.USUARIO.ci == producto.ci_usu_creador).select().first()
+      usuario = db(db.USUARIO.usbid == producto.usbid_usu_creador).select().first()
 
       # parseamos los datos para la notificacion
       datos_usuario = {'nombres' : usuario.nombres}
@@ -177,25 +159,16 @@ def ver_producto():
 # Vista de validaciones
 def gestionar_validacion():
 
-    if session.usuario != None:
-      if(session.usuario["tipo"] == "DEX"):
-          admin = 2
-      elif(session.usuario["tipo"] == "Administrador"):
-          admin = 1
-      else:
-          admin = 0
-    else:
-        redirect(URL(c ="default",f="index"))
-
+    admin = get_tipo_usuario(session)
 
     # Hago el query Espera
 
     sqlValidadas = "select producto.id_producto, producto.nombre, tipo_actividad.nombre from producto inner join tipo_actividad"\
-    + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='Validada';"
+    + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='Validado';"
     sqlEspera = "select producto.id_producto, producto.nombre, tipo_actividad.nombre from producto inner join tipo_actividad"\
-    + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='En espera';"
+    + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='Por Validar';"
     sqlRechazadas = "select producto.id_producto, producto.nombre, tipo_actividad.nombre from producto inner join tipo_actividad"\
-    + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='Rechazada';"
+    + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='No Validado';"
     productosV= db.executesql(sqlValidadas)
     productosE = db.executesql(sqlEspera)
     productosR = db.executesql(sqlRechazadas)
@@ -205,7 +178,7 @@ def gestionar_validacion():
 # Metodo para validar un producto
 def validar(id_producto):
 
-    db(db.PRODUCTO.id_producto == id_producto).update(estado='Validada')
+    db(db.PRODUCTO.id_producto == id_producto).update(estado='Validado')
 
     ## INICIO NOTIFICACION ##
 
@@ -213,7 +186,7 @@ def validar(id_producto):
     producto =  db(db.PRODUCTO.id_producto == id_producto).select().first()
 
     # obtenemos el usuario que realizo el producto
-    usuario = db(db.USUARIO.ci == producto.ci_usu_creador).select().first()
+    usuario = db(db.USUARIO.usbid == producto.usbid_usu_creador).select().first()
 
     # parseamos los datos para la notificacion
     datos_usuario = {'nombres' : usuario.nombres}
@@ -234,6 +207,6 @@ def validar(id_producto):
 
 # Metodo para rechazar una producto
 def rechazar(id_producto):
-    db(db.PRODUCTO.id_producto == id_producto).update(estado='Rechazada')
+    db(db.PRODUCTO.id_producto == id_producto).update(estado='No Validado')
     session.message = 'Producto rechazado'
     redirect(URL('gestionar_validacion.html'))

@@ -20,7 +20,7 @@
                         aria-controls="esp" 
                         role="tab" 
                         data-toggle="tab">
-                        En Espera
+                        Por Validar
                     </a>
                 </li>
                 
@@ -29,7 +29,7 @@
                         aria-controls="val" 
                         role="tab" 
                         data-toggle="tab">
-                        Validadas
+                        Validados
                     </a>
                 </li>
 
@@ -38,7 +38,7 @@
                         aria-controls="rec" 
                         role="tab" 
                         data-toggle="tab">
-                        Rechazadas
+                        No Validados
                     </a>
                 </li>       
             </ul>
@@ -49,7 +49,7 @@
                 <!-- Espera -->
                 <div role="tabpanel" class="tab-pane active" id="esp">
                     {{if len(productosE) == 0:}}
-                        No hay actividades En espera de validacion
+                        No hay productos por validar
                     {{else:}}
                         <table class="table table-striped table-condensed table-hover sortable">
                             <thead>
@@ -89,10 +89,10 @@
                     {{pass}}
                 </div>        
                 
-                <!-- Validadas -->
+                <!-- Validados -->
                 <div role="tabpanel" class="tab-pane" id="val">
                     {{if len(productosV) == 0:}}        
-                        No hay actividades validadas
+                        No hay productos validados
                     {{else:}}
                         <table class="table table-striped table-condensed table-hover sortable">
                             <thead>
@@ -132,10 +132,10 @@
                     {{pass}}
                 </div>
                 
-                <!--  Rechazadas -->
+                <!--  No Validados -->
                 <div role="tabpanel" class="tab-pane" id="rec">
                     {{if len(productosR) == 0:}}        
-                        No hay actividades rechazadas
+                        No hay productos no validados
                     {{else:}}
                         <table class="table table-striped table-condensed table-hover sortable">
                             <thead>

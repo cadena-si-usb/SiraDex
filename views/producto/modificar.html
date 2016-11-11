@@ -3,7 +3,19 @@
 {{block titulo}}
 	Modificar Producto
 {{end}}
+{{block subtitulo}}
+	{{="Actividad: "+nombre_actividad}}
+{{end}}
 
+{{block descripcion}}
+<div class="col-lg-12">
+	<p>{{="Descripcion: "+descripcion_actividad}}</p>
+	<h4> Formulario </h4>
+    <p class="text-justify">
+		Los campos con asteriscos <span style="color:red">*</span> son obligatorios
+    </p>
+</div>
+{{end}}
 
 {{block contenido}}
 <div class="row">
@@ -28,8 +40,9 @@
 		    placeholder: "Sin Archivo",
 		    buttonText: "  Adjuntar",
 		  });
-
-			var comprobante_mostrado = {{=len(comprobantes)}};
+			var comprobantes_eliminados = 0;
+			var comprobantes_bd = {{=len(comprobantes)}};
+			var comprobante_mostrado = comprobantes_bd;
 			var error_comprobante = 0;
 			var error_descripcion = 0;
 			var cantidad_comprobantes = 5;
@@ -38,7 +51,11 @@
 
 			var html='<div id="comprobantes__row" class="form-group">\
 							<hr class="col-sm-offset-3 col-sm-8">\
-							<h3 class="col-sm-offset-3 col-sm-3">Comprobantes</h3>\
+							<h3 id = "comprobantes" class="col-sm-offset-3 col-sm-3">Comprobantes</h3>\
+							<span class="col-sm-offset-3 col-sm-6" id="cant_restante">\
+								Puedes subir <b>'+(cantidad_comprobantes-comprobante_mostrado)+'</b> comprobantes mas <br>\
+								Solo puedes subir documentos PDF\
+							</span>\
 							<div class="row">\
 								<div class="col-sm-offset-3 col-sm-8 content"><br>\
 									{{if (len(comprobantes)==0): }}\
@@ -54,7 +71,8 @@
 						    					</td>\
 						    					<td class="center-vertically">\
 	                                    			<center>\
-	                                   					<a onClick = "if(confirm(\'¿Está seguro de que desea eliminar este comprobante?\')) {window.location.href=\'{{=URL(f="eliminar_comprobante", args=[comprobante[0], id_producto])}}\';comprobante_mostrado=comprobante_mostrado-1}">\
+	                                   					<a onClick = "if(confirm(\'¿Está seguro de que desea eliminar este comprobante?\')) {window.location.href=\'{{=URL(f="eliminar_comprobante", args=[comprobante[0], id_producto])}}\';comprobante_mostrado=comprobante_mostrado-1\
+	                                   						;comprobantes_eliminados += 1;}">\
 	                                                        <span class="glyphicon glyphicon-remove red"></span>\
 	                                    				</a>\
 	                                    			</center>\
@@ -115,21 +133,43 @@
 					$('#agregar_comprobante').addClass("hidden");
 				}
 
+				$('#cant_restante').remove();
+				$('#comprobantes').after('<span class="col-sm-offset-3 col-sm-6" id="cant_restante">\
+													Puedes subir <b>'+(cantidad_comprobantes-comprobante_mostrado)+'</b> comprobantes mas\
+													<br>\
+													Solo puedes subir documentos PDF</span>');
+
 			});
 
 			$('.upload').change(function(){
 				var ext = $(this).val().split('.').pop().toLowerCase();
 				if(ext != 'pdf') {
 				    alert('solo se permite cargar archivos PDF');
-						$(this).val('');
-						console.log($(":file input"));
-				    $(":file").filestyle({placeholder: "No file"});
+				    $(this).val('');
+				    $(this).filestyle('clear');
 				}
 			});
 
-			if (comprobante_mostrado==cantidad_comprobantes){
-				$('#agregar_comprobante').addClass("hidden");
-			};
+			
+			$('.form-horizontal').submit(function(){
+
+				// Verificamos los comprobantes
+				var infor_cargada = false;
+				for (i = 1; i <= cantidad_comprobantes; i++) {
+			    	if($('#no_table_c0mpr0bant3_'+i).val() !="" ){
+			    		if($('#no_table_d3scr1pc10n_comprobante_'+i).val()==""){
+			    			alert("La descripción de los comprobantes cargados no puede ser vacia");
+			    			return false;
+			    		}
+			    		infor_cargada = true;
+					}
+				}
+
+				if (!infor_cargada && comprobantes_eliminados==comprobantes_bd){
+					alert("Tiene que adjuntar al menos un comprobante");
+					return false;
+				}
+			});
 
 		});
 	</script>

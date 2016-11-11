@@ -25,4 +25,4 @@ INSERT INTO act_posee_campo values(1,3);
 
 
 #UPDATE usuario SET tipo='Administrador' WHERE usbid='12-10941';
-#INSERT INTO producto VALUES (4,1,'nombre 4','no tiene','En espera','','',NULL,'24272072','24272072');
+#INSERT INTO producto VALUES (4,1,'nombre 4','no tiene','Por Validar','','',NULL,'24272072','24272072');

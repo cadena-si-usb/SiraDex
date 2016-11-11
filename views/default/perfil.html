@@ -90,7 +90,7 @@
                 aria-controls="activas" 
                 role="tab" 
                 data-toggle="tab">
-                Validadas
+                Validados
             </a>
         </li>
         
@@ -99,7 +99,7 @@
                 aria-controls="espera" 
                 role="tab" 
                 data-toggle="tab">
-                En Espera
+                Por Validar
             </a>
         </li>
 
@@ -108,14 +108,14 @@
                 aria-controls="rechazadas" 
                 role="tab" 
                 data-toggle="tab">
-                Rechazadas
+                No Validados
             </a>
         </li>
         </ul>
 
         <!-- Tab panes -->
         <div class="tab-content">
-        <!-- Validadas -->
+        <!-- Validados -->
         <div role="tabpanel" class="tab-pane active" id="activas">
             {{if productos["Validados"]==[]:}}
             No tiene productos validados
@@ -133,14 +133,14 @@
             </table>
             {{pass}}
         </div>
-        <!-- Espera -->
+        <!-- Por Validar -->
         <div role="tabpanel" class="tab-pane" id="espera">
-            {{if productos["En espera"]==[]:}}
-            No tiene productos en espera
+            {{if productos["Por Validar"]==[]:}}
+            No tiene productos por validar
             {{else:}}
                 <table class="table table-striped table-condensed table-hover sortable">
                 <tbody>
-                {{for x in productos["En espera"]:}}
+                {{for x in productos["Por Validar"]:}}
                     <tr>
                         <td class="center-vertically">     
                             {{=x.nombre}}
@@ -151,13 +151,13 @@
                 </table>
             {{pass}}
         </div>
-        <!-- Rechazadas -->
+        <!-- No Validados -->
         <div role="tabpanel" class="tab-pane" id="rechazadas">
-            {{if productos["Rechazados"]==[]:}}
-            No tiene productos rechazados
+            {{if productos["No Validados"]==[]:}}
+            No tiene productos no validados
             {{else:}}
             <table class="table table-striped table-condensed table-hover sortable">
-                {{for x in productos["Rechazados"]:}}
+                {{for x in productos["No Validados"]:}}
                 <tr>
                     <td class="center-vertically">
                         {{=x.nombre}}        

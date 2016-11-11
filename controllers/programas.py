@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from funciones_siradex import get_tipo_usuario
-
+#import imp  
+#foo = imp.load_source('module.funciones_siradex', 'funciones_siradex.py') 
 '''
 Vista de Gestionar Programas tiene las opciones:
 - Agregar Programa
@@ -8,10 +9,9 @@ Vista de Gestionar Programas tiene las opciones:
 - Por ahora, no se pueden eliminar programas.
 '''
 
-
 def agregar_programa():
+    admin = get_tipo_usuario(session)
 
-    admin = get_tipo_usuario
     formulario = SQLFORM.factory(
                         Field('Nombre',
                               requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacio.'),
@@ -44,11 +44,11 @@ def agregar_programa():
 
     return dict(formulario=formulario, admin = admin)
 
-
 # Permitiria Modificar o Desactivar Programas
 # del sistema Siradex.
 def gestionar_programas():
-    admin = get_tipo_usuario()
+
+    admin = get_tipo_usuario(session)
 
     # Obtengo todos los programas almacenados en la base de datos.
     programas = db(db.PROGRAMA.papelera == False).select()
@@ -130,9 +130,9 @@ def gestionar_programas():
                 hayErroresEditar=formulario_editar.errors, formulario=formulario,
                 formulario_editar=formulario_editar)
 
-
 def eliminar_programa():
-    admin = get_tipo_usuario()
+    admin = get_tipo_usuario(session)
+
 
     id_programa = request.args[0]
 
@@ -140,13 +140,13 @@ def eliminar_programa():
 
     programa.papelera           = True
     programa.modif_fecha        = request.now
-    programa.ci_usu_modificador = session.usuario['cedula']
+    programa.usbid_usu_modificador = session.usuario['usbid']
     programa.update_record()
     redirect(URL('gestionar_programas.html'))
 
 def editar_programa():
 
-    admin = get_tipo_usuario()  # Obtengo el tipo del usuario actual.
+    admin = get_tipo_usuario(session) # Obtengo el tipo del usuario actual.
     id = request.args[0]        # Se identifica cual programa se identificará.
 
     # Se busca el programa en la base de datos.

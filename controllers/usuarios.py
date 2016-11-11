@@ -9,7 +9,9 @@ def user(): return dict(form=auth())
 def download(): return response.download(request,db)
 def call(): return service()
 ### end requires
+from funciones_siradex import get_tipo_usuario
 
+    
 def gestionar():
     if session.usuario != None:
         if session.usuario["tipo"] == "Bloqueado":
@@ -73,7 +75,7 @@ def gestionar():
 def agregar():
     if session.usuario != None:
         if session.usuario["tipo"] == "Bloqueado":
-            redirect(URL("index"))
+            redirect(URL(c="default",f="index"))
         if session.usuario["tipo"] == "Administrador":
             message = ""
             datosCompAux = ["","","","","","","",""]    # En esta lista guardaremos todos los datos que seran extraidos del LDAP para crear el nuevo usuario

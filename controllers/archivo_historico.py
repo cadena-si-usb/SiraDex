@@ -35,7 +35,7 @@ def gestionar():
 
     listaProgramas = db(db.PROGRAMA.papelera == True).select()
 
-    return dict(admin=get_tipo_usuario(),
+    return dict(admin=get_tipo_usuario(session),
                 listaTipoActividades=listaTipoActividades,
                 listaProgramas = listaProgramas)
 

@@ -135,30 +135,23 @@ tipo_campos = ['Fecha', 'Telefono', 'Texto Corto','Documento','Cantidad Entera',
 
 #db.usuario.drop()
 db.define_table('USUARIO',
-    Field('ci',type='string',length=8, notnull=True,required=True, unique=True),
-    Field('usbid', type='string', unique=True,notnull=True),
+    Field('ci',type='string',length=8, notnull=True,required=True),
+    Field('usbid', type='string', unique=True,notnull=True,required=True),
     Field('nombres',type='string',length=50,required=True),
     Field('apellidos',type='string',length=50,required=True),
     Field('telefono',type='string',length=15),
     Field('correo_inst', type='string',notnull=True),
     Field('correo_alter', type='string'),
     Field('tipo',type='string',length=15,requires=IS_IN_SET(['Usuario', 'DEX', 'Administrador','Bloqueado'])),
-    primarykey=['ci'],
+    primarykey=['usbid'],
     migrate=False,
 );
 
-############# QUITARIA ESTO
-db.define_table('USBID',
-    Field('ci_usuario',db.USUARIO.ci),
-    Field('usbid',type='string',length=20, notnull=True, unique=True),
-    primarykey=['ci_usuario'],
-    migrate=False
-);
 
 ############# QUITARIA ESTO Y PONER CAMPO JEFE EN USUARIO SOLO SI ES NECESARIO
 db.define_table('JEFE_DEPENDENCIA',
     Field('id_jefe', type='id'),
-    Field('ci_usuario',db.USUARIO.ci),
+    Field('usbid_usuario',db.USUARIO.usbid),
     primarykey=['id_jefe'],
     migrate=False
 );
@@ -170,7 +163,7 @@ db.define_table('PROGRAMA',
     Field('descripcion',type='string',length=2048, notnull=True, unique=True),
     Field('papelera', type='boolean', notnull = True, default=False),
     Field('modif_fecha', type='date'),
-    Field('ci_usu_modificador', db.USUARIO.ci),
+    Field('usbid_usu_modificador', db.USUARIO.usbid),
     primarykey=['id_programa'],
     migrate=False
 );
@@ -189,7 +182,7 @@ db.define_table('TIPO_ACTIVIDAD',
                      IS_LENGTH(256,error_message='El nombre no pude ser más de 256 caracteres')]),
     Field('nro_campos', type='integer', requires=IS_NOT_EMPTY(error_message='No puede ser vacía')),
     Field('id_jefe_creador',db.JEFE_DEPENDENCIA.id_jefe),
-    Field('ci_usuario_propone',db.USUARIO.ci),
+    Field('usbid_usuario_propone',db.USUARIO.usbid),
     Field('papelera', type='boolean', notnull = True, default=False),
     Field('modif_fecha', type='date'),
     primarykey=['id_tipo'],
@@ -202,14 +195,14 @@ db.define_table('PRODUCTO',
     Field('nombre',type='string',length=128, notnull=True,unique=True,
            requires=[IS_LENGTH(128,error_message='Tamaño máximo de 128 caracteres')]),
     Field('descripcion', type='string',length=256),
-    Field('estado',type='string', default='En espera', requires=IS_IN_SET(['Validado', 'En espera', 'Rechazado'])),
+    Field('estado',type='string', default='Por Validar', requires=IS_IN_SET(['Validado', 'Por Validar', 'No Validado'])),
     Field('evaluacion_criterio',type='string',length=256),
     Field('evaluacion_valor',type='string', length=256),
     Field('fecha_realizacion', type='date'),
     Field('fecha_modificacion', type='date'),
     Field('lugar', type='string',length=50),
-    Field('ci_usu_modificador', db.USUARIO.ci),
-    Field('ci_usu_creador', db.USUARIO.ci),
+    Field('usbid_usu_modificador', db.USUARIO.usbid),
+    Field('usbid_usu_creador', db.USUARIO.usbid),
     primarykey=['id_producto'],
     migrate=False
 );
@@ -281,9 +274,9 @@ db.define_table('PRODUCTO_TIENE_CAMPO',
 
 
 db.define_table('PARTICIPA_PRODUCTO',
-    Field('ci_usuario',db.USUARIO.ci),
+    Field('usbid_usuario',db.USUARIO.usbid),
     Field('id_producto',db.PRODUCTO.id_producto),
-    primarykey=['ci_usuario','id_producto'],
+    primarykey=['usbid_usuario','id_producto'],
     migrate=False
 );
 
@@ -307,7 +300,15 @@ db.define_table('LOG_SIRADEX',
     Field('accion_fecha',type='date'),
     Field('accion_ip',type='string', length=256),
     Field('descripcion',type='string'),
-    Field('ci_usuario',db.USUARIO.ci),
+    Field('usbid_usuario',db.USUARIO.usbid),
     primarykey=['accion','accion_fecha','accion_ip'],
+    migrate=False
+);
+
+db.define_table('BACKUP',
+    Field('id_backup', type='id'),
+    Field('descripcion', type='string', length=256),
+    Field('fecha', type='date'),
+    primarykey=['id_backup'],
     migrate=False
 );
