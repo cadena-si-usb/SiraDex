@@ -8,20 +8,20 @@ def busqueda():
 
     if request.vars.Programa == "all" and request.vars.TipoActividad == "all":
         sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
-         + "%\' AND usbid_usu_creador IN (SELECT usbid FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor + "%\') AND estado=\'Validada\';"
+         + "%\' AND usbid_usu_creador IN (SELECT usbid FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor + "%\') AND estado=\'Validado\';"
         productos = db.executesql(sql)
 
     elif request.vars.Programa != "all" and request.vars.TipoActividad == "all":
         sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
          + "%\' AND usbid_usu_creador IN (SELECT usbid FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
-         + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + str(request.vars.Programa)+ ") AND estado=\'Validada\';"
+         + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + str(request.vars.Programa)+ ") AND estado=\'Validado\';"
 
         productos = db.executesql(sql)
 
     elif request.vars.Programa == "all" and request.vars.TipoActividad != "all":
         sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
          + "%\' AND usbid_usu_creador IN (SELECT usbid FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
-         + "%\') AND id_tipo=\'" + str(request.vars.TipoActividad) + "\' AND estado=\'Validada\';"
+         + "%\') AND id_tipo=\'" + str(request.vars.TipoActividad) + "\' AND estado=\'Validado\';"
 
         productos = db.executesql(sql)
 
@@ -31,14 +31,14 @@ def busqueda():
            + "%\' ;"
         elif (session.usuario["tipo"] == "Usuario"):
           sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
-          + "%\' AND estado=\'Validada\';"
+          + "%\' AND estado=\'Validado\';"
 
         productos = db.executesql(sql)
     else:
         sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
          + "%\' AND usbid_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
          + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + str(request.vars.Programa)\
-         + ") AND id_tipo=\'" + str(request.vars.TipoActividad) + "\' AND estado=\'Validada\';"
+         + ") AND id_tipo=\'" + str(request.vars.TipoActividad) + "\' AND estado=\'Validado\';"
 
         productos = db.executesql(sql)
     return locals()
@@ -164,11 +164,11 @@ def gestionar_validacion():
     # Hago el query Espera
 
     sqlValidadas = "select producto.id_producto, producto.nombre, tipo_actividad.nombre from producto inner join tipo_actividad"\
-    + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='Validada';"
+    + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='Validado';"
     sqlEspera = "select producto.id_producto, producto.nombre, tipo_actividad.nombre from producto inner join tipo_actividad"\
-    + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='En espera';"
+    + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='Por Validar';"
     sqlRechazadas = "select producto.id_producto, producto.nombre, tipo_actividad.nombre from producto inner join tipo_actividad"\
-    + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='Rechazada';"
+    + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='No Validado';"
     productosV= db.executesql(sqlValidadas)
     productosE = db.executesql(sqlEspera)
     productosR = db.executesql(sqlRechazadas)
@@ -178,7 +178,7 @@ def gestionar_validacion():
 # Metodo para validar un producto
 def validar(id_producto):
 
-    db(db.PRODUCTO.id_producto == id_producto).update(estado='Validada')
+    db(db.PRODUCTO.id_producto == id_producto).update(estado='Validado')
 
     ## INICIO NOTIFICACION ##
 
@@ -207,6 +207,6 @@ def validar(id_producto):
 
 # Metodo para rechazar una producto
 def rechazar(id_producto):
-    db(db.PRODUCTO.id_producto == id_producto).update(estado='Rechazada')
+    db(db.PRODUCTO.id_producto == id_producto).update(estado='No Validado')
     session.message = 'Producto rechazado'
     redirect(URL('gestionar_validacion.html'))
