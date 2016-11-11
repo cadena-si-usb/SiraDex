@@ -57,6 +57,8 @@ def gestionar():
                 enviar_correo_contacto(mail, datos_usuario, asunto, mensaje)
 
                 session.message = 'Correo enviado satisfactoriamente'
+
+
                 redirect(URL('gestionar'))
 
             # En caso de que el formulario no sea aceptado
@@ -73,6 +75,9 @@ def gestionar():
             #             message = T("Para cambiar sus permisos, por favor comuníquese con un administrador")
             #     else:
             #         message = T("El Usuario no se encuentra registrado")
+
+            formulario_contactar.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+            formulario_contactar.element(_type='submit')['_value']="Enviar"
 
             return dict(form_editar=form_editar, hayErrores=hayErrores, formulario_contactar=formulario_contactar,usuarios = aux,message = message, admin=get_tipo_usuario())
         else:
