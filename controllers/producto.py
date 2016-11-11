@@ -15,7 +15,7 @@ from reportlab.lib.units  import *
 from reportlab.lib        import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.enums  import *
-from funciones_siradex import get_tipo_usuario
+from funciones_siradex2 import get_tipo_usuario
 
 
 def gestionar():
