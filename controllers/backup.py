@@ -1,65 +1,57 @@
 import os
 import datetime
 from funciones_siradex import get_tipo_usuario
-
-def construir_formulario_generar_backup():
-
-    formulario_generar_backup = SQLFORM.factory(
-                        Field('Descripcion', type="text",
-                              requires = [IS_NOT_EMPTY(error_message='La descripción del backup no puede quedar vacía.'),
-                                          IS_LENGTH(256)]),
-                        submit_button = 'Agregar',
-                        labels = {'Descripcion' : 'Descripción'}
-                )
-    return formulario_generar_backup
+import time
 
 def index():
 	admin = get_tipo_usuario(session)
 	backups = db(db.BACKUP).select()
 
-	form = construir_formulario_generar_backup()
+	form = restaurar_backup()
 
+	if form.process().accepted:
 
-	if form.accepts(request.vars, session,formname="form"):
-		
-		print("date:"+str(datetime.date.today()))
-		print("descr:"+request.vars.Descripcion)
+		print form.vars.backup
 
-		id_backup = db.BACKUP.insert(fecha=str(datetime.date.today()),
-						descripcion=request.vars.Descripcion)
-		print(id_backup)
-		archivo = "backup_" + str(id_backup["id_backup"]) + ".sql"
+		redirect(URL('index'))
 
+	elif form.errors:
+		response.flash = 'el formulario tiene errores'
 
+#		comando = "psql -d Siradex -U Siradex -h localhost -w < ./applications/SiraDex/backup/" + archivo
 
-		comando = "pg_dump -d Siradex -U Siradex -h localhost -w > ../backup/" + archivo
-		resp = os.system(comando)
+#		resp = os.system(comando)
 
 	return locals()
 
 def generar_backup():
 
-	formulario_generar_backup = construir_formulario_generar_backup()
+	fecha = time.asctime(time.localtime(time.time()))
 
-	archivo = "backup_" + id_backup + ".sql"
+	archivo = fecha.split()[4:19] + ".sql"
 
-	if formulario_generar_backup.accepts(request.vars, session,formname="formulario_generar_backup"):
-
-		id_backup = db.BACKUP.insert(nombre=archivo,
-						fecha=datetime.date.today(),
-						descripcion=request.vars.Descripcion)
-
-
-
-		comando = "pg_dump -d Siradex -U Siradex -h localhost -w > " + archivo
-		resp = os.system(comando)
+	comando = "pg_dump -d Siradex -U Siradex -h localhost -w ./applications/SiraDex/backup/ > " + archivo
+	resp = os.system(comando)
 
 def restaurar_backup():
 
-	id_backup = request.args[0]
+	fields = []
 
-	archivo = "backup_" + id_backup + ".sql"
+	fields.append(Field("backup", 'upload', autodelete=True, uploadfolder="./applications/SiraDex/backup/", label=''))
 
-	comando = "pg_dump -d Siradex -U Siradex -h localhost -w < " + archivo
+	form=SQLFORM.factory(*fields,upload=URL('download')) 
+	form.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+	form.element(_type='submit')['_value']="Agregar"
 
-	resp = os.system(comando)
+
+
+		#archivo = "backup_" + id_backup + ".sql"
+
+		#comando = "psql -d Siradex -U Siradex -h localhost -w < " + archivo
+
+		#resp = os.system(comando)
+
+	return form
+
+def download():
+    return response.download(request, db)
