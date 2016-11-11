@@ -1,7 +1,7 @@
 import os
 import datetime
 import re
-from notificaciones import *
+from notificaciones2 import *
 from usbutils import get_ldap_data, random_key
 import urllib2
 ### required - do no delete

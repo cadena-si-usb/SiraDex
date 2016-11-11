@@ -13,7 +13,7 @@ import re
 from usbutils import get_ldap_data, random_key
 from funciones_siradex2 import get_tipo_usuario,get_tipo_usuario_not_loged
 import urllib2
-from notificaciones import *
+from notificaciones2 import *
 ### required - do no delete
 def user(): return dict(form=auth())
 def download(): return response.download(request,db)
