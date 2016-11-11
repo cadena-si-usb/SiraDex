@@ -12,7 +12,7 @@
     <div class="row"> 
         <div class="col-md-3 col-md-offset-9">
         <!-- Datos del usuario -->
-                <div style="margin-bottom: 0em;">
+                <div style="margin-bottom: 1em;">
                   <a href="{{=URL(c='usuarios',f ='agregar')}}">
                   <button type="button" id="agregarProgBtn" class="btn btn-default green btn-border">
                     <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Usuario
@@ -428,7 +428,7 @@
     </div>
 
     <!-- Modal Contactar-->
-    <div id="modalContactarUsuario" class="modal fade" role="dialog">
+    <div id="modalContactarUsuario" class="modal fade" role="dialog" data-hayErrores="{{=hayErrores}}">
       <div class="modal-dialog">
 
         <!-- Modal content-->
@@ -451,11 +451,24 @@
     <script src="{{=URL('static','js/usuarios.js')}}"></script>
 
     <script>
+
+      var hayErrores = $("#modalContactarUsuario").attr("data-hayErrores");
+      hayErrores = hayErrores.replace(/<Storage |>/gi, "").replace(/'/g, '"')
+
+      if (hayErrores != '{}') {
+        $('#modalContactarUsuario').modal('show');
+      }
+
       // Pasamos los argumentos para contactar el usuario
       $('#modalContactarUsuario').on('show.bs.modal', function(e){
           var usbid = $(e.relatedTarget).data('id-usuario');
           console.log(usbid);
           $(e.currentTarget).find('input[name="usbid"]').val(usbid);
+          // Se quiere ocultar el usbid en el modalContactarUsuario
+          $("#no_table_usbid__row").hide();
       });
+
+
+
     </script>
 {{end}}

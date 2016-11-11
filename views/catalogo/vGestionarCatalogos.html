@@ -17,10 +17,7 @@
 </div>
 <br>
 <div class="card">
-  {{if len(catalogos) == 0:}}
-    <p> Actualmente no existen catálogos en el sistemas. Pruebe agregar
-        un nuevo catálogo usando el boton "Agregar Catálogo" </p>
-  {{else:}}
+  {{if len(catalogos) != 0:}}
     <ul class="nav nav-tabs" role="tablist">
     {{for catalogo in catalogos:}}
       <li class="nav-item {{='active' if catalogo[0].id_catalogo == catalogo_actual else ''}}">
@@ -31,6 +28,11 @@
   </ul>
 
   <div class="tab-content">
+    {{if len(catalogos) == 0:}}
+    <p> Actualmente no existen catálogos en el sistemas. Pruebe agregar
+        un nuevo catálogo usando el boton "Agregar Catálogo" </p>
+    {{pass}}
+
     {{for catalogo in catalogos:}}
       <div class="tab-pane {{='active' if catalogo[0].id_catalogo == catalogo_actual else ''}}" id="{{= catalogo[0].id}}" role="tabpanel">
             <ul class="list-group">
@@ -46,16 +48,16 @@
                     <li class="list-group-item">
                         <div class="row">
                             <div class="col-sm-4">
-                                <b>Nombre del Campo</b>
+                                <center><b>Nombre del Campo</b></center>
                             </div>
                             <div class="col-sm-4">
-                                <b>Tipo</b>
+                                <center><b>Tipo</b></center>
                             </div>
                             <div class="col-sm-2">
-                                <b>Obligatorio</b>
+                                <center><b>Obligatorio</b></center>
                             </div>
                             <div class="col-sm-2">
-                                <b>Acciones</b>
+                                <center><b>Acciones</b></center>
                             </div>
                         </div>
                      </li>
@@ -63,15 +65,16 @@
                       <li class="list-group-item">
                           <div class="row">
                               <div class="col-sm-4">
-                                  {{= campo.nombre}}
+                                  <center>{{= campo.nombre}}</center>
                               </div>
                               <div class="col-sm-4">
-                                  {{= campo.tipo_campo}}
+                                  <center>{{= campo.tipo_campo}}</center>
                               </div>
                               <div class="col-sm-2">
-                                  {{= 'Si' if campo.obligatorio else 'No'}}
+                                  <center>{{= 'Si' if campo.obligatorio else 'No'}}</center>
                               </div>
                               <div class="col-sm-1">
+                                <center>
                                   <span class="glyphicon glyphicon-edit blue"
                                         data-toggle="modal" data-target="#modalEditarCampo"
                                         data-id-campo-cat="{{=campo.id_campo_cat}}"
@@ -80,9 +83,12 @@
                                         data-tipo-campo="{{=campo.tipo_campo}}"
                                         data-obligatorio="{{=campo.obligatorio}}">
                                   </span>
+                                </center>
                               </div>
                               <div class="col-sm-1">
+                                <center>
                                   <span class="glyphicon glyphicon-remove red" data-link-eliminar-campo="{{=URL(f='eliminarCampos', args=[campo.id_campo_cat])}}" data-toggle="modal" data-target="#modalEliminarCampo"></span>
+                                </center>
                               </div>
                           </div>
                       </li>
@@ -92,14 +98,14 @@
               <div class="row">
                   <center>
                     <div class="col-sm-2 col-sm-offset-3">
-                        <button type="button" class="btn btn-default green btn-border"
+                        <button type="button" class="btn btn-default btn-block green btn-border"
                                 data-toggle="modal" data-target="#modalAgregarCampo"
                                 data-id-catalogo="{{=catalogo[0].id}}">
-                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Campo
+                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Campo
                         </button>
                     </div>
                     <div class="col-sm-2">
-                      <button type="button" class="btn btn-default green btn-border"
+                      <button type="button" class="btn btn-default btn-block renombrar btn-border"
                               data-toggle="modal" data-target="#modalCambiarNombre"
                               data-id-catalogo = "{{=catalogo[0].id}}"
                               data-nombre = "{{=catalogo[0].nombre}}">
@@ -161,23 +167,30 @@
       </div>
       <div class="modal-body">
         {{=formulario_agregar_campo.custom.begin}}
+
           <div class="row">
-            <div class="col-md-4 right" ><b>Nombre del Campo</b></div>
-            <div class="col-md-7">{{=formulario_agregar_campo.custom.widget.nombre}}</div>
+            <div class="form-group">
+              <label class=" control-label col-md-3 right" >Nombre del Campo</label>
+              <div class="col-md-9">{{=formulario_agregar_campo.custom.widget.nombre}}</div>
+            </div>
           </div>
           <br>
           <div class="row">
-            <div class="col-md-4 right"><b>Tipo</b></div>
-            <div class="col-md-7">{{=formulario_agregar_campo.custom.widget.tipo_campo}}</div>
+            <div class="form-group">
+                <label class=" control-label col-md-3 right" >Tipo</label>
+                <div class="col-md-9">{{=formulario_agregar_campo.custom.widget.tipo_campo}}</div>
+            </div>
           </div>
           <br>
           <div class="row">
-            <div class="col-md-4 right"><b>Obligatorio</b></div>
-            <div class="col-md-7">{{=formulario_agregar_campo.custom.widget.obligatorio}}</div>
+            <div class="form-group">
+              <label class=" control-label col-md-3 right" >Obligatorio</label>
+              <div class="col-md-9">{{=formulario_agregar_campo.custom.widget.obligatorio}}</div>
+            </div>
           </div>
           <br>
           <div class="row">
-            <div class="col-md-4 right"></div>
+            <div class="col-md-4 left"></div>
               <div class="col-md-7 right">
               <div style="display:none;">{{=formulario_agregar_campo.custom.widget.id_catalogo}} </div>
 
@@ -201,19 +214,25 @@
       </div>
       <div class="modal-body">
         {{=formulario_agregar_campo.custom.begin}}
-          <div class=row>
-            <div class="col-md-4 right"><b>Nombre del Campo</b></div>
-            <div class="col-md-7">{{=formulario_editar_campo.custom.widget.nombre}}</div>
+          <div class="row">
+            <div class="form-group">
+              <label class=" control-label col-md-3 right" >Nombre del Campo</label>
+              <div class="col-md-9">{{=formulario_editar_campo.custom.widget.nombre}}</div>
+            </div>
           </div>
           <br>
-          <div class=row>
-            <div class="col-md-4 right"><b>Tipo</b></div>
-            <div class="col-md-7">{{=formulario_editar_campo.custom.widget.tipo_campo}}</div>
+          <div class="row">
+            <div class="form-group">
+              <label class=" control-label col-md-3 right" >Tipo</label>
+              <div class="col-md-9">{{=formulario_editar_campo.custom.widget.tipo_campo}}</div>
+            </div>
           </div>
           <br>
-          <div class=row>
-            <div class="col-md-4 right"><b>Obligatorio</b></div>
-            <div class="col-md-7">{{=formulario_editar_campo.custom.widget.obligatorio}}</div>
+          <div class="row">
+            <div class="form-group">
+              <label class=" control-label col-md-3 right" >Obligatorio</label>
+              <div class="col-md-9">{{=formulario_editar_campo.custom.widget.obligatorio}}</div>
+            </div>
           </div>
           <br>
           <div class="row">

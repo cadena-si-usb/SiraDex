@@ -34,7 +34,7 @@ def login_cas():
         pass
     try:
         import urllib2, ssl
-        ssl._create_default_https_context = ssl._create_unverified_context
+ #       ssl._create_default_https_context = ssl._create_unverified_context
 
         url = "https://secure.dst.usb.ve/validate?ticket="+\
         request.vars.getfirst('ticket') +\
@@ -73,7 +73,7 @@ def login_cas():
 
             session.usuario['phone'] = datosUsuario.telefono
 
-            
+
             if datosUsuario.tipo == "Bloqueado":
                 response.flash = T("Usuario bloqueado")
                 redirect(URL(c = "default",f="index"))
@@ -171,7 +171,7 @@ def EditarPerfil():
             Field('Nombres',default=session.usuario["first_name"],writable = False),
             Field('Apellidos', default=session.usuario["last_name"],writable=False),
             readonly=True)
-        
+
 
         # Modificar datos del perfil
         usuario = db(db.USUARIO.ci==session.usuario['cedula']).select().first()
@@ -179,27 +179,27 @@ def EditarPerfil():
         forma=SQLFORM(
             db.USUARIO,
             record=usuario,
-            
+
             fields=['telefono','correo_alter'],
 
-            
+
             labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'})
         forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
         forma.element(_type='submit')['_value']="Actualizar"
 
-        
+
         if request.vars:
             nuevoTelefono = request.vars.telefono
             nuevoCorreoAlter = request.vars.correo_alter
-            
+
             valor_telefono = None if ((nuevoTelefono == "") | (nuevoTelefono== None)) else nuevoTelefono
             session.usuario["phone"] = valor_telefono
 
             valor_correo = None if ((nuevoCorreoAlter == "") | (nuevoCorreoAlter== None)) else nuevoCorreoAlter
             session.usuario["alternativo"] = valor_correo
-            
+
             db(db.USUARIO.ci == session.usuario["cedula"]).update(telefono=valor_telefono, correo_alter=valor_correo)
-            
+
             print "\n\nEl nuevo usuario quedo: "
             print session.usuario
             redirect(URL('perfil'))
@@ -232,7 +232,7 @@ def obtener_actividades():
         tiposA = db(db.TIPO_ACTIVIDAD).select()
     else:
         tiposA = db(db.TIPO_ACTIVIDAD.id_programa==int(request.vars.Programa)).select()
-    
+
     concat = '<option value="all" selected="">--cualquiera--</option>'
 
     for tipo in tiposA:
@@ -251,7 +251,7 @@ def vMenuAdmin():
             redirect(URL("index"))
         if session.usuario["tipo"] == "Administrador":
             session.message = ""
-            return response.render(admin = get_tipo_usuario())
+            return response.render(admin = get_tipo_usuario(session))
         else:
             redirect(URL("perfil"))
     else:
@@ -302,6 +302,6 @@ def vRegistroUsuario():
             nuevoCorreoAlter = request.vars.correo_alter
             db(db.USUARIO.ci == session.usuario["cedula"]).update(telefono=nuevoTelefono, correo_alter=nuevoCorreoAlter)
             redirect(URL('perfil'))        # Redirige al usuario al menu principal.
-        return dict(form1 = form, form = forma, admin=get_tipo_usuario())
+        return dict(form1 = form, form = forma, admin=get_tipo_usuario(session))
     else:
         redirect(URL("index"))

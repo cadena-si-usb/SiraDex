@@ -25,7 +25,7 @@
             <thead>
                 <tr>
                     <th> <center> Tipos de Actividad Eliminados </center> </th>
-                    <th> <center> Descripcion </center> </th>
+                    <th> <center> Descripción </center> </th>
                     <th> <center> Restaurar </center> </th>
                     <th> <center> Eliminar </center> </th>
                 </tr>
@@ -220,6 +220,10 @@
 
 <script type="text/javascript">
 
+    $( document ).ready(function() {
+      document.getElementById("tabTiposDeTrabajo").click();
+    });
+    
     // Restaurar Tipo Actividad
     $('#ModalRestaurarTipoActividad').on('show.bs.modal', function(e){
         var link_restaurar = $(e.relatedTarget).data('link-restaurar');

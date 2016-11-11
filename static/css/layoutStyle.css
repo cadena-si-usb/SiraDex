@@ -19,7 +19,7 @@
 	}
 
     .container {
-        width: 1300 !important;
+        width: 100% !important;
     }
 
 
@@ -39,6 +39,7 @@
 	    border: 2px solid #E6EAED;
 	    padding: 5px;
 	    color: #fff;
+	    height: auto;
 	}
 
 	img{
@@ -73,11 +74,11 @@
 
 	#degradado nav a{
 	}
-	
+
 	.navbar-default .navbar-nav>.activo>a, .navbar-default .navbar-nav>.activo>a:focus, .navbar-default .navbar-nav>.activo>a:hover{
 		background-color:#286090;
-		color: #FFF;	
-	}	
+		color: #FFF;
+	}
 
 	.dropdown:hover .dropdown-menu {
 	    display: block;
@@ -109,7 +110,7 @@
 /*                                */
 /**********************************/
 	#btn-lupa{
-	    border: 1px solid #0288D1;	
+	    border: 1px solid #0288D1;
 		border-left-style: none;
 		color:#0288D1;
 		border-top-right-radius : 2em;
@@ -119,7 +120,7 @@
 
 	#btn-filtro{
 		background-color: #B3E5FC;
-	    border: 1px solid #0288D1;	
+	    border: 1px solid #0288D1;
 		border-left-style: none;
 		border-right-style: none;
 		color:#0288D1;
@@ -128,10 +129,10 @@
 	}
 
 	#form-busqueda{
-	    border: 1px solid #0288D1;	
+	    border: 1px solid #0288D1;
 		border-right-style: none;
 		border-top-left-radius : 2em;
-		border-bottom-left-radius : 2em;	
+		border-bottom-left-radius : 2em;
 	}
 
 /**********************************/
@@ -139,7 +140,7 @@
 /*          Pie de pagina         */
 /*                                */
 /**********************************/
-	#footer 
+	#footer
 	{
 	    background-color: #333333;
 	    padding: 10px 0px 5px 0px;
@@ -161,27 +162,27 @@
 	}
 
 	#dv-act>#striped-sublist li:nth-child(odd) {
-		background-color: #4CAF50;  
+		background-color: #4CAF50;
 	}
 
 	#dv-act>#striped-sublist li:nth-child(even) {
-		background-color: #8BC34A;  
+		background-color: #8BC34A;
 	}
 
 	#dv-esp>#striped-sublist li:nth-child(odd) {
-		background-color: #607D8B;  
+		background-color: #607D8B;
 	}
 
 	#dv-esp>#striped-sublist li:nth-child(even) {
-		background-color: #9E9E9E;  
+		background-color: #9E9E9E;
 	}
 
 	#dv-rec>#striped-sublist li:nth-child(odd) {
-		background-color: #F44336;  
+		background-color: #F44336;
 	}
 
 	#dv-rec>#striped-sublist li:nth-child(even) {
-		background-color: #DE6E4B;  
+		background-color: #DE6E4B;
 	}
 
 /**********************************/
@@ -285,7 +286,7 @@ a#disabled-dropdown:hover {
 /*     Styles iconos y botones    */
 /*                                */
 /**********************************/
-	
+
 
 
 .center-vertically {
@@ -296,6 +297,18 @@ a#disabled-dropdown:hover {
 
 .btn-border {
     border-radius: 200px !important;
+}
+
+.renombrar {
+    color: #03A9F4  !important;
+    background-color: #FFFFFF !important;
+    border: 1px solid #03A9F4  !important;
+}
+
+.renombrar:hover {
+    color: #FFFFFF !important;
+    background-color: #03A9F4  !important;
+    border: 1px solid #03A9F4  !important;
 }
 
 .green {
@@ -357,6 +370,10 @@ a: hover {
     color: #43A047 !important;
 }
 
+.right {
+	text-align: right !important;
+}
+
 /**********************************/
 /*                                */
 /*              Tabla             */
@@ -371,90 +388,94 @@ a: hover {
 /*               Tabs             */
 /*                                */
 /**********************************/
-	.nav-tabs { 
-		border-bottom: 2px solid #DDD; 
+	.nav-tabs {
+		border-bottom: 2px solid #DDD;
 	}
 
-    .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover { 
-    	border-width: 0; 
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+    	border-width: 0;
     }
-    .nav-tabs > li > a { 
-    	border: none; 
-    	color: #666; 
+    .nav-tabs > li > a {
+    	border: none;
+    	color: #666;
     }
 
     .nav-tabs > li.active > a, .nav-tabs > li > a:hover {
     	border: none;
-    	color: #4285F4 !important; 
-    	background: transparent; 
-    }      
+    	color: #4285F4 !important;
+    	background: transparent;
+    }
 
     .nav-tabs > li.active > a, .nav-tabs > li > a:hover {
-    	border: none; 
-    	color: #4285F4 !important; 
-    	background: transparent; 
-    }    
+    	border: none;
+    	color: #4285F4 !important;
+    	background: transparent;
+    }
 
 
-    .nav-tabs > li > a::after { 
-    	content: ""; 
-    	background: #4285F4; 
-    	height: 2px; 
-    	position: absolute; 
-    	width: 100%; 
-    	left: 0px; 
-    	bottom: -1px; 
-    	transition: all 250ms ease 0s; 
-    	transform: scale(0); 
+    .nav-tabs > li > a::after {
+    	content: "";
+    	background: #4285F4;
+    	height: 2px;
+    	position: absolute;
+    	width: 100%;
+    	left: 0px;
+    	bottom: -1px;
+    	transition: all 250ms ease 0s;
+    	transform: scale(0);
     }
 
     .nav-tabs > li.act > a::after {
-    	background: #7CB342; 
+    	background: #7CB342;
     }
 
 	.nav-tabs > li.active.act > a, .nav-tabs > li.act > a:hover {
-    	color: #7CB342 !important; 
+    	color: #7CB342 !important;
 	}
 
     .nav-tabs > li.esp > a::after {
-    	background: #607D8B; 
+    	background: #607D8B;
     }
 
 	.nav-tabs > li.active.esp > a, .nav-tabs > li.esp > a:hover {
-    	color: #607D8B !important; 
-	} 	    
+    	color: #607D8B !important;
+	}
 
 
     .nav-tabs > li.rec > a::after {
-    	background: #F44336; 
+    	background: #F44336;
     }
 
 	.nav-tabs > li.active.rec > a, .nav-tabs > li.rec > a:hover {
-    	color: #F44336 !important; 
-	} 	    
+    	color: #F44336 !important;
+	}
 
 
-    .nav-tabs > li.active > a::after, .nav-tabs > li:hover > a::after { 
-    	transform: scale(1); 
+    .nav-tabs > li.active > a::after, .nav-tabs > li:hover > a::after {
+    	transform: scale(1);
     }
-	
+
 	.tab-nav > li > a::after {
-		background: #21527d none repeat scroll 0% 0%; 
-		color: #fff; 
+		background: #21527d none repeat scroll 0% 0%;
+		color: #fff;
 	}
-	
+
 	.tab-pane {
-		padding: 15px 0; 
+		padding: 15px 0;
 	}
-	
+
 	.tab-content{
 		padding:20px
 	}
 
 	.card {
-		background: #FFF none repeat scroll 0% 0%; 
-		box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3); 
-		margin-bottom: 30px; 
+		-webkit-box-sizing: border-box;
+    	-moz-box-sizing: border-box;
+    	box-sizing: border-box;
+    	width: 100%;
+		background: #FFF none repeat scroll 0% 0%;
+		box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+		margin-bottom: 30px;
 	}
 
 /**********************************/
@@ -497,7 +518,7 @@ a: hover {
 /*                                */
 /*             embed              */
 /*                                */
-/**********************************/	
+/**********************************/
 embed{
 	width: 100%;
 	height: 100%;
@@ -506,7 +527,7 @@ embed{
 .graph > .background {
 	fill: rgba(255,255,255,1) !important;
 	}
-	
+
 .error{
 	color: #F44336;
 }

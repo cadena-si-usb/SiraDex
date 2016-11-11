@@ -126,6 +126,9 @@ def vGestionarCatalogos():
     formulario_editar_campo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
     formulario_editar_campo.element(_type='submit')['_value']="Editar"
 
+    formulario_cambiar_nombre.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    formulario_cambiar_nombre.element(_type='submit')['_value']="Renombrar Catálogo"
+
     return dict(catalogos                   = catalogos,
                 catalogo_actual             = catalogo_actual,
                 formulario_agregar_catalogo = formulario_agregar_catalogo,

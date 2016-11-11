@@ -22,7 +22,7 @@ import os
 def enviar_correo_validacion(mail, usuario, producto):
 		print("correo validar")
 		email  = usuario['email']
-		asunto = '[SIRADEX] Producto Aprobado'
+		asunto = '[SIRADEX] Producto Validado'
 
 		# Mensaje del Correo
 
@@ -51,7 +51,7 @@ def enviar_correo_validacion(mail, usuario, producto):
 '''
 def enviar_correo_rechazo(mail, usuario, producto, razon):
 		email  = usuario['email']
-		asunto = '[SIRADEX] Producto Rechazado'
+		asunto = '[SIRADEX] Producto no Validado'
 
 		# Mensaje del Correo
 
