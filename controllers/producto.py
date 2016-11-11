@@ -49,11 +49,11 @@ def gestionar():
             print nombre.TIPO_ACTIVIDAD.nombre
             nombres[row] = nombre.TIPO_ACTIVIDAD.nombre
 
-        if row["estado"] == "En espera":
+        if row["estado"] == "Por Validar":
             cant_esp += 1
-        elif row["estado"] == "Validada":
+        elif row["estado"] == "Validado":
             cant_val += 1 
-        elif row["estado"] == "Rechazada":
+        elif row["estado"] == "No Validado":
             cant_rec += 1
 
 
@@ -156,7 +156,7 @@ def agregar():
     if form.process().accepted:
         no = ['nombre','descripcion','fecha_realizacion','lugar']
         dicc_producto = db.PRODUCTO.insert(id_tipo = tipo,nombre=form.vars.nombre, descripcion=form.vars.descripcion,\
-                                      estado='En espera',fecha_realizacion=form.vars.fecha_realizacion, fecha_modificacion=now, \
+                                      estado='Por Validar',fecha_realizacion=form.vars.fecha_realizacion, fecha_modificacion=now, \
                                       lugar = form.vars.lugar, usbid_usu_creador= session.usuario['usbid'])
         id_producto = dicc_producto['id_producto']
         for var in form.vars:
@@ -246,7 +246,8 @@ def modificar():
     valores['fecha_realizacion'] = producto.fecha_realizacion
     valores['lugar'] = producto.lugar
     
-    
+    # Los tipos documento tienen que ser tratados diferente y cargados los enlaces con js
+    hay_uploads = False
     for row in rows:
         rows_campo = db(db.CAMPO.id_campo == row.id_campo).select().first()
         nombre = rows_campo.nombre.replace(" ", "_")
@@ -298,7 +299,7 @@ def modificar():
     # Al aceptar el formulario
     if form.process().accepted:
         no = ['nombre','descripcion','fecha_realizacion','fecha_modificacion','lugar']
-        sql = "UPDATE PRODUCTO SET estado = 'En espera' WHERE id_producto = '"+str(id_producto)+"';"
+        sql = "UPDATE PRODUCTO SET estado = 'Por Validar' WHERE id_producto = '"+str(id_producto)+"';"
 
         sql2 = "UPDATE PRODUCTO SET fecha_modificacion='"+str(now.date())+"' WHERE id_producto = '"+str(id_producto)+"';"
         print "\n\nel sql quedo:" +sql

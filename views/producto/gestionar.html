@@ -40,33 +40,33 @@
         <div class="card">
         <ul class="nav nav-tabs" role="tablist">
         
-        <!-- Activas -->
+        <!-- Validados -->
         <li role="presentation" class="active act">
             <a  href="#activas" 
                 aria-controls="activas" 
                 role="tab" 
                 data-toggle="tab">
-                Validadas
+                Validados
             </a>
         </li>
         
-        <!-- Espera -->
+        <!-- Por Validar -->
         <li role="presentation" class="esp">
             <a  href="#espera" 
                 aria-controls="espera" 
                 role="tab" 
                 data-toggle="tab">
-                En Espera
+                Por Validar
             </a>
         </li>
 
-        <!-- Rechazadas -->
+        <!-- No Validados -->
         <li role="presentation" class="rec">
             <a  href="#rechazadas" 
                 aria-controls="rechazadas" 
                 role="tab" 
                 data-toggle="tab">
-                Rechazadas
+                No Validados
             </a>
         </li>
 
@@ -89,7 +89,7 @@
                         </thead>                
                         <tbody id="actividades">
                             {{for x in rows:}}
-                                {{if x.estado == 'Validada':}}
+                                {{if x.estado == 'Validado':}}
                                 <tr >
                                     <!-- Nombre 
 
@@ -137,10 +137,10 @@
                 {{pass}}
      
         </div>
-        <!-- Espera -->
+        <!-- Por Validar -->
         <div role="tabpanel" class="tab-pane" id="espera">
                 {{if cant_esp == 0:}}
-                    No tienes productos en espera
+                    No tienes productos por validar
                 {{else:}}
                     <table class="table table-striped table-condensed table-hover sortable">
                         <thead>
@@ -155,7 +155,7 @@
                         </thead>
                         <tbody id="actividades">
                             {{for x in rows:}}
-                                {{if x.estado == 'En espera':}}
+                                {{if x.estado == 'Por Validar':}}
                                     <tr>
                                         <!-- Nombre Producto -->
                                             
@@ -195,10 +195,10 @@
                 {{pass}}
         </div>
 
-        <!-- Rechazadas -->
+        <!-- No Validados -->
         <div role="tabpanel" class="tab-pane" id="rechazadas">
                 {{if cant_rec == 0:}}
-                    No tienes productos rechazados
+                    No tienes productos no validados
                 {{else:}}
                     <table class="table table-striped table-condensed table-hover sortable">
                         <thead>
@@ -213,7 +213,7 @@
                         </thead>                
                         <tbody id="actividades">
                             {{for x in rows:}}
-                                {{if x.estado == 'Rechazada':}}
+                                {{if x.estado == 'No Validado':}}
                                 <tr>
                                     <td class="center-vertically detalles"> {{=x.nombre}}</td>
                                     <td class="center-vertically detalles"> {{=nombres[x]}}</td>
