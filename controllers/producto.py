@@ -49,11 +49,11 @@ def gestionar():
             print nombre.TIPO_ACTIVIDAD.nombre
             nombres[row] = nombre.TIPO_ACTIVIDAD.nombre
 
-        if row["estado"] == "En espera":
+        if row["estado"] == "Por Validar":
             cant_esp += 1
-        elif row["estado"] == "Validada":
+        elif row["estado"] == "Validado":
             cant_val += 1 
-        elif row["estado"] == "Rechazada":
+        elif row["estado"] == "No Validado":
             cant_rec += 1
 
 
@@ -103,7 +103,8 @@ def agregar():
     fields.append(Field('descripcion','string',label="Descripcion (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(250)]))
     fields.append(Field('fecha_realizacion','date',label="Fecha de Realizacion (*)",requires=[IS_NOT_EMPTY(error_message='Debe seleccionar una fecha'),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
     fields.append(Field('lugar','string',label="Lugar (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(50)]))
-
+    obl = {} 
+    no_obl = {}
     for row in campos_id:
         rows_campo = db(db.CAMPO.id_campo == row.id_campo).select().first()
         nombre = rows_campo.nombre.replace(" ", "_")
@@ -117,7 +118,9 @@ def agregar():
         print URL('static/archivos')
         obligatorio = rows_campo.obligatorio
         tipo_campo = rows_campo.tipo_campo
+
         if obligatorio:
+            obl[nombre]= tipo_campo
             if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
             elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
             elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX')]))
@@ -128,6 +131,7 @@ def agregar():
             elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',label=rows_campo.nombre+" (*)",requires=IS_NOT_EMPTY()))
                 
         else:
+            no_obl[nombre] = tipo_campo
             if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',requires=IS_EMPTY_OR(IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD'))))
             elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string'))
             elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX'))))
@@ -138,7 +142,6 @@ def agregar():
             elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',requires=IS_NOT_EMPTY()))
         
 
-    
     for i in range(5):
         fields.append(Field("c0mpr0bant3_"+str(i+1), 'upload', autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), label=''))  
         fields.append(Field("d3scr1pc10n_comprobante_"+str(i+1), 'string', label="Descripcion")) 
@@ -150,13 +153,26 @@ def agregar():
 
 
     form=SQLFORM.factory(*fields, upload=url) 
-    form.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
-    form.element(_type='submit')['_value']="Agregar"
+    form.element(_type='submit')['_class']="btn blue-add btn-block btn-border "
+    form.element(_type='submit')['_value']="Agregar"  
+    form.element()
+
+    for i in obl.keys():
+        
+        form.element(_name=i)['_class']="form-control obligatoria "+ obl[i]
+
+    for i in no_obl.keys():
+        
+        form.element(_name=i)['_class']="form-control "+ no_obl[i]
+
+    for f in form.elements("input"):
+        print f 
+
 
     if form.process().accepted:
         no = ['nombre','descripcion','fecha_realizacion','lugar']
         dicc_producto = db.PRODUCTO.insert(id_tipo = tipo,nombre=form.vars.nombre, descripcion=form.vars.descripcion,\
-                                      estado='En espera',fecha_realizacion=form.vars.fecha_realizacion, fecha_modificacion=now, \
+                                      estado='Por Validar',fecha_realizacion=form.vars.fecha_realizacion, fecha_modificacion=now, \
                                       lugar = form.vars.lugar, usbid_usu_creador= session.usuario['usbid'])
         id_producto = dicc_producto['id_producto']
         for var in form.vars:
@@ -246,7 +262,8 @@ def modificar():
     valores['fecha_realizacion'] = producto.fecha_realizacion
     valores['lugar'] = producto.lugar
     
-    
+    # Los tipos documento tienen que ser tratados diferente y cargados los enlaces con js
+    hay_uploads = False
     for row in rows:
         rows_campo = db(db.CAMPO.id_campo == row.id_campo).select().first()
         nombre = rows_campo.nombre.replace(" ", "_")
@@ -298,7 +315,7 @@ def modificar():
     # Al aceptar el formulario
     if form.process().accepted:
         no = ['nombre','descripcion','fecha_realizacion','fecha_modificacion','lugar']
-        sql = "UPDATE PRODUCTO SET estado = 'En espera' WHERE id_producto = '"+str(id_producto)+"';"
+        sql = "UPDATE PRODUCTO SET estado = 'Por Validar' WHERE id_producto = '"+str(id_producto)+"';"
 
         sql2 = "UPDATE PRODUCTO SET fecha_modificacion='"+str(now.date())+"' WHERE id_producto = '"+str(id_producto)+"';"
         print "\n\nel sql quedo:" +sql

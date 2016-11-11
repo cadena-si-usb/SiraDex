@@ -24,11 +24,11 @@ def gestionar():
 
         detalles[row] = dict_campos
 
-        if row["validacion"] == "En espera":
+        if row["validacion"] == "Por Validar":
             cant_esp += 1
-        elif row["validacion"] == "Validada":
+        elif row["validacion"] == "Validado":
             cant_val += 1 
-        elif row["validacion"] == "Rechazada":
+        elif row["validacion"] == "No Validado":
             cant_rec += 1
 
     return locals()

@@ -73,7 +73,7 @@ CREATE TABLE PRODUCTO(
   id_tipo             INT,
   nombre              VARCHAR(128),
   descripcion         VARCHAR(256),
-  estado          VARCHAR DEFAULT 'En Espera',
+  estado          VARCHAR DEFAULT 'Por Validar',
   evaluacion_criterio VARCHAR(256),
   evaluacion_valor    VARCHAR(256),
   fecha_realizacion   DATE,

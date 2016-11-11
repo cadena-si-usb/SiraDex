@@ -114,19 +114,19 @@ def perfil():
         rows = db(db.PRODUCTO.usbid_usu_creador==session.usuario['usbid']).select()
         productos = {
                     "Validados":[],
-                    "Rechazados":[],
-                    "En espera":[]
+                    "No Validados":[],
+                    "Por Validar":[]
                     }
 
         grafica = URL('default','grafica')
 
         for row in rows:
-            if row.estado == "Validada":
+            if row.estado == "Validado":
                 productos["Validados"] += [row]
-            elif row.estado == "Rechazada":
-                productos["Rechazados"]+= [row]
+            elif row.estado == "No Validado":
+                productos["No Validados"]+= [row]
             else:
-                productos["En espera"] += [row]
+                productos["Por Validar"] += [row]
 
         return locals()
     else:
@@ -137,9 +137,9 @@ def grafica():
         query = "select programa.nombre, programa.abreviacion, count(producto.nombre)" + \
         " from ((programa inner join tipo_actividad on programa.id_programa=tipo_actividad.id_programa)" + \
         " inner join producto on producto.id_tipo=tipo_actividad.id_tipo and producto.usbid_usu_creador=\'"+ session.usuario["usbid"] +\
-        "\' and producto.estado=\'Validada\') group by programa.nombre, programa.abreviacion;"
+        "\' and producto.estado=\'Validado\') group by programa.nombre, programa.abreviacion;"
 
-        query2 = "select count(producto.nombre) from producto where producto.usbid_usu_creador=\'"+ session.usuario["usbid"]+"\' and producto.estado=\'Validada\';"
+        query2 = "select count(producto.nombre) from producto where producto.usbid_usu_creador=\'"+ session.usuario["usbid"]+"\' and producto.estado=\'Validado\';"
 
         datos = db.executesql(query)
         num_productos = db.executesql(query2)[0][0]
