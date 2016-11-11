@@ -29,10 +29,13 @@ def gestionar():
 
             ## Formulario para colocar el mensaje.
             formulario_contactar = SQLFORM.factory(
-                                        Field('asunto', type="string"),
-                                        Field('mensaje', type="text"),
+                                        Field('asunto', type="string", requires=[IS_LENGTH(50)]),
+                                        Field('mensaje', type="text", requires=[IS_NOT_EMPTY(error_message='El mensaje no puede estar vacio')]),
                                         Field('usbid', type="string"),
                                         submit_button = 'Enviar')
+
+            hayErrores = {}
+
             if formulario_contactar.accepts(request.vars, session, formname="formulario_contactar"):
                 usbid = request.vars.usbid
                 asunto = request.vars.asunto
@@ -51,20 +54,25 @@ def gestionar():
                 ## Enviamos la notificacion
                 enviar_correo_contacto(mail, datos_usuario, asunto, mensaje)
 
+                session.message = 'Correo enviado satisfactoriamente'
                 redirect(URL('gestionar'))
 
+            # En caso de que el formulario no sea aceptado
+            elif formulario_contactar.errors:
+                  hayErrores = formulario_contactar.errors
 
-            if len(request.vars)!=0:
-                if (not db(db.USUARIO.usbid == request.args[0]).isempty()):
-                    if(request.args[0] != session.usuario["usbid"]):
-                        db(db.USUARIO.usbid == request.args[0]).update(tipo = request.vars.tipo)
-                        redirect(URL('gestionar'))
-                    else:
-                        message = T("Para cambiar sus permisos, por favor comuníquese con un administrador")
-                else:
-                    message = T("El Usuario no se encuentra registrado")
+            #
+            # if len(request.vars)!=0:
+            #     if (not db(db.USUARIO.usbid == request.args[0]).isempty()):
+            #         if(request.args[0] != session.usuario["usbid"]):
+            #             db(db.USUARIO.usbid == request.args[0]).update(tipo = request.vars.tipo)
+            #             redirect(URL('gestionar'))
+            #         else:
+            #             message = T("Para cambiar sus permisos, por favor comuníquese con un administrador")
+            #     else:
+            #         message = T("El Usuario no se encuentra registrado")
 
-            return dict(form_editar=form_editar, formulario_contactar=formulario_contactar,usuarios = aux,message = message, admin=get_tipo_usuario())
+            return dict(form_editar=form_editar, hayErrores=hayErrores, formulario_contactar=formulario_contactar,usuarios = aux,message = message, admin=get_tipo_usuario())
         else:
             redirect(URL("perfil"))
     else:
