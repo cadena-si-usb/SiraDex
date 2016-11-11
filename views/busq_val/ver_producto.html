@@ -62,23 +62,23 @@
                 <center>
 
                     <a href="#">
-                        <button id="button_validar" type="button" class="btn btn-default btn-border"
+                        <button id="button_validar" type="button" class="btn btn-default btn-border green-validar "
                                                     data-toggle="modal"
                                                     data-target="#modalValidarProducto"
                                                     data-nombre="{{=producto.nombre}}"
                                                     data-id-producto="{{=producto.id_producto}}"
                                                     style="color:#7CB342">
-                            Validar <span class="glyphicon glyphicon-ok" aria-hidden="true" ></span>
+                            <span class="glyphicon glyphicon-ok" aria-hidden="true" ></span> Validar 
                         </button>
                     </a>
 
                     <a href="#">
-                    <button type="button" class="btn btn-default red btn-border"
+                    <button type="button" class="btn btn-default red-trash btn-border"
                                           data-toggle="modal"
                                           data-target="#modalRechazarProducto"
                                           data-id-producto="{{=producto.id_producto}}"
                                           style="color:#F44336">
-                        Rechazar <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Rechazar 
                     </button>
                         </a>
                 </center>
