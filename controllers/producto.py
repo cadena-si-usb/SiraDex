@@ -42,9 +42,9 @@ def gestionar():
 
         detalles[row] = dict_campos
 
-        nombres_act = db((db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo) 
+        nombres_act = db((db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo)
                     & (db.PRODUCTO.id_producto == row.id_producto)).select()
-        
+
         for nombre in nombres_act:
             print nombre.TIPO_ACTIVIDAD.nombre
             nombres[row] = nombre.TIPO_ACTIVIDAD.nombre
@@ -52,7 +52,7 @@ def gestionar():
         if row["estado"] == "Por Validar":
             cant_esp += 1
         elif row["estado"] == "Validado":
-            cant_val += 1 
+            cant_val += 1
         elif row["estado"] == "No Validado":
             cant_rec += 1
 
@@ -103,7 +103,7 @@ def agregar():
     fields.append(Field('descripcion','string',label="Descripcion (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(250)]))
     fields.append(Field('fecha_realizacion','date',label="Fecha de Realizacion (*)",requires=[IS_NOT_EMPTY(error_message='Debe seleccionar una fecha'),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
     fields.append(Field('lugar','string',label="Lugar (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(50)]))
-    obl = {} 
+    obl = {}
     no_obl = {}
     for row in campos_id:
         rows_campo = db(db.CAMPO.id_campo == row.id_campo).select().first()
@@ -140,7 +140,7 @@ def agregar():
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807))))
             elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807'))))
             elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',requires=IS_NOT_EMPTY()))
-        
+
 
     for i in range(5):
         fields.append(Field("c0mpr0bant3_"+str(i+1), 'upload', autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), label=''))
@@ -152,21 +152,21 @@ def agregar():
     print url
 
 
-    form=SQLFORM.factory(*fields, upload=url) 
+    form=SQLFORM.factory(*fields, upload=url)
     form.element(_type='submit')['_class']="btn blue-add btn-block btn-border "
-    form.element(_type='submit')['_value']="Agregar"  
+    form.element(_type='submit')['_value']="Agregar"
     form.element()
 
     for i in obl.keys():
-        
+
         form.element(_name=i)['_class']="form-control obligatoria "+ obl[i]
 
     for i in no_obl.keys():
-        
+
         form.element(_name=i)['_class']="form-control "+ no_obl[i]
 
     for f in form.elements("input"):
-        print f 
+        print f
 
 
     if form.process().accepted:
@@ -263,7 +263,7 @@ def modificar():
     valores['descripcion'] = producto.descripcion
     valores['fecha_realizacion'] = producto.fecha_realizacion
     valores['lugar'] = producto.lugar
-    
+
     # Los tipos documento tienen que ser tratados diferente y cargados los enlaces con js
     hay_uploads = False
     for row in rows:
@@ -401,7 +401,7 @@ def eliminar():
         except Exception,e:
             print "Exception: "
             print e
-    
+
 
     set_tiene_campo = db(db.PRODUCTO_TIENE_CAMPO.id_prod == id_act)
     set_tiene_campo.delete()
@@ -508,76 +508,79 @@ def descargar_comprobante():
 #Funcion para exportar PDF de un producto
 def get_pdf():
 
-    producto = db.PRODUCTO(request.args(0))
-    creador= db(db.USUARIO.usbid == producto .usbid_usu_creador).select()[0]
-    tmpfilename = os.path.join(request.folder,'private',str(uuid4()))
-    doc = SimpleDocTemplate(tmpfilename)
-    elements = []
+	producto = db.PRODUCTO(request.args(0))
+	creador  = db(db.USUARIO.usbid == producto .usbid_usu_creador).select()[0]
+	tmpfilename = os.path.join(request.folder,'private',str(uuid4()))
+	doc = SimpleDocTemplate(tmpfilename)
+	elements = []
 
-    # Definimos los estilos para el documento
-    estilo = getSampleStyleSheet()
+	# Definimos los estilos para el documento
+	estilo = getSampleStyleSheet()
 
-    estilo_titulo = estilo["Normal"]
-    estilo_titulo.alignment = TA_CENTER
-    estilo_titulo.fontName = "Helvetica"
-    estilo_titulo.fontSize = 12
-    estilo_titulo.leading = 15
+	estilo_tabla = estilo["BodyText"]
+	estilo_tabla.alignment = TA_LEFT
+	estilo_tabla.fontName = "Helvetica"
+	estilo_tabla.fontSize = 10
+	estilo_tabla.leading = 12
 
-    estilo_tabla = estilo["BodyText"]
-    estilo_tabla.alignment = TA_LEFT
-    estilo_tabla.fontName = "Helvetica"
-    estilo_tabla.fontSize = 10
-    estilo_tabla.leading = 12
+	estilo_titulo = estilo["Normal"]
+	estilo_titulo.alignment = TA_CENTER
+	estilo_titulo.fontName = "Helvetica"
+	estilo_titulo.fontSize = 12
+	estilo_titulo.leading = 15
 
-    estilo_footer = estilo["Italic"]
-    estilo_footer.alignment = TA_CENTER
-    estilo_footer.fontName = "Helvetica"
-    estilo_footer.fontSize = 10
-    estilo_footer.leading = 12
+	estilo_footer = estilo["Italic"]
+	estilo_footer.alignment = TA_CENTER
+	estilo_footer.fontName = "Helvetica"
+	estilo_footer.fontSize = 10
+	estilo_footer.leading = 12
 
-    # Agrega el footer al documento
-    def addFooter(canvas, doc):
+	# Agrega el footer al documento
+	def addFooter(canvas, doc):
 
-        footer1 = Paragraph('''<br/>Sartenejas, Baruta, Edo. Miranda - Apartado 89000 Cable Unibolivar Caracas Venezuela. Teléfono +58 0212-9063111
-                               <br/>Litoral. Camurí Grande, Edo. Vargas Parroquia Naiguatá. Teléfono +58 0212-9069000   ''', estilo_footer)
-        w, h = footer1.wrap(doc.width, doc.bottomMargin)
-        footer1.drawOn(canvas, doc.leftMargin, h)
+		footer1 = Paragraph('''<br/>Sartenejas, Baruta, Edo. Miranda - Apartado 89000 Cable Unibolivar Caracas Venezuela. Teléfono +58 0212-9063111
+		 					   <br/>Litoral. Camurí Grande, Edo. Vargas Parroquia Naiguatá. Teléfono +58 0212-9069000	''', estilo_footer)
+		w, h = footer1.wrap(doc.width, doc.bottomMargin)
+		footer1.drawOn(canvas, doc.leftMargin, h)
 
 
-    usb_logo_url = os.path.join(request.folder, 'static/images','usblogo.png')
-    usblogo = Image(usb_logo_url)
-    usblogo.drawHeight = 70
-    usblogo.drawWidth  = 100
+	usb_logo_url = os.path.join(request.folder, 'static/images','usblogo.png')
+	usblogo = Image(usb_logo_url)
+	usblogo.drawHeight = 70
+	usblogo.drawWidth  = 100
 
-    elements.append(usblogo)
-    elements.append(Paragraph('Universidad Simón Bolívar' , estilo_titulo))
-    elements.append(Paragraph('Deacanato de Extensión' , estilo_titulo))
-    elements.append(Paragraph('Sistema de Registro de Actividades de Extensión (SIRADEX)' , estilo_titulo))
-    elements.append(Paragraph('<br/><br/>DATOS DEL PRODUCTO' , estilo_titulo))
+	elements.append(usblogo)
+	elements.append(Paragraph('Universidad Simón Bolívar' , estilo_titulo))
+	elements.append(Paragraph('Vicerrectorado Académico' , estilo_titulo))
+	elements.append(Paragraph('Deacanato de Extensión' , estilo_titulo))
+	elements.append(Paragraph('Sistema de Registro de Actividades de Extensión (SIRADEX)' , estilo_titulo))
+	elements.append(Paragraph('<br/><br/>DATOS DEL PRODUCTO' , estilo_titulo))
 
-    data = [
-    [''],
-    ['', Paragraph('<b>NOMBRE DEL PRODUCTO:</b> ', estilo_tabla),  str(producto.nombre), ''],
-    ['', Paragraph('<b>REALIZADO POR: </b>' , estilo_tabla),  str(creador.nombres +' '+ creador.apellidos),''],
-    ['', Paragraph('<b>CI:</b> ' , estilo_tabla),  str(creador.ci),''],
-    ['', Paragraph('<b>DESCRIPCIÓN:</b> ', estilo_tabla) ,  str (producto.descripcion), ''],
-    ['', Paragraph('<b>LUGAR DE REALIZACIÓN:</b>', estilo_tabla),  str (producto.lugar), ''],
-    ['', Paragraph('<b>FECHA DE CREACIÓN:</b> ', estilo_tabla) ,  str (producto.fecha_realizacion), ''],
-    ['', Paragraph('<b>ÚLTIMA FECHA DE MODIFICACIÓN: </b>' , estilo_tabla) ,  str (producto.fecha_modificacion), ''],
-    ['', Paragraph('<b>STATUS DEL PRODUCTO: </b>', estilo_tabla) ,  str (producto.estado), '']
-    ]
+	data = [
+	[''],
+	['', Paragraph('<b>NOMBRE DEL PRODUCTO:</b> ', estilo_tabla),  Paragraph(str(producto.nombre), estilo_tabla), ''],
+	['', Paragraph('<b>REGISTRADO POR: </b>' , estilo_tabla),  Paragraph(str(creador.nombres +' '+ creador.apellidos), estilo_tabla),''],
+	['', Paragraph('<b>CI:</b> ' , estilo_tabla),  Paragraph(str(creador.ci), estilo_tabla),''],
+	['', Paragraph('<b>DESCRIPCIÓN:</b> ', estilo_tabla) ,  Paragraph(str (producto.descripcion), estilo_tabla), ''],
+	['', Paragraph('<b>LUGAR DE REALIZACIÓN:</b>', estilo_tabla),  Paragraph(str (producto.lugar), estilo_tabla), ''],
+	['', Paragraph('<b>FECHA DE FINALIZACIÓN:</b> ', estilo_tabla) ,  Paragraph(str (producto.fecha_realizacion), estilo_tabla), ''],
+	['', Paragraph('<b>ÚLTIMA FECHA DE MODIFICACIÓN: </b>' , estilo_tabla) ,  Paragraph(str (producto.fecha_modificacion), estilo_tabla), ''],
+	['', Paragraph('<b>STATUS DE VALIDACION: </b>', estilo_tabla) ,  Paragraph(str (producto.estado), estilo_tabla), '']
+	]
 
-    t=Table(data, colWidths=(2*inch))
+	t=Table(data, colWidths=(2*inch))
+	t.setStyle(TableStyle([('VALIGN',(1,0),(1,8),'MIDDLE')]))
 
-    elements.append(t)
+	elements.append(t)
 
-    # construimos el documento
-    doc.build(elements, onFirstPage=addFooter)
-    data = open(tmpfilename,"rb").read()
-    os.unlink(tmpfilename)
-    response.headers['Content-Type']='application/pdf'
+	# construimos el documento
+	doc.build(elements, onFirstPage=addFooter)
+	data = open(tmpfilename,"rb").read()
+	os.unlink(tmpfilename)
+	response.headers['Content-Type']='application/pdf'
 
-    return data
+	return data
+
 
 def eliminar_comprobante():
     if not request.args:
