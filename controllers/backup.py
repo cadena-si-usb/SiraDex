@@ -25,18 +25,14 @@ def index():
 	return locals()
 
 def generar_backup():
-
 	fecha = time.asctime(time.localtime(time.time()))
-
-	archivo = fecha.split()[4:19] + ".sql"
-
-	comando = "pg_dump -d Siradex -U Siradex -h localhost -w ./applications/SiraDex/backup/ > " + archivo
+	archivo = "_".join(fecha.split()[1:]).replace(":","") + ".sql"
+	comando = "pg_dump -d Siradex -U Siradex -h localhost -w > ./applications/SiraDex/backup/backup_" + archivo
 	resp = os.system(comando)
+	redirect("index")
 
 def formulario_restaurar_backup():
-
 	fields = []
-
 	fields.append(Field("backup", 'upload', autodelete=True, uploadfolder="./applications/SiraDex/backup/", label=''))
 
 	form=SQLFORM.factory(*fields,upload=URL('download')) 
@@ -46,13 +42,12 @@ def formulario_restaurar_backup():
 	return form
 
 def restaurar_backup():
-
 		archivo = request.args[0]
 
-		#comando = "psql -d Siradex -U Siradex -h localhost -w < " + archivo
+		comando = "psql -d Siradex -U Siradex -h localhost -w < ./applications/SiraDex/SQLScripts/dropSIRADEx.sql && psql -d Siradex -U Siradex -h localhost -w < ./applications/SiraDex/backup/" + archivo
 
-		#resp = os.system(comando)
-		resp = 0
+		resp = os.system(comando)
+		#resp = 0
 		if (resp == 0):
 			response.flash="Restaurado."
 		else:
@@ -63,3 +58,11 @@ def restaurar_backup():
 
 def download():
     return response.download(request, db)
+
+def eliminar():
+		archivo = request.args[0]
+		comando = "rm ./applications/SiraDex/backup/" + archivo
+
+		resp = os.system(comando)
+		redirect(URL('index'))
+		
