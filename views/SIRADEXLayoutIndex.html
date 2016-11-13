@@ -27,7 +27,9 @@
 		<header>
 			<!-- Banner de SIRADEX -->
 			<div id = "logo">
-				{{=IMG(_src=URL('static', 'images/banner.jpg')) }}
+				<a href ="{{=URL(c='default', f='index.html')}}"/>
+                            		{{=IMG(_src=URL('static', 'images', args='banner.jpg')) }} 
+                            	</a>
 			</div>
 			<!-- Menu del headder -->
             <nav class="navbar navbar-default">
