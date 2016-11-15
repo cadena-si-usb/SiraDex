@@ -25,7 +25,7 @@ def gestionar():
     rows = db(db.PRODUCTO.usbid_usu_creador==session.usuario['usbid']).select()
 
     detalles = {}
-    nombres = {
+    nombres = {}
     cant_esp = 0
     cant_val = 0
     cant_rec = 0
