@@ -102,20 +102,16 @@
                     {{else:}}
                         {{for tipoActividad in listaTipoActividades: }}
                         <tr>
-                            <td class="col-md-4 nombre_tipo">
+                            <td class="col-md-3 nombre_tipo">
                                 <a href="{{=URL(c='tipo_actividad', f='ver_tipo_actividad',args=[tipoActividad.id_tipo])}}">
                                     {{=tipoActividad.nombre}}
                                 </a>
                             </td>
-                            <td class="col-md-6 descripcion_tipo"> {{=tipoActividad.descripcion}}</td>
+                            <td class="col-md-5 descripcion_tipo"> {{=tipoActividad.descripcion}}</td>
                             <td class="center-vertically">
                               <center>
-                                    <a href="#">
-                                       <span class="glyphicon glyphicon-plus-sign"
-                                             data-toggle="modal"
-                                             data-target="#myModalAgregar"
-                                             data-id-tipo="{{=tipoActividad.id_tipo}}">
-                                       </span>
+                                    <a href="{{=URL(c='producto', f='agregar',args=[tipoActividad.id_tipo])}}">
+                                       <span class="glyphicon glyphicon-plus-sign"></span>
                                     </a>
                                 <center>
                             </td>
