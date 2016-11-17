@@ -256,6 +256,7 @@
 'invalid ticket': 'tiquete inválido',
 'Is Active': 'Está Activo',
 'Key': 'Llave',
+'La abreviacion del programa no puede quedar vacia.': 'La abreviacion del programa no puede quedar vacia.',
 'La descripcion del programa no puede quedar vacia.': 'La descripcion del programa no puede quedar vacia.',
 'La descripción dada es muy larga.': 'La descripción dada es muy larga.',
 'La descripción dada es muy larga. (Máximo 6500 caracteres)': 'La descripción dada es muy larga. (Máximo 6500 caracteres)',
