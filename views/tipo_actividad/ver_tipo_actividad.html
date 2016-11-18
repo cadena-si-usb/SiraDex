@@ -12,10 +12,10 @@
 <div class="container-fluid">
     <table class="table table-bordered tabla-border" >
         <tbody class="tabla-border">
+            <tr> <th class="col-md-2 tabla-border">Codigo de la Actividad:</th> <td class="col-md-6 tabla-border"> {{=tipo.codigo}} </td> </tr>
             <tr> <th class="col-md-2 tabla-border">Programa:</th>         <td class="col-md-6 tabla-border"> {{=programa_nombre}} </td> </tr>
-            <tr> <th class="col-md-2 tabla-border">Tipo de Programa:</th> <td class="col-md-6 tabla-border"> {{='(P) Evaluables por pares académicos' if tipo.tipo_p_r == "P" else '(R) No evaluables por pares académicos'}} </td></tr>
+            <tr> <th class="col-md-2 tabla-border">Tipo de Actividad:</th> <td class="col-md-6 tabla-border"> {{='(P) Evaluables por pares académicos' if tipo.tipo_p_r == "P" else '(R) No evaluables por pares académicos'}} </td></tr>
             <tr> <th class="col-md-2 tabla-border">Descripción:</th>      <td class="col-md-6 tabla-border"> {{=tipo.descripcion}} </td> </tr>
-            
             <!--<tr> <th class="col-md-2">Producto</td>         <td class="col-md-6"> < Producto > </td> </tr>-->
         </tbody>
     </table>

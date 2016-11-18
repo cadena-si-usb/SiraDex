@@ -43,6 +43,7 @@ CREATE TABLE PROGRAMA(
 
 CREATE TABLE TIPO_ACTIVIDAD(
   id_tipo             SERIAL        NOT NULL,
+  codigo              VARCHAR(10)   NOT NULL,
   nombre              VARCHAR(128)  NOT NULL,
   tipo_p_r            VARCHAR(1)    NOT NULL,
   descripcion         VARCHAR(2048) NOT NULL,
