@@ -22,8 +22,11 @@ def construir_formulario_agregar_tipo():
     formulario_agregar_tipo = SQLFORM.factory(
                         Field('Nombre',
                                requires = [IS_NOT_EMPTY(error_message='El nombre del tipo de actividad no puede quedar vacío.'),
-                                           IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales."),
+                                           IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin números ni caracteres especiales."),
                                            IS_LENGTH(128)]),
+                        Field('Codigo',
+                               requires = [IS_NOT_EMPTY(error_message='El tipo de actividad debe tener un codigo.'),
+                                           IS_MATCH('^[A-z0-9À-ÿŸ\s-]*$', error_message="Use solo letras, el caracter '-' y números.")]),
                         Field('Tipo', default = 'Seleccione...',
                               requires = IS_IN_SET({'P':'Evaluables por pares académicos', 'R':'No evaluables por pares académicos'},
                                                     zero=T('Seleccione...'),
@@ -54,19 +57,20 @@ def construir_formulario_editar_tipo():
 
     formulario_editar_tipo = SQLFORM.factory(
                         Field('Nombre',
-                              #default = tipo.nombre,
                               requires = [IS_NOT_EMPTY(error_message='El nombre del tipo de actividad no puede quedar vacío.'),
-                                           IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales."),
-                                           IS_LENGTH(128)]),
-                        Field('Tipo', #default = tipo.tipo_p_r,
+                                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin números ni caracteres especiales."),
+                                          IS_LENGTH(128)]),
+                        Field('Codigo',
+                             requires = [IS_NOT_EMPTY(error_message='El tipo de actividad debe tener un codigo.'),
+                                         IS_MATCH('^[A-z0-9À-ÿŸ\s-]*$', error_message="Use solo letras, el caracter '-' y números.")]),
+                        Field('Tipo',
                               requires = IS_IN_SET({'P':'Evaluables por pares académicos', 'R':'No evaluables por pares académicos'},
                                                     zero=T('Seleccione...'),
                                                     error_message = 'Debes elegir entre "Evaluables por pares académicos" o "No evaluables por pares académicos"')),
                         Field('Descripcion', type="text",
-                              #default = tipo.descripcion,
                               requires = [IS_NOT_EMPTY(error_message='La descripción del tipo de actividad no puede quedar vacía.'),
                                           IS_LENGTH(2048)]),
-                        Field('Programa', #default = tipo.id_programa,
+                        Field('Programa',
                               requires = IS_IN_SET(programas, zero="Seleccione...",
                                                    error_message = 'Debes elegir uno de los programas listados.')),
                         Field('Id_tipo',type="hidden"),
@@ -75,8 +79,8 @@ def construir_formulario_editar_tipo():
                 )
 
     formulario_editar_tipo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
-    formulario_editar_tipo.element(_type='submit')['_value']="Agregar"
-    
+    formulario_editar_tipo.element(_type='submit')['_value']="Guardar"
+
     return formulario_editar_tipo
 
 #. ---------------------------------------------------------------------------
@@ -93,6 +97,7 @@ def gestionar():
       if formulario_editar_tipo.accepts(request.vars, session,formname="formulario_editar_tipo"):
           tipo = db(db.TIPO_ACTIVIDAD.id_tipo == request.vars.Id_tipo).select()[0]
           tipo.nombre = request.vars.Nombre
+          tipo.codigo = request.vars.Codigo
           tipo.tipo_p_r = request.vars.Tipo
           tipo.descripcion = request.vars.Descripcion
           id_programa = request.vars.Programa
@@ -102,6 +107,7 @@ def gestionar():
       if formulario_agregar_tipo.accepts(request.vars, session,formname="formulario_agregar_tipo"):
           id_programa = request.vars.Programa
           db.TIPO_ACTIVIDAD.insert(nombre = request.vars.Nombre,
+                                   codigo = request.vars.Codigo,
                                    tipo_p_r = request.vars.Tipo,
                                    descripcion = request.vars.Descripcion,
                                    id_programa = id_programa)
@@ -159,7 +165,7 @@ def agregar_tipo():
     formulario_agregar_tipo = SQLFORM.factory(
                         Field('Nombre',
                                requires = [IS_NOT_EMPTY(error_message='El nombre del tipo de actividad no puede quedar vacío.'),
-                                           IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales."),
+                                           IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin números ni caracteres especiales."),
                                            IS_LENGTH(128)]),
                         Field('Tipo', default = 'Seleccione...',
                               requires = IS_IN_SET({'P':'Evaluables por pares académicos', 'R':'No evaluables por pares académicos'},
@@ -221,7 +227,7 @@ def formulario_agregar_tipo_campos():
     # Si no se utiliza catálogo.
     formSimple = SQLFORM.factory(
                     Field('Nombre', requires=[IS_NOT_EMPTY(error_message="Por favor elija un nombre para el campo."),
-                                              IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales.")]),
+                                              IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin números ni caracteres especiales.")]),
                     Field('Tipo', requires = IS_IN_SET(tipo_campos, zero="Seleccione...", error_message="Seleccione un tipo para el campo")),
                     Field('Obligatorio', widget=SQLFORM.widgets.boolean.widget),
                     submit_button = 'Agregar'
@@ -414,7 +420,7 @@ def editar_tipo():
                         Field('Nombre',
                               default = tipo.nombre,
                               requires = [IS_NOT_EMPTY(error_message='El nombre del tipo de actividad no puede quedar vacío.'),
-                                           IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales."),
+                                           IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin números ni caracteres especiales."),
                                            IS_LENGTH(128)]),
                         Field('Tipo', default = tipo.tipo_p_r,
                               requires = IS_IN_SET({'P':'Evaluables por pares académicos', 'R':'No evaluables por pares académicos'},
@@ -469,7 +475,7 @@ def formularioEditarCampo():
     formulario = SQLFORM.factory(
                     Field('nombre',
                           requires = [IS_NOT_EMPTY(error_message='El nombre del campo no puede quedar vacio.'),
-                                      IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales.")]),
+                                      IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin números ni caracteres especiales.")]),
                     Field('tipo_campo',
                            requires = [IS_IN_SET(tipo_campos, zero='Seleccione...', error_message="Debe seleccionar un tipo para el campo.")],
                            widget = SQLFORM.widgets.options.widget),
@@ -479,7 +485,7 @@ def formularioEditarCampo():
                     labels = {'nombre'      : 'Nombre',
                               'tipo_campo'  : 'Tipo',
                               'obligatorio' : 'Obligatorio'}
-                    
+
                    )
 
 

@@ -170,6 +170,7 @@ db.define_table('PROGRAMA',
 
 db.define_table('TIPO_ACTIVIDAD',
     Field('id_tipo', type='id'),
+    Field('codigo', type='string', length=10, notnull=True, unique=True),
     Field('nombre',type='string',length=128, notnull=True,unique=True,
            requires=[IS_LENGTH(128,error_message='Tamaño máximo de 128 caracteres')]),
     Field('tipo_p_r',type='string', length=1, notnull=True, requires=IS_IN_SET(["P", "R"]), default="P"),

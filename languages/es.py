@@ -180,6 +180,7 @@
 'El nombre del tipo de actividad debe comenzar con una letra.': 'El nombre del tipo de actividad debe comenzar con una letra.',
 'El nombre del tipo de actividad no puede quedar vacío.': 'El nombre del tipo de actividad no puede quedar vacío.',
 'El numero debe ser de la forma X.X, donde X esta entre -+9000000000000000000': 'El numero debe ser de la forma X.X, donde X esta entre -+9000000000000000000',
+'El tipo de actividad debe tener un codigo.': 'El tipo de actividad debe tener un codigo.',
 'El usuario no esta registrado en el CAS': 'El usuario no esta registrado en el CAS',
 'El Usuario no se encuentra registrado': 'El Usuario no se encuentra registrado',
 'Eliminar': 'Eliminar',
