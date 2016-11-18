@@ -28,10 +28,12 @@ $(document).ready(function(){
   // Pasamos los argumentos para editar el catalogo.
   $('#ModalEditarPrograma').on('show.bs.modal', function(e){
       var id_programa = $(e.relatedTarget).data('id-programa');
+      var abreviacion = $(e.relatedTarget).data('abreviacion');
       var nombre      = $(e.relatedTarget).data('nombre');
       var descripcion = $(e.relatedTarget).data('descripcion');
       localStorage.setItem("programaEditar", id_programa);
       $(e.currentTarget).find('input[name="id_programa"]').val(id_programa);
+      $(e.currentTarget).find('input[name="Abreviacion"]').val(abreviacion);
       $(e.currentTarget).find('input[name="Nombre"]').val(nombre);
       $(e.currentTarget).find("#no_table_Descripcion").val(descripcion);
 
