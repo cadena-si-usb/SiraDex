@@ -9,7 +9,7 @@ def index():
 
 	form = formulario_restaurar_backup()
 
-	if form.process().accepted:
+	if form.process(formname = "form", table_name='archivos').accepted:
 
 		print form.vars.backup
 #		comando = "psql -d Siradex -U Siradex -h localhost -w < ./applications/SiraDex/backup/" + archivo
@@ -37,9 +37,9 @@ def formulario_restaurar_backup():
 
 	fields = []
 
-	fields.append(Field("backup", 'upload', autodelete=True, uploadfolder="./applications/SiraDex/backup/", label=''))
+	fields.append(Field("backup", 'upload',uploadfield=True, uploadfolder='./applications/SiraDex/backup/'))
 
-	form=SQLFORM.factory(*fields,upload=URL('download')) 
+	form=SQLFORM.factory(*fields) 
 	form.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
 	form.element(_type='submit')['_value']="Agregar"
 
