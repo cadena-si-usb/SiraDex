@@ -10,31 +10,34 @@
 
 
 {{block contenido}}
+<h2>Graficas 
+<span class="glyphicon glyphicon-eye-close" id="ocultar_graficas"></span>
+<span class="glyphicon glyphicon-eye-open" id="ver_graficas" style="display: none;"></span></h2>
 <style type="text/css">
   embed{
-    max-height: 10em;
+    max-height: 20em;
   }
 </style>
-<div class="row">
-<div class="col-lg-4">  
+<div class="row graficas">
+<div class="col-md-4">  
   <div class="tab-content card">
-    <embed type="image/svg+xml" src="{{=grafica }}" />
+    <embed type="image/svg+xml" src="{{=graficaPie }}" />
   </div>
 </div>
 
-<div class="col-lg-4">  
+<div class="col-md-4">  
   <div class="tab-content card">
-    <embed type="image/svg+xml" src="{{=grafica }}" />
+    <embed type="image/svg+xml" src="{{=graficaBar }}" />
   </div>
 </div>
 
-<div class="col-lg-4">  
+<div class="col-md-4">  
   <div class="tab-content card">
-    <embed type="image/svg+xml" src="{{=grafica }}" />
+    <embed type="image/svg+xml" src="{{=graficaLine }}" />
   </div>
 </div>
 </div>
-
+<h2>Actividades</h2>
   <div class="tab-content card">
 
     <div role="tabpanel" class="tab-pane active" id="esp">
@@ -90,14 +93,18 @@
 {{block script}}
     <script>
         $(document).ready(function(){
-            $("#filtros").hide();
-            $("#btn-filtro").click(function(){
-            $("#filtros").toggle(300);
-                });
-            
-            $(".pygal-chart").hide();
-
+            $("#ocultar_graficas").click(function(){
+              $("#ocultar_graficas").hide();
+              $("#ver_graficas").show();
+              $(".graficas").toggle(300);
             });
+
+            $("#ver_graficas").click(function(){
+              $("#ver_graficas").hide();
+              $("#ocultar_graficas").show();
+              $(".graficas").toggle(300);
+            });                          
+        });
 
     </script>
 
