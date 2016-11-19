@@ -139,8 +139,6 @@ def gestionar():
             , programa_nombre = programa["nombre"], programa_descripcion = programa["descripcion"]
             , formulario_agregar_tipo = formulario_agregar_tipo
             , formulario_editar_tipo = formulario_editar_tipo)
-  else:
-    redirect(URL(c="default",f="index"))
 
 #. --------------------------------------------------------------------------- .
 '''
