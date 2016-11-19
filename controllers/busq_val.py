@@ -4,8 +4,12 @@ from funciones_siradex import get_tipo_usuario,get_tipo_usuario_not_loged
 
 # Funcion para busquedas publicas
 def busqueda():
+
+  
     admin = get_tipo_usuario_not_loged(session)
     try:
+      grafica = URL('busq_val','grafica')
+      
       if request.vars.Programa == "all" and request.vars.TipoActividad == "all":
           sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
            + "%\' AND usbid_usu_creador IN (SELECT usbid FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor + "%\') AND estado=\'Validado\';"
@@ -215,3 +219,23 @@ def rechazar(id_producto):
     db(db.PRODUCTO.id_producto == id_producto).update(estado='No Validado')
     session.message = 'Producto rechazado'
     redirect(URL('gestionar_validacion.html'))
+
+def grafica():
+
+        query = "select programa.nombre, programa.abreviacion, count(producto.nombre)" + \
+        " from ((programa inner join tipo_actividad on programa.id_programa=tipo_actividad.id_programa)" + \
+        " inner join producto on producto.id_tipo=tipo_actividad.id_tipo and producto.usbid_usu_creador=\'"+ session.usuario["usbid"] +\
+        "\' and producto.estado=\'Validado\') group by programa.nombre, programa.abreviacion;"
+
+        query2 = "select count(producto.nombre) from producto where producto.usbid_usu_creador=\'"+ session.usuario["usbid"]+"\' and producto.estado=\'Validado\';"
+
+        datos = db.executesql(query)
+        num_productos = db.executesql(query2)[0][0]
+
+        import pygal
+        pie_chart = pygal.Pie(height=100, width=400,background = 'red')
+        #pie_chart.title = 'Productos del usuario'
+        for producto in datos:
+            porcentaje = (producto[2]*100)//num_productos
+            pie_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])
+        return pie_chart.render()

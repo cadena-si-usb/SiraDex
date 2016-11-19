@@ -10,7 +10,33 @@
 
 
 {{block contenido}}
+<style type="text/css">
+  embed{
+    max-height: 10em;
+  }
+</style>
+<div class="row">
+<div class="col-lg-4">  
   <div class="tab-content card">
+    <embed type="image/svg+xml" src="{{=grafica }}" />
+  </div>
+</div>
+
+<div class="col-lg-4">  
+  <div class="tab-content card">
+    <embed type="image/svg+xml" src="{{=grafica }}" />
+  </div>
+</div>
+
+<div class="col-lg-4">  
+  <div class="tab-content card">
+    <embed type="image/svg+xml" src="{{=grafica }}" />
+  </div>
+</div>
+</div>
+
+  <div class="tab-content card">
+
     <div role="tabpanel" class="tab-pane active" id="esp">
       {{try:}}
       {{if len(productos) == 0:}}
@@ -68,6 +94,9 @@
             $("#btn-filtro").click(function(){
             $("#filtros").toggle(300);
                 });
+            
+            $(".pygal-chart").hide();
+
             });
 
     </script>
