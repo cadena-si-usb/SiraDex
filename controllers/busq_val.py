@@ -5,43 +5,48 @@ from funciones_siradex import get_tipo_usuario,get_tipo_usuario_not_loged
 # Funcion para busquedas publicas
 def busqueda():
     admin = get_tipo_usuario_not_loged(session)
-
-    if request.vars.Programa == "all" and request.vars.TipoActividad == "all":
-        sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
-         + "%\' AND usbid_usu_creador IN (SELECT usbid FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor + "%\') AND estado=\'Validado\';"
-        productos = db.executesql(sql)
-
-    elif request.vars.Programa != "all" and request.vars.TipoActividad == "all":
-        sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
-         + "%\' AND usbid_usu_creador IN (SELECT usbid FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
-         + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + str(request.vars.Programa)+ ") AND estado=\'Validado\';"
-
-        productos = db.executesql(sql)
-
-    elif request.vars.Programa == "all" and request.vars.TipoActividad != "all":
-        sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
-         + "%\' AND usbid_usu_creador IN (SELECT usbid FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
-         + "%\') AND id_tipo=\'" + str(request.vars.TipoActividad) + "\' AND estado=\'Validado\';"
-
-        productos = db.executesql(sql)
-
-    elif request.vars.Programa == None and request.vars.TipoActividad == None:
-        if (session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador"):
+    try:
+      if request.vars.Programa == "all" and request.vars.TipoActividad == "all":
           sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
-           + "%\' ;"
-        elif (session.usuario["tipo"] == "Usuario"):
+           + "%\' AND usbid_usu_creador IN (SELECT usbid FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor + "%\') AND estado=\'Validado\';"
+          productos = db.executesql(sql)
+
+      elif request.vars.Programa != "all" and request.vars.TipoActividad == "all":
           sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
-          + "%\' AND estado=\'Validado\';"
+           + "%\' AND usbid_usu_creador IN (SELECT usbid FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
+           + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + str(request.vars.Programa)+ ") AND estado=\'Validado\';"
 
-        productos = db.executesql(sql)
-    else:
-        sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
-         + "%\' AND usbid_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
-         + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + str(request.vars.Programa)\
-         + ") AND id_tipo=\'" + str(request.vars.TipoActividad) + "\' AND estado=\'Validado\';"
+          productos = db.executesql(sql)
 
-        productos = db.executesql(sql)
-    return locals()
+      elif request.vars.Programa == "all" and request.vars.TipoActividad != "all":
+          sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
+           + "%\' AND usbid_usu_creador IN (SELECT usbid FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
+           + "%\') AND id_tipo=\'" + str(request.vars.TipoActividad) + "\' AND estado=\'Validado\';"
+
+          productos = db.executesql(sql)
+
+      elif request.vars.Programa == None and request.vars.TipoActividad == None:
+          if (session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador"):
+            sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
+             + "%\' ;"
+          elif (session.usuario["tipo"] == "Usuario"):
+            sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
+            + "%\' AND estado=\'Validado\';"
+
+          productos = db.executesql(sql)
+      
+      else:
+          sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
+           + "%\' AND usbid_usu_creador IN (SELECT ci FROM usuario WHERE nombres LIKE \'%" + request.vars.Autor\
+           + "%\') AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + str(request.vars.Programa)\
+           + ") AND id_tipo=\'" + str(request.vars.TipoActividad) + "\' AND estado=\'Validado\';"
+
+          productos = db.executesql(sql)
+
+
+      return locals()
+    except:
+      return locals()
 
 # Mostrar productos
 def ver_producto():
@@ -61,7 +66,7 @@ def ver_producto():
   form = SQLFORM.factory(
             Field("Nombre_Producto", default=producto.nombre,writable = False),
             Field('Descripcion',default=producto.descripcion,writable = False),
-            Field('Fecha_de_Relaizacion', default=producto.fecha_realizacion,writable=False),
+            Field('Fecha_de_Relizacion', default=producto.fecha_realizacion,writable=False),
             Field('Lugar', default=producto.lugar,writable=False),
             readonly=True)
 
