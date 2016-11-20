@@ -16,7 +16,7 @@ def gestionar():
     admin = get_tipo_usuario(session)
     
     if (admin==0 || admin==2):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
        
     message = session.message
     session.message = ""
@@ -82,7 +82,7 @@ def agregar():
     admin = get_tipo_usuario(session)
     
     if (admin==0 || admin==2):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
 
     message = ""
     datosCompAux = ["","","","","","","",""]    # En esta lista guardaremos todos los datos que seran extraidos del LDAP para crear el nuevo usuario
@@ -164,7 +164,7 @@ def eliminar():
     admin = get_tipo_usuario(session)
     
     if (admin==0 || admin==2):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
    
     if len(request.args)!=0 :
         if request.args[0] != session.usuario["usbid"]:
@@ -182,7 +182,7 @@ def modificar():
     admin = get_tipo_usuario(session)
     
     if (admin==0 || admin==2):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
    
     message= ""
     form = SQLFORM.factory(

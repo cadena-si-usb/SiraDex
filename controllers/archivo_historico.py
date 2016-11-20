@@ -18,7 +18,7 @@ def gestionar():
   
     admin = get_tipo_usuario(session)
     if (admin==0):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
 
     if request.args:
 
@@ -52,7 +52,7 @@ def eliminar_tipo_papelera():
   
     admin = get_tipo_usuario(session)
     if (admin==0):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
 
     id_tipo = int(request.args[0])
 
@@ -87,7 +87,7 @@ def restaurar_tipo():
   
     admin = get_tipo_usuario(session)
     if (admin==0):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
 
     id_tipo = request.args[0]
     tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
@@ -99,7 +99,7 @@ def restaurar_programa():
   
     admin = get_tipo_usuario(session)
     if (admin==0):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
 
     id_programa = request.args[0]
     programa = db(db.PROGRAMA.id_programa == id_programa).select().first()

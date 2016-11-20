@@ -15,7 +15,7 @@ def construir_formulario_agregar_tipo():
     admin = get_tipo_usuario(session)
 
     if (admin==0):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
 
     lista_programas =  db(db.PROGRAMA.papelera == False).select()
     programas = {}
@@ -52,7 +52,7 @@ def construir_formulario_editar_tipo():
     admin = get_tipo_usuario(session)
     
     if (admin==0):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
 
     lista_programas = db(db.PROGRAMA.papelera == False).select()
     programas = {}
@@ -98,7 +98,7 @@ def gestionar():
     admin = get_tipo_usuario(session)
     
     if (admin==0):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
       
     formulario_agregar_tipo = construir_formulario_agregar_tipo()
     formulario_editar_tipo = construir_formulario_editar_tipo()
@@ -154,7 +154,7 @@ def agregar_tipo():
     admin = get_tipo_usuario(session)
     
     if (admin==0):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
       
     # Configuro widgets para el formulario de Agregar Tipo Actividad
     db.TIPO_ACTIVIDAD.nombre.widget = SQLFORM.widgets.string.widget
@@ -229,7 +229,7 @@ def formulario_agregar_tipo_campos():
     admin = get_tipo_usuario(session)
     
     if (admin==0):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
       
     # Se definen los posibles tipos de campo.
     tipo_campos = ['Fecha', 'Telefono', 'Texto Corto','Documento','Cantidad Entera','Cantidad Decimal', 'Texto Largo', 'Cedula']
@@ -279,7 +279,7 @@ def eliminar_campo():
     admin = get_tipo_usuario(session)
     
     if (admin==0):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
       
     id_tipo = int(request.args[0])
     id_campo = int(request.args[1])
@@ -306,7 +306,7 @@ def enviar_tipo_papelera():
     admin = get_tipo_usuario(session)
     
     if (admin==0):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
       
     id_tipo = int(request.args[0])
     tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
@@ -321,7 +321,7 @@ def ver_tipo_actividad():
     admin = get_tipo_usuario(session)
     
     if (admin==0):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
       
     id_tipo = request.args[0]
 
@@ -434,7 +434,7 @@ def editar_tipo():
     admin = get_tipo_usuario(session)
     
     if (admin==0):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
       
     id = request.args[0]        # Se identifica cual tipo de actividad se identificará.
 
@@ -511,7 +511,7 @@ def formularioEditarCampo():
     admin = get_tipo_usuario(session)
     
     if (admin==0):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
       
     formulario = SQLFORM.factory(
                     Field('nombre',

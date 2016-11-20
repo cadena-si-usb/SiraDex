@@ -3,14 +3,12 @@ import datetime
 from funciones_siradex import get_tipo_usuario
 import time
 
-url = 'http://localhost:8000/SiraDex'
-
 def index():
 
     admin = get_tipo_usuario(session)
     
     if (admin==0 || admin==2):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
       
 
 	admin = get_tipo_usuario(session)
@@ -38,7 +36,7 @@ def generar_backup():
     admin = get_tipo_usuario(session)
     
     if (admin==0 || admin==2):
-      redirect(URL(c ="default",f="index"))
+    	redirect(URL(c ="default",f="index"))
       
 
 	fecha = time.asctime(time.localtime(time.time()))
@@ -52,7 +50,7 @@ def formulario_restaurar_backup():
     admin = get_tipo_usuario(session)
     
     if (admin==0 || admin==2):
-      redirect(URL(c ="default",f="index"))
+    	redirect(URL(c ="default",f="index"))
       
 
 	fields = []
@@ -70,7 +68,7 @@ def restaurar_backup():
     admin = get_tipo_usuario(session)
     
     if (admin==0 || admin==2):
-      redirect(URL(c ="default",f="index"))
+    	redirect(URL(c ="default",f="index"))
       
 	archivo = request.args[0]
 

@@ -14,7 +14,7 @@ def vGestionarCatalogos():
     admin = get_tipo_usuario(session)
 
     if (admin==0):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
 
     #Si hay que agregar un campo a un catalogo
 
@@ -153,7 +153,7 @@ def AgregarCatalogo():
     admin = get_tipo_usuario(session)
 
     if (admin==0):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
 
     formulario = SQLFORM.factory(
                         Field('nombre',
@@ -174,7 +174,7 @@ def AgregarCampo():
     admin = get_tipo_usuario(session)
 
     if (admin==0):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
 
     # Genero formulario para los campos
     formulario = SQLFORM.factory(
@@ -204,7 +204,7 @@ def eliminarCatalogo():
     admin = get_tipo_usuario(session)
 
     if (admin==0):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
 
     # Obtengo el id del Catalogo a eliminar
     id_catalogo = request.args[0]
@@ -233,7 +233,7 @@ def EditarCampo():
     admin = get_tipo_usuario(session)
 
     if (admin==0):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
 
     formulario = SQLFORM.factory(
                     Field('nombre',
@@ -263,7 +263,7 @@ def eliminarCampos():
     admin = get_tipo_usuario(session)
 
     if (admin==0):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
 
     # Obtengo el id del campo que se eliminara
     id_campo_cat = request.args[0]
@@ -280,7 +280,7 @@ def cambiarNombreCatalogo():
     admin = get_tipo_usuario(session)
 
     if (admin==0):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
 
     formulario = SQLFORM.factory(
                         Field('nombre',

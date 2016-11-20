@@ -54,7 +54,6 @@ def busqueda():
 
 # Mostrar productos
 def ver_producto():
-  admin = get_tipo_usuario(session)
 
   id_producto = int(request.args(0))
   producto = db(db.PRODUCTO.id_producto == id_producto).select().first()
@@ -171,7 +170,7 @@ def gestionar_validacion():
     admin = get_tipo_usuario(session)
 
     if (admin==0):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
 
 
     # Hago el query Espera
@@ -194,7 +193,7 @@ def validar(id_producto):
     admin = get_tipo_usuario(session)
 
     if (admin==0):
-      redirect(url)
+        redirect(url)
 
     db(db.PRODUCTO.id_producto == id_producto).update(estado='Validado')
 
@@ -229,7 +228,7 @@ def rechazar(id_producto):
     admin = get_tipo_usuario(session)
 
     if (admin==0):
-      redirect(URL(c ="default",f="index"))
+        redirect(URL(c ="default",f="index"))
 
     db(db.PRODUCTO.id_producto == id_producto).update(estado='No Validado')
     session.message = 'Producto rechazado'
@@ -237,20 +236,20 @@ def rechazar(id_producto):
 
 def grafica():
 
-        query = "select programa.nombre, programa.abreviacion, count(producto.nombre)" + \
-        " from ((programa inner join tipo_actividad on programa.id_programa=tipo_actividad.id_programa)" + \
-        " inner join producto on producto.id_tipo=tipo_actividad.id_tipo and producto.usbid_usu_creador=\'"+ session.usuario["usbid"] +\
-        "\' and producto.estado=\'Validado\') group by programa.nombre, programa.abreviacion;"
+    query = "select programa.nombre, programa.abreviacion, count(producto.nombre)" + \
+    " from ((programa inner join tipo_actividad on programa.id_programa=tipo_actividad.id_programa)" + \
+    " inner join producto on producto.id_tipo=tipo_actividad.id_tipo and producto.usbid_usu_creador=\'"+ session.usuario["usbid"] +\
+    "\' and producto.estado=\'Validado\') group by programa.nombre, programa.abreviacion;"
 
-        query2 = "select count(producto.nombre) from producto where producto.usbid_usu_creador=\'"+ session.usuario["usbid"]+"\' and producto.estado=\'Validado\';"
+    query2 = "select count(producto.nombre) from producto where producto.usbid_usu_creador=\'"+ session.usuario["usbid"]+"\' and producto.estado=\'Validado\';"
 
-        datos = db.executesql(query)
-        num_productos = db.executesql(query2)[0][0]
+    datos = db.executesql(query)
+    num_productos = db.executesql(query2)[0][0]
 
-        import pygal
-        pie_chart = pygal.Pie(height=100, width=400,background = 'red')
-        #pie_chart.title = 'Productos del usuario'
-        for producto in datos:
-            porcentaje = (producto[2]*100)//num_productos
-            pie_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])
-        return pie_chart.render()
+    import pygal
+    pie_chart = pygal.Pie(height=100, width=400,background = 'red')
+    #pie_chart.title = 'Productos del usuario'
+    for producto in datos:
+        porcentaje = (producto[2]*100)//num_productos
+        pie_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])
+    return pie_chart.render()
