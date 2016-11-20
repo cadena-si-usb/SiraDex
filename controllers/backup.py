@@ -85,3 +85,9 @@ def restaurar_backup():
 
 def download():
     return response.download(request, db)
+
+def eliminar():
+    archivo = request.args[0]
+    comando = "rm ./applications/SiraDex/backup/" + archivo
+    resp = os.system(comando)
+    redirect(URL('index'))    

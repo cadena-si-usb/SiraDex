@@ -8,7 +8,9 @@ def busqueda():
   
     admin = get_tipo_usuario_not_loged(session)
     try:
-      grafica = URL('busq_val','grafica')
+      graficaPie = URL('busq_val','graficaPie')
+      graficaBar = URL('busq_val','graficaBar')
+      graficaLine = URL('busq_val','graficaLine')
       
       if request.vars.Programa == "all" and request.vars.TipoActividad == "all":
           sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto \
@@ -54,6 +56,7 @@ def busqueda():
 
 # Mostrar productos
 def ver_producto():
+  admin = get_tipo_usuario_not_loged(session)
 
     admin = get_tipo_usuario_not_loged(session)
 
@@ -238,7 +241,7 @@ def rechazar(id_producto):
     session.message = 'Producto rechazado'
     redirect(URL('gestionar_validacion.html'))
 
-def grafica():
+def graficaPie():
 
     query = "select programa.nombre, programa.abreviacion, count(producto.nombre)" + \
     " from ((programa inner join tipo_actividad on programa.id_programa=tipo_actividad.id_programa)" + \
@@ -251,12 +254,49 @@ def grafica():
     num_productos = db.executesql(query2)[0][0]
 
     import pygal
-    pie_chart = pygal.Pie(height=100, width=400,background = 'red')
-    #pie_chart.title = 'Productos del usuario'
+    pie_chart = pygal.Pie()
     for producto in datos:
         porcentaje = (producto[2]*100)//num_productos
         pie_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])
     return pie_chart.render()
+
+def graficaBar():
+
+        query = "select programa.nombre, programa.abreviacion, count(producto.nombre)" + \
+        " from ((programa inner join tipo_actividad on programa.id_programa=tipo_actividad.id_programa)" + \
+        " inner join producto on producto.id_tipo=tipo_actividad.id_tipo and producto.usbid_usu_creador=\'"+ session.usuario["usbid"] +\
+        "\' and producto.estado=\'Validado\') group by programa.nombre, programa.abreviacion;"
+
+        query2 = "select count(producto.nombre) from producto where producto.usbid_usu_creador=\'"+ session.usuario["usbid"]+"\' and producto.estado=\'Validado\';"
+
+        datos = db.executesql(query)
+        num_productos = db.executesql(query2)[0][0]
+
+        import pygal
+        bar_chart = pygal.Bar()
+        for producto in datos:
+            porcentaje = (producto[2]*100)//num_productos
+            bar_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])
+        return bar_chart.render()
+
+def graficaLine():
+
+        query = "select programa.nombre, programa.abreviacion, count(producto.nombre)" + \
+        " from ((programa inner join tipo_actividad on programa.id_programa=tipo_actividad.id_programa)" + \
+        " inner join producto on producto.id_tipo=tipo_actividad.id_tipo and producto.usbid_usu_creador=\'"+ session.usuario["usbid"] +\
+        "\' and producto.estado=\'Validado\') group by programa.nombre, programa.abreviacion;"
+
+        query2 = "select count(producto.nombre) from producto where producto.usbid_usu_creador=\'"+ session.usuario["usbid"]+"\' and producto.estado=\'Validado\';"
+
+        datos = db.executesql(query)
+        num_productos = db.executesql(query2)[0][0]
+
+        import pygal
+        line_chart = pygal.Line()
+        for producto in datos:
+            porcentaje = (producto[2]*100)//num_productos
+            line_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])
+        return line_chart.render()             
 
 def eliminar():
 
