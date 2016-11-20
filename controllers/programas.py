@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from funciones_siradex import get_tipo_usuario
+from funciones_siradex2 import get_tipo_usuario
 #import imp  
-#foo = imp.load_source('module.funciones_siradex', 'funciones_siradex.py') 
+#foo = imp.load_source('module.funciones_siradex2', 'funciones_siradex2.py') 
 '''
 Vista de Gestionar Programas tiene las opciones:
 - Agregar Programa

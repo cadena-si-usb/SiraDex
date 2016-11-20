@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from funciones_siradex import get_tipo_usuario
+from funciones_siradex2 import get_tipo_usuario
 
 #. --------------------------------------------------------------------------- .
 '''
@@ -37,6 +37,9 @@ def construir_formulario_agregar_tipo():
                         submit_button = 'Agregar',
                         labels = {'Descripcion' : 'Descripción'}
                 )
+    formulario_agregar_tipo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    formulario_agregar_tipo.element(_type='submit')['_value']="Agregar"
+
     return formulario_agregar_tipo
 
 def construir_formulario_editar_tipo():
@@ -70,6 +73,10 @@ def construir_formulario_editar_tipo():
                         submit_button = 'Actualizar',
                         labels = {'Descripcion' : 'Descripción'}
                 )
+
+    formulario_editar_tipo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    formulario_editar_tipo.element(_type='submit')['_value']="Agregar"
+    
     return formulario_editar_tipo
 
 #. ---------------------------------------------------------------------------
@@ -375,6 +382,9 @@ def ver_tipo_actividad():
 
         redirect(URL("ver_tipo_actividad", args=[id_tipo]))
 
+    formulario_editar_campo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    formulario_editar_campo.element(_type='submit')['_value']="Editar"
+
     return dict(campos = campos_guardados, tipo = tipo,
                 admin = get_tipo_usuario(session), tipo_nombre = tipo.nombre,
                 programa_nombre = programa.nombre,
@@ -465,10 +475,12 @@ def formularioEditarCampo():
                            widget = SQLFORM.widgets.options.widget),
                     Field('obligatorio', type='boolean',  default = False),
                     Field('id_campo', type="string" ,  default = ''),
+                    submit_button='Guardar',
                     labels = {'nombre'      : 'Nombre',
                               'tipo_campo'  : 'Tipo',
-                              'obligatorio' : 'Obligatorio'},
-                    submit_button='Guardar'
+                              'obligatorio' : 'Obligatorio'}
+                    
                    )
+
 
     return formulario

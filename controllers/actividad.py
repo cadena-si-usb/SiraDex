@@ -3,7 +3,7 @@
 
 from pprint import pprint
 from datetime import time
-from funciones_siradex import get_tipo_usuario
+from funciones_siradex2 import get_tipo_usuario
 
 def gestionar():
     admin = get_tipo_usuario(session)

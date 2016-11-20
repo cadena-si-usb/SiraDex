@@ -23,15 +23,15 @@
       <ul class="nav navbar-nav navbar-right">
                <li class="activo">
                 <!-- EN SERVIDOR -->
-                <!--   <a  id = login 
-                            class ='btn btn-xs' 
-                            href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas'> -->
+                  <a  id = login
+                            class ='btn btn-xs'
+                            href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas'>
                 <!-- EN DESARROLLO -->
-                        <a  class ='btn btn-xs ' 
-                            href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas'>
+<!--                         <a  class ='btn btn-xs '
+                            href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas'> -->
                         Iniciar Sesión
                     </a>
-                </li>            
+                </li>
             {{else:}}
       <form class="navbar-form navbar-left" role="search" action="{{=URL(c='busq_val',f='busqueda')}}" method="post">
         <div class="input-group">
@@ -61,7 +61,7 @@
                     <li><a href="#">Consultar Log</a></li>
                     <li><a href="{{=URL(c='backup', f='index')}}">BackUp</a></li>
                     <li><a href="{{=URL(c='usuarios', f='gestionar')}}">Usuarios</a></li>
-                    <!-- <li><a href="#">Notificaciones</a></li> -->
+                    <!-- <li><a href="#">notificaciones</a></li> -->
                     <li role="separator" class="divider"></li>
                     {{pass}}
 		                <li><a href="{{=URL(c='tipo_actividad', f='gestionar')}}">Tipos de Actividad</a></li>

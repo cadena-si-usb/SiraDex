@@ -1,6 +1,6 @@
 import os
 import datetime
-from funciones_siradex import get_tipo_usuario
+from funciones_siradex2 import get_tipo_usuario
 import time
 
 def index():

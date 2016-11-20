@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from funciones_siradex import get_tipo_usuario
+from funciones_siradex2 import get_tipo_usuario
 
 tipo_campos = ['Fecha', 'Telefono', 'Texto Corto','Documento','Cantidad Entera','Cantidad Decimal', 'Texto Largo', 'Cedula']
 
@@ -125,6 +125,9 @@ def vGestionarCatalogos():
 
     formulario_editar_campo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
     formulario_editar_campo.element(_type='submit')['_value']="Editar"
+
+    formulario_cambiar_nombre.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    formulario_cambiar_nombre.element(_type='submit')['_value']="Renombrar Catálogo"
 
     return dict(catalogos                   = catalogos,
                 catalogo_actual             = catalogo_actual,

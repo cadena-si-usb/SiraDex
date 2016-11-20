@@ -1,6 +1,7 @@
 import os
 import datetime
 import re
+from notificaciones2 import *
 from usbutils import get_ldap_data, random_key
 import urllib2
 ### required - do no delete
@@ -8,7 +9,7 @@ def user(): return dict(form=auth())
 def download(): return response.download(request,db)
 def call(): return service()
 ### end requires
-from funciones_siradex import get_tipo_usuario
+from funciones_siradex2 import get_tipo_usuario
 
     
 def gestionar():
@@ -28,21 +29,56 @@ def gestionar():
             form_editar.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
             form_editar.element(_type='submit')['_value']="Actualizar"
 
-            if len(request.vars)!=0:
-                if (not db(db.USUARIO.usbid == request.args[0]).isempty()):
-                    if(request.args[0] != session.usuario["usbid"]):
-                        db(db.USUARIO.usbid == request.args[0]).update(tipo = request.vars.tipo)
-                        redirect(URL('gestionar'))
-                    else:
-                        message = T("Para cambiar sus permisos, por favor comuníquese con un administrador")
-                else:
-                    message = T("El Usuario no se encuentra registrado")
+            ## Formulario para colocar el mensaje.
+            formulario_contactar = SQLFORM.factory(
+                                        Field('asunto', type="string", requires=[IS_LENGTH(50)]),
+                                        Field('mensaje', type="text", requires=[IS_NOT_EMPTY(error_message='El mensaje no puede estar vacio')]),
+                                        Field('usbid', type="string"),
+                                        submit_button = 'Enviar')
 
-            return dict(form_editar=form_editar,usuarios = aux,message = message, admin=get_tipo_usuario())
+            hayErrores = {}
+
+            if formulario_contactar.accepts(request.vars, session, formname="formulario_contactar"):
+                usbid = request.vars.usbid
+                asunto = request.vars.asunto
+                mensaje = request.vars.mensaje
+
+                ## Obtenemos el usuario al que deseamos contactar.
+                usuario = db(db.USUARIO.usbid == usbid).select().first()
+
+                ## parseamos los datos para la notificacion
+                datos_usuario = {'nombres' : usuario.nombres}
+                if usuario.correo_alter != None:
+                     datos_usuario['email'] = usuario.correo_alter
+                else:
+                     datos_usuario['email'] = usuario.correo_inst
+
+                ## Enviamos la notificacion
+                enviar_correo_contacto(mail, datos_usuario, asunto, mensaje)
+
+                session.message = 'Correo enviado satisfactoriamente'
+                redirect(URL('gestionar'))
+
+            # En caso de que el formulario no sea aceptado
+            elif formulario_contactar.errors:
+                  hayErrores = formulario_contactar.errors
+
+            #
+            # if len(request.vars)!=0:
+            #     if (not db(db.USUARIO.usbid == request.args[0]).isempty()):
+            #         if(request.args[0] != session.usuario["usbid"]):
+            #             db(db.USUARIO.usbid == request.args[0]).update(tipo = request.vars.tipo)
+            #             redirect(URL('gestionar'))
+            #         else:
+            #             message = T("Para cambiar sus permisos, por favor comuníquese con un administrador")
+            #     else:
+            #         message = T("El Usuario no se encuentra registrado")
+
+            return dict(form_editar=form_editar, hayErrores=hayErrores, formulario_contactar=formulario_contactar,usuarios = aux,message = message, admin=get_tipo_usuario())
         else:
             redirect(URL("perfil"))
     else:
-        redirect(URL("index"))        
+        redirect(URL("index"))
 
 def agregar():
     if session.usuario != None:
@@ -60,7 +96,7 @@ def agregar():
             # Estilo del boton
             forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
             forma.element(_type='submit')['_value']="Agregar"
-            
+
             # Si el largo de request.vars es mayor a cero, quiere decir que de introdujo informacion en el formulario.
             if len(request.vars) != 0:
                 # En usbidAux almacenamos el usbid proporcionado por el administrador
@@ -114,7 +150,7 @@ def agregar():
                                     correo_inst=user["email"],
                                     telefono = telefonoAux,
                                     correo_alter = correo_alterAux,
-                                    tipo = tipoAux)                            
+                                    tipo = tipoAux)
                             return dict(form = form, message = message, bool = 1, admin=get_tipo_usuario())
                         else:
                             message = T("Debe Especificar un Tipo")
@@ -155,7 +191,7 @@ def modificar():
         form = SQLFORM.factory(
                         Field("USBID", default=request.args[0],writable = False),
                         readonly=True)
-        
+
         forma=SQLFORM(
                 db.USUARIO,
                 button=['Actualizar'],
@@ -163,7 +199,7 @@ def modificar():
                 labels={'tipo':'TIPO'})
         forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
         forma.element(_type='submit')['_value']="Actualizar"
-        
+
         if len(request.vars)!=0:
             if (not db(db.USUARIO.usbid == request.args[0]).isempty()):
                 if(request.args[0] != session.usuario["usbid"]):

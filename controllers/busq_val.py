@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from notificaciones import *
-from funciones_siradex import get_tipo_usuario,get_tipo_usuario_not_loged
+from notificaciones2 import *
+from funciones_siradex2 import get_tipo_usuario,get_tipo_usuario_not_loged
 
 # Funcion para busquedas publicas
 def busqueda():

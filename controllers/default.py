@@ -11,8 +11,9 @@ import os
 import datetime
 import re
 from usbutils import get_ldap_data, random_key
-from funciones_siradex import get_tipo_usuario,get_tipo_usuario_not_loged
+from funciones_siradex2 import get_tipo_usuario,get_tipo_usuario_not_loged
 import urllib2
+from notificaciones2 import *
 ### required - do no delete
 def user(): return dict(form=auth())
 def download(): return response.download(request,db)
@@ -72,15 +73,20 @@ def login_cas():
 
             session.usuario['phone'] = datosUsuario.telefono
 
-            
+
             if datosUsuario.tipo == "Bloqueado":
                 response.flash = T("Usuario bloqueado")
                 redirect(URL(c = "default",f="index"))
             else:
                 redirect(URL('perfil'))
         else:
+
             session.usuario['tipo'] = "Usuario"
             session.usuario['alternativo'] = None
+           # Para el envio de notificacion
+            datos_usuario = {'nombres' : session.usuario['first_name']}
+            datos_usuario['email'] = session.usuario['email']
+
 
             db.USUARIO.insert(ci=session.usuario["cedula"],  # Lo insertamos en la base de datos.
             usbid=session.usuario["usbid"],
@@ -90,6 +96,10 @@ def login_cas():
             correo_alter= None,
             telefono=session.usuario["phone"],
             tipo = "Usuario")
+
+            # Se envia correo de bienvenida al usuario
+            enviar_correo_bienvenida(mail,datos_usuario)
+
             redirect(URL('perfil'))
 
 def logout_cas():
@@ -161,7 +171,7 @@ def EditarPerfil():
             Field('Nombres',default=session.usuario["first_name"],writable = False),
             Field('Apellidos', default=session.usuario["last_name"],writable=False),
             readonly=True)
-        
+
 
         # Modificar datos del perfil
         usuario = db(db.USUARIO.ci==session.usuario['cedula']).select().first()
@@ -169,27 +179,27 @@ def EditarPerfil():
         forma=SQLFORM(
             db.USUARIO,
             record=usuario,
-            
+
             fields=['telefono','correo_alter'],
 
-            
+
             labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'})
         forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
         forma.element(_type='submit')['_value']="Actualizar"
 
-        
+
         if request.vars:
             nuevoTelefono = request.vars.telefono
             nuevoCorreoAlter = request.vars.correo_alter
-            
+
             valor_telefono = None if ((nuevoTelefono == "") | (nuevoTelefono== None)) else nuevoTelefono
             session.usuario["phone"] = valor_telefono
 
             valor_correo = None if ((nuevoCorreoAlter == "") | (nuevoCorreoAlter== None)) else nuevoCorreoAlter
             session.usuario["alternativo"] = valor_correo
-            
+
             db(db.USUARIO.ci == session.usuario["cedula"]).update(telefono=valor_telefono, correo_alter=valor_correo)
-            
+
             print "\n\nEl nuevo usuario quedo: "
             print session.usuario
             redirect(URL('perfil'))
@@ -222,7 +232,7 @@ def obtener_actividades():
         tiposA = db(db.TIPO_ACTIVIDAD).select()
     else:
         tiposA = db(db.TIPO_ACTIVIDAD.id_programa==int(request.vars.Programa)).select()
-    
+
     concat = '<option value="all" selected="">--cualquiera--</option>'
 
     for tipo in tiposA:
@@ -241,7 +251,7 @@ def vMenuAdmin():
             redirect(URL("index"))
         if session.usuario["tipo"] == "Administrador":
             session.message = ""
-            return response.render(admin = get_tipo_usuario())
+            return response.render(admin = get_tipo_usuario(session))
         else:
             redirect(URL("perfil"))
     else:
@@ -292,6 +302,6 @@ def vRegistroUsuario():
             nuevoCorreoAlter = request.vars.correo_alter
             db(db.USUARIO.ci == session.usuario["cedula"]).update(telefono=nuevoTelefono, correo_alter=nuevoCorreoAlter)
             redirect(URL('perfil'))        # Redirige al usuario al menu principal.
-        return dict(form1 = form, form = forma, admin=get_tipo_usuario())
+        return dict(form1 = form, form = forma, admin=get_tipo_usuario(session))
     else:
         redirect(URL("index"))
