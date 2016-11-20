@@ -8,7 +8,7 @@ Maneja elementos borrados de:
 
 '''
 
-from funciones_siradex2 import get_tipo_usuario
+from funciones_siradex import get_tipo_usuario
 
 #. --------------------------------------------------------------------------- .
 '''
