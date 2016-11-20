@@ -10,7 +10,7 @@ def index():
     admin = get_tipo_usuario(session)
     
     if (admin==0 || admin==2):
-      redirect(url)
+      redirect(URL(c ="default",f="index"))
       
 
 	admin = get_tipo_usuario(session)
@@ -38,29 +38,28 @@ def generar_backup():
     admin = get_tipo_usuario(session)
     
     if (admin==0 || admin==2):
-      redirect(url)
+      redirect(URL(c ="default",f="index"))
       
 
 	fecha = time.asctime(time.localtime(time.time()))
-
-	archivo = fecha.split()[4:19] + ".sql"
-
-	comando = "pg_dump -d Siradex -U Siradex -h localhost -w ./applications/SiraDex/backup/ > " + archivo
+	archivo = "_".join(fecha.split()[1:]).replace(":","") + ".sql"
+	comando = "pg_dump -d Siradex -U Siradex -h localhost -w > ./applications/SiraDex/backup/backup_" + archivo
 	resp = os.system(comando)
+
 
 def formulario_restaurar_backup():
 
     admin = get_tipo_usuario(session)
     
     if (admin==0 || admin==2):
-      redirect(url)
+      redirect(URL(c ="default",f="index"))
       
 
 	fields = []
 
-	fields.append(Field("backup", 'upload',uploadfield=True, uploadfolder='./applications/SiraDex/backup/'))
+	fields.append(Field("backup", 'upload', autodelete=True, uploadfolder="./applications/SiraDex/backup/", label=''))
 
-	form=SQLFORM.factory(*fields) 
+	form=SQLFORM.factory(*fields,upload=URL('download')) 
 	form.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
 	form.element(_type='submit')['_value']="Agregar"
 
@@ -71,17 +70,18 @@ def restaurar_backup():
     admin = get_tipo_usuario(session)
     
     if (admin==0 || admin==2):
-      redirect(url)
+      redirect(URL(c ="default",f="index"))
       
 	archivo = request.args[0]
 
-	#comando = "psql -d Siradex -U Siradex -h localhost -w < " + archivo
+	comando = "psql -d Siradex -U Siradex -h localhost -w < ./applications/SiraDex/SQLScripts/dropSIRADEx.sql && psql -d Siradex -U Siradex -h localhost -w < ./applications/SiraDex/backup/" + archivo
 
-	#resp = os.system(comando)
-	resp = 0
+	resp = os.system(comando)
+	#resp = 0
 	if (resp == 0):
 		response.flash="Restaurado."
 	else:
 		response.flash="No se pudo restaurar."
 
-	redirect(URL('index'))
+def download():
+    return response.download(request, db)

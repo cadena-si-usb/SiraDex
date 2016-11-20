@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-from funciones_siradex import get_tipo_usuario
+from funciones_siradex2 import get_tipo_usuario
 
 tipo_campos = ['Fecha', 'Telefono', 'Texto Corto','Documento','Cantidad Entera','Cantidad Decimal', 'Texto Largo', 'Cedula']
 
-url = 'http://localhost:8000/SiraDex'
 
 '''
 Funcion que se encarga de obtener los datos para mostrar los catalogos
@@ -15,7 +14,7 @@ def vGestionarCatalogos():
     admin = get_tipo_usuario(session)
 
     if (admin==0):
-      redirect(url)
+      redirect(URL(c ="default",f="index"))
 
     #Si hay que agregar un campo a un catalogo
 
@@ -132,6 +131,9 @@ def vGestionarCatalogos():
     formulario_editar_campo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
     formulario_editar_campo.element(_type='submit')['_value']="Editar"
 
+    formulario_cambiar_nombre.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
+    formulario_cambiar_nombre.element(_type='submit')['_value']="Renombrar Catálogo"
+
     return dict(catalogos                   = catalogos,
                 catalogo_actual             = catalogo_actual,
                 formulario_agregar_catalogo = formulario_agregar_catalogo,
@@ -151,7 +153,7 @@ def AgregarCatalogo():
     admin = get_tipo_usuario(session)
 
     if (admin==0):
-      redirect(url)
+      redirect(URL(c ="default",f="index"))
 
     formulario = SQLFORM.factory(
                         Field('nombre',
@@ -172,7 +174,7 @@ def AgregarCampo():
     admin = get_tipo_usuario(session)
 
     if (admin==0):
-      redirect(url)
+      redirect(URL(c ="default",f="index"))
 
     # Genero formulario para los campos
     formulario = SQLFORM.factory(
@@ -202,7 +204,7 @@ def eliminarCatalogo():
     admin = get_tipo_usuario(session)
 
     if (admin==0):
-      redirect(url)
+      redirect(URL(c ="default",f="index"))
 
     # Obtengo el id del Catalogo a eliminar
     id_catalogo = request.args[0]
@@ -231,7 +233,7 @@ def EditarCampo():
     admin = get_tipo_usuario(session)
 
     if (admin==0):
-      redirect(url)
+      redirect(URL(c ="default",f="index"))
 
     formulario = SQLFORM.factory(
                     Field('nombre',
@@ -261,7 +263,7 @@ def eliminarCampos():
     admin = get_tipo_usuario(session)
 
     if (admin==0):
-      redirect(url)
+      redirect(URL(c ="default",f="index"))
 
     # Obtengo el id del campo que se eliminara
     id_campo_cat = request.args[0]
@@ -278,7 +280,7 @@ def cambiarNombreCatalogo():
     admin = get_tipo_usuario(session)
 
     if (admin==0):
-      redirect(url)
+      redirect(URL(c ="default",f="index"))
 
     formulario = SQLFORM.factory(
                         Field('nombre',

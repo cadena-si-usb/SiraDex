@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-from notificaciones import *
-from funciones_siradex import get_tipo_usuario,get_tipo_usuario_not_loged
-
-url = 'http://localhost:8000/SiraDex'
+from notificaciones2 import *
+from funciones_siradex2 import get_tipo_usuario,get_tipo_usuario_not_loged
 
 # Funcion para busquedas publicas
 def busqueda():
@@ -173,7 +171,7 @@ def gestionar_validacion():
     admin = get_tipo_usuario(session)
 
     if (admin==0):
-      redirect(url)
+      redirect(URL(c ="default",f="index"))
 
 
     # Hago el query Espera
@@ -231,7 +229,7 @@ def rechazar(id_producto):
     admin = get_tipo_usuario(session)
 
     if (admin==0):
-      redirect(url)
+      redirect(URL(c ="default",f="index"))
 
     db(db.PRODUCTO.id_producto == id_producto).update(estado='No Validado')
     session.message = 'Producto rechazado'
