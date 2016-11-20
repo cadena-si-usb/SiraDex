@@ -10,11 +10,17 @@ Maneja elementos borrados de:
 
 from funciones_siradex import get_tipo_usuario
 
+url = 'http://localhost:8000/SiraDex'
+
 #. --------------------------------------------------------------------------- .
 '''
  Vista de gestion de la papelera
 '''
 def gestionar():
+  
+    admin = get_tipo_usuario(session)
+    if (admin==0):
+      redirect(url)
 
     if request.args:
 
@@ -45,6 +51,10 @@ def gestionar():
  de manera definitiva
 '''
 def eliminar_tipo_papelera():
+  
+    admin = get_tipo_usuario(session)
+    if (admin==0):
+      redirect(url)
 
     id_tipo = int(request.args[0])
 
@@ -76,6 +86,10 @@ def eliminar_tipo_papelera():
  Metodo que restaura un tipo actividad de la papelera
 '''
 def restaurar_tipo():
+  
+    admin = get_tipo_usuario(session)
+    if (admin==0):
+      redirect(url)
 
     id_tipo = request.args[0]
     tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
@@ -84,6 +98,11 @@ def restaurar_tipo():
     redirect(URL('gestionar.html'))
 
 def restaurar_programa():
+  
+    admin = get_tipo_usuario(session)
+    if (admin==0):
+      redirect(url)
+
     id_programa = request.args[0]
     programa = db(db.PROGRAMA.id_programa == id_programa).select().first()
 

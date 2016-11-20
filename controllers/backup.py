@@ -3,7 +3,16 @@ import datetime
 from funciones_siradex import get_tipo_usuario
 import time
 
+url = 'http://localhost:8000/SiraDex'
+
 def index():
+
+    admin = get_tipo_usuario(session)
+    
+    if (admin==0 || admin==2):
+      redirect(url)
+      
+
 	admin = get_tipo_usuario(session)
 	backups = os.listdir("./applications/SiraDex/backup")
 
@@ -26,6 +35,12 @@ def index():
 
 def generar_backup():
 
+    admin = get_tipo_usuario(session)
+    
+    if (admin==0 || admin==2):
+      redirect(url)
+      
+
 	fecha = time.asctime(time.localtime(time.time()))
 
 	archivo = fecha.split()[4:19] + ".sql"
@@ -34,6 +49,12 @@ def generar_backup():
 	resp = os.system(comando)
 
 def formulario_restaurar_backup():
+
+    admin = get_tipo_usuario(session)
+    
+    if (admin==0 || admin==2):
+      redirect(url)
+      
 
 	fields = []
 
@@ -47,19 +68,20 @@ def formulario_restaurar_backup():
 
 def restaurar_backup():
 
-		archivo = request.args[0]
+    admin = get_tipo_usuario(session)
+    
+    if (admin==0 || admin==2):
+      redirect(url)
+      
+	archivo = request.args[0]
 
-		#comando = "psql -d Siradex -U Siradex -h localhost -w < " + archivo
+	#comando = "psql -d Siradex -U Siradex -h localhost -w < " + archivo
 
-		#resp = os.system(comando)
-		resp = 0
-		if (resp == 0):
-			response.flash="Restaurado."
-		else:
-			response.flash="No se pudo restaurar."
+	#resp = os.system(comando)
+	resp = 0
+	if (resp == 0):
+		response.flash="Restaurado."
+	else:
+		response.flash="No se pudo restaurar."
 
-		redirect(URL('index'))
-
-
-def download():
-    return response.download(request, db)
+	redirect(URL('index'))

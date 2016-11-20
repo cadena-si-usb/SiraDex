@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 from funciones_siradex import get_tipo_usuario
+
+url = 'http://localhost:8000/SiraDex'
+
 #import imp  
 #foo = imp.load_source('module.funciones_siradex', 'funciones_siradex.py') 
 '''
@@ -10,7 +13,10 @@ Vista de Gestionar Programas tiene las opciones:
 '''
 
 def agregar_programa():
+  
     admin = get_tipo_usuario(session)
+    if (admin==0):
+      redirect(url)
 
     formulario = SQLFORM.factory(
                         Field('Nombre',
@@ -49,6 +55,9 @@ def agregar_programa():
 def gestionar_programas():
 
     admin = get_tipo_usuario(session)
+
+    if (admin==0):
+      redirect(url)
 
     # Obtengo todos los programas almacenados en la base de datos.
     programas = db(db.PROGRAMA.papelera == False).select()
@@ -133,6 +142,8 @@ def gestionar_programas():
 def eliminar_programa():
     admin = get_tipo_usuario(session)
 
+    if (admin==0):
+      redirect(url)
 
     id_programa = request.args[0]
 
@@ -147,6 +158,9 @@ def eliminar_programa():
 def editar_programa():
 
     admin = get_tipo_usuario(session) # Obtengo el tipo del usuario actual.
+
+    if (admin==0):
+      redirect(URL('index'))
     id = request.args[0]        # Se identifica cual programa se identificará.
 
     # Se busca el programa en la base de datos.
