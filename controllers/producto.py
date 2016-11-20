@@ -125,7 +125,7 @@ def agregar():
             elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
             elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX')]))
             elif tipo_campo in ['Documento']:         fields.append(Field(nombre,'upload',label=rows_campo.nombre+" (*)",uploadfolder=os.path.join(request.folder,'uploads') ,requires=[IS_NOT_EMPTY(error_message='Debe subirse un archivo')]))
-            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx')]))
+            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xxxx')]))
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
             elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
             elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',label=rows_campo.nombre+" (*)",requires=IS_NOT_EMPTY()))
@@ -136,7 +136,7 @@ def agregar():
             elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string'))
             elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX'))))
             elif tipo_campo in ['Documento']:         fields.append(Field(nombre,'upload',requires=IS_EMPTY_OR(IS_UPLOAD_FILENAME()),uploadfolder=os.path.join(request.folder,'uploads')))
-            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx'))))
+            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xxxx'))))
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807))))
             elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807'))))
             elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',requires=IS_NOT_EMPTY()))
@@ -282,7 +282,7 @@ def modificar():
             elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
             elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX')]))
             elif tipo_campo in ['Documento']:         fields.append(Field(nombre,'upload',label=rows_campo.nombre+" (*)",uploadfolder=os.path.join(request.folder,'uploads'),requires=[IS_NOT_EMPTY(error_message='Debe subirse un archivo')]))
-            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx')]))
+            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xxxx')]))
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
             elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
             elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',label=nombre+" (*)",requires=IS_NOT_EMPTY()))
@@ -293,7 +293,7 @@ def modificar():
             elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string'))
             elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX'))))
             elif tipo_campo in ['Documento']:         fields.append(Field(nombre,'upload',requires=IS_EMPTY_OR(IS_UPLOAD_FILENAME()),uploadfolder=os.path.join(request.folder,'uploads')))
-            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx'))))
+            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xxxx'))))
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807))))
             elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807'))))
             elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',requires=IS_NOT_EMPTY()))
@@ -398,6 +398,8 @@ def modificar():
     return locals()
 
 def eliminar():
+    admin = get_tipo_usuario(session)
+
     id_act = int(request.args(0))
 
     query = "SELECT archivo FROM COMPROBANTE WHERE producto="+str(id_act)+";"
@@ -424,16 +426,17 @@ def eliminar():
 
 # Funcion utilizada para el ajax en el agregar
 def obtener_actividades():
+    admin = get_tipo_usuario(session)
 
     programa = db(db.PROGRAMA.nombre==request.vars.programa).select().first()
     tiposA = db(db.TIPO_ACTIVIDAD.id_programa==programa.id_programa).select(db.TIPO_ACTIVIDAD.nombre,
-        db.TIPO_ACTIVIDAD.id_tipo).as_list()
+        db.TIPO_ACTIVIDAD.id_tipo, db.TIPO_ACTIVIDAD.papelera).as_list()
 
     concat = '<option></option>'
 
     for tipo in tiposA:
-
-        concat += '<option value='+str(tipo['id_tipo'])+'>'+tipo['nombre']+'</option>'
+        if tipo['papelera']==False :
+            concat += '<option value='+str(tipo['id_tipo'])+'>'+tipo['nombre']+'</option>'
 
     aux = programa.descripcion.replace('\n','.')
     descripcion = "<div class=\"col-sm-offset-1\"><h4>Descripcion del Programa:</h4><p>"+aux+"</p></div>"
@@ -442,6 +445,8 @@ def obtener_actividades():
 
 # Funcion utilizada para el ajax cuando se elige la actividad para que aparezcan los campos
 def seleccion_actividad():
+    admin = get_tipo_usuario(session)
+
     if request.vars.id_tipo=="":
         tipo_global = None
         respuesta = "jQuery('#nombre_actividad').empty();"
@@ -491,6 +496,8 @@ def seleccion_actividad():
     return respuesta
 
 def get_comprobante():
+    admin = get_tipo_usuario(session)
+
     if not request.args:
         raise HTTP(404)
     query = "SELECT archivo FROM COMPROBANTE WHERE id_comprobante="+request.args(0)+";"
@@ -503,6 +510,8 @@ def get_comprobante():
     return data
 
 def descargar_comprobante():
+    admin = get_tipo_usuario(session)
+
     if not request.args:
         raise HTTP(404)
     query = "SELECT archivo FROM COMPROBANTE WHERE id_comprobante="+request.args(0)+";"
@@ -517,9 +526,10 @@ def descargar_comprobante():
 
 #Funcion para exportar PDF de un producto
 def get_pdf():
+    admin = get_tipo_usuario(session)
 
     producto = db.PRODUCTO(request.args(0))
-    creador= db(db.USUARIO.usbid == producto .usbid_usu_creador).select()[0]
+    creador  = db(db.USUARIO.usbid == producto .usbid_usu_creador).select()[0]
     tmpfilename = os.path.join(request.folder,'private',str(uuid4()))
     doc = SimpleDocTemplate(tmpfilename)
     elements = []
@@ -596,6 +606,9 @@ def eliminar_comprobante():
     if not request.args:
         raise HTTP(404)
     id_comprobante = request.args(0)
+    
+    admin = get_tipo_usuario(session)
+
     query = "SELECT archivo FROM COMPROBANTE WHERE id_comprobante="+id_comprobante+";"
     comprobante = db.executesql(query)
 
