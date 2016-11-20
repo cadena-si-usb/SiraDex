@@ -75,13 +75,13 @@ def gestionar():
     #     else:
     #         message = T("El Usuario no se encuentra registrado")
 
-    return dict(form_editar=form_editar, hayErrores=hayErrores, formulario_contactar=formulario_contactar,usuarios = aux,message = message, admin=get_tipo_usuario())
+    return dict(form_editar=form_editar, hayErrores=hayErrores, formulario_contactar=formulario_contactar,usuarios = aux,message = message, admin=get_tipo_usuario(session))
 
 def agregar():
 
     admin = get_tipo_usuario(session)
     
-    if (admin==0 |or admin==2):
+    if (admin==0 or admin==2):
         redirect(URL(c ="default",f="index"))
 
     message = ""
@@ -156,7 +156,7 @@ def agregar():
 
             else:
                 message= T("El usuario ya esta registrado")
-    return dict(form = forma,message = message, admin=get_tipo_usuario())
+    return dict(form = forma,message = message, admin=get_tipo_usuario(session))
 
 
 def eliminar():
@@ -207,4 +207,4 @@ def modificar():
         else:
             message = T("El Usuario no se encuentra registrado")
 
-    return dict(forma = form, form = forma, message = message, admin=get_tipo_usuario())
+    return dict(forma = form, form = forma, message = message, admin=get_tipo_usuario(session))
