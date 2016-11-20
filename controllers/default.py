@@ -232,6 +232,7 @@ def obtener_actividades():
         tiposA = db(db.TIPO_ACTIVIDAD.papelera == False).select()
     else:
         tiposA = db(db.TIPO_ACTIVIDAD.id_programa==int(request.vars.Programa)).select()
+
         
     concat = '<option value="all" selected="">--cualquiera--</option>'
 

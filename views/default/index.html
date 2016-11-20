@@ -79,7 +79,7 @@
                             <div class = "col-sm-12">
                                 <select name="Programa" 
                                         class="form-control"
-                                        onchange="ajax('default/obtener_actividades', ['Programa'], ':eval')" style="width: 100%">
+                                        onchange="ajax('{{=URL(c='default', f='obtener_actividades')}}', ['Programa'], ':eval')" style="width: 100%">
                                     
                                     <option value="all" selected="">--cualquiera--</option>
                                     
@@ -120,15 +120,12 @@
                             <div class="form-group col-sm-7">
                                 <label for="Autor">Autor:</label>
                                 <div class = "col-sm-12">
-                                    <select name="TipoActividad" 
-                                        class="form-control"
-                                        id="lista_tipos" style="width: 100%">
+                                    <select name="Autor" class="form-control" style="width: 100%">
+                                        <option value="all" selected="">--cualquiera--</option>
                                     
-                                    <option value="all" selected="">--cualquiera--</option>
-                                    
-                                    {{for x in usuarios:}}
-                                        <option value="{{=x['usbid']}}" style="width: 100%">{{=x['nombres'].split(' ',1)[0]+' '+x['apellidos'].split(' ',1)[0]}}</option>
-                                    {{pass}}
+                                        {{for x in usuarios:}}
+                                            <option value="{{=x['usbid']}}" style="width: 100%">{{=x['nombres'].split(' ',1)[0]+' '+x['apellidos'].split(' ',1)[0]}}</option>
+                                        {{pass}}
                                     </select>
                                 </div>
                             </div>
