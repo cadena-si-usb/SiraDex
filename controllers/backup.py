@@ -7,7 +7,7 @@ def index():
 
     admin = get_tipo_usuario(session)
     
-    if (admin==0 || admin==2):
+    if (admin==0 or admin==2):
         redirect(URL(c ="default",f="index"))
       
 
@@ -35,7 +35,7 @@ def generar_backup():
 
     admin = get_tipo_usuario(session)
     
-    if (admin==0 || admin==2):
+    if (admin==0 or admin==2):
     	redirect(URL(c ="default",f="index"))
       
 
@@ -49,7 +49,7 @@ def formulario_restaurar_backup():
 
     admin = get_tipo_usuario(session)
     
-    if (admin==0 || admin==2):
+    if (admin==0 or admin==2):
     	redirect(URL(c ="default",f="index"))
       
 
@@ -67,7 +67,7 @@ def restaurar_backup():
 
     admin = get_tipo_usuario(session)
     
-    if (admin==0 || admin==2):
+    if (admin==0 or admin==2):
     	redirect(URL(c ="default",f="index"))
       
 	archivo = request.args[0]

@@ -15,7 +15,7 @@ def gestionar():
 
     admin = get_tipo_usuario(session)
     
-    if (admin==0 || admin==2):
+    if (admin==0 or admin==2):
         redirect(URL(c ="default",f="index"))
        
     message = session.message
@@ -81,7 +81,7 @@ def agregar():
 
     admin = get_tipo_usuario(session)
     
-    if (admin==0 || admin==2):
+    if (admin==0 |or admin==2):
         redirect(URL(c ="default",f="index"))
 
     message = ""
@@ -163,7 +163,7 @@ def eliminar():
 
     admin = get_tipo_usuario(session)
     
-    if (admin==0 || admin==2):
+    if (admin==0 or admin==2):
         redirect(URL(c ="default",f="index"))
    
     if len(request.args)!=0 :
@@ -181,7 +181,7 @@ def modificar():
 
     admin = get_tipo_usuario(session)
     
-    if (admin==0 || admin==2):
+    if (admin==0 or admin==2):
         redirect(URL(c ="default",f="index"))
    
     message= ""
