@@ -2,7 +2,7 @@ $(document).ready(function(){
 
   var maxLongNombre  = 128;    // Longitud máxima que tendrá el campo nombre.
   var maxLongDescrip = 2048;   // Longitud máxima que tendrá el campo descripción.
-  var maxLongCodigo = 10;
+  var maxLongCodigo = 10;      // Longitud máxima que tendrá el campo código.
   var hayPrograma = $(".formularioTipo").attr("data-hayPrograma");
 
   // Muestra la cantidad de caracteres disponible en el textfield de nombre.
@@ -68,6 +68,9 @@ $(document).ready(function(){
 
     // Muestra la cantidad de caracteres disponible en el textarea de descripción.
     textoRestante(maxLongDescrip, $(e.currentTarget).find("#no_table_Descripcion"));
+
+    // Muestra la cantidad de caracteres disponible en el textarea de descripción.
+    textoRestante(maxLongCodigo, $(e.currentTarget).find("#no_table_Codigo"));
   }); 
 
   // Si hay errores en el formulario agregar...

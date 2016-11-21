@@ -1,6 +1,7 @@
 $(document).ready(function(){
   var maxLongNombre  = 256;    // Longitud máxima que tendrá el campo nombre.
   var maxLongDescrip = 2048;   // Longitud máxima que tendrá el campo descripción.
+  var maxLongCodigo = 10;      // Longitud máxima que tendrá el campo código.
 
   // Obtengo la lista de errores generados por el formulario de agregar.
   var mensajeErrorAgregar = $("#modalAgregar").attr("data-hayErroresAgregar");
@@ -17,6 +18,9 @@ $(document).ready(function(){
 
     // Muestra la cantidad de caracteres disponible en el textarea de descripción.
     textoRestante(maxLongDescrip, "#no_table_Descripcion");
+
+    // Muestra la cantidad de caracteres disponible en el textfield de código.
+    textoRestante(maxLongCodigo, "#no_table_Abreviacion");
   });
 
   // Si hay errores en el formulario agregar...
@@ -42,6 +46,9 @@ $(document).ready(function(){
 
       // Muestra la cantidad de caracteres disponible en el textarea de descripción.
       textoRestante(maxLongDescrip, $(e.currentTarget).find("#no_table_Descripcion"));
+
+      // Muestra la cantidad de caracteres disponible en el textfield de código.
+      textoRestante(maxLongCodigo, $(e.currentTarget).find("#no_table_Abreviacion"));
   });
 
   // Si hay errores en el formulario editar...
