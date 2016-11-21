@@ -78,4 +78,51 @@ $(document).ready(function(){
   var programList = new List('programs', options);
 
   // -.........................................................................-
+
+  // Para el show more y show less.
+  $("#TipoActividadTable tr").not(":eq(0)").each(function(){ //.not(":eq(0)") first is header of table
+    var descripcion = $(this).find(".hideContent").text();
+    var descripcionLong = descripcion.length;
+
+    if (descripcionLong < 46){
+      $(this).find(".showMoreContent").hide();
+
+    }else{
+      var result = '';
+      console.log(descripcion);
+    
+      result += descripcion.substring(0, 46) + '\n';
+      descripcion = descripcion.substring(46);
+      
+      $(this).find(".hideContent").html(result);
+      $(this).find(".restContent").html(descripcion);
+    }
+
+    console.log(descripcionLong);
+    //var q = parseInt($(this).find(".qty").val());
+    //$(this).find(".total").val(pr*q); 
+  });
+
+  $(".showMoreContent").on("click", function(){
+
+    // Si el ojito está abierto...
+    if ($(this).hasClass("glyphicon glyphicon-eye-open")){
+      // Se cierra el ojito.
+      $(this).removeClass("glyphicon glyphicon-eye-open");
+      $(this).addClass("glyphicon glyphicon-eye-close");
+
+      $(this).siblings(".restContent").show();
+ 
+    }else{
+      // Se abre el ojito.
+      $(this).removeClass("glyphicon glyphicon-eye-close");
+      $(this).addClass("glyphicon glyphicon-eye-open");
+
+      $(this).siblings(".showContent").addClass("hideContent");
+      $(this).siblings(".showContent").removeClass("showContent");
+
+      $(this).siblings(".restContent").hide();
+    }
+  })
+
 });

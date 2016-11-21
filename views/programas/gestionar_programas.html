@@ -51,7 +51,7 @@
         </div>
       </div>
       <div class="container-fluid card">
-      <table class="table table-striped table-condensed table-hover sortable">
+      <table id="TipoActividadTable" class="table table-striped table-condensed table-hover sortable">
           <thead>
               <tr>
                   <th>Título</th>
@@ -75,7 +75,14 @@
                   {{for programa in programas:}}
                       <tr>
                           <td class="nombre_programa"><a class="a-table" href="{{=URL(c='tipo_actividad', f='gestionar')}}/{{=programa.id_programa}}">{{=programa.nombre}}</a></td>
-                          <td class="descripcion_programa"><center>{{=programa.descripcion}}</center></td>
+                          <td class="descripcion_programa">
+                            <center>
+                              <span class="hideContent">{{=programa.descripcion}}</span>
+                              <span class="restContent" style="display:none;"></span>
+                              <button class="glyphicon glyphicon-eye-open showMoreContent"
+                                      style="border:none;background:none;"></button>
+                              </center>
+                            </td>
                           <td><center>{{=programa.abreviacion}}</center></td>
                           {{ if admin in [1,2]: }}
                             <td class="center-vertically">

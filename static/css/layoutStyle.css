@@ -543,3 +543,20 @@ embed{
 .error{
 	color: #F44336;
 }
+
+
+/**********************************/
+/*                                */
+/*         Show more/less         */
+/*                                */
+/**********************************/
+.hideContent {
+	line-height: 1em;
+    height: 3em;
+    overflow: hidden;
+}
+
+.showContent {
+    line-height: 1em;
+    height: auto;
+}
