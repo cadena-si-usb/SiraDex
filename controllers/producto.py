@@ -509,7 +509,7 @@ def descargar_comprobante():
 def get_pdf():
 
     producto = db.PRODUCTO(request.args(0))
-    creador= db(db.USUARIO.usbid == producto .usbid_usu_creador).select()[0]
+    creador= db(db.USUARIO.usbid == producto.usbid_usu_creador).select()[0]
     tmpfilename = os.path.join(request.folder,'private',str(uuid4()))
     doc = SimpleDocTemplate(tmpfilename)
     elements = []
@@ -517,17 +517,17 @@ def get_pdf():
     # Definimos los estilos para el documento
     estilo = getSampleStyleSheet()
 
-    estilo_titulo = estilo["Normal"]
-    estilo_titulo.alignment = TA_CENTER
-    estilo_titulo.fontName = "Helvetica"
-    estilo_titulo.fontSize = 12
-    estilo_titulo.leading = 15
-
     estilo_tabla = estilo["BodyText"]
     estilo_tabla.alignment = TA_LEFT
     estilo_tabla.fontName = "Helvetica"
     estilo_tabla.fontSize = 10
     estilo_tabla.leading = 12
+
+    estilo_titulo = estilo["Normal"]
+    estilo_titulo.alignment = TA_CENTER
+    estilo_titulo.fontName = "Helvetica"
+    estilo_titulo.fontSize = 12
+    estilo_titulo.leading = 15
 
     estilo_footer = estilo["Italic"]
     estilo_footer.alignment = TA_CENTER
@@ -551,23 +551,25 @@ def get_pdf():
 
     elements.append(usblogo)
     elements.append(Paragraph('Universidad Simón Bolívar' , estilo_titulo))
+    elements.append(Paragraph('Vicerrectorado Académico' , estilo_titulo))
     elements.append(Paragraph('Deacanato de Extensión' , estilo_titulo))
     elements.append(Paragraph('Sistema de Registro de Actividades de Extensión (SIRADEX)' , estilo_titulo))
     elements.append(Paragraph('<br/><br/>DATOS DEL PRODUCTO' , estilo_titulo))
 
     data = [
     [''],
-    ['', Paragraph('<b>NOMBRE DEL PRODUCTO:</b> ', estilo_tabla),  str(producto.nombre), ''],
-    ['', Paragraph('<b>REALIZADO POR: </b>' , estilo_tabla),  str(creador.nombres +' '+ creador.apellidos),''],
-    ['', Paragraph('<b>CI:</b> ' , estilo_tabla),  str(creador.ci),''],
-    ['', Paragraph('<b>DESCRIPCIÓN:</b> ', estilo_tabla) ,  str (producto.descripcion), ''],
-    ['', Paragraph('<b>LUGAR DE REALIZACIÓN:</b>', estilo_tabla),  str (producto.lugar), ''],
-    ['', Paragraph('<b>FECHA DE CREACIÓN:</b> ', estilo_tabla) ,  str (producto.fecha_realizacion), ''],
-    ['', Paragraph('<b>ÚLTIMA FECHA DE MODIFICACIÓN: </b>' , estilo_tabla) ,  str (producto.fecha_modificacion), ''],
-    ['', Paragraph('<b>STATUS DEL PRODUCTO: </b>', estilo_tabla) ,  str (producto.estado), '']
+    ['', Paragraph('<b>NOMBRE DEL PRODUCTO:</b> ', estilo_tabla),  Paragraph(str(producto.nombre), estilo_tabla), ''],
+    ['', Paragraph('<b>REGISTRADO POR: </b>' , estilo_tabla),  Paragraph(str(creador.nombres +' '+ creador.apellidos), estilo_tabla),''],
+    ['', Paragraph('<b>CI:</b> ' , estilo_tabla),  Paragraph(str(creador.ci), estilo_tabla),''],
+    ['', Paragraph('<b>DESCRIPCIÓN:</b> ', estilo_tabla) ,  Paragraph(str (producto.descripcion), estilo_tabla), ''],
+    ['', Paragraph('<b>LUGAR DE REALIZACIÓN:</b>', estilo_tabla),  Paragraph(str (producto.lugar), estilo_tabla), ''],
+    ['', Paragraph('<b>FECHA DE CREACIÓN:</b> ', estilo_tabla) ,  Paragraph(str (producto.fecha_realizacion), estilo_tabla), ''],
+    ['', Paragraph('<b>ÚLTIMA FECHA DE MODIFICACIÓN: </b>' , estilo_tabla) ,  Paragraph(str (producto.fecha_modificacion), estilo_tabla), ''],
+    ['', Paragraph('<b>STATUS DE VALIDACION: </b>', estilo_tabla) ,  Paragraph(str (producto.estado), estilo_tabla), '']
     ]
 
     t=Table(data, colWidths=(2*inch))
+    t.setStyle(TableStyle([('VALIGN',(1,0),(1,8),'MIDDLE')]))
 
     elements.append(t)
 
@@ -577,7 +579,7 @@ def get_pdf():
     os.unlink(tmpfilename)
     response.headers['Content-Type']='application/pdf'
 
-    return data
+return data
 
 def eliminar_comprobante():
     if not request.args:
