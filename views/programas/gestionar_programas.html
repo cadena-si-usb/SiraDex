@@ -56,6 +56,7 @@
               <tr>
                   <th>Título</th>
                   <th><center>Descripción</center></th>
+                  <th><center></center></th>
                   <th><center>Abreviación</center></th>
                   {{ if admin in [1,2]: }}
                     <th><center>Editar</center></th>
@@ -79,10 +80,10 @@
                             <center>
                               <span class="hideContent">{{=programa.descripcion}}</span>
                               <span class="restContent" style="display:none;"></span>
-                              <button class="glyphicon glyphicon-eye-open showMoreContent"
-                                      style="border:none;background:none;"></button>
-                              </center>
-                            </td>
+                            </center>
+                          </td>
+                          <td><button class="glyphicon glyphicon-eye-open showMoreContent"
+                                      style="border:none;background:none;"></button></td>
                           <td><center>{{=programa.abreviacion}}</center></td>
                           {{ if admin in [1,2]: }}
                             <td class="center-vertically">

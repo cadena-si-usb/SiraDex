@@ -86,21 +86,21 @@ $(document).ready(function(){
 
     if (descripcionLong < 46){
       $(this).find(".showMoreContent").hide();
-
     }else{
+      var restContent = '';
       var result = '';
-      console.log(descripcion);
     
-      result += descripcion.substring(0, 46) + '\n';
+      restContent += descripcion.substring(0, 46) + '\n';
       descripcion = descripcion.substring(46);
-      
-      $(this).find(".hideContent").html(result);
-      $(this).find(".restContent").html(descripcion);
-    }
+    
+      while (descripcion.length > 0) {
+        result += descripcion.substring(0, 46) + '\n';
+        descripcion = descripcion.substring(200);
+      }
 
-    console.log(descripcionLong);
-    //var q = parseInt($(this).find(".qty").val());
-    //$(this).find(".total").val(pr*q); 
+      $(this).find(".hideContent").html(restContent);
+      $(this).find(".restContent").html(result);
+    }
   });
 
   $(".showMoreContent").on("click", function(){
@@ -111,15 +111,12 @@ $(document).ready(function(){
       $(this).removeClass("glyphicon glyphicon-eye-open");
       $(this).addClass("glyphicon glyphicon-eye-close");
 
-      $(this).siblings(".restContent").show();
+      $(this).siblings("td.restContent").show();
  
     }else{
       // Se abre el ojito.
       $(this).removeClass("glyphicon glyphicon-eye-close");
       $(this).addClass("glyphicon glyphicon-eye-open");
-
-      $(this).siblings(".showContent").addClass("hideContent");
-      $(this).siblings(".showContent").removeClass("showContent");
 
       $(this).siblings(".restContent").hide();
     }
