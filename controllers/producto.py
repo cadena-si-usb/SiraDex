@@ -21,9 +21,15 @@ from funciones_siradex2 import get_tipo_usuario
 def gestionar():
     admin = get_tipo_usuario(session)
 
-
+    # Productos registrados por el usuario.
     rows = db(db.PRODUCTO.usbid_usu_creador==session.usuario['usbid']).select()
 
+    # Productos del usuario, registrados por otros usuarios
+    otrosProductos = db(db.PARTICIPA_PRODUCTO.usbid_usuario = session.usuario['usbid']).select()
+    for prod in otrosProductos:
+        prodAux = db(db.PRODUCTO.id_producto == prod.id_producto).select().first()
+        rows.append(prodAux)
+        
     detalles = {}
     nombres = {}
     cant_esp = 0
