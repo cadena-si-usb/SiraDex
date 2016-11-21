@@ -56,6 +56,7 @@
           <div class="col-sm-5 col-sm-push-1" style="margin-top:10px;margin-left:50px">
               <button type="button"
                       class="btn btn-default green btn-border"
+                      id = "agregarTipoActividadBtn"
                       data-toggle="modal"
                       data-target="#myModal"
                       >
@@ -164,7 +165,7 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <center><h4 class="modal-title">Agregar Tipo de Actividad</h4><center>
       </div>
-      <div class="modal-body" id="agregar_tipo_actividad">
+      <div class="modal-body" id="modalAgregar" data-hayErroresAgregar="{{=hayErroresAgregar}}">
           {{=formulario_agregar_tipo}}
       </div>
     </div>
@@ -179,7 +180,7 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <center><h4 class="modal-title">Editar Tipo de Actividad</h4><center>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" id="modalEditar" data-hayErroresEditar="{{=hayErroresEditar}}">
           {{=formulario_editar_tipo}}
       </div>
     </div>
@@ -213,51 +214,4 @@
       </div>
     </div>
   </div>
-
-<script type="text/javascript">
-
-    // Eliminar definitivamente
-
-    $('#myModalDelete').on('show.bs.modal', function (event) {
-        if (event.relatedTarget != null){
-            $("#botonDelete").attr("data-id-tipo", event.relatedTarget.getAttribute("data-id-tipo"));
-        }
-    });
-
-    $("#botonDelete").click(function (event){
-
-        var id_tipo = $("#botonDelete").attr("data-id-tipo");
-        ajax("{{=URL('enviar_tipo_papelera')}}/"+id_tipo,[]);
-        location.reload();
-    });
-
-    $(document).ready(function () {
-  var maxLongNombre  = 256;    // Longitud máxima que tendrá el campo nombre.
-  var maxLongDescrip = 2048;   // Longitud máxima que tendrá el campo descripción.
-  $('#myModalEditar').on('show.bs.modal', function(e){
-      var id_tipo = $(e.relatedTarget).data('idtipo');
-      var nombre      = $(e.relatedTarget).data('nombre');
-      var codigo      = $(e.relatedTarget).data('codigo');
-      var descripcion = $(e.relatedTarget).data('descripcion');
-      var id_programa = $(e.relatedTarget).data('idprograma');
-      var tipoPR =  $(e.relatedTarget).data('tipopr');
-      $(e.currentTarget).find('input[name="Id_tipo"]').val(id_tipo);
-      $("#no_table_Id_tipo__row").css("display","none");
-      $(e.currentTarget).find('input[name="Nombre"]').val(nombre);
-      $(e.currentTarget).find('input[name="Codigo"]').val(codigo);
-      $(e.currentTarget).find('textarea[name="Descripcion"]').val(descripcion);
-      $(e.currentTarget).find('#no_table_Programa').val(id_programa);
-      $(e.currentTarget).find('#no_table_Tipo').val(tipoPR);
-      // Muestra la cantidad de caracteres disponible en el textfield de nombre.
-      textoRestante(maxLongNombre,  $(e.currentTarget).find("#no_table_Nombre"));
-
-      // Muestra la cantidad de caracteres disponible en el textarea de descripción.
-      textoRestante(maxLongDescrip, $(e.currentTarget).find("#no_table_Descripcion"));
-  });
-
-    });
-
-</script>
-
-
 {{end}}

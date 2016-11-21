@@ -5,8 +5,6 @@ $(document).ready(function(){
   var mensajeErrorAgregar = $("#modalAgregar").attr("data-hayErroresAgregar");
   mensajeErrorAgregar = mensajeErrorAgregar.replace(/<Storage |>/gi, "").replace(/'/g, '"')
 
-  console.log("El mensaje es");
-  console.log(mensajeErrorAgregar);
   // Definición del comportamiento del botón agregar programa cuando se hace click.
   $("#agregarCatalogoBtn").click(function(){
     // Muestra la cantidad de caracteres disponible en el textfield de nombre.

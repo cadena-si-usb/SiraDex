@@ -472,6 +472,7 @@
 'upload file:': 'suba archivo:',
 'Use (...)&(...) for AND, (...)|(...) for OR, and ~(...)  for NOT to build more complex queries.': 'Use (...)&(...) para AND, (...)|(...) para OR, y ~(...) para NOT, para crear consultas más complejas.',
 'Use solo letras, sin numeros ni caracteres especiales.': 'Use solo letras, sin numeros ni caracteres especiales.',
+'Use solo letras, sin números ni caracteres especiales.': 'Use solo letras, sin números ni caracteres especiales.',
 'User %(id)s is impersonating %(other_id)s': 'El usuario %(id)s está suplantando %(other_id)s',
 'User %(id)s Logged-in': 'El usuario %(id)s inició la sesión',
 'User %(id)s Logged-out': 'El usuario %(id)s finalizó la sesión',

@@ -29,7 +29,7 @@ def construir_formulario_agregar_tipo():
                                            IS_MATCH('^[A-z0-9À-ÿŸ\s-]*$', error_message="Use solo letras, el caracter '-' y números."),
                                            IS_LENGTH(10, error_message="Use como máximo diez caracteres")]),
                         Field('Tipo', default = 'Seleccione...',
-                              requires = IS_IN_SET({'P':'Evaluables por pares académicos', 'R':'No evaluables por pares académicos'},
+                              requires = IS_IN_SET({'P':'(P) Evaluables por pares académicos', 'R':'(R) No evaluables por pares académicos'},
                                                     zero=T('Seleccione...'),
                                                     error_message = 'Debes elegir entre "Evaluables por pares académicos" o "No evaluables por pares académicos"')),
                         Field('Descripcion', type="text",
@@ -137,7 +137,9 @@ def gestionar():
               , listaTipoActividades = listaTipoActividades
               , programa_nombre = programa["nombre"], programa_descripcion = programa["descripcion"]
               , formulario_agregar_tipo = formulario_agregar_tipo
-              , formulario_editar_tipo = formulario_editar_tipo)
+              , formulario_editar_tipo = formulario_editar_tipo
+              , hayErroresAgregar = formulario_agregar_tipo.errors
+              , hayErroresEditar = formulario_editar_tipo.errors)
     else:
       redirect(URL(c="default",f="index"))
 

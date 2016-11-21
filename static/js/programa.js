@@ -49,7 +49,6 @@ $(document).ready(function(){
       var programaEditar = localStorage.getItem("programaEditar");
       $('span[data-id-programa="' + programaEditar + '"]').click();
       $(".error_wrapper").css('color','red');
-      console.log(programaEditar);
   }
 
   // Se tuvo que añadir el id al formulario para poder editarlo o eliminarlo en
