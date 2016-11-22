@@ -125,10 +125,10 @@ def perfil():
         rows = db(db.PRODUCTO.usbid_usu_creador==session.usuario['usbid']).select()
 
         # Productos del usuario, registrados por otros usuarios
-        otrosProductos = db(db.PARTICIPA_PRODUCTO.usbid_usuario = session.usuario['usbid']).select()
+        otrosProductos = db(db.PARTICIPA_PRODUCTO.usbid_usuario == session.usuario['usbid']).select()
         for prod in otrosProductos:
-            prodAux = db(db.PRODUCTO.id_producto == prod.id_producto).select().first()
-            rows.append(prodAux)
+            prodAux = db(db.PRODUCTO.id_producto == prod.id_producto).select()
+            rows = rows & prodAux #unimos el producto a las filas que ya existian
 
         productos = {
                     "Validados":[],
