@@ -10,7 +10,11 @@ def busqueda():
         graficaBar = URL('busq_val','graficaBar')
         graficaLine = URL('busq_val','graficaLine')
 
-        sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE plainto_tsquery('english','"+request.vars.Producto+"') @@ to_tsvector('english',coalesce(nombre,'') || ' '|| coalesce(descripcion,''))"
+        if (request.vars.Producto == ""):
+            sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto + "%\'"
+
+        else:
+            sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE plainto_tsquery('english','"+request.vars.Producto+"') @@ to_tsvector('english',coalesce(nombre,'') || ' '|| coalesce(descripcion,''))"
 
         if request.vars.Programa != None and\
            request.vars.TipoActividad != None and\
