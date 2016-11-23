@@ -1,7 +1,6 @@
 # coding: utf8
 # try something like
 
-
 import datetime
 import os
 import shutil
@@ -249,7 +248,6 @@ def agregar():
         response.flash = 'el formulario tiene errores'
 
 
-
     return locals()
 
 
@@ -327,7 +325,7 @@ def modificar():
             elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\(0\d{3}\)\d{3}-\d{2}-\d{2}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx'))))
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807))))
             elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807'))))
-            elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',requires=IS_NOT_EMPTY()))
+            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'texto',requires=IS_NOT_EMPTY()))
 
         valores[nombre]=row.valor_campo
 
@@ -539,8 +537,17 @@ def descargar_comprobante():
 #Funcion para exportar PDF de un producto
 def get_pdf():
 
-    producto = db.PRODUCTO(request.args(0))
-    creador= db(db.USUARIO.usbid == producto.usbid_usu_creador).select()[0]
+    id_producto = request.args(0)
+    producto = db.PRODUCTO(id_producto)
+    creador = db(db.USUARIO.usbid == producto.usbid_usu_creador).select().first()
+
+    nombres_autores  = creador.nombres +' '+ creador.apellidos #Primer autor siempre es el creador.
+    autores = db(db.PARTICIPA_PRODUCTO.id_producto == id_producto).select()
+
+    for autor in autores:
+        autorAux = db(db.USUARIO.usbid == autor.usbid_usuario).select().first()
+        nombres_autores  = nombres_autores + ', ' + autorAux.nombres +' '+ autorAux.apellidos
+
     tmpfilename = os.path.join(request.folder,'private',str(uuid4()))
     doc = SimpleDocTemplate(tmpfilename)
     elements = []
@@ -590,16 +597,17 @@ def get_pdf():
     data = [
     [''],
     ['', Paragraph('<b>NOMBRE DEL PRODUCTO:</b> ', estilo_tabla),  Paragraph(str(producto.nombre), estilo_tabla), ''],
+    ['', Paragraph('<b>AUTOR(ES):</b> ', estilo_tabla),  Paragraph(nombres_autores, estilo_tabla), ''],
     ['', Paragraph('<b>REGISTRADO POR: </b>' , estilo_tabla),  Paragraph(str(creador.nombres +' '+ creador.apellidos), estilo_tabla),''],
     ['', Paragraph('<b>CI:</b> ' , estilo_tabla),  Paragraph(str(creador.ci), estilo_tabla),''],
     ['', Paragraph('<b>DESCRIPCIÓN:</b> ', estilo_tabla) ,  Paragraph(str (producto.descripcion), estilo_tabla), ''],
     ['', Paragraph('<b>LUGAR DE REALIZACIÓN:</b>', estilo_tabla),  Paragraph(str (producto.lugar), estilo_tabla), ''],
-    ['', Paragraph('<b>FECHA DE CREACIÓN:</b> ', estilo_tabla) ,  Paragraph(str (producto.fecha_realizacion), estilo_tabla), ''],
+    ['', Paragraph('<b>FECHA DE CULMINACIÓN:</b> ', estilo_tabla) ,  Paragraph(str (producto.fecha_realizacion), estilo_tabla), ''],
     ['', Paragraph('<b>ÚLTIMA FECHA DE MODIFICACIÓN: </b>' , estilo_tabla) ,  Paragraph(str (producto.fecha_modificacion), estilo_tabla), ''],
     ['', Paragraph('<b>STATUS DE VALIDACION: </b>', estilo_tabla) ,  Paragraph(str (producto.estado), estilo_tabla), '']
     ]
 
-    t=Table(data, colWidths=(2*inch))
+    t=Table(data, colWidths=(2.5*inch))
     t.setStyle(TableStyle([('VALIGN',(1,0),(1,8),'MIDDLE')]))
 
     elements.append(t)
