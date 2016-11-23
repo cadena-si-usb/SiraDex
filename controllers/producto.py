@@ -250,8 +250,6 @@ def agregar():
 
     return locals()
 
-
-
 def modificar():
     admin = get_tipo_usuario(session)
 
@@ -275,7 +273,6 @@ def modificar():
 
     tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == producto.id_tipo).select().first()
 
-
     nombre_actividad = tipo_actividad.nombre
     descripcion_actividad = tipo_actividad.descripcion
 
@@ -292,6 +289,27 @@ def modificar():
     valores['descripcion'] = producto.descripcion
     valores['fecha_realizacion'] = producto.fecha_realizacion
     valores['lugar'] = producto.lugar
+
+    # Otros Autores de la Actividad
+    lista_usuarios = db(db.USUARIO.tipo == 'Usuario').select()
+    usuarios = {}
+
+    # Se crea un diccionario para almacenar unicamente los nombres de los usuarios
+    for usuario in lista_usuarios:
+        usuarios[usuario.usbid] = usuario.nombres + ' ' + usuario.apellidos
+
+    for i in range(5):
+        fields.append(Field("autor_"+str(i+1),
+                            label = 'Autor ',
+                            requires = IS_EMPTY_OR(IS_IN_SET(usuarios, zero="Seleccione usuario", error_message = 'Debes elegir uno de los usuarios listados.'))))
+
+    #Obtenemos los valores de los otros autores, si exiten
+    otros_autores = db(db.PARTICIPA_PRODUCTO.id_producto == producto.id_producto).select()
+    num_aut = 0
+    for autor in otros_autores:
+        autorAux = db(db.USUARIO.usbid == autor.usbid_usuario).select().first()
+        valores['autor_' + str(num_aut + 1)] = autorAux.usbid
+        num_aut += 1
 
     # Los tipos documento tienen que ser tratados diferente y cargados los enlaces con js
     hay_uploads = False
@@ -315,7 +333,7 @@ def modificar():
             elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{2}-\d{2}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx')]))
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
             elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
-            elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',label=nombre+" (*)",requires=IS_NOT_EMPTY()))
+            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'texto',label=nombre+" (*)",requires=IS_NOT_EMPTY()))
 
         else:
             if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',requires=IS_EMPTY_OR(IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD'))))
@@ -356,7 +374,19 @@ def modificar():
         db.executesql(sql2)
         print "listo 2"
 
+        # Eliminamos los autores anteriores.
+        db(db.PARTICIPA_PRODUCTO.id_producto == id_producto).delete()
+
         for var in form.vars:
+            #Buscamos los autores
+            try:
+                if (var[0:5]=="autor"):
+                    usbid_autor = getattr(form.vars, var)
+                    if usbid_autor != None:
+                        db.PARTICIPA_PRODUCTO.insert(id_producto = id_producto, usbid_usuario =  usbid_autor)
+            except Exception, e:
+                print "Exception Autor: "
+                print e
             try:
                 if (var[0:11]=="c0mpr0bant3"):
                     numero_comprobante = var[12:13]
@@ -374,44 +404,45 @@ def modificar():
                 print "Exception: "
                 print e
 
-            print "trabajare con: " + var
-            valor_anterior = valores[var]
-            print "valor anterior: " + str(valor_anterior)
-            print "entrara " + str(not(var in no))
-            if not(var in no):
+            if var[0:5] != 'autor':
+                print "trabajare con: " + var
+                valor_anterior = valores[var]
+                print "valor anterior: " + str(valor_anterior)
+                print "entrara " + str(not(var in no))
+                if not(var in no):
 
-                try:
-                    if (var[0:6]=="campo_"):
-                        campo = var[6:]
-                    else:
+                    try:
+                        if (var[0:6]=="campo_"):
+                            campo = var[6:]
+                        else:
+                            campo = var
+                    except Exception,e:
+                        print "Exception: "
+                        print e
                         campo = var
-                except Exception,e:
-                    print "Exception: "
-                    print e
-                    campo = var
 
-                print "var:" + var
-                valor_nuevo = getattr(form.vars ,var)
-                print "El valor es: " + str(valor_nuevo)
-                if valor_nuevo != valor_anterior:
-                    campo = campo.replace("_"," ")
-                    id_campo = db(db.CAMPO.nombre==campo).select().first().id_campo
+                    print "var:" + var
+                    valor_nuevo = getattr(form.vars ,var)
+                    print "El valor es: " + str(valor_nuevo)
+                    if valor_nuevo != valor_anterior:
+                        campo = campo.replace("_"," ")
+                        id_campo = db(db.CAMPO.nombre==campo).select().first().id_campo
 
-                    sql = "UPDATE PRODUCTO_TIENE_CAMPO SET valor_campo = '" + str(valor_nuevo)
-                    sql = sql + "' WHERE id_prod = '" + str(id_producto) + "' AND id_campo = '" + str(id_campo) + "';"
-                    db.executesql(sql)
+                        sql = "UPDATE PRODUCTO_TIENE_CAMPO SET valor_campo = '" + str(valor_nuevo)
+                        sql = sql + "' WHERE id_prod = '" + str(id_producto) + "' AND id_campo = '" + str(id_campo) + "';"
+                        db.executesql(sql)
 
+                    else:
+                        print "next"
                 else:
-                    print "next"
-            else:
-                valor_nuevo = getattr(form.vars ,var)
-                if valor_nuevo != valor_anterior:
-                    sql = "UPDATE PRODUCTO SET "+var+"= '"+str(valor_nuevo)+\
-                          "' WHERE id_producto = '"+str(id_producto)+"';"
-                    db.executesql(sql)
-                    print " agregada "+ str(var)
-                else:
-                    print "next "+ str(var)
+                    valor_nuevo = getattr(form.vars ,var)
+                    if valor_nuevo != valor_anterior:
+                        sql = "UPDATE PRODUCTO SET "+var+"= '"+str(valor_nuevo)+\
+                              "' WHERE id_producto = '"+str(id_producto)+"';"
+                        db.executesql(sql)
+                        print " agregada "+ str(var)
+                    else:
+                        print "next "+ str(var)
 
         redirect(URL('gestionar'))
 

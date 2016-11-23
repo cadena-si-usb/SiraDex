@@ -47,7 +47,52 @@
 			var error_descripcion = 0;
 			var cantidad_comprobantes = 5;
 			var agregados_aqui = 0;
+			var autores_agregados = {{= num_aut }};
+			var cantidad_autores  = 5;
 
+			// agregar autores adicionales
+			$('#no_table_autor_1__row').before('<div id="autores_row" class="form-group">\
+															<h3 class="col-sm-offset-3">Otros Autores</h3>\
+															\
+															<div class="row">\
+																<div class="col-sm-10 col-sm-offset-2" style="margin-left:15em;">\
+													    	\
+													    	<span class="col-sm-8" style="text-align: justify;">\
+																	Puedes agregar a otros usuarios registrados en el SIRADEX como Autores.\
+																	<br>\
+																	Todos los autores pueden ver este producto.\
+																	<br>\
+																	Un producto tiene un maximo de <b>5</b> autores adicionales.\
+																</span>\
+																\
+																<div class="col-md-offset-3">\
+																	<div style="margin-bottom: 0em;">\
+																	  <button type="button" id="agregar_autor" class="btn btn-default green btn-border" onclick="return false;">\
+																	    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Autor\
+																	  </button>\
+																	</div>\
+												        </div>\
+												        \
+																</div>\
+															</div>\
+															</div>\
+															<br>'
+												);
+
+				for (i = autores_agregados + 1; i <= cantidad_autores; i++) {
+			    	$('#no_table_autor_'+ i +'__row').addClass("hidden");
+				}
+
+				$('#agregar_autor').click(function(){
+
+					if (autores_agregados<cantidad_autores){
+								autores_agregados += 1;
+								$('#no_table_autor_'+autores_agregados+'__row').removeClass("hidden");
+					};
+					if (autores_agregados==cantidad_autores){
+						$('#agregar_autor').addClass("hidden");
+					};
+				});
 
 			var html='<div id="comprobantes__row" class="form-group">\
 							<hr class="col-sm-offset-3 col-sm-8">\
@@ -150,7 +195,7 @@
 				}
 			});
 
-			
+
 			$('.form-horizontal').submit(function(){
 
 				// Verificamos los comprobantes
