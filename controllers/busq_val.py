@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from notificaciones2 import *
+from notificaciones import *
 from funciones_siradex2 import get_tipo_usuario,get_tipo_usuario_not_loged
 
 # Funcion para busquedas publicas
@@ -57,6 +57,13 @@ def ver_producto():
   query = "SELECT id_comprobante, descripcion FROM COMPROBANTE WHERE producto="+str(id_producto)+";"
   comprobantes = db.executesql(query)
 
+  #Obtenemos el nombre de los autores
+  nombres_autores  = usuario_nombre #Primer autor siempre es el creador.
+  autores = db(db.PARTICIPA_PRODUCTO.id_producto == id_producto).select()
+
+  for autor in autores:
+      autorAux = db(db.USUARIO.usbid == autor.usbid_usuario).select().first()
+      nombres_autores  = nombres_autores + ', ' + autorAux.nombres +' '+ autorAux.apellidos
 
   form = SQLFORM.factory(
             Field("Nombre_Producto", default=producto.nombre,writable = False),

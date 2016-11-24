@@ -138,6 +138,7 @@
 'Debe subirse un archivo': 'Debe subirse un archivo',
 'Debes elegir entre "Evaluables por pares académicos" o "No evaluables por pares académicos"': 'Debes elegir entre "Evaluables por pares académicos" o "No evaluables por pares académicos"',
 'Debes elegir uno de los programas listados.': 'Debes elegir uno de los programas listados.',
+'Debes elegir uno de los usuarios listados.': 'Debes elegir uno de los usuarios listados.',
 'defines tables': 'define tablas',
 'Delete': 'Eliminar',
 'delete': 'eliminar',

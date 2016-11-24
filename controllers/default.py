@@ -13,7 +13,7 @@ import re
 from usbutils import get_ldap_data, random_key
 from funciones_siradex2 import get_tipo_usuario,get_tipo_usuario_not_loged
 import urllib2
-from notificaciones2 import *
+from notificaciones import *
 ### required - do no delete
 def user(): return dict(form=auth())
 def download(): return response.download(request,db)
@@ -121,14 +121,20 @@ def perfil():
             Field('Correo_Alternativo', default=session.usuario["alternativo"],writable=False),
             readonly=True)
 
+        # Productos Registrados por el Usuario
         rows = db(db.PRODUCTO.usbid_usu_creador==session.usuario['usbid']).select()
+
+        # Productos del usuario, registrados por otros usuarios
+        otrosProductos = db(db.PARTICIPA_PRODUCTO.usbid_usuario == session.usuario['usbid']).select()
+        for prod in otrosProductos:
+            prodAux = db(db.PRODUCTO.id_producto == prod.id_producto).select()
+            rows = rows & prodAux #unimos el producto a las filas que ya existian
+
         productos = {
                     "Validados":[],
                     "No Validados":[],
                     "Por Validar":[]
                     }
-
-        grafica = URL('default','grafica')
 
         for row in rows:
             if row.estado == "Validado":
@@ -137,6 +143,8 @@ def perfil():
                 productos["No Validados"]+= [row]
             else:
                 productos["Por Validar"] += [row]
+
+        grafica = URL('default','grafica')
 
         return locals()
     else:

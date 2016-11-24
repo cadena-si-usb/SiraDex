@@ -1,7 +1,6 @@
 # coding: utf8
 # try something like
 
-
 import datetime
 import os
 import shutil
@@ -21,8 +20,14 @@ from funciones_siradex2 import get_tipo_usuario
 def gestionar():
     admin = get_tipo_usuario(session)
 
-
+    # Productos registrados por el usuario.
     rows = db(db.PRODUCTO.usbid_usu_creador==session.usuario['usbid']).select()
+
+    # Productos del usuario, registrados por otros usuarios
+    otrosProductos = db(db.PARTICIPA_PRODUCTO.usbid_usuario == session.usuario['usbid']).select()
+    for prod in otrosProductos:
+        prodAux = db(db.PRODUCTO.id_producto == prod.id_producto).select()
+        rows = rows & prodAux #unimos el producto a las filas que ya existian
 
     detalles = {}
     nombres = {}
@@ -42,9 +47,9 @@ def gestionar():
 
         detalles[row] = dict_campos
 
-        nombres_act = db((db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo) 
+        nombres_act = db((db.PRODUCTO.id_tipo == db.TIPO_ACTIVIDAD.id_tipo)
                     & (db.PRODUCTO.id_producto == row.id_producto)).select()
-        
+
         for nombre in nombres_act:
             print nombre.TIPO_ACTIVIDAD.nombre
             nombres[row] = nombre.TIPO_ACTIVIDAD.nombre
@@ -52,7 +57,7 @@ def gestionar():
         if row["estado"] == "Por Validar":
             cant_esp += 1
         elif row["estado"] == "Validado":
-            cant_val += 1 
+            cant_val += 1
         elif row["estado"] == "No Validado":
             cant_rec += 1
 
@@ -103,7 +108,23 @@ def agregar():
     fields.append(Field('descripcion','string',label="Descripcion (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(250)]))
     fields.append(Field('fecha_realizacion','date',label="Fecha de Realizacion (*)",requires=[IS_NOT_EMPTY(error_message='Debe seleccionar una fecha'),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
     fields.append(Field('lugar','string',label="Lugar (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(50)]))
-    obl = {} 
+
+    # Otros Autores de la Actividad
+    lista_usuarios = db(db.USUARIO.tipo == 'Usuario').select()
+    usuarios = {}
+
+    # Se crea un diccionario para almacenar unicamente los nombres de los usuarios
+    for usuario in lista_usuarios:
+        if usuario.usbid != session.usuario['usbid']:
+            usuarios[usuario.usbid] = usuario.nombres + ' ' + usuario.apellidos
+
+    for i in range(5):
+        fields.append(Field("autor_"+str(i+1),
+                            label = 'Autor ',
+                            requires = IS_EMPTY_OR(IS_IN_SET(usuarios, zero="Seleccione usuario",
+                                                                       error_message = 'Debes elegir uno de los usuarios listados.'))))
+
+    obl = {}
     no_obl = {}
     for row in campos_id:
         rows_campo = db(db.CAMPO.id_campo == row.id_campo).select().first()
@@ -128,7 +149,7 @@ def agregar():
             elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{2}-\d{2}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx')]))
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
             elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
-            elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',label=rows_campo.nombre+" (*)",requires=IS_NOT_EMPTY()))
+            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'texto',label=rows_campo.nombre+" (*)",requires=IS_NOT_EMPTY()))
 
         else:
             no_obl[nombre] = tipo_campo
@@ -140,7 +161,7 @@ def agregar():
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807))))
             elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807'))))
             elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',requires=IS_NOT_EMPTY()))
-        
+
 
     for i in range(5):
         fields.append(Field("c0mpr0bant3_"+str(i+1), 'upload', autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), label=''))
@@ -152,21 +173,21 @@ def agregar():
     print url
 
 
-    form=SQLFORM.factory(*fields, upload=url) 
+    form=SQLFORM.factory(*fields, upload=url)
     form.element(_type='submit')['_class']="btn blue-add btn-block btn-border "
-    form.element(_type='submit')['_value']="Agregar"  
+    form.element(_type='submit')['_value']="Agregar"
     form.element()
 
     for i in obl.keys():
-        
+
         form.element(_name=i)['_class']="form-control obligatoria "+ obl[i]
 
     for i in no_obl.keys():
-        
+
         form.element(_name=i)['_class']="form-control "+ no_obl[i]
 
     for f in form.elements("input"):
-        print f 
+        print f
 
 
     if form.process().accepted:
@@ -175,8 +196,18 @@ def agregar():
                                       estado='Por Validar',fecha_realizacion=form.vars.fecha_realizacion, fecha_modificacion=now, \
                                       lugar = form.vars.lugar, usbid_usu_creador= session.usuario['usbid'])
         id_producto = dicc_producto['id_producto']
+
         for var in form.vars:
             if not(var in no):
+                #Buscamos los autores
+                try:
+                    if (var[0:5]=="autor"):
+                        usbid_autor = getattr(form.vars, var)
+                        if usbid_autor != None:
+                            db.PARTICIPA_PRODUCTO.insert(id_producto = id_producto, usbid_usuario =  usbid_autor)
+                except Exception, e:
+                    print "Exception Autor: "
+                    print e
 
                 try:
                     if (var[0:11]=="c0mpr0bant3"):
@@ -205,23 +236,21 @@ def agregar():
                     print e
                     campo = var
 
-                campo = campo.replace("_"," ")
-                print "Lo imprimes: " + campo
-                id_camp = db(db.CAMPO.nombre==campo).select().first().id_campo
-                print id_camp
-                valor = getattr(form.vars ,var)
-                db.PRODUCTO_TIENE_CAMPO.insert(id_prod=id_producto,id_campo=id_camp,valor_campo= valor)
-
+                #Ignora campos de autor
+                if campo[0:5] != 'autor':
+                    campo = campo.replace("_"," ")
+                    print "Lo imprimes: " + campo
+                    id_camp = db(db.CAMPO.nombre==campo).select().first().id_campo
+                    print id_camp
+                    valor = getattr(form.vars ,var)
+                    db.PRODUCTO_TIENE_CAMPO.insert(id_prod=id_producto,id_campo=id_camp,valor_campo= valor)
 
         redirect(URL('gestionar'))
     elif form.errors:
         response.flash = 'el formulario tiene errores'
 
 
-
     return locals()
-
-
 
 def modificar():
     admin = get_tipo_usuario(session)
@@ -246,7 +275,6 @@ def modificar():
 
     tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == producto.id_tipo).select().first()
 
-
     nombre_actividad = tipo_actividad.nombre
     descripcion_actividad = tipo_actividad.descripcion
 
@@ -263,7 +291,29 @@ def modificar():
     valores['descripcion'] = producto.descripcion
     valores['fecha_realizacion'] = producto.fecha_realizacion
     valores['lugar'] = producto.lugar
-    
+
+    # Otros Autores de la Actividad
+    lista_usuarios = db(db.USUARIO.tipo == 'Usuario').select()
+    usuarios = {}
+
+    # Se crea un diccionario para almacenar unicamente los nombres de los usuarios
+    for usuario in lista_usuarios:
+        if usuario.usbid != session.usuario['usbid']:
+            usuarios[usuario.usbid] = usuario.nombres + ' ' + usuario.apellidos
+
+    for i in range(5):
+        fields.append(Field("autor_"+str(i+1),
+                            label = 'Autor ',
+                            requires = IS_EMPTY_OR(IS_IN_SET(usuarios, zero="Seleccione usuario", error_message = 'Debes elegir uno de los usuarios listados.'))))
+
+    #Obtenemos los valores de los otros autores, si exiten
+    otros_autores = db(db.PARTICIPA_PRODUCTO.id_producto == producto.id_producto).select()
+    num_aut = 0
+    for autor in otros_autores:
+        autorAux = db(db.USUARIO.usbid == autor.usbid_usuario).select().first()
+        valores['autor_' + str(num_aut + 1)] = autorAux.usbid
+        num_aut += 1
+
     # Los tipos documento tienen que ser tratados diferente y cargados los enlaces con js
     hay_uploads = False
     for row in rows:
@@ -286,7 +336,7 @@ def modificar():
             elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{2}-\d{2}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx')]))
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
             elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
-            elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',label=nombre+" (*)",requires=IS_NOT_EMPTY()))
+            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'texto',label=nombre+" (*)",requires=IS_NOT_EMPTY()))
 
         else:
             if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',requires=IS_EMPTY_OR(IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD'))))
@@ -296,7 +346,7 @@ def modificar():
             elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\(0\d{3}\)\d{3}-\d{2}-\d{2}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx'))))
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807))))
             elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807'))))
-            elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',requires=IS_NOT_EMPTY()))
+            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'texto',requires=IS_NOT_EMPTY()))
 
         valores[nombre]=row.valor_campo
 
@@ -327,7 +377,19 @@ def modificar():
         db.executesql(sql2)
         print "listo 2"
 
+        # Eliminamos los autores anteriores.
+        db(db.PARTICIPA_PRODUCTO.id_producto == id_producto).delete()
+
         for var in form.vars:
+            #Buscamos los autores
+            try:
+                if (var[0:5]=="autor"):
+                    usbid_autor = getattr(form.vars, var)
+                    if usbid_autor != None:
+                        db.PARTICIPA_PRODUCTO.insert(id_producto = id_producto, usbid_usuario =  usbid_autor)
+            except Exception, e:
+                print "Exception Autor: "
+                print e
             try:
                 if (var[0:11]=="c0mpr0bant3"):
                     numero_comprobante = var[12:13]
@@ -345,44 +407,45 @@ def modificar():
                 print "Exception: "
                 print e
 
-            print "trabajare con: " + var
-            valor_anterior = valores[var]
-            print "valor anterior: " + str(valor_anterior)
-            print "entrara " + str(not(var in no))
-            if not(var in no):
+            if var[0:5] != 'autor':
+                print "trabajare con: " + var
+                valor_anterior = valores[var]
+                print "valor anterior: " + str(valor_anterior)
+                print "entrara " + str(not(var in no))
+                if not(var in no):
 
-                try:
-                    if (var[0:6]=="campo_"):
-                        campo = var[6:]
-                    else:
+                    try:
+                        if (var[0:6]=="campo_"):
+                            campo = var[6:]
+                        else:
+                            campo = var
+                    except Exception,e:
+                        print "Exception: "
+                        print e
                         campo = var
-                except Exception,e:
-                    print "Exception: "
-                    print e
-                    campo = var
 
-                print "var:" + var
-                valor_nuevo = getattr(form.vars ,var)
-                print "El valor es: " + str(valor_nuevo)
-                if valor_nuevo != valor_anterior:
-                    campo = campo.replace("_"," ")
-                    id_campo = db(db.CAMPO.nombre==campo).select().first().id_campo
+                    print "var:" + var
+                    valor_nuevo = getattr(form.vars ,var)
+                    print "El valor es: " + str(valor_nuevo)
+                    if valor_nuevo != valor_anterior:
+                        campo = campo.replace("_"," ")
+                        id_campo = db(db.CAMPO.nombre==campo).select().first().id_campo
 
-                    sql = "UPDATE PRODUCTO_TIENE_CAMPO SET valor_campo = '" + str(valor_nuevo)
-                    sql = sql + "' WHERE id_prod = '" + str(id_producto) + "' AND id_campo = '" + str(id_campo) + "';"
-                    db.executesql(sql)
+                        sql = "UPDATE PRODUCTO_TIENE_CAMPO SET valor_campo = '" + str(valor_nuevo)
+                        sql = sql + "' WHERE id_prod = '" + str(id_producto) + "' AND id_campo = '" + str(id_campo) + "';"
+                        db.executesql(sql)
 
+                    else:
+                        print "next"
                 else:
-                    print "next"
-            else:
-                valor_nuevo = getattr(form.vars ,var)
-                if valor_nuevo != valor_anterior:
-                    sql = "UPDATE PRODUCTO SET "+var+"= '"+str(valor_nuevo)+\
-                          "' WHERE id_producto = '"+str(id_producto)+"';"
-                    db.executesql(sql)
-                    print " agregada "+ str(var)
-                else:
-                    print "next "+ str(var)
+                    valor_nuevo = getattr(form.vars ,var)
+                    if valor_nuevo != valor_anterior:
+                        sql = "UPDATE PRODUCTO SET "+var+"= '"+str(valor_nuevo)+\
+                              "' WHERE id_producto = '"+str(id_producto)+"';"
+                        db.executesql(sql)
+                        print " agregada "+ str(var)
+                    else:
+                        print "next "+ str(var)
 
         redirect(URL('gestionar'))
 
@@ -401,7 +464,7 @@ def eliminar():
         except Exception,e:
             print "Exception: "
             print e
-    
+
 
     set_tiene_campo = db(db.PRODUCTO_TIENE_CAMPO.id_prod == id_act)
     set_tiene_campo.delete()
@@ -508,8 +571,17 @@ def descargar_comprobante():
 #Funcion para exportar PDF de un producto
 def get_pdf():
 
-    producto = db.PRODUCTO(request.args(0))
-    creador= db(db.USUARIO.usbid == producto .usbid_usu_creador).select()[0]
+    id_producto = request.args(0)
+    producto = db.PRODUCTO(id_producto)
+    creador = db(db.USUARIO.usbid == producto.usbid_usu_creador).select().first()
+
+    nombres_autores  = creador.nombres +' '+ creador.apellidos #Primer autor siempre es el creador.
+    autores = db(db.PARTICIPA_PRODUCTO.id_producto == id_producto).select()
+
+    for autor in autores:
+        autorAux = db(db.USUARIO.usbid == autor.usbid_usuario).select().first()
+        nombres_autores  = nombres_autores + ', ' + autorAux.nombres +' '+ autorAux.apellidos
+
     tmpfilename = os.path.join(request.folder,'private',str(uuid4()))
     doc = SimpleDocTemplate(tmpfilename)
     elements = []
@@ -517,17 +589,17 @@ def get_pdf():
     # Definimos los estilos para el documento
     estilo = getSampleStyleSheet()
 
-    estilo_titulo = estilo["Normal"]
-    estilo_titulo.alignment = TA_CENTER
-    estilo_titulo.fontName = "Helvetica"
-    estilo_titulo.fontSize = 12
-    estilo_titulo.leading = 15
-
     estilo_tabla = estilo["BodyText"]
     estilo_tabla.alignment = TA_LEFT
     estilo_tabla.fontName = "Helvetica"
     estilo_tabla.fontSize = 10
     estilo_tabla.leading = 12
+
+    estilo_titulo = estilo["Normal"]
+    estilo_titulo.alignment = TA_CENTER
+    estilo_titulo.fontName = "Helvetica"
+    estilo_titulo.fontSize = 12
+    estilo_titulo.leading = 15
 
     estilo_footer = estilo["Italic"]
     estilo_footer.alignment = TA_CENTER
@@ -551,23 +623,26 @@ def get_pdf():
 
     elements.append(usblogo)
     elements.append(Paragraph('Universidad Simón Bolívar' , estilo_titulo))
+    elements.append(Paragraph('Vicerrectorado Académico' , estilo_titulo))
     elements.append(Paragraph('Deacanato de Extensión' , estilo_titulo))
     elements.append(Paragraph('Sistema de Registro de Actividades de Extensión (SIRADEX)' , estilo_titulo))
     elements.append(Paragraph('<br/><br/>DATOS DEL PRODUCTO' , estilo_titulo))
 
     data = [
     [''],
-    ['', Paragraph('<b>NOMBRE DEL PRODUCTO:</b> ', estilo_tabla),  str(producto.nombre), ''],
-    ['', Paragraph('<b>REALIZADO POR: </b>' , estilo_tabla),  str(creador.nombres +' '+ creador.apellidos),''],
-    ['', Paragraph('<b>CI:</b> ' , estilo_tabla),  str(creador.ci),''],
-    ['', Paragraph('<b>DESCRIPCIÓN:</b> ', estilo_tabla) ,  str (producto.descripcion), ''],
-    ['', Paragraph('<b>LUGAR DE REALIZACIÓN:</b>', estilo_tabla),  str (producto.lugar), ''],
-    ['', Paragraph('<b>FECHA DE CREACIÓN:</b> ', estilo_tabla) ,  str (producto.fecha_realizacion), ''],
-    ['', Paragraph('<b>ÚLTIMA FECHA DE MODIFICACIÓN: </b>' , estilo_tabla) ,  str (producto.fecha_modificacion), ''],
-    ['', Paragraph('<b>STATUS DEL PRODUCTO: </b>', estilo_tabla) ,  str (producto.estado), '']
+    ['', Paragraph('<b>NOMBRE DEL PRODUCTO:</b> ', estilo_tabla),  Paragraph(str(producto.nombre), estilo_tabla), ''],
+    ['', Paragraph('<b>AUTOR(ES):</b> ', estilo_tabla),  Paragraph(nombres_autores, estilo_tabla), ''],
+    ['', Paragraph('<b>REGISTRADO POR: </b>' , estilo_tabla),  Paragraph(str(creador.nombres +' '+ creador.apellidos), estilo_tabla),''],
+    ['', Paragraph('<b>CI:</b> ' , estilo_tabla),  Paragraph(str(creador.ci), estilo_tabla),''],
+    ['', Paragraph('<b>DESCRIPCIÓN:</b> ', estilo_tabla) ,  Paragraph(str (producto.descripcion), estilo_tabla), ''],
+    ['', Paragraph('<b>LUGAR DE REALIZACIÓN:</b>', estilo_tabla),  Paragraph(str (producto.lugar), estilo_tabla), ''],
+    ['', Paragraph('<b>FECHA DE CULMINACIÓN:</b> ', estilo_tabla) ,  Paragraph(str (producto.fecha_realizacion), estilo_tabla), ''],
+    ['', Paragraph('<b>ÚLTIMA FECHA DE MODIFICACIÓN: </b>' , estilo_tabla) ,  Paragraph(str (producto.fecha_modificacion), estilo_tabla), ''],
+    ['', Paragraph('<b>STATUS DE VALIDACION: </b>', estilo_tabla) ,  Paragraph(str (producto.estado), estilo_tabla), '']
     ]
 
-    t=Table(data, colWidths=(2*inch))
+    t=Table(data, colWidths=(2.5*inch))
+    t.setStyle(TableStyle([('VALIGN',(1,0),(1,8),'MIDDLE')]))
 
     elements.append(t)
 
