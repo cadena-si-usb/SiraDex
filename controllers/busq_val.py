@@ -2,6 +2,7 @@
 from notificaciones import *
 from funciones_siradex import get_tipo_usuario,get_tipo_usuario_not_loged
 import pygal
+from datetime  import date
 
 # Funcion para busquedas publicas
 def busqueda():
@@ -16,13 +17,14 @@ def busqueda():
                      "p.nombre,"+\
                      "p.abreviacion"+\
                 " FROM (( PRODUCTO AS prod INNER JOIN TIPO_ACTIVIDAD AS a ON prod.id_tipo=a.id_tipo)"+\
-                     "INNER JOIN PROGRAMA AS p ON a.id_programa = p.id_programa)"
+                     "INNER JOIN PROGRAMA AS p ON a.id_programa = p.id_programa) "+\
+                " WHERE p.papelera=False "
 
 
         if (request.vars.Producto == ""):
-            sql += "WHERE prod.nombre LIKE \'%" + request.vars.Producto + "%\'"
+            pass
         else:
-            sql += "WHERE plainto_tsquery('english','"+request.vars.Producto+"') @@ to_tsvector('english',coalesce(prod.nombre,'') || ' '|| coalesce(prod.descripcion,''))"
+            sql += "AND plainto_tsquery('english','"+request.vars.Producto+"') @@ to_tsvector('english',coalesce(prod.nombre,'') || ' '|| coalesce(prod.descripcion,''))"
 
         if request.vars.Programa != None and\
            request.vars.TipoActividad != None and\
@@ -57,8 +59,8 @@ def busqueda():
         graficaPie = URL(c='busq_val',f='graficaPie_busqueda',vars=dict(productos=productos))
 
         #graficaBar = URL(c='busq_val',f='graficaBar_busqueda',vars=dict(productos=productos))
+        graficaBar = graficaBar_busqueda(productos)
         graficaBar = URL(c='busq_val',f='graficaBar')
-        #graficaBar = graficaBar_busqueda(productos)
 
         graficaLine = URL('busq_val','graficaLine')     
         
@@ -274,24 +276,20 @@ def graficaPie():
 
 def graficaPie_busqueda():
     productos = request.vars.productos
-    print "==========="
-    print request.vars
-    print "\n\n"
-    print productos
-    print "\n\n"
     pie_chart = pygal.Pie()
     total_productos = len(productos)
 
     programas = {}
 
     for producto in productos:
-        id_programa = producto[5]
+        id_programa = producto.split('\'')[4].split(',')[-2]
         try:
             programas[id_programa]['repeticiones'] += 1
         except:
-            nombre = producto[6]
-            abrev = producto[7]
+            nombre = producto.split('\'')[-4]
+            abrev  = producto.split('\'')[-2]
             programas[id_programa] = {'nombre':nombre,'abreviacion':abrev,'repeticiones':1}
+
 
     for key in programas:
         porcentaje = (programas[key]['repeticiones']*100)//total_productos
@@ -301,7 +299,32 @@ def graficaPie_busqueda():
 
 def graficaBar_busqueda(productos):
     #productos = request.vars.productos
-    return
+    fecha_hasta = date.today().year
+    fecha_desde = fecha_hasta - 10
+
+    line_chart = pygal.Bar()
+    line_chart.x_labels = map(str, range(fecha_desde, fecha_hasta + 1))
+    '''line_chart.add('Firefox', [None, None, 0, 16.6,   25,   31, 36.4, 45.5, 46.3, 42.8, 37.1])
+    line_chart.add('Chrome',  [None, None, None, None, None, None,    0,  3.9, 10.8, 23.8, 35.3])
+    line_chart.add('IE',      [85.8, 84.6, 84.7, 74.5,   66, 58.6, 54.7, 44.8, 36.2, 26.6, 20.1])
+    line_chart.add('Others',  [14.2, 15.4, 15.3,  8.9,    9, 10.4,  8.9,  5.8,  6.7,  6.8,  7.5])
+    line_chart.value_formatter = lambda x: '%.2f%%' % x if x is not None else '∅'''
+    
+    fechas = {}
+    programas = db(db.PROGRAMA['papelera']==False).select().as_list()
+
+    programas_dict = {}
+    for programa in programas:
+        ident = programa['id_programa']
+        nombre = programa['nombre']
+        abrev = programa['abreviacion']
+        programas_dict[ident] = {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':[None for x in range(10)]}
+    
+    for producto in productos:
+        print producto  
+
+
+    return line_chart.render()
 
 
 def graficaBar():
