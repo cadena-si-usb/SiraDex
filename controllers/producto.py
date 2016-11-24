@@ -115,7 +115,8 @@ def agregar():
 
     # Se crea un diccionario para almacenar unicamente los nombres de los usuarios
     for usuario in lista_usuarios:
-        usuarios[usuario.usbid] = usuario.nombres + ' ' + usuario.apellidos
+        if usuario.usbid != session.usuario['usbid']:
+            usuarios[usuario.usbid] = usuario.nombres + ' ' + usuario.apellidos
 
     for i in range(5):
         fields.append(Field("autor_"+str(i+1),
@@ -148,7 +149,7 @@ def agregar():
             elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{2}-\d{2}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xx-xx')]))
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
             elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
-            elif tipo_campo in ['Texto Largo']:           fields.append(Field(nombre,'texto',label=rows_campo.nombre+" (*)",requires=IS_NOT_EMPTY()))
+            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'texto',label=rows_campo.nombre+" (*)",requires=IS_NOT_EMPTY()))
 
         else:
             no_obl[nombre] = tipo_campo
@@ -297,7 +298,8 @@ def modificar():
 
     # Se crea un diccionario para almacenar unicamente los nombres de los usuarios
     for usuario in lista_usuarios:
-        usuarios[usuario.usbid] = usuario.nombres + ' ' + usuario.apellidos
+        if usuario.usbid != session.usuario['usbid']:
+            usuarios[usuario.usbid] = usuario.nombres + ' ' + usuario.apellidos
 
     for i in range(5):
         fields.append(Field("autor_"+str(i+1),
