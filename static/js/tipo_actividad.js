@@ -97,4 +97,115 @@ $(document).ready(function(){
   var tipo_actividadList = new List('tipo_actividad', options);
 
   // -.........................................................................-
+
+  // Para el show more y show less en descripción.
+  // Y mostrar un titulo con longitud larga sin que se modifique la vista.
+  $("#TipoActividadTable tr").not(":eq(0)").each(function(){ //.not(":eq(0)") first is header of table
+    var titulo = $(this).find(".a_table").text();
+    var tituloLong = titulo.length;
+    var descripcion = $(this).find(".hideContent").text();
+    var descripcionLong = descripcion.length;
+    var amountText;
+    var i;
+
+    // Verificar si la longitud del titulo es mayor a 18 para así reacomodarlo en la columna correspondiente.
+    if (tituloLong >= 18){
+      var splitTitulo = titulo.split(" ");     
+      var restTitulo = splitTitulo[0];
+      amountText = splitTitulo[0].length;
+      i = 1;
+
+      while (true){
+        if (splitTitulo.length > i && amountText + splitTitulo[i].length + 1 < 18){
+            restTitulo += " " + splitTitulo[i];  
+            amountText += splitTitulo[i].length;
+            i++;
+        }else{
+          restTitulo += '\n';
+          amountText = 0;
+        }
+
+        if (splitTitulo.length <= i)
+          break;
+      }
+
+      // Se reemplaza los saltos de lineaa de texto por los saltos de linea de HTML.
+      restTitulo = restTitulo.replace(/\n/g, "<br />");
+      $(this).find(".a-table").html(restTitulo);
+    }
+
+    // Si la descripción es menor a 46 se muestra sin modificación.
+    // Si es mayor a 46 entonces se hace el split y se muestra restContent y 
+    // result dependiendo si se quiere ver más o si no.
+    if (descripcionLong < 36){
+      $(this).find(".showMoreContent").hide();
+    }else{
+      var restContent = '';
+      var result = '';
+      
+      var splitDescription = descripcion.split(" ");
+      amountText = 0;
+      i = 1;
+
+      // Para lo que se mostrará por defecto.
+      restContent += splitDescription[0];
+      amountText += splitDescription[0].length;
+ 
+      while (true){
+        if (splitDescription.length > i && amountText + splitDescription[i].length + 1 < 30){
+            restContent += " " + splitDescription[i]; 
+            amountText += splitDescription[i].length;
+            i++; 
+        }else{
+          restContent += '\n';
+          break;
+        }
+      }
+
+
+      amountText = 0;
+
+      // Para lo que se oculta.
+      if (splitDescription.length > i){
+        result += splitDescription[i];
+        amountText += splitDescription[i].length;
+        i += 1;
+
+        while (true){
+          if (splitDescription.length > i && amountText + splitDescription[i].length + 1 < 30){
+              result += " " + splitDescription[i];  
+              amountText += splitDescription[i].length;
+              i++;
+          }else{
+            result += '\n';
+            amountText = 0;
+          }
+
+          if (splitDescription.length <= i)
+            break;
+        }
+      }
+
+      // Se reemplazan los saltos de linea de texto por los saltos de HTML.
+      restContent = restContent.replace(/\n/g, "<br />");
+      result = result.replace(/\n/g, "<br />");
+      $(this).find(".hideContent").html(restContent);
+      $(this).find(".restContent").html(result);
+    }
+  });
+
+  $(".showMoreContent").on("click", function(){
+    // Si el ojito está abierto...
+    if ($(this).hasClass("glyphicon glyphicon-eye-open")){
+      // Se cierra el ojito.
+      $(this).removeClass("glyphicon glyphicon-eye-open");
+      $(this).addClass("glyphicon glyphicon-eye-close");
+      $(this).closest('tr').find(".descripcion_tipo").find(".restContent").show();
+    }else{
+      // Se abre el ojito.
+      $(this).removeClass("glyphicon glyphicon-eye-close");
+      $(this).addClass("glyphicon glyphicon-eye-open");
+      $(this).closest('tr').find(".descripcion_tipo").find(".restContent").hide();
+    }
+  });
 });
