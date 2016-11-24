@@ -56,8 +56,8 @@ def busqueda():
         
         productos = db.executesql(sql)
 
-        graficaPie = URL(c='busq_val',f='graficaPie_busqueda',vars=dict(productos=productos))
-        graficaBar = URL(c='busq_val',f='graficaBar_busqueda',vars=dict(productos=productos))
+        graficaPie = URL(c='busq_val',f='graficaPie',vars=dict(productos=productos))
+        graficaBar = URL(c='busq_val',f='graficaBar',vars=dict(productos=productos))
         graficaLine = URL('busq_val','graficaLine')     
         
         return locals()
@@ -252,25 +252,6 @@ def rechazar(id_producto):
     redirect(URL('gestionar_validacion.html'))
 
 def graficaPie():
-
-    query = "select programa.nombre, programa.abreviacion, count(producto.nombre)" + \
-    " from ((programa inner join tipo_actividad on programa.id_programa=tipo_actividad.id_programa)" + \
-    " inner join producto on producto.id_tipo=tipo_actividad.id_tipo and producto.usbid_usu_creador=\'"+ session.usuario["usbid"] +\
-    "\' and producto.estado=\'Validado\') group by programa.nombre, programa.abreviacion;"
-
-    query2 = "select count(producto.nombre) from producto where producto.usbid_usu_creador=\'"+ session.usuario["usbid"]+"\' and producto.estado=\'Validado\';"
-
-    datos = db.executesql(query)
-    num_productos = db.executesql(query2)[0][0]
-
-    import pygal
-    pie_chart = pygal.Pie()
-    for producto in datos:
-        porcentaje = (producto[2]*100)//num_productos
-        pie_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])
-    return pie_chart.render()
-
-def graficaPie_busqueda():
     productos = request.vars.productos
     pie_chart = pygal.Pie()
     total_productos = len(productos)
@@ -293,7 +274,7 @@ def graficaPie_busqueda():
 
     return pie_chart.render()
 
-def graficaBar_busqueda():
+def graficaBar():
     productos = request.vars.productos
     fecha_hasta = date.today().year
     fecha_desde = fecha_hasta - 10
@@ -332,26 +313,6 @@ def graficaBar_busqueda():
     # para la tabla
     #line_chart.render_table(style=True, total=True, transpose=True)
     return line_chart.render()
-
-
-def graficaBar():
-
-    query = "select programa.nombre, programa.abreviacion, count(producto.nombre)" + \
-    " from ((programa inner join tipo_actividad on programa.id_programa=tipo_actividad.id_programa)" + \
-    " inner join producto on producto.id_tipo=tipo_actividad.id_tipo and producto.usbid_usu_creador=\'"+ session.usuario["usbid"] +\
-    "\' and producto.estado=\'Validado\') group by programa.nombre, programa.abreviacion;"
-
-    query2 = "select count(producto.nombre) from producto where producto.usbid_usu_creador=\'"+ session.usuario["usbid"]+"\' and producto.estado=\'Validado\';"
-
-    datos = db.executesql(query)
-    num_productos = db.executesql(query2)[0][0]
-
-    import pygal
-    bar_chart = pygal.Bar()
-    for producto in datos:
-        porcentaje = (producto[2]*100)//num_productos
-        bar_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])
-    return bar_chart.render()
 
 def graficaLine():
 
