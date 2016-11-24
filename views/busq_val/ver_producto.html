@@ -6,14 +6,13 @@
 
 {{block subtitulo}}
     <!-- Nombre del usuario -->
-   Producto del usuario: {{=usuario_nombre}}
-    </a>
+   Producto del Usuario: {{=usuario_nombre}}
 {{end}}
 
 {{block descripcion}}
     <div class="row">
         <div class="col-sm-12">
-        <!-- Datos del usuario -->
+            <p><b>Autor(es): </b> {{=nombres_autores}}</p>
             <p><b>Programa: </b> {{=programa_nombre}}</p>
             <p><b>Tipo de Actividad: </b>{{=tipo_actividad.nombre}}</p>
         </div>
