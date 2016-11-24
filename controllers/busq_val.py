@@ -57,11 +57,7 @@ def busqueda():
         productos = db.executesql(sql)
 
         graficaPie = URL(c='busq_val',f='graficaPie_busqueda',vars=dict(productos=productos))
-
-        #graficaBar = URL(c='busq_val',f='graficaBar_busqueda',vars=dict(productos=productos))
-        graficaBar = graficaBar_busqueda(productos)
-        graficaBar = URL(c='busq_val',f='graficaBar')
-
+        graficaBar = URL(c='busq_val',f='graficaBar_busqueda',vars=dict(productos=productos))
         graficaLine = URL('busq_val','graficaLine')     
         
         return locals()
@@ -297,8 +293,8 @@ def graficaPie_busqueda():
 
     return pie_chart.render()
 
-def graficaBar_busqueda(productos):
-    #productos = request.vars.productos
+def graficaBar_busqueda():
+    productos = request.vars.productos
     fecha_hasta = date.today().year
     fecha_desde = fecha_hasta - 10
 
@@ -318,12 +314,23 @@ def graficaBar_busqueda(productos):
         ident = programa['id_programa']
         nombre = programa['nombre']
         abrev = programa['abreviacion']
-        programas_dict[ident] = {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':[None for x in range(10)]}
-    
+        programas_dict[ident] = {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':[None for x in range(11)]}
     for producto in productos:
-        print producto  
+        identificador = producto[5]
+        anio = producto[4].year
+        i = anio-fecha_desde
+        if (i <= 0):
+            i=0
+        if programas_dict[identificador]['repeticiones'][i]==None:
+            programas_dict[identificador]['repeticiones'][i] = 1
+        else:
+            programas_dict[identificador]['repeticiones'][i]+=1
 
+    for key in programas_dict:
+        line_chart.add(programas[key]['abreviacion'], [{'value':programas[key]['repeticiones'], 'label':programas[key]['nombre']}])
 
+    # para la tabla
+    #line_chart.render_table(style=True, total=True, transpose=True)
     return line_chart.render()
 
 
