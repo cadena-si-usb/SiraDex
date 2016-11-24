@@ -120,7 +120,8 @@ def agregar():
     for i in range(5):
         fields.append(Field("autor_"+str(i+1),
                             label = 'Autor ',
-                            requires = IS_EMPTY_OR(IS_IN_SET(usuarios, zero="Seleccione usuario", error_message = 'Debes elegir uno de los usuarios listados.'))))
+                            requires = IS_EMPTY_OR(IS_IN_SET(usuarios, zero="Seleccione usuario",
+                                                                       error_message = 'Debes elegir uno de los usuarios listados.'))))
 
     obl = {}
     no_obl = {}

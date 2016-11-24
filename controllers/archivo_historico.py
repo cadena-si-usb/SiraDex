@@ -46,9 +46,9 @@ def gestionar():
  de manera definitiva
 '''
 def eliminar_tipo_papelera():
-    
+
     id_tipo = int(request.args[0])
-    
+
     # Determino si existen productos con ese tipo de actividad
     # Si existen, entonces no borro al tipo de actividad
     hayProductos = not db(db.PRODUCTO.id_tipo == id_tipo).isempty()
@@ -56,28 +56,29 @@ def eliminar_tipo_papelera():
         session.message = 'No se puede eliminar un \
                           tipo de actividad con \
                           productos asociados'
-        
+
         return redirect(URL('gestionar.html'))
-    
+
     query = reduce(lambda a, b: (a & b), [db.TIPO_ACTIVIDAD.papelera == True,
                                           db.TIPO_ACTIVIDAD.id_tipo == id_tipo,
                                           db.TIPO_ACTIVIDAD.id_tipo == db.ACT_POSEE_CAMPO.id_tipo_act,
                                           db.ACT_POSEE_CAMPO.id_campo == db.CAMPO.id_campo]
                    )
+
     # Guardo los reusltados en 'aux'
     aux = db(query).select(db.ACT_POSEE_CAMPO.ALL)
-    
+
     # Borro las relaciones
     if (len(aux) > 0):
         db(db.ACT_POSEE_CAMPO.id_tipo_act == aux[0].id_tipo_act).delete()
-    
+
     # Borro los campos
     for row in aux:
         db(db.CAMPO.id_campo == row.id_campo).delete()
-    
+
     # Borro el tipo_activdad
     db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).delete()
-    
+
     # Guardo mensaje de exito
     session.message = 'Tipo Eliminado'
     redirect(URL('gestionar.html'))
@@ -88,9 +89,9 @@ def eliminar_tipo_papelera():
  de manera definitiva
 '''
 def eliminar_programa_papelera():
-    
+
     id_programa = int(request.args[0])
-    
+
     # Determino si existen tipos de actividad con ese programa
     # Si existen, entonces no borro al programa
     hayTiposDeActividad = not db(db.TIPO_ACTIVIDAD.id_programa == id_programa).isempty()
@@ -98,11 +99,11 @@ def eliminar_programa_papelera():
         session.message = 'No se puede eliminar un \
                           programa con tipos de \
                           actividades asociados'
-        
+
         return redirect(URL('gestionar.html'))
-    
+
     db(db.PROGRAMA.id_programa == id_programa).delete()
-    
+
     # Guardo mensaje de exito
     session.message = 'Programa Eliminado'
     redirect(URL('gestionar.html'))
@@ -111,7 +112,7 @@ def eliminar_programa_papelera():
  Metodo que restaura un tipo actividad de la papelera
 '''
 def restaurar_tipo():
-    
+
     id_tipo = request.args[0]
     tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
     tipo_actividad.update(papelera=False)
@@ -121,7 +122,7 @@ def restaurar_tipo():
 def restaurar_programa():
     id_programa = request.args[0]
     programa = db(db.PROGRAMA.id_programa == id_programa).select().first()
-    
+
     programa.papelera = False
     programa.update_record()
     session.message = 'Programa Restaurado.'
