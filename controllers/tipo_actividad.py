@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from funciones_siradex2 import get_tipo_usuario
+from funciones_siradex import get_tipo_usuario
 
 #. --------------------------------------------------------------------------- .
 '''
