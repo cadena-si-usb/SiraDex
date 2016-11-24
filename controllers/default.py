@@ -162,27 +162,20 @@ def grafica():
         for producto in datos:
             porcentaje = (producto[2]*100)//num_productos
             pie_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])
+
         return pie_chart.render()
 
 def tabla():
-    query = "select p.nombre, p.abreviacion, count(p.nombre), extract(year from prod.fecha_realizacion) as yy" + \
+    fecha_hasta = datetime.date.today().year
+    fecha_desde = fecha_hasta - 10
+    query = "select p.id_programa, count(p.id_programa), extract(year from prod.fecha_realizacion) as yy" + \
         " from ((programa as p inner join tipo_actividad as a on p.id_programa=a.id_programa)" + \
         " inner join producto as prod on prod.id_tipo=a.id_tipo and prod.usbid_usu_creador=\'"+ session.usuario["usbid"] +\
-        "\' and prod.estado=\'Validado\') group by p.nombre, p.abreviacion, extract(year from prod.fecha_realizacion);"
+        "\' and prod.estado=\'Validado\') group by p.id_programa, extract(year from prod.fecha_realizacion);"
 
     
     productos = db.executesql(query)
-    fecha_hasta = datetime.date.today().year
-    fecha_desde = fecha_hasta - 10
 
-    line_chart = pygal.Bar()
-    line_chart.x_labels = map(str, range(fecha_desde, fecha_hasta + 1))
-    '''line_chart.add('Firefox', [None, None, 0, 16.6,   25,   31, 36.4, 45.5, 46.3, 42.8, 37.1])
-    line_chart.add('Chrome',  [None, None, None, None, None, None,    0,  3.9, 10.8, 23.8, 35.3])
-    line_chart.add('IE',      [85.8, 84.6, 84.7, 74.5,   66, 58.6, 54.7, 44.8, 36.2, 26.6, 20.1])
-    line_chart.add('Others',  [14.2, 15.4, 15.3,  8.9,    9, 10.4,  8.9,  5.8,  6.7,  6.8,  7.5])
-    line_chart.value_formatter = lambda x: '%.2f%%' % x if x is not None else '∅'''
-    fechas = {}
     #programas = db(db.PROGRAMA['papelera']==False).select().as_list()
     programas = db(db.PROGRAMA).select().as_list()
 
@@ -191,17 +184,24 @@ def tabla():
         ident = programa['id_programa']
         nombre = programa['nombre']
         abrev = programa['abreviacion']
-        programas_dict[ident] = {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':[None for x in range(11)]}
+        programas_dict[ident] = {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':[0 for x in range(11)]}
     
     for producto in productos:
-        print producto
+        identificador = producto[0]
+        anio = int(producto[2])
+        index = anio-fecha_desde
+        if (index <= 0):
+            index=0        
+        programas_dict[identificador]['repeticiones'][index]+= producto[1]
 
-        
+    
+    line_chart = pygal.Bar()
+    line_chart.x_labels = map(str, range(fecha_desde, fecha_hasta + 1))
 
     for key in programas_dict:
-        line_chart.add(programas[key]['abreviacion'], [{'value':programas[key]['repeticiones'], 'label':programas[key]['nombre']}])
+        line_chart.add(programas_dict[key]['abreviacion'],programas_dict[key]['repeticiones'])
 
-    return line_chart.render_table(style=True, total=True, transpose=True)
+    return line_chart.render_table(transpose=True)
 
 def EditarPerfil():
     if session.usuario != None:
