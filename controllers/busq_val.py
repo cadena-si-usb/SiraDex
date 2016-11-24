@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from notificaciones import *
 from funciones_siradex import get_tipo_usuario,get_tipo_usuario_not_loged
-import pygal
 
 # Funcion para busquedas publicas
 def busqueda():
@@ -9,22 +8,15 @@ def busqueda():
   
     admin = get_tipo_usuario_not_loged(session)
     try:
-        sql = "SELECT prod.descripcion," + \
-                     "prod.nombre," +\
-                     "prod.id_tipo," +\
-                     "prod.id_producto,"+\
-                     "prod.fecha_realizacion,"+\
-                     "p.id_programa,"+\
-                     "p.nombre,"+\
-                     "p.abreviacion"+\
-                " FROM (( PRODUCTO AS prod INNER JOIN TIPO_ACTIVIDAD AS a ON prod.id_tipo=a.id_tipo)"+\
-                     "INNER JOIN PROGRAMA AS p ON a.id_programa = p.id_programa)"
-
+        graficaPie = URL('busq_val','graficaPie')
+        graficaBar = URL('busq_val','graficaBar')
+        graficaLine = URL('busq_val','graficaLine')
 
         if (request.vars.Producto == ""):
-            sql += "WHERE prod.nombre LIKE \'%" + request.vars.Producto + "%\'"
+            sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE nombre LIKE \'%" + request.vars.Producto + "%\'"
+
         else:
-            sql += "WHERE plainto_tsquery('english','"+request.vars.Producto+"') @@ to_tsvector('english',coalesce(prod.nombre,'') || ' '|| coalesce(prod.descripcion,''))"
+            sql = "SELECT descripcion,nombre,id_tipo,id_producto FROM PRODUCTO WHERE plainto_tsquery('english','"+request.vars.Producto+"') @@ to_tsvector('english',coalesce(nombre,'') || ' '|| coalesce(descripcion,''))"
 
         if request.vars.Programa != None and\
            request.vars.TipoActividad != None and\
@@ -32,38 +24,33 @@ def busqueda():
            request.vars.Autor != None:
         
 
-
             # Anadimos el filtro del usuario T-T T-N N-T N-N
             if request.vars.Autor != "all":
-                sql += " AND prod.usbid_usu_creador = " + request.vars.Autor
+                sql += " AND usbid_usu_creador = " + request.vars.Autor
 
             # Anadimos el filtro del tipo de actividad
             if request.vars.Programa != "all" and request.vars.TipoActividad == "all":
-                sql += " AND p.id_programa =" + str(request.vars.Programa)+ ")"
+                sql += " AND id_tipo IN (SELECT id_tipo FROM TIPO_ACTIVIDAD WHERE id_programa=" + str(request.vars.Programa)+ ")"
 
             elif request.vars.TipoActividad != "all":
-                sql += " AND prod.id_tipo=\'" + str(request.vars.TipoActividad)+"'"
+                sql += " AND id_tipo=\'" + str(request.vars.TipoActividad)+"'"
 
             # Anadimos el filtro de la fecha
             if request.vars.fecha != "":
-                sql += " AND prod.fecha_realizacion <= '" + request.vars.fecha +"'"
+                sql += " AND fecha_realizacion <= '" + request.vars.fecha +"'"
 
         # Ahora dependiendo del usuario anadimos las restricciones del estado (no se contempla cuando
         # el usuario esta bloqueado porqu no deberia llegar aqui)
-        if (session.usuario == None or session.usuario["tipo"] == "Usuario"):
-            sql += " AND prod.estado=\'Validado\';"
+        if (session.usuario["tipo"] == "Usuario"):
+            sql += " AND estado=\'Validado\';"
         elif (session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador"):
             sql += ";"
 
-        
+        print(sql)
         productos = db.executesql(sql)
 
-        graficaPie = graficaPie_busqueda(productos).render()
-        print graficaPie
-
-        graficaBar = URL('busq_val','graficaBar')
-        graficaLine = URL('busq_val','graficaLine')     
         
+
         return locals()
     except:
 
@@ -273,27 +260,6 @@ def graficaPie():
         porcentaje = (producto[2]*100)//num_productos
         pie_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])
     return pie_chart.render()
-
-def graficaPie_busqueda(productos):
-    pie_chart = pygal.Pie()
-    total_productos = len(productos)
-
-    programas = {}
-
-    for producto in productos:
-        id_programa = producto[5]
-        try:
-            programas[id_programa]['repeticiones'] += 1
-        except:
-            nombre = producto[6]
-            abrev = producto[7]
-            programas[id_programa] = {'nombre':nombre,'abreviacion':abrev,'repeticiones':1}
-
-    for key in programas:
-        porcentaje = (programas[key]['repeticiones']*100)//total_productos
-        pie_chart.add(programas[key]['abreviacion'],[{'value':porcentaje, 'label':programas[key]['nombre']}])
-
-    return pie_chart
 
 def graficaBar():
 
