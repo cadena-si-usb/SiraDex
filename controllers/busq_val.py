@@ -56,7 +56,9 @@ def busqueda():
 
         graficaPie = URL(c='busq_val',f='graficaPie_busqueda',vars=dict(productos=productos))
 
-        graficaBar = URL('busq_val','graficaBar')
+        #graficaBar = URL(c='busq_val',f='graficaBar_busqueda',vars=dict(productos=productos))
+        graficaBar = graficaBar_busqueda(productos)
+
         graficaLine = URL('busq_val','graficaLine')     
         
         return locals()
@@ -271,6 +273,11 @@ def graficaPie():
 
 def graficaPie_busqueda():
     productos = request.vars.productos
+    print "==========="
+    print request.vars
+    print "\n\n"
+    print productos
+    print "\n\n"
     pie_chart = pygal.Pie()
     total_productos = len(productos)
 
@@ -285,13 +292,15 @@ def graficaPie_busqueda():
             abrev = producto[7]
             programas[id_programa] = {'nombre':nombre,'abreviacion':abrev,'repeticiones':1}
 
-
     for key in programas:
-        print programas[key]
         porcentaje = (programas[key]['repeticiones']*100)//total_productos
         pie_chart.add(programas[key]['abreviacion'],[{'value':porcentaje, 'label':programas[key]['nombre']}])
 
     return pie_chart.render()
+
+def graficaBar_busqueda():
+    productos = request.vars.productos
+
 
 def graficaBar():
 
