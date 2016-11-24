@@ -57,7 +57,8 @@ def busqueda():
         graficaPie = URL(c='busq_val',f='graficaPie_busqueda',vars=dict(productos=productos))
 
         #graficaBar = URL(c='busq_val',f='graficaBar_busqueda',vars=dict(productos=productos))
-        graficaBar = graficaBar_busqueda(productos)
+        graficaBar = URL(c='busq_val',f='graficaBar')
+        #graficaBar = graficaBar_busqueda(productos)
 
         graficaLine = URL('busq_val','graficaLine')     
         
@@ -298,8 +299,9 @@ def graficaPie_busqueda():
 
     return pie_chart.render()
 
-def graficaBar_busqueda():
-    productos = request.vars.productos
+def graficaBar_busqueda(productos):
+    #productos = request.vars.productos
+    return
 
 
 def graficaBar():
