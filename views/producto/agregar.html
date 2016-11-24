@@ -173,8 +173,8 @@ $(document).ready(function () {
 		    $(this).filestyle('clear');
 		}
 		
-		if ($(this).files[0].size > 2097152){
-	            alert('solo se permiten archivos de hasta 2 MB');
+		if (this.files[0].size > 2097152){
+	        alert('solo se permiten archivos de hasta 2 MB');
 		    $(this).val('');
 		    $(this).filestyle('clear');
 		}
