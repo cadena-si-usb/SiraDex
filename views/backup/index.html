@@ -99,7 +99,7 @@
 
  <!-- Modal Editar-->
 <div class ="container">
-<div id="ModalCrearBackup" class="modal fade" role="dialog">
+<div class="modal" id="ModalCrearBackup" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
     <div class="modal-content">
@@ -161,11 +161,10 @@
                           
                           <input type="file" name="archivo">
                           <br>
-                          <input type="submit" name="Carga" value="Cargar" class="btn blue-add btn-block btn-border">
+                          <input type="submit" name="Carga" value="Cargar" class="btn blue-add btn-block btn-border" data-toggle="modal" data-target="#ModalCargaBackup">
                         </form>
                         </div>
                     </div>
-
                 </form> 
           </div>
         </div>
@@ -173,6 +172,24 @@
     </div>
 </div>
 
+ <!-- Modal Backup Restaruado de Archivo-->
+<div class ="container">
+<div class="modal" id="ModalCargaBackup" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <center><h4 class="modal-title">Backup Restaurado</h4><center>
+      </div>
+      <div class="modal-body">
+          <p> <center> El backup ha sido restaurado exitosamente </center> </p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>														    
+														    
 {{end}}
 
 
