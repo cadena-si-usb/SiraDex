@@ -15,7 +15,7 @@
                 <div>
                   <!-- <a href="{{=URL(c='usuarios',f ='agregar')}}"> -->
                   <button type="button" id="agregarProgBtn" class="btn btn-default green btn-border"  style="margin-bottom: 1em;" onclick="location.href='{{=URL('generar_backup')}}'"">
-                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true" data-target="#ModalCrearBackup"></span> Generar backup
+                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true" data-toggle="modal" data-target="#ModalCrearBackup"></span> Generar backup
                   </button>
                   <!-- </a> -->
                 </div>
@@ -78,7 +78,7 @@
                     <td class="center-vertically">
                     <a href="{{=URL(c='backup',f='eliminar',args=[ backup ])}}">
                       <center>
-                      <span class="glyphicon glyphicon-remove eliminar" style="color:#F44336" data-target="#ModalEliminarBackup"></span>
+                      <span class="glyphicon glyphicon-remove eliminar" style="color:#F44336" data-toggle="modal" data-target="#ModalEliminarBackup"></span>
 
                       </center>
                     </a>
