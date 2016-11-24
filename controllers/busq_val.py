@@ -29,9 +29,7 @@ def busqueda():
            request.vars.fecha != None and\
            request.vars.Autor != None:
         
-
-
-            # Anadimos el filtro del usuario T-T T-N N-T N-N
+            # Anadimos el filtro del usuario
             if request.vars.Autor != "all":
                 sql += " AND prod.usbid_usu_creador = " + request.vars.Autor
 
@@ -56,8 +54,7 @@ def busqueda():
         
         productos = db.executesql(sql)
 
-        graficaPie = graficaPie_busqueda(productos).render()
-        print graficaPie
+        graficaPie = URL(c='busq_val',f='graficaPie_busqueda',vars=dict(productos=productos))
 
         graficaBar = URL('busq_val','graficaBar')
         graficaLine = URL('busq_val','graficaLine')     
@@ -272,7 +269,8 @@ def graficaPie():
         pie_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])
     return pie_chart.render()
 
-def graficaPie_busqueda(productos):
+def graficaPie_busqueda():
+    productos = request.vars.productos
     pie_chart = pygal.Pie()
     total_productos = len(productos)
 
@@ -287,11 +285,13 @@ def graficaPie_busqueda(productos):
             abrev = producto[7]
             programas[id_programa] = {'nombre':nombre,'abreviacion':abrev,'repeticiones':1}
 
+
     for key in programas:
+        print programas[key]
         porcentaje = (programas[key]['repeticiones']*100)//total_productos
         pie_chart.add(programas[key]['abreviacion'],[{'value':porcentaje, 'label':programas[key]['nombre']}])
 
-    return pie_chart
+    return pie_chart.render()
 
 def graficaBar():
 
