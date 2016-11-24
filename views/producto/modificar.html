@@ -117,6 +117,18 @@
 					};
 				});
 
+				// Verficamos que el usuario no seleccione dos veces al mismo autor
+				$('.author-select').on('change', function () {
+					var val = $(this).val();
+					var id  = $(this).attr('id');
+					$('.author-select').each(function() {
+							if ($(this).val() === val && val != '' && $(this).attr('id') != id) {
+								alert('Ya el usuario seleccionado es autor de este producto.');
+								$('#'+ id).val('');
+					 }
+					});
+				});
+
 				$('.remove-tag').click(function(e){
 					autores_agregados = autores_agregados - 1;
 					var autor = $(this).data('autor');

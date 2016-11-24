@@ -102,7 +102,7 @@ $(document).ready(function () {
 
 	$(".Telefono").click(function(){
 
-		$(".Telefono").siblings(".help-block").html( "el formato de telefono es (0xxx)XXX-XXXX");
+		$(".Telefono").siblings(".help-block").html( "el formato de telefono es (0xxx)xxx-xx-xx");
 
 	});
 
@@ -173,6 +173,18 @@ $(document).ready(function () {
 			if (autores_agregados < cantidad_autores){
 				$('#agregar_autor').removeClass("hidden");
 			};
+		});
+
+		// Verficamos que el usuario no seleccione dos veces al mismo autor
+		$('.author-select').on('change', function () {
+    	var val = $(this).val();
+			var id  = $(this).attr('id');
+    	$('.author-select').each(function() {
+        	if ($(this).val() === val && val != '' && $(this).attr('id') != id) {
+            alert('Ya el usuario seleccionado es autor de este producto.');
+						$('#'+ id).val('');
+       }
+    	});
 		});
 
 	 $('#no_table_c0mpr0bant3_1__row').before('	<div id="comprobantes__row" class="form-group">\
