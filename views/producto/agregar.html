@@ -33,6 +33,17 @@
 
 
 {{block script}}
+<style>
+	.author-select {
+		width: 80%
+	}
+	.remove-tag    {
+		position: absolute;
+    float: none;
+    margin-left: -12%;
+	  margin-top: 4px;
+	}
+</style>
 
 <script>
 
@@ -132,16 +143,35 @@ $(document).ready(function () {
 
 		for (i = 1; i <= cantidad_autores; i++) {
 	    	$('#no_table_autor_'+i+'__row').addClass("hidden");
+				$('#no_table_autor_'+i).addClass("author-select");
+				$('#no_table_autor_'+i+'__row').append(' <a class="remove-tag" data-autor="'+i+'" onClick = "">\
+			                                              <span class="glyphicon glyphicon-remove red"></span>\
+			                                    				</a>\
+			                                    			');
 		}
 
 		$('#agregar_autor').click(function(){
-
-			if (autores_agregados<cantidad_autores){
+			if (autores_agregados < cantidad_autores){
 						autores_agregados += 1;
-						$('#no_table_autor_'+autores_agregados+'__row').removeClass("hidden");
+						for (var i = 1; i <= 5; i++) {
+						if ($('#no_table_autor_'+i+'__row').hasClass("hidden")){
+							$('#no_table_autor_'+i+'__row').removeClass("hidden");
+							break;
+						};
+					};
 			};
 			if (autores_agregados==cantidad_autores){
 				$('#agregar_autor').addClass("hidden");
+			};
+		});
+
+		$('.remove-tag').click(function(e){
+			autores_agregados = autores_agregados - 1;
+			var autor = $(this).data('autor');
+			$('#no_table_autor_'+ autor).val('');
+			$('#no_table_autor_'+ autor +'__row').addClass("hidden");
+			if (autores_agregados < cantidad_autores){
+				$('#agregar_autor').removeClass("hidden");
 			};
 		});
 
