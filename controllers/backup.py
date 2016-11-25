@@ -81,6 +81,8 @@ def restaurar_backup():
     
     redirect(URL('index'))
 
+
+
 def download():
     return response.download(request, db)
 
@@ -89,22 +91,3 @@ def eliminar():
     comando = "rm ./applications/SiraDex/backup/" + archivo
     resp = os.system(comando)
     redirect(URL('index'))    
-
-def descargar_backup():
-
-    admin = get_tipo_usuario(session)
-
-    if (admin==0 or admin==2):
-        redirect(URL(c ="default",f="index"))
-
-    if not request.args:
-        raise HTTP(404)
-
-    archivo = request.args[0]
-
-    backFile = os.path.join(request.folder,'backup',archivo)
-    data = open(backFile,"rb").read()
-
-    response.headers['Content-Type']=None
-    response.headers["Content-Disposition"] = "attachment; filename=%s" % archivo
-    return data
