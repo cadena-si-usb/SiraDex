@@ -297,8 +297,11 @@ def graficaBar():
         abrev = programa['abreviacion']
         programas_dict[ident] = {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':[None for x in range(11)]}
     for producto in productos:
-        identificador = producto[5]
-        anio = producto[4].year
+        print '>>'
+        print producto.split('\'')[4].split(',')[2]
+        print '<<'
+        identificador = producto.split('\'')[4].split(',')[2]
+        anio = int(producto.split('\'')[4].split(',')[3].split('(')[1])
         i = anio-fecha_desde
         if (i <= 0):
             i=0

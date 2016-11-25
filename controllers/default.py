@@ -15,6 +15,8 @@ from funciones_siradex import get_tipo_usuario,get_tipo_usuario_not_loged
 import urllib2
 from notificaciones import *
 import pygal
+from pygal.style import Style
+
 ### required - do no delete
 def user(): return dict(form=auth())
 def download(): return response.download(request,db)
@@ -108,6 +110,7 @@ def logout_cas():
     return response.render()
 
 def perfil():
+
     if session.usuario != None:
         admin = get_tipo_usuario(session)
 
@@ -157,7 +160,7 @@ def grafica():
         datos = db.executesql(query)
         num_productos = db.executesql(query2)[0][0]
 
-        pie_chart = pygal.Pie(height=300, width=400,background = 'red')
+        pie_chart = pygal.Pie()
         #pie_chart.title = 'Productos del usuario'
         for producto in datos:
             porcentaje = (producto[2]*100)//num_productos
@@ -201,7 +204,7 @@ def tabla():
     for key in programas_dict:
         line_chart.add(programas_dict[key]['abreviacion'],programas_dict[key]['repeticiones'])
 
-    return line_chart.render_table(transpose=True)
+    return line_chart.render_table(transpose=True,style=True)
 
 def EditarPerfil():
     if session.usuario != None:
