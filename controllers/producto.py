@@ -446,7 +446,7 @@ def obtener_actividades():
     print '>>'
     print programa
     print '<<'
-    aux = programa.descripcion.replace('\r\n','.')
+    aux = programa.descripcion.split('\r\n')[0]
     descripcion = "<div class=\"col-sm-offset-1\"><h4>Descripcion del Programa:</h4><p>"+aux+"</p></div>"
     html = "jQuery('#lista_tipos').empty().append('"+concat+"');jQuery('#descripcion_programa').empty().append('"+descripcion+"')"
     return html
