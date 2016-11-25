@@ -713,12 +713,15 @@ def eliminar_comprobante():
     if not request.args:
         raise HTTP(404)
     id_comprobante = request.args(0)
+    print ("============")
+    print id_comprobante
 
     admin = get_tipo_usuario(session)
 
     query = "SELECT archivo FROM COMPROBANTE WHERE id_comprobante="+id_comprobante+";"
     comprobante = db.executesql(query)
 
+    print comprobante
     pdf = os.path.join(request.folder,'uploads',comprobante[0][0][0:22],comprobante[0][0][23:25],comprobante[0][0])
     try:
         os.unlink(pdf)
@@ -727,7 +730,7 @@ def eliminar_comprobante():
         print e
 
     db(db.COMPROBANTE.id_comprobante == id_comprobante).delete()
-    return redirect(URL(modificar,args=[id_comprobante]))
+    return redirect(URL(modificar,args=[request.args(1)]))
 
 def eliminar_documento():
 
