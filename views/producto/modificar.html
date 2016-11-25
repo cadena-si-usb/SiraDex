@@ -49,6 +49,35 @@
 			var agregados_aqui = 0;
 
 
+
+			var perro='	<div class="row">\
+								<div class="col-sm-offset-3 col-sm-8 content"><br>\
+										<table><tbody>\
+											<tr>\
+												<td>\
+													<a  href="/{{=request.application}}/{{=request.controller}}/get_documento/{{=documento[0]}}" target="blanck">\
+						        					{{=documento[1]}}\
+						    						</a>\
+						    					</td>\
+						    					<td class="center-vertically">\
+	                                    			<center>\
+	                                   					<a onClick = "if(confirm(\'¿Está seguro de que desea eliminar este comprobante?\')) {window.location.href=\'{{=URL(f="eliminar_documento", args=[documento[0], id_producto])}}\'\
+	                                   						;}">\
+	                                                        <span class="glyphicon glyphicon-remove red"></span>\
+	                                    				</a>\
+	                                    			</center>\
+	                                    		</td>\
+						    				</tr>\
+										{{pass}}\
+										</tbody></table>\
+									{{pass}}\
+								<br></div>\
+							</div>\
+						</div>';
+
+			$('#no_table_que_webonada_es_ps').before(perro);
+			$('#no_table_que_webonada_es_ps').addClass("hidden");
+
 			var html='<div id="comprobantes__row" class="form-group">\
 							<hr class="col-sm-offset-3 col-sm-8">\
 							<h3 id = "comprobantes" class="col-sm-offset-3 col-sm-3">Comprobantes</h3>\
@@ -89,7 +118,6 @@
 								</div>\
 							</div>\
 						</div>';
-
 
 
 
@@ -239,5 +267,6 @@
 			});
 
 		});
+
 	</script>
 {{end}}

@@ -240,6 +240,7 @@ def modificar():
     query = "SELECT id_comprobante, descripcion FROM COMPROBANTE WHERE producto="+str(id_producto)+";"
     comprobantes = db.executesql(query)
 
+    temp= "SELECT id_comprobante, descripcion FROM COMPROBANTE WHERE producto="+str(id_producto)+"AND ;"
     tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == producto.id_tipo).select().first()
 
 
@@ -262,6 +263,7 @@ def modificar():
     valores['fecha_realizacion'] = producto.fecha_realizacion
     valores['lugar'] = producto.lugar
 
+    documento=[]
     # Los tipos documento tienen que ser tratados diferente y cargados los enlaces con js
     hay_uploads = False
     for row in rows:
@@ -281,7 +283,11 @@ def modificar():
             if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
             elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
             elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX')]))
-            elif tipo_campo in ['Documento']:         fields.append(Field(nombre,'upload',label=rows_campo.nombre+" (*)",uploadfolder=os.path.join(request.folder,'uploads'),requires=[IS_NOT_EMPTY(error_message='Debe subirse un archivo')]))
+            elif tipo_campo in ['Documento']:         
+                documento+= nombre 
+                documento+= str(rows_campo.id_campo)
+
+                fields.append(Field(nombre,'upload',label=rows_campo.nombre+" (*)",uploadfolder=os.path.join(request.folder,'uploads'),requires=[IS_NOT_EMPTY(error_message='Debe subirse un archivo')]))
             elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xxxx')]))
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
             elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
@@ -623,3 +629,37 @@ def eliminar_comprobante():
 
 
     db(db.COMPROBANTE.id_comprobante == id_comprobante).delete()
+
+def eliminar_documento():
+
+    if not request.args:
+        raise HTTP(404)
+    id_documento = request.args(0)
+
+    admin = get_tipo_usuario(session)
+
+    query = "SELECT nombre FROM CAMPO WHERE nombre="+id_documento+";"
+    documento = db.executesql(query)
+
+    pdf = os.path.join(request.folder,'uploads', documento[0][0])
+    try:
+        os.unlink(pdf)
+    except Exception,e:
+        print "Exception: "
+        print e
+
+    db(db.COMPROBANTE.id_comprobante == id_documento).delete()
+
+def get_documento():
+    admin = get_tipo_usuario(session)
+
+    if not request.args:
+        raise HTTP(404)
+    query = "SELECT nombre FROM CAMPO WHERE nombre="+request.args(0)+";"
+    documento = db.executesql(query)
+
+    pdf = os.path.join(request.folder,'uploads',documento[0][0])
+    data = open(pdf,"rb").read()
+
+    response.headers['Content-Type']='application/pdf'
+    return data

@@ -92,7 +92,7 @@ def ver_producto():
     campos = db(db.PRODUCTO_TIENE_CAMPO.id_prod == producto.id_producto).select()
 
     elementos = []
-
+    documento= []
     for campo_valor in campos:
         campo = db(db.CAMPO.id_campo == campo_valor.id_campo).select().first()
         nombre_campo = campo.nombre
@@ -105,7 +105,12 @@ def ver_producto():
             pass
 
         elementos.append(Field(nombre_campo, default=campo_valor.valor_campo, writable=False))
-
+        
+        if campo.tipo_campo=="Documento":
+            temp=[str(campo.id_campo), nombre_campo ]
+            documento += temp
+        print (documento)
+        
     if len(elementos) != 0:
         form_datos = SQLFORM.factory(*elementos, readonly=True)
 
