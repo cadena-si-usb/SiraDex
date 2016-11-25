@@ -14,9 +14,6 @@ def construir_formulario_agregar_tipo():
 
     admin = get_tipo_usuario(session)
 
-    if (admin==0):
-        redirect(URL(c ="default",f="index"))
-
     lista_programas =  db(db.PROGRAMA.papelera == False).select()
     programas = {}
 
@@ -54,9 +51,6 @@ def construir_formulario_agregar_tipo():
 def construir_formulario_editar_tipo():
 
     admin = get_tipo_usuario(session)
-
-    if (admin==0):
-        redirect(URL(c ="default",f="index"))
 
     lista_programas = db(db.PROGRAMA.papelera == False).select()
     programas = {}
@@ -102,9 +96,6 @@ def construir_formulario_editar_tipo():
 def gestionar():
 
     admin = get_tipo_usuario(session)
-
-    if (admin==0):
-        redirect(URL(c ="default",f="index"))
 
     formulario_agregar_tipo = construir_formulario_agregar_tipo()
     formulario_editar_tipo = construir_formulario_editar_tipo()
@@ -236,9 +227,6 @@ tambien tiene una tabla con los campos que ya han sido agregados
 def formulario_agregar_tipo_campos():
 
     admin = get_tipo_usuario(session)
-
-    if (admin==0):
-        redirect(URL(c ="default",f="index"))
 
     # Se definen los posibles tipos de campo.
     tipo_campos = ['Fecha', 'Telefono', 'Texto Corto','Documento','Cantidad Entera','Cantidad Decimal', 'Texto Largo', 'Cedula']
