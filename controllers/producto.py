@@ -437,8 +437,10 @@ def obtener_actividades():
     for tipo in tiposA:
         if tipo['papelera']==False :
             concat += '<option value='+str(tipo['id_tipo'])+'>'+tipo['nombre']+'</option>'
-
-    aux = programa.descripcion.replace('\n','.')
+    print '>>'
+    print programa
+    print '<<'
+    aux = programa.descripcion.replace('\r\n','.')
     descripcion = "<div class=\"col-sm-offset-1\"><h4>Descripcion del Programa:</h4><p>"+aux+"</p></div>"
     html = "jQuery('#lista_tipos').empty().append('"+concat+"');jQuery('#descripcion_programa').empty().append('"+descripcion+"')"
     return html

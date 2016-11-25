@@ -171,7 +171,13 @@ $(document).ready(function () {
 		    alert('solo se permite cargar archivos PDF');
 		    $(this).val('');
 		    $(this).filestyle('clear');
-
+		}
+		
+		if (this.files[0].size > 2097152){
+		var text = 'solo se permiten archivos de hasta 2 MB, el archivo que se cargo es de '+		((this.files[0].size)/1024/1024)+' MB.'; 
+	        alert(text);
+		    $(this).val('');
+		    $(this).filestyle('clear');
 		}
 	});
 

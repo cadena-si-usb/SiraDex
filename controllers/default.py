@@ -14,6 +14,7 @@ from usbutils import get_ldap_data, random_key
 from funciones_siradex import get_tipo_usuario,get_tipo_usuario_not_loged
 import urllib2
 from notificaciones import *
+import pygal
 ### required - do no delete
 def user(): return dict(form=auth())
 def download(): return response.download(request,db)
@@ -128,7 +129,9 @@ def perfil():
                     "Por Validar":[]
                     }
 
+
         grafica = URL('default','grafica')
+        tabla = URL('default','tabla')
 
         for row in rows:
             if row.estado == "Validado":
@@ -154,13 +157,51 @@ def grafica():
         datos = db.executesql(query)
         num_productos = db.executesql(query2)[0][0]
 
-        import pygal
         pie_chart = pygal.Pie(height=300, width=400,background = 'red')
         #pie_chart.title = 'Productos del usuario'
         for producto in datos:
             porcentaje = (producto[2]*100)//num_productos
             pie_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])
+
         return pie_chart.render()
+
+def tabla():
+    fecha_hasta = datetime.date.today().year
+    fecha_desde = fecha_hasta - 10
+    query = "select p.id_programa, count(p.id_programa), extract(year from prod.fecha_realizacion) as yy" + \
+        " from ((programa as p inner join tipo_actividad as a on p.id_programa=a.id_programa)" + \
+        " inner join producto as prod on prod.id_tipo=a.id_tipo and prod.usbid_usu_creador=\'"+ session.usuario["usbid"] +\
+        "\' and prod.estado=\'Validado\') group by p.id_programa, extract(year from prod.fecha_realizacion);"
+
+    
+    productos = db.executesql(query)
+
+    #programas = db(db.PROGRAMA['papelera']==False).select().as_list()
+    programas = db(db.PROGRAMA).select().as_list()
+
+    programas_dict = {}
+    for programa in programas:
+        ident = programa['id_programa']
+        nombre = programa['nombre']
+        abrev = programa['abreviacion']
+        programas_dict[ident] = {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':[0 for x in range(11)]}
+    
+    for producto in productos:
+        identificador = producto[0]
+        anio = int(producto[2])
+        index = anio-fecha_desde
+        if (index <= 0):
+            index=0        
+        programas_dict[identificador]['repeticiones'][index]+= producto[1]
+
+    
+    line_chart = pygal.Bar()
+    line_chart.x_labels = map(str, range(fecha_desde, fecha_hasta + 1))
+
+    for key in programas_dict:
+        line_chart.add(programas_dict[key]['abreviacion'],programas_dict[key]['repeticiones'])
+
+    return line_chart.render_table(transpose=True)
 
 def EditarPerfil():
     if session.usuario != None:
