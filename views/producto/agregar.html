@@ -11,9 +11,9 @@
 <div class="col-lg-12">
 	<p>{{="Descripcion: "+descripcion_actividad}}</p>
 	<h4> Formulario </h4>
-    <p class="text-justify">
-		Los campos con asteriscos <span style="color:red">*</span> son obligatorios
-    </p>
+  <p class="text-justify">
+	Los campos con asteriscos <span style="color:red">*</span> son obligatorios.
+  </p>
 </div>
 {{end}}
 
@@ -25,6 +25,10 @@
 			<div class="tab-pane">
             	{{=form}}
 			</div>
+			<center><p>
+				 Una vez enviado su producto no podrá editarlo, este esperara a ser evaluado por el Comité de Evaluación
+				 de Decanato de Extensión. Si desea editarlo más tarde puede guardarlo como Borrador.
+			</p></center>
 		</div>
 	</div>
 </div>
@@ -42,6 +46,9 @@
     float: none;
     margin-left: -12%;
 	  margin-top: 4px;
+	}
+	.blue-add{
+		margin-left: 15%;
 	}
 </style>
 

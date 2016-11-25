@@ -26,6 +26,10 @@
 
 					{{=form}}
 			</div>
+			<center><p>
+				 Una vez enviado su producto no podrá editarlo, este esperara a ser evaluado por el Comité de Evaluación
+				 de Decanato de Extensión. Si desea editarlo más tarde puede guardarlo como Borrador.
+			</p></center>
 		</div>
 	</div>
 </div>
@@ -41,6 +45,9 @@
     float: none;
     margin-left: -12%;
 	  margin-top: 4px;
+	}
+	.blue-add{
+		margin-left: 15%;
 	}
 </style>
 <script type="text/javascript">
@@ -243,7 +250,7 @@
 
 			$('.form-horizontal').submit(function(){
 				var infor_cargada = false;
-				
+
 				if($('#no_table_nombre').val()=="" ){
 					alert("El nombre del producto no puede estar vacio ");
 					return false;
@@ -266,7 +273,7 @@
 
 				if($('.obligatoria').val()==""){
 					alert("Todos los campos obligatorios  ");
-					return false; 
+					return false;
 				}
 
 				if($('.Cedula').val()!=""){
@@ -286,7 +293,7 @@
 							alert("No es el formato del numero de telefono adecuado ");
 							return false;
 						}
-					}	
+					}
 				}
 
 

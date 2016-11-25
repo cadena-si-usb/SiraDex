@@ -16,7 +16,6 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.enums  import *
 from funciones_siradex import get_tipo_usuario
 
-
 def gestionar():
     admin = get_tipo_usuario(session)
 
@@ -34,6 +33,7 @@ def gestionar():
     cant_esp = 0
     cant_val = 0
     cant_rec = 0
+    cant_bor = 0
 
     for row in rows:
         dict_campos = dict()
@@ -58,10 +58,14 @@ def gestionar():
             cant_esp += 1
         elif row["estado"] == "Validado":
             cant_val += 1
-        elif row["estado"] == "No Validado":
+        # solo los creadores pueden ver los no validados
+        elif row["estado"] == "No Validado" and row['usbid_usu_creador'] == session.usuario['usbid']:
             cant_rec += 1
+        # solo los creadores pueden ver los borrdores
+        elif row["estado"] == "Borrador" and row['usbid_usu_creador'] == session.usuario['usbid'] :
+            cant_bor += 1
 
-    # Para el modal de Agregar actividad
+    # Para el modal de Agregar Producto
     programas = db(db.PROGRAMA.papelera==False).select('nombre')
     formulario = SQLFORM.factory(
         Field('programa', requires=IS_NOT_EMPTY()),
@@ -141,7 +145,7 @@ def agregar():
 
         if obligatorio:
             obl[nombre]= tipo_campo
-            if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
+            if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',label=rows_campo.nombre+"  (*)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
             elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
             elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX')]))
             elif tipo_campo in ['Documento']:         fields.append(Field(nombre,'upload',label=rows_campo.nombre+" (*)",uploadfolder=os.path.join(request.folder,'uploads') ,requires=[IS_NOT_EMPTY(error_message='Debe subirse un archivo')]))
@@ -172,10 +176,11 @@ def agregar():
     print url
 
 
-    form=SQLFORM.factory(*fields, upload=url)
-    form.element(_type='submit')['_class']="btn blue-add btn-block btn-border "
-    form.element(_type='submit')['_value']="Agregar"
+
+    form=SQLFORM.factory(*fields, upload=url, buttons = [INPUT(_value='Guardar como Borrador',_type="submit", _class="btn blue-add btn-block btn-border ", _name="borrador"),
+                                                         INPUT(_value='Enviar Producto',_type="submit", _class="btn blue-add btn-block btn-border ")])
     form.element()
+
 
     for i in obl.keys():
         form.element(_name=i)['_class']="form-control obligatoria "+ obl[i]
@@ -189,8 +194,13 @@ def agregar():
 
     if form.process().accepted:
         no = ['nombre','descripcion','fecha_realizacion','lugar']
+
+        estado = "Por Validar"
+        if request.vars.borrador:
+            #Verificamos si se quiere es un borrador.
+            estado = "Borrador"
         dicc_producto = db.PRODUCTO.insert(id_tipo = tipo,nombre=form.vars.nombre, descripcion=form.vars.descripcion,\
-                                      estado='Por Validar',fecha_realizacion=form.vars.fecha_realizacion, fecha_modificacion=now, \
+                                      estado= estado, fecha_realizacion=form.vars.fecha_realizacion, fecha_modificacion=now, \
                                       lugar = form.vars.lugar, usbid_usu_creador= session.usuario['usbid'])
         id_producto = dicc_producto['id_producto']
 
@@ -234,7 +244,7 @@ def agregar():
                     campo = var
 
                 #Ignora campos de autor
-                if campo[0:5] != 'autor':
+                if campo[0:5] != 'autor' and campo[0:8] != 'borrador':
                     campo = campo.replace("_"," ")
                     print "Lo imprimes: " + campo
                     id_camp = db(db.CAMPO.nombre==campo).select().first().id_campo
@@ -355,10 +365,9 @@ def modificar():
         fields.append(Field("c0mpr0bant3_"+str(i+1), 'upload', autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), label=''))
         fields.append(Field("d3scr1pc10n_comprobante_"+str(i+1), 'string', label="Descripción"))
 
-
-    form=SQLFORM.factory(*fields, uploads=URL('download'))
-    form.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
-    form.element(_type='submit')['_value']="Modificar"
+    form=SQLFORM.factory(*fields, upload=URL('download'), buttons = [INPUT(_value='Guardar como Borrador',_type="submit", _class="btn blue-add btn-block btn-border ", _name="borrador"),
+                                                         INPUT(_value='Enviar Producto',_type="submit", _class="btn blue-add btn-block btn-border ")])
+    form.element()
 
     print valores
     # Le escribimos la informacion a las vistas
@@ -377,7 +386,11 @@ def modificar():
     # Al aceptar el formulario
     if form.process().accepted:
         no = ['nombre','descripcion','fecha_realizacion','fecha_modificacion','lugar']
-        sql = "UPDATE PRODUCTO SET estado = 'Por Validar' WHERE id_producto = '"+str(id_producto)+"';"
+        sql = ''
+        if request.vars.borrador:
+            sql = "UPDATE PRODUCTO SET estado = 'Borrador' WHERE id_producto = '"+str(id_producto)+"';"
+        else:
+            sql = "UPDATE PRODUCTO SET estado = 'Por Validar' WHERE id_producto = '"+str(id_producto)+"';"
 
         sql2 = "UPDATE PRODUCTO SET fecha_modificacion='"+str(now.date())+"' WHERE id_producto = '"+str(id_producto)+"';"
         print "\n\nel sql quedo:" +sql
@@ -417,7 +430,7 @@ def modificar():
                 print "Exception: "
                 print e
 
-            if var[0:5] != 'autor':
+            if var[0:5] != 'autor' and var[0:8] != 'borrador':
                 print "trabajare con: " + var
                 valor_anterior = valores[var]
                 print "valor anterior: " + str(valor_anterior)

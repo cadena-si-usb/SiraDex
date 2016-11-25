@@ -15,6 +15,7 @@
 '%Y-%m-%d %H:%M:%S': '%Y-%m-%d %H:%M:%S',
 '(something like "it-it")': '(algo como "eso-eso")',
 '22El mensaje no puede estar vacio': '22El mensaje no puede estar vacio',
+'< Back': '< Back',
 '@markmin\x01An error occured, please [[reload %s]] the page': 'Ha ocurrido un error, por favor [[recargar %s]] la página',
 '@markmin\x01Number of entries: **%s**': 'Número de entradas: **%s**',
 'A new version of web2py is available': 'Hay una nueva versión de web2py disponible',
