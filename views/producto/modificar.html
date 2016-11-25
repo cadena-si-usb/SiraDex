@@ -161,7 +161,7 @@
 						    					</td>\
 						    					<td class="center-vertically">\
 	                                    			<center>\
-	                                   					<a onClick = "if(confirm(\'¿Está seguro de que desea eliminar este comprobante?\')) {window.location.href=\'{{=URL(f="eliminar_documento", args=[documento[0], id_producto])}}\'\
+	                                   					<a onClick = "if(confirm(\'¿Está seguro de que desea eliminar este Documento?\')) {window.location.href=\'{{=URL(f="eliminar_documento", args=[documento[0], id_producto])}}\';$(\'#no_table_{{=documento[1]}}__row\').find(\'.group-span-filestyle\').removeClass(\'hidden\');\
 	                                   						;}">\
 	                                                        <span class="glyphicon glyphicon-remove red"></span>\
 	                                    				</a>\
@@ -174,10 +174,12 @@
 							</div>\
 						</div>';
 
+
 			{{if len(documento) != 0 :}}
 				$('#no_table_{{=documento[1]}}__row').find('.group-span-filestyle').before(perro);
 				$('#no_table_{{=documento[1]}}__row').find('.group-span-filestyle').addClass('hidden');
 				$('#no_table_{{=documento[1]}}__row').find('.form-control').addClass('hidden');
+
 			{{pass}}
 
 
