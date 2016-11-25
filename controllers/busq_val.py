@@ -286,8 +286,7 @@ def graficaBar():
     line_chart.add('IE',      [85.8, 84.6, 84.7, 74.5,   66, 58.6, 54.7, 44.8, 36.2, 26.6, 20.1])
     line_chart.add('Others',  [14.2, 15.4, 15.3,  8.9,    9, 10.4,  8.9,  5.8,  6.7,  6.8,  7.5])
     line_chart.value_formatter = lambda x: '%.2f%%' % x if x is not None else '∅'''
-    
-    fechas = {}
+
     programas = db(db.PROGRAMA['papelera']==False).select().as_list()
 
     programas_dict = {}
@@ -295,7 +294,7 @@ def graficaBar():
         ident = programa['id_programa']
         nombre = programa['nombre']
         abrev = programa['abreviacion']
-        programas_dict[ident] = {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':[None for x in range(11)]}
+        programas_dict[ident] = {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':[0 for x in range(11)]}
     for producto in productos:
         identificador = producto[5]
         anio = producto[4].year

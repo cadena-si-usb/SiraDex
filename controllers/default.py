@@ -129,8 +129,8 @@ def perfil():
                     "Por Validar":[]
                     }
 
-
-        grafica = URL('default','grafica')
+        grafica = URL('default','tabla')
+        #grafica = URL('default','grafica')
         tabla = URL('default','tabla')
 
         for row in rows:
