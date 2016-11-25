@@ -532,6 +532,21 @@ def descargar_comprobante():
     response.headers["Content-Disposition"] = "attachment; filename=%s" % comprobante[0][0]
     return data
 
+def descargar_documento():
+    admin = get_tipo_usuario(session)
+
+    if not request.args:
+        raise HTTP(404)
+    query = "SELECT nombre FROM CAMPO WHERE id_campo="+request.args(0)+";"
+    documento = db.executesql(query)
+
+    pdf = os.path.join(request.folder,'uploads',documento[0][0])
+    data = open(pdf,"rb").read()
+
+    response.headers['Content-Type']='application/pdf'
+    response.headers["Content-Disposition"] = "attachment; filename=%s" % documento[0][0]
+    return data
+
 #Funcion para exportar PDF de un producto
 def get_pdf():
     admin = get_tipo_usuario(session)
