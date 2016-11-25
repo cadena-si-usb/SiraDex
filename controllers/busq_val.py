@@ -44,7 +44,6 @@ def busqueda():
         elif (session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador"):
             sql += ";"
 
-        print(sql)
         productos = db.executesql(sql)
 
         
