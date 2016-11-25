@@ -104,13 +104,13 @@ def ver_producto():
         except:
             pass
 
-        elementos.append(Field(nombre_campo, default=campo_valor.valor_campo, writable=False))
-        
         if campo.tipo_campo=="Documento":
             temp=[str(campo.id_campo), nombre_campo ]
-            documento += temp
-        print (documento)
-        
+            documento += [temp]
+        else :
+             elementos.append(Field(nombre_campo, default=campo_valor.valor_campo, writable=False))
+    
+    print(documento)
     if len(elementos) != 0:
         form_datos = SQLFORM.factory(*elementos, readonly=True)
 
