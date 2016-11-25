@@ -58,7 +58,7 @@ def busqueda():
 
         graficaPie = URL(c='busq_val',f='graficaPie',vars=dict(productos=productos))
         graficaBar = URL(c='busq_val',f='graficaBar',vars=dict(productos=productos))
-        graficaLine = URL('busq_val','graficaLine')     
+        tabla = URL(c='busq_val',f='tabla',vars=dict(productos=productos))     
         
         return locals()
     except:
@@ -92,7 +92,7 @@ def ver_producto():
     campos = db(db.PRODUCTO_TIENE_CAMPO.id_prod == producto.id_producto).select()
 
     elementos = []
-
+    documento= []
     for campo_valor in campos:
         campo = db(db.CAMPO.id_campo == campo_valor.id_campo).select().first()
         nombre_campo = campo.nombre
@@ -105,7 +105,12 @@ def ver_producto():
             pass
 
         elementos.append(Field(nombre_campo, default=campo_valor.valor_campo, writable=False))
-
+        
+        if campo.tipo_campo=="Documento":
+            temp=[str(campo.id_campo), nombre_campo ]
+            documento += temp
+        print (documento)
+        
     if len(elementos) != 0:
         form_datos = SQLFORM.factory(*elementos, readonly=True)
 
@@ -253,6 +258,7 @@ def rechazar(id_producto):
 
 def graficaPie():
     productos = request.vars.productos
+
     pie_chart = pygal.Pie()
     total_productos = len(productos)
 
@@ -281,13 +287,7 @@ def graficaBar():
 
     line_chart = pygal.Bar()
     line_chart.x_labels = map(str, range(fecha_desde, fecha_hasta + 1))
-    '''line_chart.add('Firefox', [None, None, 0, 16.6,   25,   31, 36.4, 45.5, 46.3, 42.8, 37.1])
-    line_chart.add('Chrome',  [None, None, None, None, None, None,    0,  3.9, 10.8, 23.8, 35.3])
-    line_chart.add('IE',      [85.8, 84.6, 84.7, 74.5,   66, 58.6, 54.7, 44.8, 36.2, 26.6, 20.1])
-    line_chart.add('Others',  [14.2, 15.4, 15.3,  8.9,    9, 10.4,  8.9,  5.8,  6.7,  6.8,  7.5])
-    line_chart.value_formatter = lambda x: '%.2f%%' % x if x is not None else '∅'''
     
-    fechas = {}
     programas = db(db.PROGRAMA['papelera']==False).select().as_list()
 
     programas_dict = {}
@@ -295,46 +295,60 @@ def graficaBar():
         ident = programa['id_programa']
         nombre = programa['nombre']
         abrev = programa['abreviacion']
-        programas_dict[ident] = {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':[None for x in range(11)]}
+        programas_dict[ident] = {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':[0 for x in range(11)]}
+
     for producto in productos:
-        print '>>'
-        print producto.split('\'')[4].split(',')[2]
-        print '<<'
-        identificador = producto.split('\'')[4].split(',')[2]
-        anio = int(producto.split('\'')[4].split(',')[3].split('(')[1])
+        id_programa = int(producto.split('\'')[4].split(',')[-2])
+        anio = int(producto.split('\'')[4].split(',')[3][15:])
         i = anio-fecha_desde
+
         if (i <= 0):
             i=0
-        if programas_dict[identificador]['repeticiones'][i]==None:
-            programas_dict[identificador]['repeticiones'][i] = 1
-        else:
-            programas_dict[identificador]['repeticiones'][i]+=1
+       
+        programas_dict[id_programa]['repeticiones'][i]+=1
 
-    for key in programas_dict:
-        line_chart.add(programas[key]['abreviacion'], [{'value':programas[key]['repeticiones'], 'label':programas[key]['nombre']}])
 
-    # para la tabla
-    #line_chart.render_table(style=True, total=True, transpose=True)
+    for key in programas_dict.keys():
+        line_chart.add(programas_dict[key]['abreviacion'], programas_dict[key]['repeticiones'])
+
+
     return line_chart.render()
 
-def graficaLine():
+def tabla():
 
-    query = "select programa.nombre, programa.abreviacion, count(producto.nombre)" + \
-    " from ((programa inner join tipo_actividad on programa.id_programa=tipo_actividad.id_programa)" + \
-    " inner join producto on producto.id_tipo=tipo_actividad.id_tipo and producto.usbid_usu_creador=\'"+ session.usuario["usbid"] +\
-    "\' and producto.estado=\'Validado\') group by programa.nombre, programa.abreviacion;"
+    productos = request.vars.productos
 
-    query2 = "select count(producto.nombre) from producto where producto.usbid_usu_creador=\'"+ session.usuario["usbid"]+"\' and producto.estado=\'Validado\';"
 
-    datos = db.executesql(query)
-    num_productos = db.executesql(query2)[0][0]
+    fecha_hasta = date.today().year
+    fecha_desde = fecha_hasta - 10
 
-    import pygal
-    line_chart = pygal.Line()
-    for producto in datos:
-        porcentaje = (producto[2]*100)//num_productos
-        line_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])
-    return line_chart.render()             
+    line_chart = pygal.Bar()
+    line_chart.x_labels = map(str, range(fecha_desde, fecha_hasta + 1))
+    
+    programas = db(db.PROGRAMA['papelera']==False).select().as_list()
+
+    programas_dict = {}
+    for programa in programas:
+        ident = programa['id_programa']
+        nombre = programa['nombre']
+        abrev = programa['abreviacion']
+        programas_dict[ident] = {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':[0 for x in range(11)]}
+
+    for producto in productos:
+        id_programa = int(producto.split('\'')[4].split(',')[-2])
+        anio = int(producto.split('\'')[4].split(',')[3][15:])
+        i = anio-fecha_desde
+
+        if (i <= 0):
+            i=0
+       
+        programas_dict[id_programa]['repeticiones'][i]+=1
+
+
+    for key in programas_dict.keys():
+        line_chart.add(programas_dict[key]['abreviacion'], programas_dict[key]['repeticiones'])
+
+    return line_chart.render_table(transpose=True)            
 
 def eliminar():
 

@@ -100,7 +100,7 @@ $(document).ready(function () {
 
 	textoRestante1(maxLongNombre, $("#no_table_lugar"));
 
-
+ 
 	$('#no_table_c0mpr0bant3_1__row').before('	<div id="comprobantes__row" class="form-group">\
 													<h3 class="col-sm-offset-3">Comprobantes</h3>\
 													\
@@ -174,7 +174,7 @@ $(document).ready(function () {
 		}
 		
 		if (this.files[0].size > 2097152){
-		var text = 'solo se permiten archivos de hasta 2 MB, el archivo que se cargo es de '+		((this.files[0].size)/1024/1024)+' MB.'; 
+		var text = 'Solo se permiten archivos de hasta 2 MB, el archivo que se cargo es de '+		((this.files[0].size)/1024/1024).toFixed(1)+' MB';
 	        alert(text);
 		    $(this).val('');
 		    $(this).filestyle('clear');
