@@ -42,10 +42,9 @@ $(document).ready(function(){
     }
   });
 
-  $("#botonDelete").click(function (event){
-    var id_tipo = $("#botonDelete").attr("data-id-tipo");
-    ajax("{{=URL('enviar_tipo_papelera')}}/"+id_tipo,[]);
-    location.reload();
+  $('#myModalInhabilitar').on('show.bs.modal', function(e){
+    var enlace = $(e.relatedTarget).data('enlace-inhabilitar');
+    $("#botonDelete").attr("href", enlace );
   });
 
   $('#myModalEditar').on('show.bs.modal', function(e){
@@ -71,7 +70,7 @@ $(document).ready(function(){
 
     // Muestra la cantidad de caracteres disponible en el textarea de descripción.
     textoRestante(maxLongCodigo, $(e.currentTarget).find("#no_table_Codigo"));
-  }); 
+  });
 
   // Si hay errores en el formulario agregar...
   if (mensajeErrorAgregar != '{}'){
@@ -110,14 +109,14 @@ $(document).ready(function(){
 
     // Verificar si la longitud del titulo es mayor a 18 para así reacomodarlo en la columna correspondiente.
     if (tituloLong >= 18){
-      var splitTitulo = titulo.split(" ");     
+      var splitTitulo = titulo.split(" ");
       var restTitulo = splitTitulo[0];
       amountText = splitTitulo[0].length;
       i = 1;
 
       while (true){
         if (splitTitulo.length > i && amountText + splitTitulo[i].length + 1 < 18){
-            restTitulo += " " + splitTitulo[i];  
+            restTitulo += " " + splitTitulo[i];
             amountText += splitTitulo[i].length;
             i++;
         }else{
@@ -135,14 +134,14 @@ $(document).ready(function(){
     }
 
     // Si la descripción es menor a 46 se muestra sin modificación.
-    // Si es mayor a 46 entonces se hace el split y se muestra restContent y 
+    // Si es mayor a 46 entonces se hace el split y se muestra restContent y
     // result dependiendo si se quiere ver más o si no.
     if (descripcionLong < 36){
       $(this).find(".showMoreContent").hide();
     }else{
       var restContent = '';
       var result = '';
-      
+
       var splitDescription = descripcion.split(" ");
       amountText = 0;
       i = 1;
@@ -150,12 +149,12 @@ $(document).ready(function(){
       // Para lo que se mostrará por defecto.
       restContent += splitDescription[0];
       amountText += splitDescription[0].length;
- 
+
       while (true){
         if (splitDescription.length > i && amountText + splitDescription[i].length + 1 < 30){
-            restContent += " " + splitDescription[i]; 
+            restContent += " " + splitDescription[i];
             amountText += splitDescription[i].length;
-            i++; 
+            i++;
         }else{
           restContent += '\n';
           break;
@@ -173,7 +172,7 @@ $(document).ready(function(){
 
         while (true){
           if (splitDescription.length > i && amountText + splitDescription[i].length + 1 < 30){
-              result += " " + splitDescription[i];  
+              result += " " + splitDescription[i];
               amountText += splitDescription[i].length;
               i++;
           }else{

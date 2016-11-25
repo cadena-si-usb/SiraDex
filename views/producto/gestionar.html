@@ -10,12 +10,12 @@
     <!-- icono editar -->
     <a id="editar" href="{{=URL(c='default',f='EditarPerfil')}}" >
     <span class="glyphicon glyphicon-edit green-icn"></span>
-    <!-- {{=IMG(_src=URL('static', 'icon', args='i_edit.png'),_style='max-height:1em') }} --> 
+    <!-- {{=IMG(_src=URL('static', 'icon', args='i_edit.png'),_style='max-height:1em') }} -->
     </a>
 {{end}}
 
 {{block descripcion}}
-    <div class="row"> 
+    <div class="row">
         <div class="col-md-3 col-md-offset-9">
         <!-- Datos del usuario -->
                 <div style="margin-bottom: 0em;">
@@ -33,28 +33,28 @@
     <!-- <div class="container">  -->
 
     <br>
-    
+
     <div class="row">
         <div class="col-md-12">
         <!-- Nav tabs -->
         <div class="card">
         <ul class="nav nav-tabs" role="tablist">
-        
+
         <!-- Validados -->
         <li role="presentation" class="active act">
-            <a  href="#activas" 
-                aria-controls="activas" 
-                role="tab" 
+            <a  href="#activas"
+                aria-controls="activas"
+                role="tab"
                 data-toggle="tab">
                 Validados
             </a>
         </li>
-        
+
         <!-- Por Validar -->
         <li role="presentation" class="esp">
-            <a  href="#espera" 
-                aria-controls="espera" 
-                role="tab" 
+            <a  href="#espera"
+                aria-controls="espera"
+                role="tab"
                 data-toggle="tab">
                 Por Validar
             </a>
@@ -62,9 +62,9 @@
 
         <!-- No Validados -->
         <li role="presentation" class="rec">
-            <a  href="#rechazadas" 
-                aria-controls="rechazadas" 
-                role="tab" 
+            <a  href="#rechazadas"
+                aria-controls="rechazadas"
+                role="tab"
                 data-toggle="tab">
                 No Validados
             </a>
@@ -86,20 +86,20 @@
                                 <th><center>Editar</center></th>
                                 <th><center>Descargar</center></th>
                                 <th><center>Eliminar</center></th>
-                        </thead>                
+                        </thead>
                         <tbody id="actividades">
                             {{for x in rows:}}
                                 {{if x.estado == 'Validado':}}
                                 <tr >
-                                    <!-- Nombre 
+                                    <!-- Nombre
 
-                                    <td class="center-vertically detalles" data-toggle="modal" 
+                                    <td class="center-vertically detalles" data-toggle="modal"
                                     data-target="#myModal" data-producto={{=x.id_producto}}> -->
                                     <td class="center-vertically detalles">
                                     {{=x.nombre}}</td>
-                                    
+
                                     <!-- Boton Modificar -->
-                                    <td class="center-vertically"> 
+                                    <td class="center-vertically">
                                     <center>
                                     <span class="glyphicon glyphicon-edit" style="color:#9E9E9E"></span>
                                     </center>
@@ -113,8 +113,8 @@
                                     <a href='/{{=request.application}}/{{=request.controller}}/get_pdf/{{=x.id_producto}}'
                                     class="glyphicon glyphicon-save blue" target="blanck" title="Imprimir Producto {{=x.id_producto}}"></a>
 
-                                    
-                                
+
+
                                 </a>
                                     </center>
                                     </td>
@@ -124,21 +124,21 @@
                                     <span class="glyphicon glyphicon-remove" style="color:#9E9E9E"></span>
                                     </center>
                                     </td>
-                                </tr>                            
+                                </tr>
                                 {{pass}}
                             {{pass}}
                         </tbody>
                     </table>
-        
-        <div class="text-center">
-          <ul class="pagination pagination-lg pager" id="myPager"></ul>
-        </div>
+
+            <div class="text-center">
+              <ul class="pagination pagination-lg pager" id="myPager"></ul>
+            </div>
             <!-- ESTABA AL FINAL PARA LA PAGINACION -->
             <div class="text-center">
               <ul class="pagination pagination-lg pager" id="myPager"></ul>
             </div>
           {{pass}}
-     
+
         </div>
         <!-- Por Validar -->
         <div role="tabpanel" class="tab-pane" id="espera">
@@ -151,7 +151,7 @@
                                 <th>Nombre</th>
                                 <th>Tipo Actividad</th>
                                 <th>Modificación</th>
-                                <th>Realizacion</th>
+                                <th>Finalización</th>
                                 <th><center>Editar</center></th>
                                 <th><center>Descargar</center></th>
                                 <th><center>Eliminar</center></th>
@@ -161,8 +161,8 @@
                                 {{if x.estado == 'Por Validar':}}
                                     <tr>
                                         <!-- Nombre Producto -->
-                                            
-                                        <td class="center-vertically detalles"> 
+
+                                        <td class="center-vertically detalles">
                                         {{=x.nombre}}
                                         </td>
                                         <!-- Nombre Actividad -->
@@ -172,7 +172,7 @@
                                         <!-- Realizacion  -->
                                         <td class="center-vertically"> {{=x.fecha_modificacion}}</td>
                                         <!-- Boton Modificar -->
-                                        <td class="center-vertically"> 
+                                        <td class="center-vertically">
                                         <center>
                                         <span class="glyphicon glyphicon-edit" style="color:#9E9E9E"></span>
                                         </center>
@@ -190,11 +190,18 @@
                                                 <span class="glyphicon glyphicon-remove" style="color:#9E9E9E"></span>
                                             </center>
                                         </td>
-                                    </tr>                             
+                                    </tr>
                                 {{pass}}
                             {{pass}}
                         </tbody>
                     </table>
+                    <div class="text-center">
+                      <ul class="pagination pagination-lg pager" id="myPager"></ul>
+                    </div>
+                        <!-- ESTABA AL FINAL PARA LA PAGINACION -->
+                    <div class="text-center">
+                        <ul class="pagination pagination-lg pager" id="myPager"></ul>
+                    </div>
                 {{pass}}
         </div>
 
@@ -209,11 +216,11 @@
                                 <th>Nombre</th>
                                 <th>Tipo Actividad</th>
                                 <th>Modificación</th>
-                                <th>Realización</th>
+                                <th>Finalización</th>
                                 <th><center>Editar</center></th>
                                 <th><center>Descargar</center></th>
-                                <th><center>Eliminar</center></th>                                   
-                        </thead>                
+                                <th><center>Eliminar</center></th>
+                        </thead>
                         <tbody id="actividades">
                             {{for x in rows:}}
                                 {{if x.estado == 'No Validado':}}
@@ -223,7 +230,7 @@
                                     <td class="center-vertically"><!--   Creacion    --> {{=x.fecha_realizacion}}</td>
                                     <td class="center-vertically"> <!-- Modificacion --> {{=x.fecha_modificacion}}</td>
                                     <!-- Boton Modificar -->
-                                    <td class="center-vertically"> 
+                                    <td class="center-vertically">
                                     <center>
                                     <a href="{{=URL('modificar',args=x.id)}}">
                                     <!-- {{=IMG(_src=URL('static', 'icon/i_edit.png'),_height='25',_title="Modificar") }} -->
@@ -238,7 +245,7 @@
 
                                     <a href='/{{=request.application}}/{{=request.controller}}/get_pdf/{{=x.id_producto}}'
                                     class="glyphicon glyphicon-save blue" target="blanck" title="Imprimir Producto {{=x.id_producto}}"></a>
-                                   
+
                                     </center>
                                     </td>
                                     <!-- Boton Eliminar -->
@@ -250,11 +257,19 @@
                                     </a>
                                     </center>
                                     </td>
-                                </tr>                           
+                                </tr>
                                 {{pass}}
                             {{pass}}
                         </tbody>
                     </table>
+                  </table>
+                  <div class="text-center">
+                    <ul class="pagination pagination-lg pager" id="myPager"></ul>
+                  </div>
+                      <!-- ESTABA AL FINAL PARA LA PAGINACION -->
+                  <div class="text-center">
+                      <ul class="pagination pagination-lg pager" id="myPager"></ul>
+                  </div>
                 {{pass}}
         </div>
 
@@ -287,6 +302,7 @@
                                 {{pass}}
                             </select>
                         </div>
+                        <br><br>
                         <div id="descripcion_programa"></div>
                     </div>
 
@@ -297,7 +313,7 @@
                         </label>
                         <div class="col-sm-8 ">
                             <select class="form-control" name="id_tipo" id="lista_tipos" >
-                                <!--Con el ajax traemos las actividades-->      
+                                <!--Con el ajax traemos las actividades-->
                             </select>
 
                         </div>
@@ -306,7 +322,7 @@
                         <input type="submit" class="col-sm-offset-3 col-sm-8 btn blue-add btn-border " value="Agregar" />
                         <input type="hidden" name="_formname" value="crear_tipo" />
                     </div>
-                </form> 
+                </form>
           </div>
         </div>
       </div>

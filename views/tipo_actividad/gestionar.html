@@ -152,8 +152,8 @@
                                       <a href="#">
                                          <span class="glyphicon glyphicon-remove red"
                                                data-toggle="modal"
-                                               data-target="#myModalDelete"
-                                               data-id-tipo="{{=tipoActividad.id_tipo}}">
+                                               data-target="#myModalInhabilitar"
+                                               data-enlace-inhabilitar="{{=URL(f='enviar_tipo_papelera', args=[tipoActividad.id_tipo])}}">
                                          </span>
                                       </a>
                                   <center>
@@ -199,7 +199,7 @@
 
 <!-- Modal Eliminar-->
 <div class="container">
-  <div class="modal fade" id="myModalDelete" role="dialog">
+  <div class="modal fade" id="myModalInhabilitar" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -210,11 +210,9 @@
             <center> <p>¿Está seguro que quiere inhabilitar este tipo de actividad?</p> </center>
             <br>
             <center>
-                <a href="javascript:location.reload();">
+                <a id="botonDelete" href="#">
                   <button type="button"
-                          class="btn blue-add btn-border"
-                          data-dismiss="modal"
-                          id="botonDelete">
+                          class="btn blue-add btn-border">
                       Inhabilitar</button>
                 </a>
                 <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
@@ -223,5 +221,5 @@
         </div>
       </div>
     </div>
-  </div>
+</div>
 {{end}}

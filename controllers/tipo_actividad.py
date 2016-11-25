@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from funciones_siradex2 import get_tipo_usuario
+from funciones_siradex import get_tipo_usuario
 
 #. --------------------------------------------------------------------------- .
 '''
@@ -11,6 +11,11 @@ Vista de Gestionar Tipo Actividad, tiene las opciones:
 '''
 
 def construir_formulario_agregar_tipo():
+
+    admin = get_tipo_usuario(session)
+
+    if (admin==0):
+        redirect(URL(c ="default",f="index"))
 
     lista_programas =  db(db.PROGRAMA.papelera == False).select()
     programas = {}
@@ -47,6 +52,11 @@ def construir_formulario_agregar_tipo():
     return formulario_agregar_tipo
 
 def construir_formulario_editar_tipo():
+
+    admin = get_tipo_usuario(session)
+
+    if (admin==0):
+        redirect(URL(c ="default",f="index"))
 
     lista_programas = db(db.PROGRAMA.papelera == False).select()
     programas = {}
@@ -90,64 +100,71 @@ def construir_formulario_editar_tipo():
     Gestionar Tipo de Actividad
 '''
 def gestionar():
+
     admin = get_tipo_usuario(session)
-    if admin != -1:
-      formulario_agregar_tipo = construir_formulario_agregar_tipo()
-      formulario_editar_tipo = construir_formulario_editar_tipo()
 
-      # Vista básica
-      if formulario_editar_tipo.accepts(request.vars, session,formname="formulario_editar_tipo"):
-          tipo = db(db.TIPO_ACTIVIDAD.id_tipo == request.vars.Id_tipo).select()[0]
-          tipo.nombre = request.vars.Nombre
-          tipo.codigo = request.vars.Codigo
-          tipo.tipo_p_r = request.vars.Tipo
-          tipo.descripcion = request.vars.Descripcion
-          id_programa = request.vars.Programa
-          tipo.id_programa = id_programa
-          tipo.update_record()                                 # Se actualiza el tipo de actividad.
+    if (admin==0):
+        redirect(URL(c ="default",f="index"))
 
-      if formulario_agregar_tipo.accepts(request.vars, session,formname="formulario_agregar_tipo"):
-          id_programa = request.vars.Programa
-          db.TIPO_ACTIVIDAD.insert(nombre = request.vars.Nombre,
-                                   codigo = request.vars.Codigo,
-                                   tipo_p_r = request.vars.Tipo,
-                                   descripcion = request.vars.Descripcion,
-                                   id_programa = id_programa)
+    formulario_agregar_tipo = construir_formulario_agregar_tipo()
+    formulario_editar_tipo = construir_formulario_editar_tipo()
 
+    # Vista básica
+    if formulario_editar_tipo.accepts(request.vars, session,formname="formulario_editar_tipo"):
+      tipo = db(db.TIPO_ACTIVIDAD.id_tipo == request.vars.Id_tipo).select()[0]
+      tipo.nombre = request.vars.Nombre
+      tipo.codigo = request.vars.Codigo
+      tipo.tipo_p_r = request.vars.Tipo
+      tipo.descripcion = request.vars.Descripcion
+      id_programa = request.vars.Programa
+      tipo.id_programa = id_programa
+      tipo.update_record()                                 # Se actualiza el tipo de actividad.
 
-      if len(request.args) == 0:
+    if formulario_agregar_tipo.accepts(request.vars, session,formname="formulario_agregar_tipo"):
+      id_programa = request.vars.Programa
+      db.TIPO_ACTIVIDAD.insert(nombre = request.vars.Nombre,
+                               codigo = request.vars.Codigo,
+                               tipo_p_r = request.vars.Tipo,
+                               descripcion = request.vars.Descripcion,
+                               id_programa = id_programa)
 
-          listaTipoActividades = db(db.TIPO_ACTIVIDAD.papelera == False).select(db.TIPO_ACTIVIDAD.ALL)
-          programa = dict()
-          programa["nombre"] = None
-          programa["descripcion"] = None
+    if len(request.args) == 0:
 
-
-      else :
-
-          id_programa = request.args[0]
-
-          listaTipoActividades =   db((db.TIPO_ACTIVIDAD.papelera == False)
-                                   & (db.TIPO_ACTIVIDAD.id_programa == id_programa)).select(db.TIPO_ACTIVIDAD.ALL)
-
-          programa = db(db.PROGRAMA.id_programa == id_programa).select(db.PROGRAMA.ALL).first()
+        listaTipoActividades = db(db.TIPO_ACTIVIDAD.papelera == False).select(db.TIPO_ACTIVIDAD.ALL)
+        programa = dict()
+        programa["nombre"] = None
+        programa["descripcion"] = None
 
 
-      return dict(admin = get_tipo_usuario(session)
-              , listaTipoActividades = listaTipoActividades
-              , programa_nombre = programa["nombre"], programa_descripcion = programa["descripcion"]
-              , formulario_agregar_tipo = formulario_agregar_tipo
-              , formulario_editar_tipo = formulario_editar_tipo
-              , hayErroresAgregar = formulario_agregar_tipo.errors
-              , hayErroresEditar = formulario_editar_tipo.errors)
-    else:
-      redirect(URL(c="default",f="index"))
+    else :
+
+        id_programa = request.args[0]
+
+        listaTipoActividades =   db((db.TIPO_ACTIVIDAD.papelera == False)
+                                 & (db.TIPO_ACTIVIDAD.id_programa == id_programa)).select(db.TIPO_ACTIVIDAD.ALL)
+
+        programa = db(db.PROGRAMA.id_programa == id_programa).select(db.PROGRAMA.ALL).first()
+
+
+    return dict(admin = get_tipo_usuario(session)
+          , listaTipoActividades = listaTipoActividades
+          , programa_nombre = programa["nombre"], programa_descripcion = programa["descripcion"]
+          , formulario_agregar_tipo = formulario_agregar_tipo
+          , formulario_editar_tipo = formulario_editar_tipo
+          , hayErroresAgregar = formulario_agregar_tipo.errors
+          , hayErroresEditar = formulario_editar_tipo.errors)
 
 #. --------------------------------------------------------------------------- .
 '''
     Permite añadir un nuevo tipo de actividad.
 '''
 def agregar_tipo():
+
+    admin = get_tipo_usuario(session)
+
+    if (admin==0):
+        redirect(URL(c ="default",f="index"))
+
     # Configuro widgets para el formulario de Agregar Tipo Actividad
     db.TIPO_ACTIVIDAD.nombre.widget = SQLFORM.widgets.string.widget
     db.TIPO_ACTIVIDAD.descripcion.widget = SQLFORM.widgets.text.widget
@@ -218,6 +235,11 @@ tambien tiene una tabla con los campos que ya han sido agregados
 '''
 def formulario_agregar_tipo_campos():
 
+    admin = get_tipo_usuario(session)
+
+    if (admin==0):
+        redirect(URL(c ="default",f="index"))
+
     # Se definen los posibles tipos de campo.
     tipo_campos = ['Fecha', 'Telefono', 'Texto Corto','Documento','Cantidad Entera','Cantidad Decimal', 'Texto Largo', 'Cedula']
 
@@ -263,6 +285,11 @@ encuentra en la base)
 '''
 def eliminar_campo():
 
+    admin = get_tipo_usuario(session)
+
+    if (admin==0):
+        redirect(URL(c ="default",f="index"))
+
     id_tipo = int(request.args[0])
     id_campo = int(request.args[1])
 
@@ -285,6 +312,11 @@ def eliminar_campo():
 '''
 def enviar_tipo_papelera():
 
+    admin = get_tipo_usuario(session)
+
+    if (admin==0):
+        redirect(URL(c ="default",f="index"))
+
     id_tipo = int(request.args[0])
     tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
     tipo.update(papelera=True)
@@ -294,6 +326,11 @@ def enviar_tipo_papelera():
 
 #. --------------------------------------------------------------------------- .
 def ver_tipo_actividad():
+
+    admin = get_tipo_usuario(session)
+
+    if (admin==0):
+        redirect(URL(c ="default",f="index"))
 
     id_tipo = request.args[0]
 
@@ -403,7 +440,11 @@ def ver_tipo_actividad():
 
 def editar_tipo():
 
-    admin = get_tipo_usuario(session)  # Obtengo el tipo del usuario actual.
+    admin = get_tipo_usuario(session)
+
+    if (admin==0):
+        redirect(URL(c ="default",f="index"))
+
     id = request.args[0]        # Se identifica cual tipo de actividad se identificará.
 
     session.tipo_id_editar = id
@@ -476,6 +517,11 @@ campo de un catalogo.
 '''
 def formularioEditarCampo():
 
+    admin = get_tipo_usuario(session)
+
+    if (admin==0):
+        redirect(URL(c ="default",f="index"))
+
     formulario = SQLFORM.factory(
                     Field('nombre',
                           requires = [IS_NOT_EMPTY(error_message='El nombre del campo no puede quedar vacio.'),
@@ -491,6 +537,5 @@ def formularioEditarCampo():
                               'obligatorio' : 'Obligatorio'}
 
                    )
-
 
     return formulario
