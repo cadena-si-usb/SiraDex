@@ -24,6 +24,7 @@
 		<div class="card">
 			<div class="tab-pane">
             	{{=form}}
+
 			</div>
 			<center><p>
 				 Una vez enviado su producto no podrá editarlo, este esperara a ser evaluado por el Comité de Evaluación
@@ -98,7 +99,7 @@ $(document).ready(function () {
 	// Muestra la cantidad de caracteres disponible en el textfield de nombre.
 
 
-	$("#no_table_fecha_realizacion").siblings(".help-block").html( "                                         El formato para la fecha es de YYYY-MM-DD");
+	$("#no_table_fecha_realizacion").siblings(".help-block").html( "                                         El formato para la fecha es de YYYY-MM-DD");	
 
 
 	$(".Cedula").click(function(){
@@ -265,7 +266,13 @@ $(document).ready(function () {
 		    alert('solo se permite cargar archivos PDF');
 		    $(this).val('');
 		    $(this).filestyle('clear');
-
+		}
+		
+		if (this.files[0].size > 2097152){
+		var text = 'Solo se permiten archivos de hasta 2 MB, el archivo que se cargo es de '+		((this.files[0].size)/1024/1024).toFixed(1)+' MB';
+	        alert(text);
+		    $(this).val('');
+		    $(this).filestyle('clear');
 		}
 	});
 
