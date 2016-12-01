@@ -1,0 +1,353 @@
+{{extend 'layoutSIRADEXloged.html'}}
+
+
+{{block titulo}}
+  Gestión de Catálogos
+{{end}}
+
+{{block contenido}}
+
+<script src="{{=URL('static','js/global.js')}}"></script>
+<script src="{{=URL('static','js/catalogo.js')}}"></script>
+
+<!-- Nav tabs -->
+<div class="row">
+    <div class="col-sm-5 col-sm-push-9" style="margin-top:10px; ; margin-left:30px">
+        <button type="button" id="agregarCatalogoBtn" class="btn btn-default green btn-border" data-toggle="modal" data-target="#modalAgregarCatalogo">
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Catálogo
+        </button>
+    </div>
+</div>
+<br>
+<div class="card">
+  {{if len(catalogos) != 0:}}
+    <ul class="nav nav-tabs" role="tablist">
+    {{for catalogo in catalogos:}}
+      <li class="nav-item {{='active' if catalogo[0].id_catalogo == catalogo_actual else ''}}">
+        <a class="nav-link" data-toggle="tab" href="#{{ = catalogo[0].id}}" role="tab" id="Cat{{= catalogo[0].id}}">{{= catalogo[0].nombre}}</a>
+      </li>
+     {{pass}}
+  {{pass}}
+  </ul>
+
+  <div class="tab-content">
+    {{if len(catalogos) == 0:}}
+    <p> Actualmente no existen catálogos en el sistemas. Pruebe agregar
+        un nuevo catálogo usando el boton "Agregar Catálogo" </p>
+    {{pass}}
+
+    {{for catalogo in catalogos:}}
+      <div class="tab-pane {{='active' if catalogo[0].id_catalogo == catalogo_actual else ''}}" id="{{= catalogo[0].id}}" role="tabpanel">
+            <ul class="list-group">
+                {{if len(catalogo[1]) == 0:}}
+                <li class="list-group-item">
+                  <div class="row">
+                      <div class="col-sm-4">
+                        <p>Este catalogo aun no tiene campos.</p>
+                      </div>
+                  </div>
+                </li>
+                {{else:}}
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <center><b>Nombre del Campo</b></center>
+                            </div>
+                            <div class="col-sm-4">
+                                <center><b>Tipo</b></center>
+                            </div>
+                            <div class="col-sm-2">
+                                <center><b>Obligatorio</b></center>
+                            </div>
+                            <div class="col-sm-2">
+                                <center><b>Acciones</b></center>
+                            </div>
+                        </div>
+                     </li>
+                    {{for campo in catalogo[1]:}}
+                      <li class="list-group-item">
+                          <div class="row">
+                              <div class="col-sm-4">
+                                  <center>{{= campo.nombre}}</center>
+                              </div>
+                              <div class="col-sm-4">
+                                  <center>{{= campo.tipo_campo}}</center>
+                              </div>
+                              <div class="col-sm-2">
+                                  <center>{{= 'Si' if campo.obligatorio else 'No'}}</center>
+                              </div>
+                              <div class="col-sm-1">
+                                <center>
+                                  <span class="glyphicon glyphicon-edit blue"
+                                        data-toggle="modal" data-target="#modalEditarCampo"
+                                        data-id-campo-cat="{{=campo.id_campo_cat}}"
+                                        data-id-catalogo="{{=campo.id_catalogo}}"
+                                        data-nombre="{{=campo.nombre}}"
+                                        data-tipo-campo="{{=campo.tipo_campo}}"
+                                        data-obligatorio="{{=campo.obligatorio}}">
+                                  </span>
+                                </center>
+                              </div>
+                              <div class="col-sm-1">
+                                <center>
+                                  <span class="glyphicon glyphicon-remove red" data-link-eliminar-campo="{{=URL(f='eliminarCampos', args=[campo.id_campo_cat])}}" data-toggle="modal" data-target="#modalEliminarCampo"></span>
+                                </center>
+                              </div>
+                          </div>
+                      </li>
+                    {{pass}}
+                  {{pass}}
+              </ul>
+              <div class="row">
+                  <center>
+                    <div class="col-sm-2 col-sm-offset-3">
+                        <button type="button" class="btn btn-default btn-block green btn-border"
+                                data-toggle="modal" data-target="#modalAgregarCampo"
+                                data-id-catalogo="{{=catalogo[0].id}}">
+                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Campo
+                        </button>
+                    </div>
+                    <div class="col-sm-2">
+                      <button type="button" class="btn btn-default btn-block renombrar btn-border"
+                              data-toggle="modal" data-target="#modalCambiarNombre"
+                              data-id-catalogo = "{{=catalogo[0].id}}"
+                              data-nombre = "{{=catalogo[0].nombre}}">
+                          <span class="glyphicon glyphicon-edit " aria-hidden="true"></span> Renombrar
+                      </button>
+                    </div>
+                    <div class="col-sm-2">
+                      <button type="button" class="btn btn-default btn-block red-trash btn-border"
+                              data-toggle="modal" data-target="#modalEliminarCatalogo"
+                              data-link-eliminar-catalogo = "{{=URL(f='eliminarCatalogo', args=[catalogo[0].id])}}">
+                          <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> Eliminar
+                      </button>
+                    </div>
+                  </center>
+              </div>
+        </div>
+      {{pass}}
+  </div>
+</div>
+
+
+<!-- Modal Agregar Catalogo-->
+<div id="modalAgregarCatalogo" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <center><h4 class="modal-title"> Agregar Catálogo </h4><center>
+      </div>
+      <div class="modal-body" id="modalAgregar" data-hayErroresAgregar="{{=hayErroresAgregar}}">
+          <p>{{ = formulario_agregar_catalogo}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Cambiar Nombre Catalogo-->
+<div id="modalCambiarNombre" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <center><h4 class="modal-title"> Renombrar Catalogo </h4><center>
+      </div>
+      <div class="modal-body">
+          <p>{{ = formulario_cambiar_nombre }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Agregar Campo-->
+<div id="modalAgregarCampo" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <center><h4 class="modal-title"> Agregar Campo </h4><center>
+      </div>
+      <div class="modal-body">
+        {{=formulario_agregar_campo.custom.begin}}
+
+          <div class="row">
+            <div class="form-group">
+              <label class=" control-label col-md-3 right" >Nombre del Campo</label>
+              <div class="col-md-9">{{=formulario_agregar_campo.custom.widget.nombre}}</div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="form-group">
+                <label class=" control-label col-md-3 right" >Tipo</label>
+                <div class="col-md-9">{{=formulario_agregar_campo.custom.widget.tipo_campo}}</div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="form-group">
+              <label class=" control-label col-md-3 right" >Obligatorio</label>
+              <div class="col-md-9">{{=formulario_agregar_campo.custom.widget.obligatorio}}</div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-3 left"></div>
+              <div class="col-md-9 right">
+              <div style="display:none;">{{=formulario_agregar_campo.custom.widget.id_catalogo}} </div>
+
+                  {{=formulario_agregar_campo.custom.submit}}
+
+                   {{=formulario_agregar_campo.custom.end}}
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="modalEditarCampo" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <center><h4 class="modal-title"> Editar Campo </h4><center>
+      </div>
+      <div class="modal-body">
+        {{=formulario_agregar_campo.custom.begin}}
+          <div class="row">
+            <div class="form-group">
+              <label class=" control-label col-md-3 right" >Nombre del Campo</label>
+              <div class="col-md-9">{{=formulario_editar_campo.custom.widget.nombre}}</div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="form-group">
+              <label class=" control-label col-md-3 right" >Tipo</label>
+              <div class="col-md-9">{{=formulario_editar_campo.custom.widget.tipo_campo}}</div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="form-group">
+              <label class=" control-label col-md-3 right" >Obligatorio</label>
+              <div class="col-md-9">{{=formulario_editar_campo.custom.widget.obligatorio}}</div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-3 right"></div>
+            <div class="col-md-9 ">
+              <div style="display: none;">{{=formulario_editar_campo.custom.widget.id_catalogo}}</div>
+              <div style="display: none;">{{=formulario_editar_campo.custom.widget.id_campo_cat}}</div>
+              {{=formulario_editar_campo.custom.submit}}
+
+            </div>
+          </div>
+      </div>
+      {{=formulario_editar_campo.custom.end}}
+    </div>
+  </div>
+</div>
+
+<!-- Modal Eliminar-->
+<div class="container">
+  <div class="modal fade" id="modalEliminarCatalogo" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <center> <h4 class="modal-title">Eliminar Catálogo</h4> </center>
+        </div>
+        <div class="modal-body">
+            <center> <p>Está seguro que quiere eliminar este Catálogo.</p> </center>
+            <br>
+            <center>
+                <a id="botonEliminarCatalogo">
+                  <button type="button" class="btn blue-add btn-border">Eliminar</button>
+                </a>
+                <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
+            </center>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar Elementos-->
+<div class="container">
+  <div class="modal fade" id="modalEliminarCampo" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <center> <h4 class="modal-title">Eliminar Campo del Catálogo</h4> </center>
+        </div>
+        <div class="modal-body">
+            <center> <p>Está seguro que quiere eliminar este campo del Catálogo.</p> </center>
+            <br>
+            <center>
+                <a id="botonEliminarCampo">
+                  <button type="button" class="btn blue-add btn-border">Eliminar</button>
+                </a>
+                <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
+            </center>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<script type"text/javascript">
+
+  // Pasamos los argumentos para editar el catalogo.
+  $('#modalAgregarCampo').on('show.bs.modal', function(e){
+      var id_catalogo = $(e.relatedTarget).data('id-catalogo');
+      $(e.currentTarget).find('input[name="id_catalogo"]').val(id_catalogo);
+  });
+
+  // Pasamos los argumentos para editar el catalogo.
+  $('#modalCambiarNombre').on('show.bs.modal', function(e){
+      var id_catalogo = $(e.relatedTarget).data('id-catalogo');
+      var nombre       = $(e.relatedTarget).data('nombre');
+      $("#no_table_id_catalogo__row").hide();
+      $(e.currentTarget).find('input[name="nombre"]').val(nombre);
+      $(e.currentTarget).find('input[name="id_catalogo"]').val(id_catalogo);
+  });
+
+  // Pasamos los argumentos para editar el campo.
+  $('#modalEditarCampo').on('show.bs.modal', function(e){
+      var id_catalogo  = $(e.relatedTarget).data('id-catalogo');
+      var id_campo_cat = $(e.relatedTarget).data('id-campo-cat');
+      var nombre       = $(e.relatedTarget).data('nombre');
+      var tipo_campo   = $(e.relatedTarget).data('tipo-campo');
+      var obligatorio  = $(e.relatedTarget).data('obligatorio');
+      $(e.currentTarget).find('input[name="id_catalogo"]').val(id_catalogo);
+      $(e.currentTarget).find('input[name="id_campo_cat"]').val(id_campo_cat);
+      $(e.currentTarget).find('input[name="nombre"]').val(nombre);
+      $(e.currentTarget).find('#no_table_tipo_campo').val(tipo_campo);
+      if (obligatorio == 'True') {
+        $(e.currentTarget).find('#no_table_obligatorio').prop('checked', true);
+      } else {
+        $(e.currentTarget).find('#no_table_obligatorio').prop('checked', false);
+      }
+  });
+
+  // Pasamos los argumentos para eliminar campo
+  $('#modalEliminarCampo').on('show.bs.modal', function(e){
+      var linkEliminar = $(e.relatedTarget).data('link-eliminar-campo');
+      $("#botonEliminarCampo").attr("href", linkEliminar);
+  });
+
+  // Pasamos los argumentos para eliminar catalogo.
+  $('#modalEliminarCatalogo').on('show.bs.modal', function(e){
+      var linkEliminar = $(e.relatedTarget).data('link-eliminar-catalogo');
+      $("#botonEliminarCatalogo").attr("href", linkEliminar);
+  });
+</script>
+
+
+{{end}}

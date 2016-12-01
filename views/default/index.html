@@ -1,6 +1,173 @@
-<!DOCTYPE html>
-{{extend 'SIRADEXLayoutIndex.html'}}
+{{extend 'layoutSIRADEXloged.html'}}
 
-<h1>
-    <div id ="titulo"> Bienvenidos a SIRADEX </div>
-</h1>
+
+{{block titulo}}
+    DEX
+{{end}}
+
+{{block descripcion}}
+<div class="text-justify">
+    
+    <p>
+    "Tiene como objetivo promover, planificar, coordinar y evaluar las políticas universitarias mediante las cuales la Universidad se vincula con la sociedad y amplía, complementa y profundiza los alcances de aquellos postulados de su misión relativos tanto a aspectos formativos, educativos y de acción comunitaria, como a los referidos a la generación e instrumentación de conocimientos para la resolución de los problemas concretos del país. Asimismo, tiene como propósito hacer de la Universidad un actor protagónico cooperante en el desarrollo del país, fomentar la integración de la comunidad universitaria y fortalecer la formación integral y la sensibilidad social del estudiante."
+    <br>
+    <br>
+
+    Los programas asignados por el Consejo Directivo al Decanato de Extensión son:
+    <ul>
+    <li>La educación permanente</li>
+    <li>La acción social y el desarrollo comunitario</li>
+    <li>La asistencia técnica a los sectores productivos y de servicios públicos y privados</li>
+    <li>El fomento y la proyección Artística, Cultural y Deportiva</li>
+    <li>La divulgación y promoción del quehacer universitario</li>
+    <li>Programa Igualdad de Oportunidades </li>
+    <li>Programa de Seguimiento de Egresados</li>
+    <li>Programa de Información Ocupacional y de Investigación del Mercado Laboral </li>
+    <li>Programa de Promoción del Emprendimiento </li>
+    <li>Programa de Enlace Universidad – Empresa</li>
+    </ul>
+    <a href="http://www.dex.usb.ve/pdf/criterios2012v5.pdf" target="black">
+        Ver más detalles de los programas y actividades del DEX
+    </a>
+    <br>
+    <br>
+    </p>
+</div>
+{{end}}
+
+{{block contenido}}
+
+    <!-- Busquedas publicas -->
+        <!-- Buscador -->
+        <form class="navbar-form" role="search" action="{{=URL(c='busq_val',f='busqueda')}}" method="post">
+            <div class="input-group col-lg-12 col-lg-offset-1">
+                <!-- barra de busqueda -->
+                <input  type="text" 
+                        class="form-control" 
+                        placeholder="Buscar Productos"
+                        id="form-busqueda"
+                        name="Producto"/>
+                    
+                <div class="input-group-btn" >
+                    <div clss="btn-group" role="group">
+                    <!-- btn filtros -->
+                        <span class="input-group-btn" >
+                            <button type="button" class="btn btn-default" id="btn-filtro">
+                                Filtros
+                            </button>
+                        </span>
+
+                    <!-- Lupa -->
+                        <span class="input-group-btn">
+                            <button type="submit" 
+                                    class="btn btn-default glyphicon glyphicon-search"
+                                    id="btn-lupa"
+                                    style="top:0px !important;">
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        <br>
+            <!-- Filtros -->
+            <div id="filtros" class="form-group col-sm-offset-1 col-sm-9">
+                
+                    <div role = "menu" class="tab-pane">
+                        <!--Filtro de Programa-->
+                        <div class="form-group col-sm-12">
+                            <label for="Programa"> Programas</label>
+                            <div class = "col-sm-12">
+                                <select name="Programa" 
+                                        class="form-control"
+                                        onchange="ajax('{{=URL(c='default', f='obtener_actividades')}}', ['Programa'], ':eval')" style="width: 100%">
+                                    
+                                    <option value="all" selected="">--cualquiera--</option>
+                                    
+                                    {{for x in programas:}}
+                                        <option value="{{=x['id_programa']}}" style="width: 100%">{{=x['nombre']}}</option>
+                                    {{pass}}
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Filtro de Tipo de Actividad -->
+                        <div class="form-group col-sm-12">
+                            <label for="TipoActividad"> Tipo Actividad:</label>
+                            <div class = "col-sm-12">
+                                <select name="TipoActividad" 
+                                        class="form-control"
+                                        id="lista_tipos" style="width: 100%">
+                                    
+                                    <option value="all" selected="">--cualquiera--</option>
+                                    
+                                    {{for x in actividades:}}
+                                        <option value="{{=x['id_tipo']}}" style="width: 100%">{{=x['nombre']}}</option>
+                                    {{pass}}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div >
+                            <!-- Filtro de Fecha -->
+                            <div class="form-group col-sm-5">
+                                <label for="date">Fecha Tope:</label>
+                                <div class = "col-sm-12">
+                                    <input type="date" name="fecha" max='{{=fecha}}' id="focusedInput" class="form-control datepicker" style="width: 100%"/>
+                                </div>
+                            </div>
+
+                            <!-- Filtro de Autor -->
+                            <div class="form-group col-sm-7">
+                                <label for="Autor">Autor:</label>
+                                <div class = "col-sm-12">
+                                    <select name="Autor" class="form-control" style="width: 100%">
+                                        <option value="all" selected="">--cualquiera--</option>
+                                    
+                                        {{for x in usuarios:}}
+                                            <option value="{{=x['usbid']}}" style="width: 100%">{{=x['nombres'].split(' ',1)[0]+' '+x['apellidos'].split(' ',1)[0]}}</option>
+                                        {{pass}}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+            </div>
+    </form>        
+
+
+{{end}}
+
+{{block footer}}
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+{{end}}
+
+{{block script}}
+    <script>
+        $(document).ready(function(){
+            $("#filtros").hide();
+            $("#btn-filtro").click(function(){
+            $("#filtros").toggle(300);
+                });
+
+            $( ".datepicker" ).datepicker({ 
+                maxDate: -1,
+                dateFormat: "yy-mm-dd",
+                beforeShow: function() {
+                    setTimeout(function(){
+                        $('.ui-datepicker').css('z-index', 2);
+                    }, 0);
+                }
+            });
+
+            var maxLength = 85;
+            $('select > option').text(function(i, c) {
+              if (c.length > maxLength) {
+                return c.substr(0, maxLength) + '...';  
+              }
+            });
+        });
+
+    </script>
+{{end}}

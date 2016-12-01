@@ -1,0 +1,68 @@
+{{ extend 'layoutSIRADEXloged.html' }}
+
+
+{{block titulo}}
+    Editar Perfil
+{{end}}
+
+{{block subtitulo}}
+    <!-- Nombre del usuario -->
+    {{=session.usuario['first_name']}}
+    {{=session.usuario['last_name']}}
+{{end}}
+
+{{block descripcion}}
+    <div class="card">
+    <div class="container-fluid">
+        
+    <div class="row tab-pane"> 
+        <div class="col-sm-6">
+        <!-- Datos fijos del usuario -->
+            {{=form1}}
+        </div>                        
+
+        <div class="col-sm-6">
+        <!-- Datos editables del usuario -->
+            {{=form}}   
+        </div>
+    </div>
+    </div>
+    </div>
+        
+{{end}}
+
+{{block contenido}}
+    <div class="row">
+        <div class="col-lg-12 center-block">
+        <center>
+     	OPCIONES DE GRAFICAS
+        </center>
+        </div>           
+    </div>
+{{end}}                                    
+
+{{block script}}
+
+    <script>
+        $(document).ready(function(){
+            $("#dv-act").hide();
+            $("#dv-rec").hide();
+            $("#dv-esp").hide();
+
+            $("#btn-act").click(function(){
+            $("#dv-act").toggle(300);
+                });
+
+            $("#btn-rec").click(function(){
+            $("#dv-rec").toggle(300);
+                });
+
+            $("#btn-esp").click(function(){
+            $("#dv-esp").toggle(300);
+                });                            
+            });
+    </script>
+{{end}}
+
+
+

@@ -1,0 +1,28 @@
+{{ extend 'layoutSIRADEXloged.html' }}
+
+{{block titulo}}
+    Modificar Rol del Usuario
+{{end}}			
+
+{{block descripcion}}
+    <div id = error>
+        {{=message}}
+    </div>
+{{end}}
+
+{{block contenido}}
+<!-- Contenido principal de la pagina -->
+	<!-- En esta seccion va todo el contenido de la pagina -->
+<div class="row">
+    <div class="card">
+    <div class="container-fluid">
+        <div class="tab-pane">
+             {{=forma}}
+             {{=form}}        
+        </div>
+    </div>
+    </div>
+</div>
+
+	
+{{end}}

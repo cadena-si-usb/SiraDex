@@ -1,0 +1,25 @@
+{{extend 'layoutSIRADEXloged.html'}}
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="tab-pane">
+				<form enctype="multipart/form-data" method="post" class="form-horizontal" role="form">
+
+					<!--Nombre del producto-->
+					<div class="form-group">
+	                    <label for="PRODUCTO_nombre" class = "control-label col-sm-3">
+	                    	Nombre (*)
+	                    </label>
+	                    <div class="col-sm-8">
+							<input id="PRODUCTO_nombre" class="form-control string" name="nombre" value="hola" type="text"/>
+						</div>
+	                </div>	
+
+	                <input type="submit" class="col-sm-offset-3 col-sm-8 btn blue-add btn-border " value="Validar" />
+  					<input type="hidden" name="_formname" value="validar_producto" />
+
+	            </form>
+			</div>
+		</div>
+	</div>
+</div>

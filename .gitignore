@@ -1,7 +1,21 @@
+
+.*
+*.orig
+!.gitignore
+*.orig
+*.pyc
+*.pyo
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
+
+# wb2py
+sessions/
+uploads/
+errors/
+backup/
 
 # C extensions
 *.so
@@ -9,6 +23,8 @@ __pycache__/
 # Distribution / packaging
 .Python
 env/
+errors/
+databases/
 build/
 develop-eggs/
 dist/
@@ -50,40 +66,19 @@ coverage.xml
 *.pot
 
 # Django stuff:
+
 *.log
-local_settings.py
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# IPython Notebook
-.ipynb_checkpoints
-
-# pyenv
-.python-version
-
-# celery beat schedule file
-celerybeat-schedule
-
-# dotenv
-.env
-
-# virtualenv
-venv/
-ENV/
-
-# Spyder project settings
-.spyderproject
-
-# Rope project settings
-.ropeproject
+*~
+*.1
+*.bak
+*.bak2
+Thumbs.db
+routes.py
+logging.conf
+./*.zip
+databases/
+errors/
+sessions/
+uploads/
+tests/
+cache/

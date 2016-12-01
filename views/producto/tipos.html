@@ -1,0 +1,126 @@
+{{ extend 'layoutSIRADEXloged.html' }}
+
+{{block titulo}}
+    Registro de Productos
+{{end}}
+
+{{block descripcion}}
+Seleccione el Tipo de Producto que desea agregar.
+{{end}}
+
+{{block contenido}}
+    <div class="row">
+        <div class="col-md-12">
+        <!-- Nav tabs -->
+        <div class="card">
+        <ul class="nav nav-tabs" role="tablist">
+        <!-- Activas -->
+        <li role="presentation" class="active">
+            <a  href="#prog1" 
+                aria-controls="prog1" 
+                role="tab" 
+                data-toggle="tab">
+                Programa 1
+            </a>
+        </li>
+        
+        <!-- Espera -->
+        <li role="presentation">
+            <a  href="#prog2" 
+                aria-controls="prog2" 
+                role="tab" 
+                data-toggle="tab">
+                Programa 2
+            </a>
+        </li>
+
+        <!-- Rechazadas -->
+        <li role="presentation">
+            <a  href="#prog3" 
+                aria-controls="prog3" 
+                role="tab" 
+                data-toggle="tab">
+                Programa 3
+            </a>
+        </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+        <!-- Programa 1 -->
+        <div role="tabpanel" class="tab-pane active" id="prog1">
+                {{if len(rows) == 0:}}
+                    No hay Productos que mostrar
+                {{else:}}
+                    <table class="table table-striped table-condensed table-hover sortable">
+                    <thead>
+                        <tr>
+                            <th>Tipo de Actividad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{for x in rows:}}
+                            {{if x.id_programa == 1:}}
+                            <tr>
+                                <td>
+                                    <a href="{{=URL('agregar',args=x.id)}}"> {{=x.nombre}}</a>
+                                </td>
+                            </tr>
+                            {{pass}}
+                        {{pass}}
+                    </tbody>
+                {{pass}}
+            </table>
+        </div>
+        <!-- Programa 2 -->
+        <div role="tabpanel" class="tab-pane" id="prog2">
+            <table class="table">
+                   
+                {{if len(rows) == 0:}}
+
+                    No hay Productos que mostrar
+
+                {{else:}}
+                <thead>
+                    <th>Tipo de Actividad</th>
+                </thead>
+                    {{for x in rows:}}
+                        {{if x.id_programa == 2:}}
+                            <td>
+                            <a href="{{=URL('agregar',args=x.id)}}"> {{=x.nombre}}</a>
+                            </td>
+                        </tr>
+                         {{pass}}
+                     {{pass}}
+                 {{pass}}
+            </table>
+        </div>
+
+        <!-- Rechazadas -->
+        <div role="tabpanel" class="tab-pane" id="prog3">
+            <table class="table">
+                   
+                {{if len(rows) == 0:}}
+
+                    No hay Productos que mostrar
+
+                {{else:}}
+                <thead>
+                    <th>Tipo de Actividad</th>
+                </thead>
+                    {{for x in rows:}}
+                        {{if x.id_programa == 3:}}
+                            <td>
+                            <a href="{{=URL('agregar',args=x.id)}}"> {{=x.nombre}}</a>
+                            </td>
+                        </tr>
+                         {{pass}}
+                     {{pass}}
+                 {{pass}}
+            </table>  
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+{{end}}

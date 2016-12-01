@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 # -------------------------------------------------------------------------
 # This scaffolding model makes your app work on Google App Engine too
 # File is released under public domain and you can use without limitations
@@ -77,7 +78,9 @@ response.form_label_separator = myconf.get('forms.separator') or ''
 # (more options discussed in gluon/tools.py)
 # -------------------------------------------------------------------------
 
-from gluon.tools import Auth, Service, PluginManager
+from gluon.tools import Auth, Service, PluginManager, Mail
+import datetime
+import os
 
 # host names must be a list of allowed host names (glob syntax allowed)
 auth = Auth(db, host_names=myconf.get('host.names'))
@@ -92,12 +95,11 @@ auth.define_tables(username=False, signature=False)
 # -------------------------------------------------------------------------
 # configure email
 # -------------------------------------------------------------------------
-mail = auth.settings.mailer
-mail.settings.server = 'logging' if request.is_local else myconf.get('smtp.server')
-mail.settings.sender = myconf.get('smtp.sender')
-mail.settings.login = myconf.get('smtp.login')
-mail.settings.tls = myconf.get('smtp.tls') or False
-mail.settings.ssl = myconf.get('smtp.ssl') or False
+mail = Mail()
+mail.settings.server = 'smtp.gmail.com:587'
+mail.settings.sender = 'usbsiradex@gmail.com'
+mail.settings.login  = 'usbsiradex@gmail.com:SiradexUSB2016'
+
 
 # -------------------------------------------------------------------------
 # configure auth policy
@@ -129,71 +131,90 @@ auth.settings.reset_password_requires_verification = True
 # auth.enable_record_versioning(db)
 #raise HTTP(404)
 
-tipo_campos = ['fecha', 'participante', 'ci', 'comunidad', 'telefono', 'texto','documento', 'imagen', 'cantidad entera', 'cantidad decimal']
+tipo_campos = ['Fecha', 'Telefono', 'Texto Corto','Documento','Cantidad Entera','Cantidad Decimal', 'Texto Largo', 'Cedula']
 
 #db.usuario.drop()
 db.define_table('USUARIO',
-    Field('ci',type='string',length=8, notnull=True,required=True, unique=True),
-    Field('usbid', type='string', unique=True,notnull=True),
+    Field('ci',type='string',length=8, notnull=True,required=True),
+    Field('usbid', type='string', unique=True,notnull=True,required=True),
     Field('nombres',type='string',length=50,required=True),
     Field('apellidos',type='string',length=50,required=True),
     Field('telefono',type='string',length=15),
     Field('correo_inst', type='string',notnull=True),
     Field('correo_alter', type='string'),
     Field('tipo',type='string',length=15,requires=IS_IN_SET(['Usuario', 'DEX', 'Administrador','Bloqueado'])),
-    primarykey=['ci'],
-    migrate = False,
-    # redefine=True,
-    # migrate='usuario.table',
+    primarykey=['usbid'],
+    migrate=False,
 );
 
-db.define_table('USBID',
-    Field('ci_usuario',db.USUARIO.ci),
-    Field('usbid',type='string',length=20, notnull=True, unique=True),
-    primarykey=['ci_usuario'],
+
+############# QUITARIA ESTO Y PONER CAMPO JEFE EN USUARIO SOLO SI ES NECESARIO
+db.define_table('JEFE_DEPENDENCIA',
+    Field('id_jefe', type='id'),
+    Field('usbid_usuario',db.USUARIO.usbid),
+    primarykey=['id_jefe'],
     migrate=False
 );
 
-db.define_table('JEFE_DEPENDENCIA',
-    Field('id_jefe',type='id'),
-    Field('ci_usuario',db.USUARIO.ci),
-    primarykey=['ci_usuario','id_jefe'],
+db.define_table('PROGRAMA',
+    Field('id_programa', type='id'),
+    Field('nombre',type='string',length=256, notnull=True, unique=True),
+    Field('abreviacion',type='string',length=10, notnull=True, unique=True),
+    Field('descripcion',type='string',length=2048, notnull=True, unique=True),
+    Field('papelera', type='boolean', notnull = True, default=False),
+    Field('modif_fecha', type='date'),
+    Field('usbid_usu_modificador', db.USUARIO.usbid),
+    primarykey=['id_programa'],
     migrate=False
 );
 
 db.define_table('TIPO_ACTIVIDAD',
-    Field('id_tipo',type='id'),
+    Field('id_tipo', type='id'),
+    Field('codigo', type='string', length=10, notnull=True, unique=True),
     Field('nombre',type='string',length=128, notnull=True,unique=True,
-        requires=[IS_LENGTH(128,error_message='Tamaño máximo de 128 caracteres')]),
+           requires=[IS_LENGTH(128,error_message='Tamaño máximo de 128 caracteres')]),
     Field('tipo_p_r',type='string', length=1, notnull=True, requires=IS_IN_SET(["P", "R"]), default="P"),
     Field('descripcion',type='string',length=2048, notnull=True,
-        requires=[IS_LENGTH(2048,error_message='Tamaño máximo de 2048 caracteres')]),
-    Field('programa',type='string', length=128, notnull=True,
-        requires=[IS_LENGTH(128, error_message='Tamaño máximo de 128 caracteres')]),
-    Field('validacion',type='string', length=128, notnull=True,default='True'),
+           requires=[IS_LENGTH(2048,error_message='Tamaño máximo de 2048 caracteres')]),
+    Field('id_programa',db.PROGRAMA.id_programa),
+    Field('validacion',type='string', length=128, notnull=True, default='True'),
     Field('producto', type='string', length=256,
-        requires=[IS_NOT_EMPTY(error_message='No puede ser vacía'),
-        IS_LENGTH(256,error_message='El nombre no pude ser más de 256 caracteres')]),
+           requires=[IS_NOT_EMPTY(error_message='No puede ser vacía'),
+                     IS_LENGTH(256,error_message='El nombre no pude ser más de 256 caracteres')]),
     Field('nro_campos', type='integer', requires=IS_NOT_EMPTY(error_message='No puede ser vacía')),
     Field('id_jefe_creador',db.JEFE_DEPENDENCIA.id_jefe),
-    Field('ci_usuario_propone',db.USUARIO.ci),
+    Field('usbid_usuario_propone',db.USUARIO.usbid),
     Field('papelera', type='boolean', notnull = True, default=False),
+    Field('modif_fecha', type='date'),
     primarykey=['id_tipo'],
     migrate=False
 );
 
-db.define_table('ACTIVIDAD',
-    Field('id_actividad', type='id'),
+db.define_table('PRODUCTO',
+    Field('id_producto',  type='id'),
     Field('id_tipo', db.TIPO_ACTIVIDAD.id_tipo),
-    Field('validacion',type='string',default='En espera'),
-    Field('estado',type='string'),
+    Field('nombre',type='string',length=128, notnull=True,unique=True,
+           requires=[IS_LENGTH(128,error_message='Tamaño máximo de 128 caracteres')]),
+    Field('descripcion', type='string',length=256),
+    Field('estado',type='string', default='Por Validar', requires=IS_IN_SET(['Validado', 'Por Validar', 'No Validado', 'Borrador'])),
     Field('evaluacion_criterio',type='string',length=256),
     Field('evaluacion_valor',type='string', length=256),
-    Field('ci_usuario_modifica', db.USUARIO.ci),
-    Field('ci_usuario_elimina', db.USUARIO.ci),
-    Field('ci_usuario_crea', db.USUARIO.ci),
-    primarykey=['id_actividad'],
+    Field('fecha_realizacion', type='date'),
+    Field('fecha_modificacion', type='date'),
+    Field('lugar', type='string',length=50),
+    Field('usbid_usu_modificador', db.USUARIO.usbid),
+    Field('usbid_usu_creador', db.USUARIO.usbid),
+    primarykey=['id_producto'],
     migrate=False
+);
+
+db.define_table('COMPROBANTE',
+    Field('id_comprobante', type='id'),
+    Field('archivo', type='upload',autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads')),
+    Field('descripcion', type='string', length=100),
+    Field('producto','reference producto'),
+    primarykey=['id_comprobante'],
+    migrate = False
 );
 
 db.define_table('PERMISOS_TIPO_ACT',
@@ -205,7 +226,7 @@ db.define_table('PERMISOS_TIPO_ACT',
 );
 
 db.define_table('CATALOGO',
-    Field('id_catalogo',type='id'),
+    Field('id_catalogo', type='id'),
     Field('nro_campos',type='integer'),
     Field('nombre',type='string',length=128, unique = True),
     primarykey=['id_catalogo'],
@@ -213,55 +234,27 @@ db.define_table('CATALOGO',
 );
 
 
-db.define_table('CAMPO',
-    Field('id_campo',type='id'),
-    Field('obligatorio', type='boolean'),
-    Field('nombre',type='string', length=64,
-        requires = [IS_NOT_IN_DB(db, 'CAMPO.nombre',error_message='')]),
-    Field('lista', type='string', length=64,
-        requires = [IS_IN_SET(tipo_campos)],
-        widget = SQLFORM.widgets.options.widget),
-    Field('despliega_cat',db.CATALOGO.id_catalogo),
-    primarykey=['id_campo'],
-    migrate=False
-);
-
-
 db.define_table('CAMPO_CATALOGO',
-    Field('id_campo_cat', type='id'),
-    Field('tipo_cat',type='string', length=256,        
-          requires = [IS_IN_SET(tipo_campos)],
-        widget = SQLFORM.widgets.options.widget),
-    Field('nombre', type='string', length=64),
-    Field('eliminar', type='boolean'),
+    Field('id_campo_cat',  type='id'),
+    Field('id_catalogo', db.CATALOGO.id_catalogo),
+    Field('nombre', type='string', length=256),
+    Field('tipo_campo',type='string', length=64,
+           requires = [IS_IN_SET(tipo_campos, zero='Seleccione...')],
+           widget = SQLFORM.widgets.options.widget),
+    Field('obligatorio', type='boolean'),
     primarykey=['id_campo_cat'],
     migrate=False
 );
 
-
-db.define_table('LOG_SIRADEX',
-    Field('accion',type='string'),
-    Field('accion_fecha',type='datetime'),
-    Field('accion_ip',type='string'),
-    Field('descripcion',type='string'),
-    Field('ci_usuario',db.USUARIO.ci),
-    primarykey=['accion','accion_fecha','accion_ip'],
-    migrate=False
-);
-
-
-db.define_table('PARTICIPA_ACT',
-    Field('ci_usuario',db.USUARIO.ci),
-    Field('id_actividad',db.ACTIVIDAD.id_actividad),
-    primarykey=['ci_usuario','id_actividad'],
-    migrate=False
-);
-
-db.define_table('TIENE_CAMPO',
-    Field('id_actividad',db.ACTIVIDAD.id_actividad),
-    Field('id_campo', db.CAMPO.id_campo),
-    Field('valor_campo', type='string', length=256),
-    primarykey=['id_actividad', 'id_campo'],
+db.define_table('CAMPO',
+    Field('id_campo', type='id'),
+    Field('id_catalogo', db.CATALOGO.id_catalogo),
+    Field('nombre',type='string', length=256),
+    Field('tipo_campo',type='string', length=64,
+           requires = [IS_IN_SET(tipo_campos)],
+           widget = SQLFORM.widgets.options.widget),
+    Field('obligatorio', type='boolean'),
+    primarykey=['id_campo'],
     migrate=False
 );
 
@@ -269,6 +262,22 @@ db.define_table('ACT_POSEE_CAMPO',
     Field('id_tipo_act', db.TIPO_ACTIVIDAD.id_tipo),
     Field('id_campo', db.CAMPO.id_campo),
     primarykey=['id_tipo_act', 'id_campo'],
+    migrate=False
+);
+
+db.define_table('PRODUCTO_TIENE_CAMPO',
+    Field('id_prod',db.PRODUCTO.id_producto),
+    Field('id_campo', db.CAMPO.id_campo),
+    Field('valor_campo', type='string', length=512),
+    primarykey=['id_prod', 'id_campo'],
+    migrate=False
+);
+
+
+db.define_table('PARTICIPA_PRODUCTO',
+    Field('usbid_usuario',db.USUARIO.usbid),
+    Field('id_producto',db.PRODUCTO.id_producto),
+    primarykey=['usbid_usuario','id_producto'],
     migrate=False
 );
 
@@ -287,17 +296,20 @@ db.define_table('GESTIONA_CATALOGO',
     migrate=False
 );
 
-db.define_table('CATALOGO_TIENE_CAMPO',
-    Field('id_catalogo',db.CATALOGO.id_catalogo),
-    Field('id_campo_cat',db.CAMPO_CATALOGO.id_campo_cat),
-    primarykey=['id_catalogo','id_campo_cat'],
+db.define_table('LOG_SIRADEX',
+    Field('accion',type='string'),
+    Field('accion_fecha',type='date'),
+    Field('accion_ip',type='string', length=256),
+    Field('descripcion',type='string'),
+    Field('usbid_usuario',db.USUARIO.usbid),
+    primarykey=['accion','accion_fecha','accion_ip'],
     migrate=False
 );
 
-db.define_table('VALORES_CAMPO_CATALOGO',
-    Field('id_catalogo',db.CATALOGO.id_catalogo),
-    Field('id_campo_cat',db.CAMPO_CATALOGO.id_campo_cat),
-    Field('valor',type='string', length=256, notnull = True),
-    primarykey=['id_catalogo','id_campo_cat','valor'],
+db.define_table('BACKUP',
+    Field('id_backup', type='id'),
+    Field('descripcion', type='string', length=256),
+    Field('fecha', type='date'),
+    primarykey=['id_backup'],
     migrate=False
 );
