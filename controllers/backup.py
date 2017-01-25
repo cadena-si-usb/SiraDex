@@ -94,5 +94,8 @@ def eliminar():
 
 
 def descargar_backup():
-    response.headers['Content-Type']
-    responde.headers['Content-Disposition']
+    nombre_archivo = str(request.args[0])
+    direccion = os.path.join('applications','SiraDex','backup',nombre_archivo)
+    response.headers['ContentType'] ="application/octet-stream"
+    response.headers['Content-Disposition']= "attachment; filename=" + nombre_archivo
+    return response.stream(open(direccion),chunk_size=4096)
