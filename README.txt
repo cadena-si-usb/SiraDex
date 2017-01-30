@@ -101,11 +101,8 @@ Hasta ahora, las tablas que deben aparecer son:
     public | catalogo_tiene_campo            | table    | Siradex
     public | gestiona_catalogo               | table    | Siradex
     public | gestiona_tipo_act               | table    | Siradex
-    public | jefe_dependencia                | table    | Siradex
-    public | jefe_dependencia_id_jefe_seq    | sequence | Siradex
     public | log_siradex                     | table    | Siradex
     public | participa_act                   | table    | Siradex
-    public | permisos_tipo_act               | table    | Siradex
     public | programa                        | table    | Siradex
     public | programa_id_programa_seq        | sequence | Siradex
     public | tiene_campo                     | table    | Siradex
