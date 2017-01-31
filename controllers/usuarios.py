@@ -83,7 +83,7 @@ def agregar():
                          IS_MATCH('^[0-9]+$', error_message="Use sólo números.")]),
         Field('correo_alter',
                requires=[IS_NOT_EMPTY(error_message='El correo no puede quedar vacío.'),
-                         IS_MATCH('^[A-z0-9À-ÿŸ\s-]*$', error_message="Use solo letras, el caracter '-' y números.")]),
+                         IS_MATCH('^[@.A-z0-9À-ÿŸ\s-]*$', error_message="Use solo letras, el caracter '-' y números.")]),
         Field('tipo',
                requires=IS_IN_SET({'Usuario':'Usuario', 'DEX':'DEX', 'Administrador':'Administrador', 'Bloqueado':'Bloqueado'},
                                                     zero=T('Seleccione...'),
