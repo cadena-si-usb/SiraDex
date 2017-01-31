@@ -69,7 +69,7 @@ def restaurar_backup():
       
     archivo = request.args[0]
 
-    comando = "psql -d Siradex -U Siradex -h localhost -w < ./applications/SiraDex/SQLScripts/dropSIRADEx.sql && psql -d Siradex -U Siradex -h localhost -w < ./applications/SiraDex/backup/" + archivo
+    comando = "psql --dbname=postgres://Siradex:Siradex@localhost/Siradex -w < ./applications/SiraDex/SQLScripts/dropSIRADEx.sql && psql --dbname=postgres://Siradex:Siradex@localhost/Siradex -w < ./applications/SiraDex/backup/" + archivo
 
     resp = os.system(comando)
     #resp = 0
