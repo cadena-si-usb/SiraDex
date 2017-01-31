@@ -11,7 +11,7 @@ def index():
         redirect(URL(c ="default",f="index"))
       
     backups = os.listdir("./applications/SiraDex/backup")
-
+    
     form = formulario_restaurar_backup()
 
     if form.process(formname = "form", table_name='archivos').accepted:
@@ -90,4 +90,12 @@ def eliminar():
     archivo = request.args[0]
     comando = "rm ./applications/SiraDex/backup/" + archivo
     resp = os.system(comando)
-    redirect(URL('index'))    
+    redirect(URL('index'))
+
+
+def descargar_backup():
+    nombre_archivo = str(request.args[0])
+    direccion = os.path.join('applications','SiraDex','backup',nombre_archivo)
+    response.headers['ContentType'] ="application/octet-stream"
+    response.headers['Content-Disposition']= "attachment; filename=" + nombre_archivo
+    return response.stream(open(direccion),chunk_size=4096)
