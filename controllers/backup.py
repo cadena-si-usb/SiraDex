@@ -38,7 +38,7 @@ def generar_backup():
 
     fecha = time.asctime(time.localtime(time.time()))
     archivo = "_".join(fecha.split()[1:]).replace(":","") + ".sql"
-    comando = "pg_dump -d Siradex -U Siradex -h localhost -w > ./applications/SiraDex/backup/backup_" + archivo
+    comando = "pg_dump --dbname=postgres://Siradex:Siradex@localhost/Siradex -w > ./applications/SiraDex/backup/backup_" + archivo
     resp = os.system(comando)
     session.flash = "Backup generado exitosamente"
     redirect(URL('index'))
