@@ -4,7 +4,6 @@ from funciones_siradex import get_tipo_usuario
 import time
 
 def index():
-
     admin = get_tipo_usuario(session)
 
     if (admin==0 or admin==2):
@@ -20,11 +19,11 @@ def index():
     #        comando = "psql -d Siradex -U Siradex -h localhost -w < ./applications/SiraDex/backup/" + archivo
 
     #        resp = os.system(comando)
-
+        
         redirect(URL('index'))
 
     elif form.errors:
-        response.flash = 'el formulario tiene errores'
+        session.flash = 'el formulario tiene errores'
 
 
     return locals()
@@ -41,7 +40,7 @@ def generar_backup():
     archivo = "_".join(fecha.split()[1:]).replace(":","") + ".sql"
     comando = "pg_dump -d Siradex -U Siradex -h localhost -w > ./applications/SiraDex/backup/backup_" + archivo
     resp = os.system(comando)
-
+    session.flash = "Backup generado exitosamente"
     redirect(URL('index'))
 
 def formulario_restaurar_backup():
@@ -75,9 +74,9 @@ def restaurar_backup():
     resp = os.system(comando)
     #resp = 0
     if (resp == 0):
-        response.flash="Restaurado."
+        session.flash="Restaurado."
     else:
-        response.flash="No se pudo restaurar."
+        session.flash="No se pudo restaurar."
     
     redirect(URL('index'))
 
@@ -90,6 +89,7 @@ def eliminar():
     archivo = request.args[0]
     comando = "rm ./applications/SiraDex/backup/" + archivo
     resp = os.system(comando)
+    session.flash="Backup eliminado exitosamente"
     redirect(URL('index'))
 
 

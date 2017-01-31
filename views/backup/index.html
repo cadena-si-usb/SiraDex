@@ -9,6 +9,8 @@
 {{end}}
 
 {{block descripcion}}
+
+{{=response.flash or ''}}
     <div class="row"  style="margin-bottom: 0em;"> 
         <div class="col-md-2 col-md-offset-7">
         <!-- Datos del usuario -->
@@ -176,7 +178,9 @@
             <br>
             <center>
                 <a id="BotonRestaurar" >
-                  <button type="button" class="btn blue-add btn-border">
+                  <button type="button" 
+                          class="btn blue-add btn-border"
+                          >
                           Restaurar
                   </button>
                 </a>
@@ -276,8 +280,9 @@
 
   // Pasamos los argumentos para eliminar campo
   $('#ModalRestaurarBackup').on('show.bs.modal', function(e){
-      var linkEliminar = $(e.relatedTarget).data('link-restaurar-backup');
-      $("#BotonRestaurar").attr("href", linkEliminar);
+      var linkRestaurar = $(e.relatedTarget).data('link-restaurar-backup');
+      $("#BotonRestaurar").attr("href", linkRestaurar);
+      
   });
 
     </script>
