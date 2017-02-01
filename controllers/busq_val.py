@@ -272,6 +272,10 @@ def graficaPie():
     productos = request.vars.productos
 
     pie_chart = pygal.Pie()
+
+    if productos == None:
+        return pie_chart.render()
+
     total_productos = len(productos)
 
     programas = {}
@@ -298,6 +302,10 @@ def graficaBar():
     fecha_desde = fecha_hasta - 10
 
     line_chart = pygal.Bar()
+
+    if productos == None:
+        return line_chart.render()
+
     line_chart.x_labels = map(str, range(fecha_desde, fecha_hasta + 1))
     
     programas = db(db.PROGRAMA['papelera']==False).select().as_list()
@@ -330,11 +338,14 @@ def tabla():
 
     productos = request.vars.productos
 
-
     fecha_hasta = date.today().year
     fecha_desde = fecha_hasta - 10
 
     line_chart = pygal.Bar()
+
+    if productos == None:
+        return line_chart.render_table(transpose=True) 
+
     line_chart.x_labels = map(str, range(fecha_desde, fecha_hasta + 1))
     
     programas = db(db.PROGRAMA['papelera']==False).select().as_list()
