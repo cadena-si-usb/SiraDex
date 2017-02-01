@@ -55,6 +55,8 @@ def busqueda():
 
         
         productos = db.executesql(sql)
+        print sql
+        print productos
 
         graficaPie = URL(c='busq_val',f='graficaPie',vars=dict(productos=productos))
         graficaBar = URL(c='busq_val',f='graficaBar',vars=dict(productos=productos))
@@ -276,18 +278,27 @@ def graficaPie():
     if productos == None:
         return pie_chart.render()
 
-    total_productos = len(productos)
-
     programas = {}
 
-    for producto in productos:
-        id_programa = producto.split('\'')[4].split(',')[-2]
-        try:
-            programas[id_programa]['repeticiones'] += 1
-        except:
-            nombre = producto.split('\'')[-4]
-            abrev  = producto.split('\'')[-2]
-            programas[id_programa] = {'nombre':nombre,'abreviacion':abrev,'repeticiones':1}
+    if type(productos) is str:
+
+        total_productos = 1
+        id_programa = productos.split('\'')[4].split(',')[-2]
+        nombre = productos.split('\'')[-4]
+        abrev = productos.split('\'')[-2]
+        programas[id_programa] = {'nombre':nombre,'abreviacion':abrev,'repeticiones':1}
+
+    else:
+        total_productos = len(productos)
+
+        for producto in productos:
+            id_programa = producto.split('\'')[4].split(',')[-2]
+            try:
+                programas[id_programa]['repeticiones'] += 1
+            except:
+                nombre = producto.split('\'')[-4]
+                abrev  = producto.split('\'')[-2]
+                programas[id_programa] = {'nombre':nombre,'abreviacion':abrev,'repeticiones':1}
 
 
     for key in programas:
@@ -317,15 +328,27 @@ def graficaBar():
         abrev = programa['abreviacion']
         programas_dict[ident] = {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':[0 for x in range(11)]}
 
-    for producto in productos:
-        id_programa = int(producto.split('\'')[4].split(',')[-2])
-        anio = int(producto.split('\'')[4].split(',')[3][15:])
+    if type(productos) is str:
+
+        id_programa = int(productos.split('\'')[4].split(',')[-2])
+        anio = int(productos.split('\'')[4].split(',')[3][15:])
         i = anio-fecha_desde
 
         if (i <= 0):
             i=0
        
         programas_dict[id_programa]['repeticiones'][i]+=1
+
+    else:
+        for producto in productos:
+            id_programa = int(producto.split('\'')[4].split(',')[-2])
+            anio = int(producto.split('\'')[4].split(',')[3][15:])
+            i = anio-fecha_desde
+
+            if (i <= 0):
+                i=0
+           
+            programas_dict[id_programa]['repeticiones'][i]+=1
 
 
     for key in programas_dict.keys():
@@ -357,15 +380,26 @@ def tabla():
         abrev = programa['abreviacion']
         programas_dict[ident] = {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':[0 for x in range(11)]}
 
-    for producto in productos:
-        id_programa = int(producto.split('\'')[4].split(',')[-2])
-        anio = int(producto.split('\'')[4].split(',')[3][15:])
+    if type(productos) is str:
+        id_programa = int(productos.split('\'')[4].split(',')[-2])
+        anio = int(productos.split('\'')[4].split(',')[3][15:])
         i = anio-fecha_desde
 
         if (i <= 0):
             i=0
        
         programas_dict[id_programa]['repeticiones'][i]+=1
+    else:
+
+        for producto in productos:
+            id_programa = int(producto.split('\'')[4].split(',')[-2])
+            anio = int(producto.split('\'')[4].split(',')[3][15:])
+            i = anio-fecha_desde
+
+            if (i <= 0):
+                i=0
+           
+            programas_dict[id_programa]['repeticiones'][i]+=1
 
 
     for key in programas_dict.keys():
