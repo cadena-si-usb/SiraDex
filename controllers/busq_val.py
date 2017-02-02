@@ -55,6 +55,8 @@ def busqueda():
 
         
         productos = db.executesql(sql)
+        print sql
+        print productos
 
         graficaPie = URL(c='busq_val',f='graficaPie',vars=dict(productos=productos))
         graficaBar = URL(c='busq_val',f='graficaBar',vars=dict(productos=productos))
@@ -271,12 +273,15 @@ def rechazar(id_producto):
 def graficaPie():
     productos = request.vars.productos
 
+    print productos
+
     pie_chart = pygal.Pie()
 
     if productos == None:
         return pie_chart.render()
 
     total_productos = len(productos)
+    print total_productos
 
     programas = {}
 
