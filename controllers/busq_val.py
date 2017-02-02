@@ -8,6 +8,7 @@ from datetime  import date
 def busqueda():
     admin = get_tipo_usuario_not_loged(session)
     try:
+
         sql = "SELECT prod.descripcion," + \
                      "prod.nombre," +\
                      "prod.id_tipo," +\
@@ -30,14 +31,14 @@ def busqueda():
            request.vars.TipoActividad != None and\
            request.vars.fecha != None and\
            request.vars.Autor != None:
-        
+            
             # Anadimos el filtro del usuario
             if request.vars.Autor != "all":
-                sql += " AND prod.usbid_usu_creador = " + request.vars.Autor
+                sql += " AND prod.usbid_usu_creador=\'" + request.vars.Autor + "\'"
 
             # Anadimos el filtro del tipo de actividad
             if request.vars.Programa != "all" and request.vars.TipoActividad == "all":
-                sql += " AND p.id_programa =" + str(request.vars.Programa)+ ")"
+                sql += " AND p.id_programa=" + str(request.vars.Programa)
 
             elif request.vars.TipoActividad != "all":
                 sql += " AND prod.id_tipo=\'" + str(request.vars.TipoActividad)+"'"
@@ -53,7 +54,7 @@ def busqueda():
         elif (session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador"):
             sql += ";"
 
-        
+        print sql
         productos = db.executesql(sql)
         print sql
         print productos
@@ -272,7 +273,7 @@ def rechazar(id_producto):
 
 def graficaPie():
     productos = request.vars.productos
-
+    print productos
     pie_chart = pygal.Pie()
 
     if productos == None:
