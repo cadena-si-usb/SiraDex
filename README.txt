@@ -115,6 +115,21 @@ Hasta ahora, las tablas que deben aparecer son:
     public | usuario                         | table    | Siradex
     public | valores_campo_catalogo          | table    | Siradex
 
+
+
+Nos salimos de postgres
+	$ \q
+	$ exit
+
+Instalamos ldap
+	$ sudo apt-get install libsasl2-dev python-dev libldap2-dev libssl-dev ldap-utils
+	$ pip install ldap
+
+	Si la linea anterior da error probar: sudo pip install python-ldap
+
+Instalamos pygal
+	$ pip install pygal
+
 4. EJECUCION
 ################################################################################
 
@@ -128,7 +143,7 @@ Si no hay errores, el sistema empezara a correr en:
 
 Verificar cualquier error y reportarlo como Issue en el repo de GitHub:
 
-    https://github.com/SergioTeranZ/Sistemas2/issues/
+    https://github.com/cadena-si-usb/SIRADEX/issues/
 
 5. ERRORES FRECUENTES
 ################################################################################
