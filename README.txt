@@ -127,6 +127,10 @@ Instalamos ldap
 Instalamos pygal
 	$ pip install pygal
 
+Revisar el nombre de la carpeta
+  El nombre TIENE que ser SiraDex, si no es asi hacer:
+    mv <nombre_actual>/ SiraDex/
+
 
 ################################################################################
 ################################# IMPORTANTE ###################################
