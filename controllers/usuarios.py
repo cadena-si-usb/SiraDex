@@ -48,7 +48,7 @@ def gestionar():
         usuario = db(db.USUARIO.usbid == usbid).select().first()
 
         ## parseamos los datos para la notificacion
-        datos_usuario = {'nombres' : usuario.nombres}
+        datos_usuario = {'nombres' : usuario.nombres + ' ' + usuario.apellidos}
         if usuario.correo_alter != None:
              datos_usuario['email'] = usuario.correo_alter
         else:
@@ -91,7 +91,7 @@ def agregar():
         submit_button='Agregar',
         labels={'usbid':'USBID','telefono':'Teléfono', 'correo_alter':'Correo alternativo','tipo':'Tipo'}
         )
-    
+
     """
     forma=SQLFORM(                              # Se hace un formulario para introducir un USBID.
         db.USUARIO,
@@ -100,18 +100,18 @@ def agregar():
         submit_button='Agregar',
         labels={'usbid':'USBID','telefono':'Teléfono', 'correo_alter':'Correo alternativo','tipo':'Tipo'})
     """
-    
+
     # Estilo del boton
     forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
     forma.element(_type='submit')['_value']="Agregar"
-    
+
     if forma.accepts(request.vars, session,formname="forma"):
-        
+
         # En usbidAux almacenamos el usbid proporcionado por el administrador
         # En buscarUser revisamos si el usuario a agregar efectivamente esta en el CAS
         usbidAux = request.vars.usbid
         buscasUser = os.popen("ldapsearch -x -h ldap.usb.ve -b \"dc=usb,dc=ve\" uid="+ usbidAux +" |grep numEntries")
-        
+
         if buscasUser.read() == '':
             message = T("El usuario no esta registrado en el CAS")
         else:
@@ -121,8 +121,8 @@ def agregar():
             telefonoAux = request.vars.telefono
             correo_alterAux = request.vars.correo_alter
             tipoAux = request.vars.tipo
-            
-            
+
+
             # Primero verificamos que el usuario que intenta agregarse no esta en la base de datos
             if db(db.USUARIO.usbid == usbidAux).isempty():
                 # Luego de insertar al usuario, mostramos un formulario al administrador con los datos de la persona agregada
@@ -144,13 +144,13 @@ def agregar():
                     return dict(form = form, message = message,errores=forma.errors, bool = 1, admin=get_tipo_usuario(session))
                 else:
                     message = T("Debe Especificar un Tipo")
-                
+
             else:
                 message= T("El usuario ya esta registrado")
-        
+
     else:
         print("ERRORES: ",forma.errors)
-            
+
     return dict(form = forma,message = message,errores=forma.errors, admin=get_tipo_usuario(session))
 
 
