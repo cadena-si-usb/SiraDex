@@ -59,7 +59,7 @@
   <span class="glyphicon glyphicon-eye-close" id="ocultar_tabla" title="Ocultar graficas"></span>
   <span class="glyphicon glyphicon-eye-open" id="ver_tabla" title="Ver graficas" style="display: none;"></span></h2>
   <div class="row tabla">
-    <embed type="image/svg+xml" src="{{=tabla }}" />
+    <embed type="image/svg+xml" src="{{=tabla }}" style="margin-left: 5%;height: auto;" />
   </div>
   {{pass}}
 {{except:}}
@@ -127,10 +127,10 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"><center>Grafica de Torta de productos</center></h4>
+        <h4 class="modal-title"><center>Grafica de Productos por Programa</center></h4>
       </div>
       <div class="modal-body">
-        <embed type="image/svg+xml" src="{{=graficaPie }}" style="max-height: 100%" />
+        <embed type="image/svg+xml" src="{{=graficaPie }}" style="max-height: 70vh" />
         
       </div>
       <div class="modal-footer">
@@ -153,10 +153,10 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"><center>Grafica de Barra</center></h4>
+        <h4 class="modal-title"><center>Grafica de Producto por año</center></h4>
       </div>
       <div class="modal-body">
-        <embed type="image/svg+xml" src="{{=graficaBar }}" style="max-height: 100%" />
+        <embed type="image/svg+xml" src="{{=graficaBar }}" style="max-height: 70vh" />
       </div>
       <div class="modal-footer">
       <center>
@@ -170,30 +170,6 @@
   </div>
 </div>  
 
-<!-- Modal 3 -->
-<!-- <div id="modalLine" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"><center>Grafica de Lineas</center></h4>
-      </div>
-      
-      <div class="modal-body">
-        <embed type="image/svg+xml" src="{{=tabla }}" style="max-height: 100%" />
-      </div>
-      <div class="modal-footer">
-      <center>
-        <button type="button" class="btn btn-default green btn-border " data-dismiss="modal">
-        <span class="glyphicon glyphicon-resize-small"></span>
-        Cerrar</button>
-        </center>
-      </div>
-    </div>
-
-  </div>
-</div> -->
 {{except:}}
 {{pass}}
 {{end}}
