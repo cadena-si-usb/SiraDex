@@ -406,7 +406,7 @@ def tabla():
     for key in programas_dict.keys():
         line_chart.add(programas_dict[key]['abreviacion'], programas_dict[key]['repeticiones'])
 
-    return line_chart.render_table(transpose=True)            
+    return line_chart.render_table(transpose=True,style=True,total=True)            
 
 def eliminar():
 
