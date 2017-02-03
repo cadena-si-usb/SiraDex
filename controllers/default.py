@@ -25,9 +25,9 @@ def call(): return service()
 
 # URLS DE RETORNO PARA EL CAS ##
 # PARA EL SERVIDOR:
-URL_RETORNO = "http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas"
+# URL_RETORNO = "http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas"
 # PARA DESSARROLLO. Cambiar el puerto 8000 si es necesario.
-# URL_RETORNO = "http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas"
+URL_RETORNO = "http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas"
 
 # FUNCIONES USUARIO
 
@@ -167,7 +167,7 @@ def grafica():
         num_productos = db.executesql(query2)[0][0]
 
         pie_chart = pygal.Pie()
-        #pie_chart.title = 'Productos del usuario'
+        pie_chart.title = 'Productos del usuario'
         for producto in datos:
             porcentaje = (producto[2]*100)//num_productos
             pie_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])

@@ -112,6 +112,51 @@ Hasta ahora, las tablas que deben aparecer son:
     public | usuario                         | table    | Siradex
     public | valores_campo_catalogo          | table    | Siradex
 
+
+
+Nos salimos de postgres
+	$ \q
+	$ exit
+
+Instalamos ldap
+	$ sudo apt-get install libsasl2-dev python-dev libldap2-dev libssl-dev ldap-utils
+	$ pip install ldap
+
+	Si la linea anterior da error probar: sudo pip install python-ldap
+
+Instalamos pygal y reportlab
+	$ pip install pygal
+  $ pip install reportlab
+    Nota: si es necesario colocar sudo
+
+Revisar el nombre de la carpeta
+  El nombre TIENE que ser SiraDex, si no es asi hacer:
+    mv <nombre_actual>/ SiraDex/
+
+
+################################################################################
+################################# IMPORTANTE ###################################
+################################################################################
+Si estas trabajando en local:
+    En controllers/default:
+      Comentar la linea de URL_RETORNO del servidor y descomentar la del entorno
+      de desarroll0: 
+          # URLS DE RETORNO PARA EL CAS ##
+          # PARA EL SERVIDOR:
+          # URL_RETORNO = "http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas"
+          # PARA DESSARROLLO. Cambiar el puerto 8000 si es necesario.
+          URL_RETORNO = "http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas"
+
+    En views/layoutSIRADEXloged.html:
+      Comentar el enlace del servidor y descomentar el del desarrollo:
+          <!-- EN SERVIDOR -->
+                    <!--<a  id = login
+                      class ='btn btn-xs'
+                      href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas'> -->
+          <!-- EN DESARROLLO -->
+                    <a  class ='btn btn-xs '
+                      href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas'> 
+
 4. EJECUCION
 ################################################################################
 
@@ -125,7 +170,7 @@ Si no hay errores, el sistema empezara a correr en:
 
 Verificar cualquier error y reportarlo como Issue en el repo de GitHub:
 
-    https://github.com/SergioTeranZ/Sistemas2/issues/
+    https://github.com/cadena-si-usb/SIRADEX/issues/
 
 5. ERRORES FRECUENTES
 ################################################################################
