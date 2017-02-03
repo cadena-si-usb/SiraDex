@@ -20,7 +20,6 @@ import os
 '''
 
 def enviar_correo_validacion(mail, usuario, producto):
-		print("correo validar")
 		email  = usuario['email']
 		asunto = '[SIRADEX] Producto Validado'
 
@@ -33,10 +32,43 @@ def enviar_correo_validacion(mail, usuario, producto):
 									</p>
 									<p>
 										 Recuerde que siempre puede ver el estado de este y sus otros productos
-										 iniciando sesión en el <a href="https://siradex.dex.usb.ve/SiraDex">SIDADEX.</a>
+										 iniciando sesión en el <a href="https://siradex.dex.usb.ve/SiraDex">SIRADEX.</a>
 									</p>
 									<p> Saludos cordiales.</p>
 							 '''  % {'nombres': usuario['nombres'], 'nombreProducto' : producto['nombre']}
+
+		body   =  get_plantilla_html(mensaje)
+
+		mail.send(email, asunto, body)
+
+'''
+		Envia un correo que indica que una producto fue validado a los coautores
+		de producto.
+		Parametros:
+				mail     = configuracion de web2py de correo.
+				coautor  = {email, nombres}
+				creador  = {email, nombres}
+				producto = {nombre}
+'''
+
+def enviar_correo_validacion_coautor(mail, coautor, creador, producto):
+		email  = coautor['email']
+		asunto = '[SIRADEX] Producto Validado'
+
+		# Mensaje del Correo
+
+		mensaje  = '''<h1>Estimado/a %(nombres)s:</h1>
+									<p>Nos complace comunicarle que su Producto de Extensión
+												<b> %(nombreProducto)s</b>
+												cargado en el sistema SIRADEX por <b>%(usuarioCreador)s</b>
+												fue validado satisfactoriamente por el Comité de Evaluación del Decanato de Extensión.
+									</p>
+									<p>
+										 Recuerde que siempre puede ver el estado de este y sus otros productos
+										 iniciando sesión en el <a href="https://siradex.dex.usb.ve/SiraDex">SIRADEX.</a>
+									</p>
+									<p> Saludos cordiales.</p>
+							 '''  % {'nombres': coautor['nombres'], 'nombreProducto' : producto['nombre'], 'usuarioCreador' : creador['nombres'] }
 
 		body   =  get_plantilla_html(mensaje)
 
@@ -67,12 +99,12 @@ def enviar_correo_rechazo(mail, usuario, producto, razon):
 											<br>
 									''' % {'razon':razon}
 		mensaje +=  '''
-									<p> Usted puede ingresar al <a href="https://siradex.dex.usb.ve/SiraDex">SIDADEX.</a>
+									<p> Usted puede ingresar al <a href="https://siradex.dex.usb.ve/SiraDex">SIRADEX.</a>
 											para editar este producto y solicitar nuevamente su evaluación.
 									</p>
 									<p>
 										 Recuerde que siempre puede ver el estado de este y sus otros productos
-										 iniciando sesión en el Sistema SIDADEX.</a>
+										 iniciando sesión en el Sistema SIRADEX.</a>
 									</p>
 									<p> Saludos cordiales.</p>
 								'''
@@ -116,7 +148,7 @@ def enviar_correo_bienvenida(mail, usuario):
 									Ahora podrá subir sus productos y esperar la validación por parte del Comité de Evaluación del Decanato de Extensión.
 								</p>
 								<p>
-									Lo primero que debe realizar es ingresar al <a href="https://siradex.dex.usb.ve/EditarPerfil">SIDADEX</a>
+									Lo primero que debe realizar es ingresar al <a href="https://siradex.dex.usb.ve/EditarPerfil">SIRADEX</a>
 									para actualizar su número de teléfono y correo electrónico.
 								</p>
 								<p> Saludos cordiales.</p>

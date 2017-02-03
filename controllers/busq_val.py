@@ -30,7 +30,7 @@ def busqueda():
            request.vars.TipoActividad != None and\
            request.vars.fecha != None and\
            request.vars.Autor != None:
-        
+
             # Anadimos el filtro del usuario
             if request.vars.Autor != "all":
                 sql += " AND prod.usbid_usu_creador = " + request.vars.Autor
@@ -53,13 +53,13 @@ def busqueda():
         elif (session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador"):
             sql += ";"
 
-        
+
         productos = db.executesql(sql)
 
         graficaPie = URL(c='busq_val',f='graficaPie',vars=dict(productos=productos))
         graficaBar = URL(c='busq_val',f='graficaBar',vars=dict(productos=productos))
-        tabla = URL(c='busq_val',f='tabla',vars=dict(productos=productos))     
-        
+        tabla = URL(c='busq_val',f='tabla',vars=dict(productos=productos))
+
         return locals()
     except:
 
@@ -116,7 +116,7 @@ def ver_producto():
             documento += [temp]
         else :
              elementos.append(Field(nombre_campo, default=campo_valor.valor_campo, writable=False))
-    
+
     print(documento)
     if len(elementos) != 0:
         form_datos = SQLFORM.factory(*elementos, readonly=True)
@@ -180,7 +180,7 @@ def ver_producto():
         usuario = db(db.USUARIO.usbid == producto.usbid_usu_creador).select().first()
 
         # parseamos los datos para la notificacion
-        datos_usuario = {'nombres' : usuario.nombres}
+        datos_usuario = {'nombres' : usuario.nombres + ' ' + usuario.apellidos}
         if usuario.correo_alter != None:
             datos_usuario['email'] = usuario.correo_alter
         else:
@@ -240,7 +240,7 @@ def validar(id_producto):
     usuario = db(db.USUARIO.usbid == producto.usbid_usu_creador).select().first()
 
     # parseamos los datos para la notificacion
-    datos_usuario = {'nombres' : usuario.nombres}
+    datos_usuario = {'nombres' : usuario.nombres + ' ' + usuario.apellidos}
     if usuario.correo_alter != None:
         datos_usuario['email'] = usuario.correo_alter
     else:
@@ -248,8 +248,22 @@ def validar(id_producto):
 
     producto = {'nombre': producto.nombre}
 
-    # enviamos la notificacion
+    # enviamos la notificacion al usuario creador
     enviar_correo_validacion(mail,datos_usuario, producto)
+
+    # enviamos notificacion a los coautores (si existen)
+    participaciones = db(db.PARTICIPA_PRODUCTO.id_producto == id_producto).select()
+    for participacion in participaciones:
+        #obtenemos el coautor
+        usuario = db(db.USUARIO.usbid == participacion.usbid_usuario).select().first()
+
+        datos_coautor = {'nombres' : usuario.nombres + ' ' + usuario.apellidos }
+        if usuario.correo_alter != None:
+            datos_coautor['email'] = usuario.correo_alter
+        else:
+            datos_coautor['email'] = usuario.correo_inst
+        # Enviamos el correo.
+        enviar_correo_validacion_coautor(mail, datos_coautor, datos_usuario, producto)
 
     ## FIN NOTIFICACION ##
 
@@ -307,7 +321,7 @@ def graficaBar():
         return line_chart.render()
 
     line_chart.x_labels = map(str, range(fecha_desde, fecha_hasta + 1))
-    
+
     programas = db(db.PROGRAMA['papelera']==False).select().as_list()
 
     programas_dict = {}
@@ -324,7 +338,7 @@ def graficaBar():
 
         if (i <= 0):
             i=0
-       
+
         programas_dict[id_programa]['repeticiones'][i]+=1
 
 
@@ -347,7 +361,7 @@ def tabla():
         return line_chart.render_table(transpose=True) 
 
     line_chart.x_labels = map(str, range(fecha_desde, fecha_hasta + 1))
-    
+
     programas = db(db.PROGRAMA['papelera']==False).select().as_list()
 
     programas_dict = {}
@@ -364,14 +378,14 @@ def tabla():
 
         if (i <= 0):
             i=0
-       
+
         programas_dict[id_programa]['repeticiones'][i]+=1
 
 
     for key in programas_dict.keys():
         line_chart.add(programas_dict[key]['abreviacion'], programas_dict[key]['repeticiones'])
 
-    return line_chart.render_table(transpose=True)            
+    return line_chart.render_table(transpose=True)
 
 def eliminar():
 
