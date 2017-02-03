@@ -25,32 +25,32 @@
       <span class="glyphicon glyphicon-eye-close" id="ocultar_graficas" title="Ocultar graficas"></span>
       <span class="glyphicon glyphicon-eye-open" id="ver_graficas" title="Ver graficas" style="display: none;"></span></h2>
     <div class="row graficas">
-      <div class="col-md-4"  >  
+      <div class="col-md-6"  >  
         <div class="tab-content card" style="text-align: center;">
           <embed type="image/svg+xml" src="{{=graficaPie }}" />
-         <button type="button" id="btn-pieChart" class="btn btn-default green btn-border" data-toggle="modal" data-target="#modalPie" style="margin-top: -5em;">
+         <button type="button" id="btn-pieChart" class="btn btn-default green btn-border" data-toggle="modal" data-target="#modalPie" style="margin-top: 1em;">
           <span class="glyphicon glyphicon-resize-full"></span> Aumentar
         </button>
         </div>
       </div>
 
-      <div class="col-md-4">  
+      <div class="col-md-6">  
         <div class="tab-content card"  style="text-align: center;">
           <embed type="image/svg+xml" src="{{=graficaBar }}" />
-          <button type="button" id="btn-barChart" class="btn btn-default green btn-border" data-toggle="modal" data-target="#modalBar" style="margin-top: -5em;">
+          <button type="button" id="btn-barChart" class="btn btn-default green btn-border" data-toggle="modal" data-target="#modalBar" style="margin-top: 1em;">
             <span class="glyphicon glyphicon-resize-full"></span> Aumentar
           </button>      
         </div>
       </div>
 
-      <div class="col-md-4">  
+<!--       <div class="col-md-4">  
         <div class="tab-content card"  style="text-align: center;">
           <embed type="image/svg+xml" src="{{=tabla }}" />
           <button type="button" id="btn-barLine" class="btn btn-default green btn-border" data-toggle="modal" data-target="#modalLine" style="margin-top: -5em;">
             <span class="glyphicon glyphicon-resize-full"></span> Aumentar
           </button>        
         </div>
-      </div>
+      </div> -->
     </div>
   {{pass}}
 {{except:}}
