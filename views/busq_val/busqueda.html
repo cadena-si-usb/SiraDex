@@ -16,10 +16,10 @@
   }
 </style>
 
-<!-- Titulo graficas -->
-
+<!-- GRAFICAS -->
 {{try:}}
   {{if productos != ():}}    
+  <!-- Titulo graficas -->
     <h2>Graficas
     <!-- iconos mostrar/ocultar -->
       <span class="glyphicon glyphicon-eye-close" id="ocultar_graficas" title="Ocultar graficas"></span>
@@ -52,10 +52,20 @@
         </div>
       </div> -->
     </div>
+
+<!-- TABLA -->
+<h2>Tabla
+<!-- iconos mostrar/ocultar -->
+  <span class="glyphicon glyphicon-eye-close" id="ocultar_tabla" title="Ocultar graficas"></span>
+  <span class="glyphicon glyphicon-eye-open" id="ver_tabla" title="Ver graficas" style="display: none;"></span></h2>
+  <div class="row tabla">
+    <embed type="image/svg+xml" src="{{=tabla }}" />
+  </div>
   {{pass}}
 {{except:}}
 {{pass}}
 
+<!-- ACTIVIDADES -->    
 <h2>Actividades</h2>
   <div class="tab-content card">
 
@@ -107,9 +117,9 @@
     {{pass}}
   </div>
 
-
-<!-- Modal 1 -->
+<!-- MODALS -->
 {{try:}}
+<!-- Modal 1 -->
 <div id="modalPie" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
@@ -161,15 +171,15 @@
 </div>  
 
 <!-- Modal 3 -->
-<div id="modalLine" class="modal fade" role="dialog">
+<!-- <div id="modalLine" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
-    <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title"><center>Grafica de Lineas</center></h4>
       </div>
+      
       <div class="modal-body">
         <embed type="image/svg+xml" src="{{=tabla }}" style="max-height: 100%" />
       </div>
@@ -183,7 +193,7 @@
     </div>
 
   </div>
-</div>
+</div> -->
 {{except:}}
 {{pass}}
 {{end}}
@@ -202,9 +212,21 @@
               $("#ver_graficas").hide();
               $("#ocultar_graficas").show();
               $(".graficas").toggle(300);
-            });                          
-        });
+            });  
 
+            $("#ocultar_tabla").click(function(){
+              $("#ocultar_tabla").hide();
+              $("#ver_tabla").show();
+              $(".tabla").toggle(300);
+            });
+
+            $("#ver_tabla").click(function(){
+              $("#ver_tabla").hide();
+              $("#ocultar_tabla").show();
+              $(".tabla").toggle(300);
+            });
+
+        });
     </script>
 
 
