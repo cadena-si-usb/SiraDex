@@ -124,8 +124,10 @@ Instalamos ldap
 
 	Si la linea anterior da error probar: sudo pip install python-ldap
 
-Instalamos pygal
+Instalamos pygal y reportlab
 	$ pip install pygal
+  $ pip install reportlab
+    Nota: si es necesario colocar sudo
 
 Revisar el nombre de la carpeta
   El nombre TIENE que ser SiraDex, si no es asi hacer:
