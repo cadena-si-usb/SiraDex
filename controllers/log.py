@@ -6,6 +6,9 @@ from funciones_siradex import get_tipo_usuario
 from log import download_logfile
 import StringIO
 
+'''
+
+'''
 def consultar():
     admin = get_tipo_usuario(session)
 
