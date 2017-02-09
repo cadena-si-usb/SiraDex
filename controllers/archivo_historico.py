@@ -9,13 +9,14 @@ Maneja elementos borrados de:
 '''
 
 from funciones_siradex import get_tipo_usuario
+from log import insertar_log
 
 #. --------------------------------------------------------------------------- .
 '''
  Vista de gestion de la papelera
 '''
 def gestionar():
-  
+
     admin = get_tipo_usuario(session)
     if (admin==0):
         redirect(URL(c ="default",f="index"))
@@ -50,7 +51,7 @@ def gestionar():
  de manera definitiva
 '''
 def eliminar_tipo_papelera():
-  
+
     admin = get_tipo_usuario(session)
     if (admin==0):
         redirect(URL(c ="default",f="index"))
@@ -87,6 +88,8 @@ def eliminar_tipo_papelera():
     # Borro el tipo_activdad
     db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).delete()
 
+    insertar_log(db, 'PAPELERA', datetime.datetime.now(), request.client, 'ELIMINADO TIPO DE ACTIVIDAD CON ID '+ str(id_tipo), session.usuario['usbid'])
+
     # Guardo mensaje de exito
     session.message = 'Tipo Eliminado'
     redirect(URL('gestionar.html'))
@@ -112,6 +115,7 @@ def eliminar_programa_papelera():
 
     db(db.PROGRAMA.id_programa == id_programa).delete()
 
+    insertar_log(db, 'PAPELERA', datetime.datetime.now(), request.client, 'ELIMINADO PROGRAMA CON ID '+ str(id_programa), session.usuario['usbid'])
     # Guardo mensaje de exito
     session.message = 'Programa Eliminado'
     redirect(URL('gestionar.html'))
@@ -120,7 +124,7 @@ def eliminar_programa_papelera():
  Metodo que restaura un tipo actividad de la papelera
 '''
 def restaurar_tipo():
-  
+
     admin = get_tipo_usuario(session)
     if (admin==0):
         redirect(URL(c ="default",f="index"))
@@ -129,10 +133,11 @@ def restaurar_tipo():
     tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
     tipo_actividad.update(papelera=False)
     tipo_actividad.update_record()
+    insertar_log(db, 'PAPELERA', datetime.datetime.now(), request.client, 'RESTAURADO TIPO DE ACTIVIDAD CON ID '+ str(id_tipo), session.usuario['usbid'])
     redirect(URL('gestionar.html'))
 
 def restaurar_programa():
-  
+
     admin = get_tipo_usuario(session)
     if (admin==0):
         redirect(URL(c ="default",f="index"))
@@ -143,4 +148,5 @@ def restaurar_programa():
     programa.papelera = False
     programa.update_record()
     session.message = 'Programa Restaurado.'
+    insertar_log(db, 'PAPELERA', datetime.datetime.now(), request.client, 'RESTAURADO PROGRAMA CON ID '+ str(id_programa), session.usuario['usbid'])
     redirect(URL('gestionar.html'))
