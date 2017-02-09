@@ -3,7 +3,7 @@
     Este controlador provee las funciones necesarias para la consulta del LOG.
 '''
 from funciones_siradex import get_tipo_usuario
-from log import download_logfile
+from log import insertar_log, download_logfile
 import StringIO
 
 '''
@@ -21,6 +21,8 @@ def consultar():
 
 def download():
 
+    insertar_log(db, 'LOG', datetime.datetime.now(), request.client, 'DESCARGA DE LOG', session.usuario['usbid'])
+    
     # creamos el archivo con el backup
     rows = db.executesql('SELECT * FROM LOG_SIRADEX;', fields=db.LOG_SIRADEX)
     tempfile = StringIO.StringIO()
