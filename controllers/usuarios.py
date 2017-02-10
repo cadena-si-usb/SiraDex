@@ -10,6 +10,7 @@ def download(): return response.download(request,db)
 def call(): return service()
 ### end requires
 from funciones_siradex import get_tipo_usuario
+from log import insertar_log
 
 def gestionar():
 
@@ -56,6 +57,7 @@ def gestionar():
 
         ## Enviamos la notificacion
         enviar_correo_contacto(mail, datos_usuario, asunto, mensaje)
+        insertar_log(db, 'CONTACTO', datetime.datetime.now(), request.client, 'ENVIO DE MENSAJE A '+ usbid, session.usuario['usbid'])
 
         session.message = 'Correo enviado satisfactoriamente'
         redirect(URL('gestionar'))
@@ -141,6 +143,7 @@ def agregar():
                             telefono = telefonoAux,
                             correo_alter = correo_alterAux,
                             tipo = tipoAux)
+                    insertar_log(db, 'USUARIO', datetime.datetime.now(), request.client, 'CREACION DE USUARIO ' + usbidAux, session.usuario['usbid'])
                     return dict(form = form, message = message,errores=forma.errors, bool = 1, admin=get_tipo_usuario(session))
                 else:
                     message = T("Debe Especificar un Tipo")
@@ -167,6 +170,7 @@ def eliminar():
             print request.args[0]
             if (not db(db.USUARIO.usbid == request.args[0]).isempty()):
                 db(db.USUARIO.usbid == request.args[0]).delete()
+                insertar_log(db, 'USUARIO', datetime.datetime.now(), request.client, 'ELIMINACION DE USUARIO ' + request.args[0], session.usuario['usbid'])
                 redirect(URL('gestionar'))
         else:
             session.message = T("Para eliminar su cuenta, por favor comuníquese con un administrador")
@@ -196,6 +200,7 @@ def modificar():
         if (not db(db.USUARIO.usbid == request.args[0]).isempty()):
             if(request.args[0] != session.usuario["usbid"]):
                 db(db.USUARIO.usbid == request.args[0]).update(tipo = request.vars.tipo)
+                insertar_log(db, 'USUARIO', datetime.datetime.now(), request.client, 'CAMBIO DE USUARIO ' + request.args[0] + ' A TIPO ' + request.vars.tipo.upper(), session.usuario['usbid'])
                 redirect(URL('gestionar'))
             else:
                 message = T("Para cambiar sus permisos, por favor comuníquese con un administrador")

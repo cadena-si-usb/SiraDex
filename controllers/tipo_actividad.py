@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from funciones_siradex import get_tipo_usuario
+from log import insertar_log
 
 #. --------------------------------------------------------------------------- .
 '''
@@ -110,6 +111,7 @@ def gestionar():
       id_programa = request.vars.Programa
       tipo.id_programa = id_programa
       tipo.update_record()                                 # Se actualiza el tipo de actividad.
+      insertar_log(db, 'ACTIVIDAD', datetime.datetime.now(), request.client, 'MODIFICACION DE TIPO DE ACTIVIDAD CON ID '+ str(request.vars.Id_tipo), session.usuario['usbid'])
 
     if formulario_agregar_tipo.accepts(request.vars, session,formname="formulario_agregar_tipo"):
       id_programa = request.vars.Programa
@@ -118,6 +120,7 @@ def gestionar():
                                tipo_p_r = request.vars.Tipo,
                                descripcion = request.vars.Descripcion,
                                id_programa = id_programa)
+      insertar_log(db, 'ACTIVIDAD', datetime.datetime.now(), request.client, 'NUEVO TIPO DE ACTIVIDAD '+ request.vars.Nombre.upper(), session.usuario['usbid'])
 
     if len(request.args) == 0:
 
@@ -205,6 +208,7 @@ def agregar_tipo():
                                  tipo_p_r = request.vars.Tipo,
                                  descripcion = request.vars.Descripcion,
                                  id_programa = id_programa)
+        insertar_log(db, 'ACTIVIDAD', datetime.datetime.now(), request.client, 'NUEVO TIPO DE ACTIVIDAD '+ request.vars.Nombre.upper(), session.usuario['usbid'])
     elif not hayPrograma :
         session.message = 'Lo sentimos, no existen programas.'
     # En caso de que el formulario no sea aceptado
@@ -290,7 +294,6 @@ def eliminar_campo():
     # Busco el campo y lo elimno de los campos
     db(db.CAMPO.id_campo == id_campo).delete()
 
-
     redirect(URL('ver_tipo_actividad.html',args=[id_tipo]))
 
 #. --------------------------------------------------------------------------- .
@@ -309,6 +312,7 @@ def enviar_tipo_papelera():
     tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
     tipo.update(papelera=True)
     tipo.update_record()
+    insertar_log(db, 'ACTIVIDAD', datetime.datetime.now(), request.client, 'TIPO DE ACTIVIDAD CON ID '+ str(id_tipo) + ' ENVIADO A LA PAPELERA', session.usuario['usbid'])
     session.message = 'Tipo Enviado a la Papelera'
     redirect(URL('gestionar.html'))
 

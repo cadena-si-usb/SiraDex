@@ -1,6 +1,6 @@
 
 CREATE TABLE USUARIO(
-  ci             VARCHAR(10)   NOT NULL,
+  ci             VARCHAR(8)   NOT NULL,
   usbid          VARCHAR(20)   NOT NULL,
   nombres        VARCHAR(50),
   apellidos      VARCHAR(50),
@@ -58,6 +58,7 @@ CREATE TABLE PRODUCTO(
   fecha_realizacion   DATE,
   fecha_modificacion  DATE,
   lugar               VARCHAR(50),
+  colaboradores       VARCHAR(256),
   usbid_usu_creador      VARCHAR(20),
 
   CONSTRAINT PK_PRODUCTO
@@ -169,6 +170,7 @@ CREATE TABLE PARTICIPA_PRODUCTO(
 );
 
 CREATE TABLE LOG_SIRADEX(
+  id_log        SERIAL NOT NULL,
   accion        TEXT,
   accion_fecha  DATE,
   accion_ip     VARCHAR(256),
@@ -176,7 +178,7 @@ CREATE TABLE LOG_SIRADEX(
   usbid_usuario    VARCHAR(20),
 
   CONSTRAINT PK_LOG
-             PRIMARY KEY (accion,accion_fecha,accion_ip),
+             PRIMARY KEY (id_log),
   CONSTRAINT FK_LOG_USBID_USUARIO
              FOREIGN KEY (usbid_usuario)
              REFERENCES  USUARIO(usbid)
