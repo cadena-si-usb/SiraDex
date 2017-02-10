@@ -173,6 +173,7 @@ db.define_table('TIPO_ACTIVIDAD',
                      IS_LENGTH(256,error_message='El nombre no pude ser más de 256 caracteres')]),
     Field('nro_campos', type='integer', requires=IS_NOT_EMPTY(error_message='No puede ser vacía')),
     Field('papelera', type='boolean', notnull = True, default=False),
+    Field('validacion', type='boolean',notnull=True,default=True),
     Field('modif_fecha', type='date'),
     primarykey=['id_tipo'],
     migrate=False
