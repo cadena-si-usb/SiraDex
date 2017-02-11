@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from notificaciones import *
 from funciones_siradex import get_tipo_usuario,get_tipo_usuario_not_loged
+from log import insertar_log
 import pygal
 from datetime  import date
 
@@ -233,6 +234,7 @@ def validar(id_producto):
         redirect(url)
 
     db(db.PRODUCTO.id_producto == id_producto).update(estado='Validado')
+    insertar_log(db, 'VALIDACION', datetime.datetime.now(), request.client, 'PRODUCTO CON ID ' + str(id_producto) + ' VALIDADO', session.usuario['usbid'])
 
     ## INICIO NOTIFICACION ##
 
@@ -282,6 +284,7 @@ def rechazar(id_producto):
         redirect(URL(c ="default",f="index"))
 
     db(db.PRODUCTO.id_producto == id_producto).update(estado='No Validado')
+    insertar_log(db, 'VALIDACION', datetime.datetime.now(), request.client, 'PRODUCTO CON ID ' + str(id_producto) + ' NO VALIDADO', session.usuario['usbid'])
     session.message = 'Producto rechazado'
     redirect(URL('gestionar_validacion.html'))
 
