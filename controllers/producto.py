@@ -15,6 +15,7 @@ from reportlab.lib        import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.enums  import *
 from funciones_siradex import get_tipo_usuario
+from log import insertar_log
 
 def gestionar():
     admin = get_tipo_usuario(session)
@@ -145,7 +146,7 @@ def agregar():
 
         if obligatorio:
             obl[nombre]= tipo_campo
-            if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',label=rows_campo.nombre+"  (*)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
+            if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date', label=rows_campo.nombre+"  (**)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
             elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
             elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX')]))
             elif tipo_campo in ['Documento']:         fields.append(Field(nombre,'upload',label=rows_campo.nombre+" (*)",uploadfolder=os.path.join(request.folder,'uploads') ,requires=[IS_NOT_EMPTY(error_message='Debe subirse un archivo')]))
@@ -181,15 +182,15 @@ def agregar():
                                                          INPUT(_value='Enviar Producto',_type="submit", _class="btn blue-add btn-block btn-border ")])
     form.element()
 
+    #fix para el datepicker de las fechas:
     for i in obl.keys():
-        form.element(_name=i)['_class']="form-control obligatoria "+ obl[i]
+        form.element(_name=i)['_class']= form.element(_name=i)['_class'] + " obligatoria "+ obl[i]
 
     for i in no_obl.keys():
-        form.element(_name=i)['_class']="form-control "+ no_obl[i]
+        form.element(_name=i)['_class']= form.element(_name=i)['_class'] + ' ' + obl[i]
 
     for f in form.elements("input"):
         print f
-
 
     if form.process().accepted:
         no = ['nombre','descripcion','fecha_realizacion','lugar']
@@ -202,6 +203,11 @@ def agregar():
                                       estado= estado, fecha_realizacion=form.vars.fecha_realizacion, fecha_modificacion=now, \
                                       lugar = form.vars.lugar, usbid_usu_creador= session.usuario['usbid'])
         id_producto = dicc_producto['id_producto']
+
+        if request.vars.borrador:
+            insertar_log(db, 'PRODUCTO', datetime.datetime.now(), request.client, 'NUEVO BORRADOR CON ID ' + str(id_producto), session.usuario['usbid'])
+        else:
+            insertar_log(db, 'PRODUCTO', datetime.datetime.now(), request.client, 'NUEVO PRODUCTO CON ID ' + str(id_producto), session.usuario['usbid'])
 
         for var in form.vars:
             if not(var in no):
@@ -343,7 +349,7 @@ def modificar():
             if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
             elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
             elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX')]))
-            elif tipo_campo in ['Documento']:         
+            elif tipo_campo in ['Documento']:
                 temp= [str(rows_campo.id_campo), nombre]
                 documento+= temp
                 fields.append(Field(nombre,'upload',label=rows_campo.nombre+" (*)",uploadfolder=os.path.join(request.folder,'uploads'),requires=[IS_NOT_EMPTY(error_message='Debe subirse un archivo')]))
@@ -357,7 +363,7 @@ def modificar():
             if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',requires=IS_EMPTY_OR(IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD'))))
             elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string'))
             elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX'))))
-            elif tipo_campo in ['Documento']:         
+            elif tipo_campo in ['Documento']:
                 temp= [str(rows_campo.id_campo), nombre]
                 documento+= temp
                 fields.append(Field(nombre,'upload',requires=IS_EMPTY_OR(IS_UPLOAD_FILENAME()),uploadfolder=os.path.join(request.folder,'uploads')))
@@ -381,11 +387,12 @@ def modificar():
     for nombre_campo in valores.keys():
         setattr(form.vars, nombre_campo, valores[nombre_campo])
 
+    #fix para el datepicker de las fechas:
     for i in obl.keys():
-        form.element(_name=i)['_class']="form-control obligatoria "+ obl[i]
+        form.element(_name=i)['_class']= form.element(_name=i)['_class'] + " obligatoria "+ obl[i]
 
     for i in no_obl.keys():
-        form.element(_name=i)['_class']="form-control "+ no_obl[i]
+        form.element(_name=i)['_class']= form.element(_name=i)['_class'] + ' ' + obl[i]
 
     for f in form.elements("input"):
         print f
@@ -396,8 +403,10 @@ def modificar():
         sql = ''
         if request.vars.borrador:
             sql = "UPDATE PRODUCTO SET estado = 'Borrador' WHERE id_producto = '"+str(id_producto)+"';"
+            insertar_log(db, 'PRODUCTO', datetime.datetime.now(), request.client, 'MODICIFACION DE BORRADOR CON ID ' + str(id_producto), session.usuario['usbid'])
         else:
             sql = "UPDATE PRODUCTO SET estado = 'Por Validar' WHERE id_producto = '"+str(id_producto)+"';"
+            insertar_log(db, 'PRODUCTO', datetime.datetime.now(), request.client, 'NUEVO PRODUCTO CON ID ' + str(id_producto), session.usuario['usbid'])
 
         sql2 = "UPDATE PRODUCTO SET fecha_modificacion='"+str(now.date())+"' WHERE id_producto = '"+str(id_producto)+"';"
         db.executesql(sql)
@@ -499,6 +508,7 @@ def eliminar():
     producto = db(db.PRODUCTO.id_producto == id_act)
     producto.delete()
 
+    insertar_log(db, 'PRODUCTO', datetime.datetime.now(), request.client, 'PRODUCTO CON ID ' + str(id_act) + ' ELIMINADO', session.usuario['usbid'])
     redirect(URL('gestionar'))
 
     #return "producto {} eliminada".format(producto)
@@ -679,7 +689,7 @@ def get_pdf():
     elements.append(Paragraph('Universidad Simón Bolívar' , estilo_titulo))
     elements.append(Paragraph('Vicerrectorado Académico' , estilo_titulo))
     elements.append(Paragraph('Deacanato de Extensión' , estilo_titulo))
-    elements.append(Paragraph('Sistema de Registro de Actividades de Extensión (SIRADEX)' , estilo_titulo))
+    elements.append(Paragraph('Sistema de Registro de Actividades de Extensión (SIRADEx)' , estilo_titulo))
     elements.append(Paragraph('<br/><br/>DATOS DEL PRODUCTO' , estilo_titulo))
 
     data = [

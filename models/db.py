@@ -188,6 +188,7 @@ db.define_table('PRODUCTO',
     Field('fecha_realizacion', type='date'),
     Field('fecha_modificacion', type='date'),
     Field('lugar', type='string',length=50),
+    Field('colaboradores', type='string',length=256),
     Field('usbid_usu_creador', db.USUARIO.usbid),
     primarykey=['id_producto'],
     migrate=False
@@ -197,7 +198,7 @@ db.define_table('COMPROBANTE',
     Field('id_comprobante', type='id'),
     Field('archivo', type='upload',autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads')),
     Field('descripcion', type='string', length=100),
-    Field('producto','reference producto'),
+    Field('producto','reference producto'),  #No entiendo porque se hace esto.Preguntar.En el esquema se usa para cascada.
     primarykey=['id_comprobante'],
     migrate = False
 );
@@ -226,7 +227,7 @@ db.define_table('CAMPO_CATALOGO',
 db.define_table('CAMPO',
     Field('id_campo', type='id'),
     Field('id_catalogo', db.CATALOGO.id_catalogo),
-    Field('nombre',type='string', length=256),
+    Field('nombre', type='string', length=256),
     Field('tipo_campo',type='string', length=64,
            requires = [IS_IN_SET(tipo_campos)],
            widget = SQLFORM.widgets.options.widget),
@@ -259,11 +260,16 @@ db.define_table('PARTICIPA_PRODUCTO',
 );
 
 db.define_table('LOG_SIRADEX',
-    Field('accion',type='string'),
+    Field('id_log', type='id'),
+    Field('accion',type='string'), #En el schema aparece como TEXT, investigar diferencias.
     Field('accion_fecha',type='date'),
     Field('accion_ip',type='string', length=256),
     Field('descripcion',type='string'),
     Field('usbid_usuario',db.USUARIO.usbid),
-    primarykey=['accion','accion_fecha','accion_ip'],
+    primarykey=['id_log'],
     migrate=False
 );
+
+#Nota: Preguntarle a los desarrolladores sobre la necesidad de comprobaciones 
+#con notnull=TRUE, unique=TRUE aqui o NOT NULL en schema, de modo que pueda modificarse
+#para que sea lo mas eficiente posible.

@@ -22,21 +22,15 @@
             {{if admin == -1:}}
       <ul class="nav navbar-nav navbar-right">
                <li class="activo">
-<<<<<<< HEAD
-                <!-- EN SERVIDOR 
+
+                <!-- EN SERVIDOR -->
                  <a  id = login
                             class ='btn btn-xs'
                             href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas'>
-                            -->
-=======
-                <!-- EN SERVIDOR -->
-                 <!-- <a  id = login
-                            class ='btn btn-xs'
-                            href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas'> -->
->>>>>>> origin/morpheus
-                <!-- EN DESARROLLO -->
+                            
+                <!-- EN DESARROLLO 
                          <a  class ='btn btn-xs '
-                            href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas'>
+                            href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas'>-->
                         Iniciar Sesión
                     </a>
                 </li>
@@ -66,10 +60,9 @@
                 <a class="dropdown-toggle" data-toggle="dropdown" href="{{=URL(c='default', f='setVista', args=[2])}}"> Sistema</a>
                 <ul class="dropdown-menu" style="right:auto">
                     {{if admin == 1:}}
-                    <li><a href="#">Consultar Log</a></li>
+                    <li><a href="{{=URL(c='log', f='consultar')}}">Consultar Log</a></li>
                     <li><a href="{{=URL(c='backup', f='index')}}">BackUp</a></li>
                     <li><a href="{{=URL(c='usuarios', f='gestionar')}}">Usuarios</a></li>
-                    <!-- <li><a href="#">notificaciones</a></li> -->
                     <li role="separator" class="divider"></li>
                     {{pass}}
 		                <li><a href="{{=URL(c='tipo_actividad', f='gestionar')}}">Tipos de Actividad</a></li>

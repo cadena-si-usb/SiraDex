@@ -10,63 +10,59 @@
 
 
 {{block contenido}}
-<style type="text/css">
-  embed{
-    max-height: 20em;
-  }
-</style>
 
-<!-- GRAFICAS -->
+{{=productos}}
+<!-- GRAFICAS Y TABLA -->
 {{try:}}
-  {{if productos != ():}}    
-  <!-- Titulo graficas -->
-    <h2>Graficas
-    <!-- iconos mostrar/ocultar -->
-      <span class="glyphicon glyphicon-eye-close" id="ocultar_graficas" title="Ocultar graficas"></span>
-      <span class="glyphicon glyphicon-eye-open" id="ver_graficas" title="Ver graficas" style="display: none;"></span></h2>
-    <div class="row graficas">
-      <div class="col-md-6"  >  
-        <div class="tab-content card" style="text-align: center;">
-          <embed type="image/svg+xml" src="{{=graficaPie }}" />
-         <button type="button" id="btn-pieChart" class="btn btn-default green btn-border" data-toggle="modal" data-target="#modalPie" style="margin-top: 1em;">
-          <span class="glyphicon glyphicon-resize-full"></span> Aumentar
-        </button>
-        </div>
-      </div>
+  {{if productos != () or len(productos)!=0:}}  
+    <!-- GRAFICAS -->
+      <!-- Titulo graficas -->
+        <h2>Graficas
+        <!-- iconos mostrar/ocultar -->
+        <span class="glyphicon glyphicon-eye-close" id="ocultar_graficas" title="Ocultar graficas"></span>
+        <span class="glyphicon glyphicon-eye-open" id="ver_graficas" title="Ver graficas" style="display: none;"></span></h2>
+    
+      <!-- graficas -->
+        <div class="row graficas">
+          <!-- Grafica de Torta -->
+            <div class="col-md-6"  >  
+              <div class="tab-content card" style="text-align: center;">
+                <div id="chart_div"></div>
+                <!-- <embed type="image/svg+xml" src="{{=graficaPie }}" /> -->
+               <button type="button" id="btn-pieChart" class="btn btn-default green btn-border" data-toggle="modal" data-target="#modalPie">
+                <span class="glyphicon glyphicon-resize-full"></span> Aumentar
+              </button>
+              </div>
+            </div>
 
-      <div class="col-md-6">  
-        <div class="tab-content card"  style="text-align: center;">
-          <embed type="image/svg+xml" src="{{=graficaBar }}" />
-          <button type="button" id="btn-barChart" class="btn btn-default green btn-border" data-toggle="modal" data-target="#modalBar" style="margin-top: 1em;">
-            <span class="glyphicon glyphicon-resize-full"></span> Aumentar
-          </button>      
+          <!-- Grafica de Barras -->
+            <div class="col-md-6">  
+              <div class="tab-content card"  style="text-align: center;">
+                <embed type="image/svg+xml" src="{{=graficaBar }}" />
+                <button type="button" id="btn-barChart" class="btn btn-default green btn-border" data-toggle="modal" data-target="#modalBar" style="margin-top: 1em;">
+                  <span class="glyphicon glyphicon-resize-full"></span> Aumentar
+                </button>      
+              </div>
+            </div>
         </div>
-      </div>
 
-<!--       <div class="col-md-4">  
-        <div class="tab-content card"  style="text-align: center;">
-          <embed type="image/svg+xml" src="{{=tabla }}" />
-          <button type="button" id="btn-barLine" class="btn btn-default green btn-border" data-toggle="modal" data-target="#modalLine" style="margin-top: -5em;">
-            <span class="glyphicon glyphicon-resize-full"></span> Aumentar
-          </button>        
+    <!-- TABLA -->
+      <!-- titulo tabla -->
+        <h2>Tabla
+        <!-- iconos mostrar/ocultar -->
+          <span class="glyphicon glyphicon-eye-close" id="ocultar_tabla" title="Ocultar graficas"></span>
+          <span class="glyphicon glyphicon-eye-open" id="ver_tabla" title="Ver graficas" style="display: none;"></span></h2>
+        
+      <!-- tabla -->
+        <div class="row tabla">
+          <embed type="image/svg+xml" src="{{=tabla }}" style="margin-left: 5%;height: auto;" />
         </div>
-      </div> -->
-    </div>
-
-<!-- TABLA -->
-<h2>Tabla
-<!-- iconos mostrar/ocultar -->
-  <span class="glyphicon glyphicon-eye-close" id="ocultar_tabla" title="Ocultar graficas"></span>
-  <span class="glyphicon glyphicon-eye-open" id="ver_tabla" title="Ver graficas" style="display: none;"></span></h2>
-  <div class="row tabla">
-    <embed type="image/svg+xml" src="{{=tabla }}" style="margin-left: 5%;height: auto;" />
-  </div>
   {{pass}}
 {{except:}}
 {{pass}}
 
-<!-- ACTIVIDADES -->    
-<h2>Actividades</h2>
+<!-- ACTIVIDADES -->
+  <h2>Actividades</h2>
   <div class="tab-content card">
 
     <div role="tabpanel" class="tab-pane active" id="esp">
@@ -119,57 +115,56 @@
 
 <!-- MODALS -->
 {{try:}}
-<!-- Modal 1 -->
-<div id="modalPie" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+  <!-- Modal 1 -->
+  <div id="modalPie" class="modal fade" role="dialog">
+    <div class="modal-dialog">
 
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"><center>Grafica de Productos por Programa</center></h4>
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title"><center>Grafica de Productos por Programa</center></h4>
+        </div>
+        <div class="modal-body">
+          <embed type="image/svg+xml" src="{{=graficaPie }}" style="max-height: 70vh" />
+          
+        </div>
+        <div class="modal-footer">
+        <center>
+          <button type="button" class="btn btn-default green btn-border " data-dismiss="modal">
+          <span class="glyphicon glyphicon-resize-small"></span>
+          Cerrar</button>
+          </center>
+        </div>
       </div>
-      <div class="modal-body">
-        <embed type="image/svg+xml" src="{{=graficaPie }}" style="max-height: 70vh" />
-        
-      </div>
-      <div class="modal-footer">
-      <center>
-        <button type="button" class="btn btn-default green btn-border " data-dismiss="modal">
-        <span class="glyphicon glyphicon-resize-small"></span>
-        Cerrar</button>
-        </center>
-      </div>
+
     </div>
-
   </div>
-</div>
 
-<!-- Modal 2 -->
-<div id="modalBar" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+  <!-- Modal 2 -->
+  <div id="modalBar" class="modal fade" role="dialog">
+    <div class="modal-dialog">
 
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"><center>Grafica de Producto por año</center></h4>
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title"><center>Grafica de Producto por año</center></h4>
+        </div>
+        <div class="modal-body">
+          <embed type="image/svg+xml" src="{{=graficaBar }}" style="max-height: 70vh" />
+        </div>
+        <div class="modal-footer">
+        <center>
+          <button type="button" class="btn btn-default green btn-border " data-dismiss="modal">
+          <span class="glyphicon glyphicon-resize-small"></span>
+          Cerrar</button>
+          </center>
+        </div>
       </div>
-      <div class="modal-body">
-        <embed type="image/svg+xml" src="{{=graficaBar }}" style="max-height: 70vh" />
-      </div>
-      <div class="modal-footer">
-      <center>
-        <button type="button" class="btn btn-default green btn-border " data-dismiss="modal">
-        <span class="glyphicon glyphicon-resize-small"></span>
-        Cerrar</button>
-        </center>
-      </div>
+
     </div>
-
-  </div>
-</div>  
-
+  </div>  
 {{except:}}
 {{pass}}
 {{end}}
@@ -204,6 +199,41 @@
 
         });
     </script>
+
+<script type="text/javascript">
+// Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(drawChart);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Topping');
+        data.addColumn('number', 'Slices');
+        data.addRows([
+          ['Mushrooms', 3],
+          ['Onions', 1],
+          ['Olives', 1],
+          ['Zucchini', 1],
+          ['Pepperoni', 2]
+        ]);
+
+        // Set chart options
+        var options = {'title':'How Much Pizza I Ate Last Night',
+                       'width':400,
+                       'height':300};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+</script>
 
 
     <!-- SCRIPT PARA MOSTRAR Y OCULTAR DETALLES -->
