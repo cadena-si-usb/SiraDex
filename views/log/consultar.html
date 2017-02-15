@@ -68,59 +68,35 @@
     <div>
         <!-- Tabla con los tipos de actividad disponibles en el sistema -->
         <div class="container-fluid card">
-            <table id ="TipoActividadTable" class="table table-striped table-condensed table-hover sortable">
+
+            <table id ="TipoActividadTable" class="table table-hover table-striped borde-tabla">
                 <thead>
-                    <tr>
-                        <th><center>Acción</center></th>
-                        <th><center>Fecha</center></th>
-                        <th><center>Usuario</center></th>
-                        <th><center>IP</center></th>
-                        <th><center>Descripción</center></th>
-                    </tr>
+                    <th class="hColumns text-center">Acción </th>
+                    <th class="hColumns text-center">Fecha </th>
+                    <th class="hColumns text-center">Usuario </th>
+                    <th class="hColumns text-center">IP </th>
+                    <th class="hColumns text-center">Descripción </th>
                 </thead>
-                <tbody class="list">
+
+                <tbody class="clickable">
                   {{if len(log_entries) == 0:}}
                   <tr>
-                      <td colspan="4"> No hay registros en el Log para mostrar.</td>
+                      <td colspan="5" class="text-center"> No hay registros en el Log para mostrar.</td>
                   </tr>
                   {{else:}}
                       {{for entry in log_entries:}}
                         <tr>
-                            <td class="col-md-1">
-                              <center>
-                                  {{=entry.accion}}
-                              </center>
-                            </td>
-
-                            <td class="col-md-1">
-                              <center>
-                                  {{=entry.accion_fecha}}
-                              </center>
-                            </td>
-
-
-                            <td class="col-md-1">
-                              <center>
-                                  {{=entry.usbid_usuario}}
-                              </center>
-                            </td>
-
-                            <td class="col-md-1">
-                              <center>
-                                  {{=entry.accion_ip}}
-                              </center>
-                            </td>
-
-                            <td class="col-md-1">
-                              <center>
-                                  {{=entry.descripcion}}
-                              </center>
-                            </td>
+                            <td class="hColumns text-center">{{=entry.accion}}</td>
+                            <td class="hColumns text-center">{{=entry.accion_fecha}}</td>
+                            <td class="hColumns text-center">{{=entry.usbid_usuario}}</td>
+                            <td class="hColumns text-center">{{=entry.accion_ip}}</td>
+                            <td class="hColumns text-center">{{=entry.descripcion}}</td>
                         </tr>
                         {{pass}}
                       {{pass}}
                 </tbody>
             </table>
+
         </div>
 
 <!-- Modal Agregar-->
