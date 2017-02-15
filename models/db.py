@@ -265,11 +265,11 @@ db.define_table('LOG_SIRADEX',
     Field('accion_fecha',type='date'),
     Field('accion_ip',type='string', length=256),
     Field('descripcion',type='string'),
-    Field('usbid_usuario',db.USUARIO.usbid),
+    Field('usbid_usuario', type='string'),
     primarykey=['id_log'],
     migrate=False
 );
 
-#Nota: Preguntarle a los desarrolladores sobre la necesidad de comprobaciones 
+#Nota: Preguntarle a los desarrolladores sobre la necesidad de comprobaciones
 #con notnull=TRUE, unique=TRUE aqui o NOT NULL en schema, de modo que pueda modificarse
 #para que sea lo mas eficiente posible.
