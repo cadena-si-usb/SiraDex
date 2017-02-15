@@ -1,5 +1,6 @@
 $(document).ready(function(){
 
+
   var maxLongNombre  = 128;    // Longitud máxima que tendrá el campo nombre.
   var maxLongDescrip = 2048;   // Longitud máxima que tendrá el campo descripción.
   var maxLongCodigo = 10;      // Longitud máxima que tendrá el campo código.
@@ -27,6 +28,15 @@ $(document).ready(function(){
   {
     $(".formularioTipo").hide();
   }
+
+    // Se muestra valor por defecto del programa desde el cual se ve la vista 
+  $('#myModal').on('show.bs.modal', function(e){
+      if ($("#identificador_de_programa").length > 0){
+        var id_programa = $("#identificador_de_programa").attr("data-programa");
+        var opcion = $("#myModal .generic-widget.form-control#no_table_Programa option[value='"+ id_programa +"']");
+        opcion.attr("selected", true);
+      }
+  });
 
    // Pasamos los argumentos para eliminar catalogo.
   $('#myModalDelete').on('show.bs.modal', function(e){
@@ -207,4 +217,6 @@ $(document).ready(function(){
       $(this).closest('tr').find(".descripcion_tipo").find(".restContent").hide();
     }
   });
+  
+  
 });

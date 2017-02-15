@@ -128,7 +128,7 @@ def gestionar():
         programa = dict()
         programa["nombre"] = None
         programa["descripcion"] = None
-
+        id_programa = None
 
     else :
 
@@ -146,7 +146,8 @@ def gestionar():
           , formulario_agregar_tipo = formulario_agregar_tipo
           , formulario_editar_tipo = formulario_editar_tipo
           , hayErroresAgregar = formulario_agregar_tipo.errors
-          , hayErroresEditar = formulario_editar_tipo.errors)
+          , hayErroresEditar = formulario_editar_tipo.errors
+          , id_programa = id_programa)
 
 #. --------------------------------------------------------------------------- .
 '''
