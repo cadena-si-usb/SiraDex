@@ -319,7 +319,7 @@ def graficaPie():
         porcentaje = (programas[key]['repeticiones']*100)//total_productos
         pie_chart.add(programas[key]['abreviacion'],[{'value':porcentaje, 'label':programas[key]['nombre']}])
 
-    return pie_chart.render()
+    return programas
 
 def graficaBar():
     productos = request.vars.productos
@@ -369,7 +369,7 @@ def graficaBar():
         line_chart.add(programas_dict[key]['abreviacion'], programas_dict[key]['repeticiones'])
 
 
-    return line_chart.render()
+    return programas
 
 def tabla():
 
