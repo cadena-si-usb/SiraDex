@@ -189,6 +189,7 @@
 
 
 {{block script}}
+<!-- SCRIPT DE VISUALIZACION DE GRAFICAS Y TABLA -->
 <script>
   $(document).ready(function(){
     $("#ocultar_graficas").click(function(){
@@ -217,101 +218,102 @@
   });
 </script>
 
+<!-- SCRIPT DE GRAFICAS -->
 <script type="text/javascript">
-// Load the Visualization API and the corechart package.
-google.charts.load('current', {'packages':['corechart']});
-// Set a callback to run when the Google Visualization API is loaded.
-google.charts.setOnLoadCallback(PieChart);
-google.charts.setOnLoadCallback(BarChart);
+  // Load the Visualization API and the corechart package.
+  google.charts.load('current', {'packages':['corechart']});
+  // Set a callback to run when the Google Visualization API is loaded.
+  google.charts.setOnLoadCallback(PieChart);
+  google.charts.setOnLoadCallback(BarChart);
 
-// Grafica de torta
-function PieChart() {
-  // Inicialziar datos
-  var dataTable = new google.visualization.DataTable();
-  dataTable.addColumn('string', 'Programa');
-  dataTable.addColumn('number', 'Productos');
-  dataTable.addColumn({type: 'string', role: 'tooltip'});
+  // Grafica de torta
+  function PieChart() {
+    // Inicialziar datos
+    var dataTable = new google.visualization.DataTable();
+    dataTable.addColumn('string', 'Programa');
+    dataTable.addColumn('number', 'Productos');
+    dataTable.addColumn({type: 'string', role: 'tooltip'});
 
-  // Generar color para cada slice
-  var colorsArray = [];
-  {{for i in infoPieChart:}}
-    dataTable.addRows([['{{=infoPieChart[i]["abreviacion"]}}',parseInt({{=infoPieChart[i]['repeticiones']}},10),'{{=infoPieChart[i]["nombre"]}}\nTotal: {{=infoPieChart[i]["repeticiones"]}}']]);
-    var new_light_color = 'rgb(' +  (Math.floor((255-111)*Math.random()) + 28) + ',' + 
-                                    (Math.floor((255-170)*Math.random()) + 42) + ',' + 
-                                    (Math.floor((255-109)*Math.random()) + 64) + ')';
-    colorsArray.push(new_light_color);
-  {{pass}}
+    // Generar color para cada slice
+    var colorsArray = [];
+    {{for i in infoPieChart:}}
+      dataTable.addRows([['{{=infoPieChart[i]["abreviacion"]}}',parseInt({{=infoPieChart[i]['repeticiones']}},10),'{{=infoPieChart[i]["nombre"]}}\nTotal: {{=infoPieChart[i]["repeticiones"]}}']]);
+      var new_light_color = 'rgb(' +  (Math.floor((255-111)*Math.random()) + 28) + ',' + 
+                                      (Math.floor((255-170)*Math.random()) + 42) + ',' + 
+                                      (Math.floor((255-109)*Math.random()) + 64) + ')';
+      colorsArray.push(new_light_color);
+    {{pass}}
 
-    // Set opciones de las graficas
-    var options =  {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent'};
-    var options2 = {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent'};
+      // Set opciones de las graficas
+      var options =  {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent'};
+      var options2 = {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent'};
 
-    // Instanciar las graficas, dibujarlas usando opciones
-    var chart = new google.visualization.PieChart(document.getElementById('pieChart'));
-    chart.draw(dataTable, options);
+      // Instanciar las graficas, dibujarlas usando opciones
+      var chart = new google.visualization.PieChart(document.getElementById('pieChart'));
+      chart.draw(dataTable, options);
 
-    // grafica dentro del modal
-    var chartBig = new google.visualization.PieChart(document.getElementById('pieChartB'));
-    chartBig.draw(dataTable, options2);
+      // grafica dentro del modal
+      var chartBig = new google.visualization.PieChart(document.getElementById('pieChartB'));
+      chartBig.draw(dataTable, options2);
 
-    // Agregando funcion para redirigir al hacer click
-    google.visualization.events.addListener(chart, 'select', selectHandler);
-    function selectHandler() {
-      var selectedItem = chart.getSelection()[0];
-      
-      if (selectedItem) {
+      // Agregando funcion para redirigir al hacer click
+      google.visualization.events.addListener(chart, 'select', selectHandler);
+      function selectHandler() {
+        var selectedItem = chart.getSelection()[0];
+        
+        if (selectedItem) {
+          var topping = dataTable.getValue(selectedItem.row, 0);
+        
+          {{for i in infoPieChart:}}
+            if(topping == '{{=infoPieChart[i]["abreviacion"]}}'){
+              window.location = "http://localhost:8000/tipo_actividad/gestionar/"+{{=infoPieChart[i]["id"]}};
+            }
+          {{pass}}
+        }
+      }
+  }
+
+  function BarChart() {
+    var dataTable = new google.visualization.DataTable();
+    dataTable.addColumn('string', 'Programa');
+    dataTable.addColumn('number', 'Productos');
+    dataTable.addColumn({type: 'string', role: 'tooltip'});
+
+    var colorsArray = [];
+    {{for i in infoPieChart:}}
+      dataTable.addRows([['{{=infoPieChart[i]["abreviacion"]}}',parseInt({{=infoPieChart[i]['repeticiones']}},10),'{{=infoPieChart[i]["nombre"]}}\nTotal: {{=infoPieChart[i]["repeticiones"]}}']]);
+
+      var new_light_color = 'rgb(' +  (Math.floor((255-111)*Math.random()) + 28) + ',' + 
+                                      (Math.floor((255-170)*Math.random()) + 42) + ',' + 
+                                      (Math.floor((255-109)*Math.random()) + 64) + ')';
+      colorsArray.push(new_light_color);
+    {{pass}}
+      // Set opciones de las graficas
+      var options =  {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent'};
+      var options2 = {'title':'Productos por Programa\n ',colors: colorsArray};
+
+      // INstanciar las graficas, dibujarlas usando opciones
+      var chart = new google.visualization.ColumnChart(document.getElementById('barChart'));
+      chart.draw(dataTable, options);
+
+      // grafica dentro del modal
+      var chartBig = new google.visualization.ColumnChart(document.getElementById('barChartB'));
+      chartBig.draw(dataTable, options2);
+
+      // Agregando funcion para redirigir al hacer click
+      google.visualization.events.addListener(chart, 'select', selectHandler);
+      function selectHandler() {
+        var selectedItem = chart.getSelection()[0];
+        if (selectedItem) {
         var topping = dataTable.getValue(selectedItem.row, 0);
-      
         {{for i in infoPieChart:}}
-          if(topping == '{{=infoPieChart[i]["abreviacion"]}}'){
+          if(topping == '{{=infoPieChart[i]["abreviacion"]}}'){ 
             window.location = "http://localhost:8000/tipo_actividad/gestionar/"+{{=infoPieChart[i]["id"]}};
           }
         {{pass}}
+          }
       }
-    }
-}
-
-function BarChart() {
-  var dataTable = new google.visualization.DataTable();
-  dataTable.addColumn('string', 'Programa');
-  dataTable.addColumn('number', 'Productos');
-  dataTable.addColumn({type: 'string', role: 'tooltip'});
-
-  var colorsArray = [];
-  {{for i in infoPieChart:}}
-    dataTable.addRows([['{{=infoPieChart[i]["abreviacion"]}}',parseInt({{=infoPieChart[i]['repeticiones']}},10),'{{=infoPieChart[i]["nombre"]}}\nTotal: {{=infoPieChart[i]["repeticiones"]}}']]);
-
-    var new_light_color = 'rgb(' +  (Math.floor((255-111)*Math.random()) + 28) + ',' + 
-                                    (Math.floor((255-170)*Math.random()) + 42) + ',' + 
-                                    (Math.floor((255-109)*Math.random()) + 64) + ')';
-    colorsArray.push(new_light_color);
-  {{pass}}
-    // Set opciones de las graficas
-    var options =  {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent'};
-    var options2 = {'title':'Productos por Programa\n ',colors: colorsArray};
-
-    // INstanciar las graficas, dibujarlas usando opciones
-    var chart = new google.visualization.ColumnChart(document.getElementById('barChart'));
-    chart.draw(dataTable, options);
-
-    // grafica dentro del modal
-    var chartBig = new google.visualization.BarChart(document.getElementById('barChartB'));
-    chartBig.draw(dataTable, options2);
-
-    // Agregando funcion para redirigir al hacer click
-    google.visualization.events.addListener(chart, 'select', selectHandler);
-    function selectHandler() {
-      var selectedItem = chart.getSelection()[0];
-      if (selectedItem) {
-      var topping = dataTable.getValue(selectedItem.row, 0);
-      {{for i in infoPieChart:}}
-        if(topping == '{{=infoPieChart[i]["abreviacion"]}}'){ 
-          window.location = "http://localhost:8000/tipo_actividad/gestionar/"+{{=infoPieChart[i]["id"]}};
-        }
-      {{pass}}
-        }
-    }
-}
+  }
 </script>
 
 <!-- SCRIPT PARA MOSTRAR Y OCULTAR DETALLES -->
