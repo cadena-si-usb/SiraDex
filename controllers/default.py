@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#-*- coding: utf-8 -*-
 # this file is released under public domain and you can use without limitations
 
 # -------------------------------------------------------------------------
@@ -12,6 +12,7 @@ import datetime
 import re
 from usbutils import get_ldap_data, random_key
 from funciones_siradex import get_tipo_usuario,get_tipo_usuario_not_loged
+from log import insertar_log
 import urllib2
 from notificaciones import *
 import pygal
@@ -25,7 +26,7 @@ def call(): return service()
 
 # URLS DE RETORNO PARA EL CAS ##
 # PARA EL SERVIDOR:
-#URL_RETORNO = "http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas"
+# URL_RETORNO = "http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas"
 # PARA DESSARROLLO. Cambiar el puerto 8000 si es necesario.
 URL_RETORNO = "http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas"
 
@@ -78,16 +79,18 @@ def login_cas():
 
 
             if datosUsuario.tipo == "Bloqueado":
+                insertar_log(db, 'LOGIN', datetime.datetime.now(), request.client, 'LOGIN USUARIO BLOQUEADO', usbid)
                 response.flash = T("Usuario bloqueado")
                 redirect(URL(c = "default",f="index"))
             else:
+                insertar_log(db, 'LOGIN', datetime.datetime.now(), request.client, 'LOGIN SATISFACTORIO', usbid)
                 redirect(URL('perfil'))
         else:
 
             session.usuario['tipo'] = "Usuario"
             session.usuario['alternativo'] = None
            # Para el envio de notificacion
-            datos_usuario = {'nombres' : session.usuario['first_name']}
+            datos_usuario = {'nombres' : session.usuario['first_name'] + ' ' + session.usuario['last_name']}
             datos_usuario['email'] = session.usuario['email']
 
 
@@ -100,12 +103,16 @@ def login_cas():
             telefono=session.usuario["phone"],
             tipo = "Usuario")
 
+            insertar_log(db, 'REGISTRO', datetime.datetime.now(), request.client, 'REGISTRO SATISFACTORIO', usbid)
+
             # Se envia correo de bienvenida al usuario
             enviar_correo_bienvenida(mail,datos_usuario)
 
+            insertar_log(db, 'LOGIN', datetime.datetime.now(), request.client, 'LOGIN SATISFACTORIO', usbid)
             redirect(URL('perfil'))
 
 def logout_cas():
+    insertar_log(db, 'LOGOUT', datetime.datetime.now(), request.client, 'LOGOUT SATISFACTORIO', session.usuario['usbid'])
     session.usuario = None
     return response.render()
 
@@ -167,7 +174,7 @@ def grafica():
         num_productos = db.executesql(query2)[0][0]
 
         pie_chart = pygal.Pie()
-        #pie_chart.title = 'Productos del usuario'
+        pie_chart.title = 'Productos del usuario'
         for producto in datos:
             porcentaje = (producto[2]*100)//num_productos
             pie_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])
@@ -182,7 +189,7 @@ def tabla():
         " inner join producto as prod on prod.id_tipo=a.id_tipo and prod.usbid_usu_creador=\'"+ session.usuario["usbid"] +\
         "\' and prod.estado=\'Validado\') group by p.id_programa, extract(year from prod.fecha_realizacion);"
 
-    
+
     productos = db.executesql(query)
 
     #programas = db(db.PROGRAMA['papelera']==False).select().as_list()
@@ -194,16 +201,16 @@ def tabla():
         nombre = programa['nombre']
         abrev = programa['abreviacion']
         programas_dict[ident] = {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':[0 for x in range(11)]}
-    
+
     for producto in productos:
         identificador = producto[0]
         anio = int(producto[2])
         index = anio-fecha_desde
         if (index <= 0):
-            index=0        
+            index=0
         programas_dict[identificador]['repeticiones'][index]+= producto[1]
 
-    
+
     line_chart = pygal.Bar()
     line_chart.x_labels = map(str, range(fecha_desde, fecha_hasta + 1))
 
@@ -252,6 +259,8 @@ def EditarPerfil():
 
             print "\n\nEl nuevo usuario quedo: "
             print session.usuario
+
+            insertar_log(db, 'PERFIL', datetime.datetime.now(), request.client, 'ACT. PERFIL SATISFACTORIA', session.usuario['usbid'])
             redirect(URL('perfil'))
 
         return dict(form1 = form, form = forma, admin = admin)

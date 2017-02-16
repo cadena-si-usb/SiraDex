@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from funciones_siradex import get_tipo_usuario
+from log import insertar_log
 
 #import imp
 #foo = imp.load_source('module.funciones_siradex', 'funciones_siradex.py')
@@ -38,6 +39,7 @@ def agregar_programa():
                            abreviacion = request.vars.Abreviacion,
                            descripcion = request.vars.Descripcion
                            )
+        insertar_log(db, 'PROGRAMA', datetime.datetime.now(), request.client, 'CREACION DE PROGRAMA '+ request.vars.Nombre.upper(), session.usuario['usbid'])
         redirect(URL('gestionar_programas.html'))
     # En caso de que el formulario no sea aceptado
     elif formulario.errors:
@@ -108,6 +110,7 @@ def gestionar_programas():
                             abreviacion = request.vars.Abreviacion,
                            descripcion = request.vars.Descripcion)
         # Se redirige a la vista de getión de programas.
+        insertar_log(db, 'PROGRAMA', datetime.datetime.now(), request.client, 'CREACION DE PROGRAMA '+ request.vars.Nombre.upper(), session.usuario['usbid'])
         redirect(URL('gestionar_programas.html'))
     # En caso de que el formulario no sea aceptado:
     elif (formulario.errors):
@@ -123,6 +126,7 @@ def gestionar_programas():
         programa.descripcion = request.vars.Descripcion
         programa.update_record()                    # Se actualiza el programa.
 
+        insertar_log(db, 'PROGRAMA', datetime.datetime.now(), request.client, 'MODIFICACION DE PROGRAMA '+ request.vars.Nombre.upper(), session.usuario['usbid'])
         redirect(URL('gestionar_programas.html'))   # Se redirige a la vista de gestión.
 
     # En caso de que el formulario no sea aceptado
@@ -148,6 +152,7 @@ def eliminar_programa():
     programa.modif_fecha        = request.now
     programa.usbid_usu_modificador = session.usuario['usbid']
     programa.update_record()
+    insertar_log(db, 'PROGRAMA', datetime.datetime.now(), request.client, 'ENVIO DE PROGRAMA '+ programa.nombre.upper() + ' A PAPELERA', session.usuario['usbid'])
     redirect(URL('gestionar_programas.html'))
 
 def editar_programa():
@@ -186,6 +191,7 @@ def editar_programa():
         programa.abreviacion = request.vars.Abreviacion
         programa.descripcion = request.vars.Descripcion
         programa.update_record()                    # Se actualiza el programa.
+        insertar_log(db, 'PROGRAMA', datetime.datetime.now(), request.client, 'MODIFICACION DE PROGRAMA '+ request.vars.Nombre.upper(), session.usuario['usbid'])
         redirect(URL('gestionar_programas.html'))   # Se redirige a la vista de gestión.
 
     # En caso de que el formulario no sea aceptado
