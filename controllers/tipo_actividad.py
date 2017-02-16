@@ -343,7 +343,7 @@ def ver_tipo_actividad():
 
         # Verifico si se seleccionó el campo "Obligatorio".
         if request.vars.Obligatorio == None:
-           request.vars.Obligatorio = False
+           request.vars.Obligatorio = 'f'
 
         # Se inserta el campo, en la base de datos, que se desea utilizar.
         db.CAMPO.insert(nombre = request.vars.Nombre,
@@ -408,7 +408,11 @@ def ver_tipo_actividad():
     if formulario_editar_campo.accepts(request.vars, session,formname="formulario_editar_campo"):
 
         id_campo = request.vars.id_campo
-
+        
+        # Verifico si se seleccionó el campo "Obligatorio".
+        if request.vars.obligatorio == None:
+           request.vars.obligatorio = 'f'
+           
         # Los atributos del campo son puestos por defecto en el formulario
         campo = db(db.CAMPO.id_campo == id_campo).select(db.CAMPO.ALL).first()
 

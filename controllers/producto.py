@@ -154,8 +154,8 @@ def agregar():
             elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xxxx')]))
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
             elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
-            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'texto',label=rows_campo.nombre+" (*)",requires=IS_NOT_EMPTY()))
-
+            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'text',label=rows_campo.nombre+" (*)",requires=IS_NOT_EMPTY()))
+            
         else:
             no_obl[nombre] = tipo_campo
             if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',requires=IS_EMPTY_OR(IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD'))))
@@ -165,7 +165,7 @@ def agregar():
             elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xxxx'))))
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807))))
             elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807'))))
-            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'texto',requires=IS_NOT_EMPTY()))
+            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'text'))
 
 
     for i in range(5):
@@ -188,7 +188,7 @@ def agregar():
         form.element(_name=i)['_class']= form.element(_name=i)['_class'] + " obligatoria "+ obl[i]
 
     for i in no_obl.keys():
-        form.element(_name=i)['_class']= form.element(_name=i)['_class'] + ' ' + obl[i]
+        form.element(_name=i)['_class']= form.element(_name=i)['_class'] + ' ' + no_obl[i]
 
     for f in form.elements("input"):
         print f
@@ -346,7 +346,7 @@ def modificar():
                 nombre = "campo_"+nombre
         except:
             pass
-
+        print("rows_campo", rows_campo)
         obligatorio = rows_campo.obligatorio
         tipo_campo = rows_campo.tipo_campo
 
@@ -362,7 +362,7 @@ def modificar():
             elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xxxx')]))
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
             elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
-            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'texto',label=nombre+" (*)",requires=IS_NOT_EMPTY()))
+            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'text',label=nombre+" (*)",requires=IS_NOT_EMPTY()))
 
         else:
             no_obl[nombre] = tipo_campo
@@ -376,7 +376,7 @@ def modificar():
             elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xxxx'))))
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807))))
             elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807'))))
-            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'texto',requires=IS_NOT_EMPTY()))
+            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'text'))
 
         valores[nombre]=row.valor_campo
     print(documento)
@@ -392,13 +392,14 @@ def modificar():
     # Le escribimos la informacion a las vistas
     for nombre_campo in valores.keys():
         setattr(form.vars, nombre_campo, valores[nombre_campo])
-
+    print("obl", obl)
+    print("no_obl",no_obl)
     #fix para el datepicker de las fechas:
     for i in obl.keys():
         form.element(_name=i)['_class']= form.element(_name=i)['_class'] + " obligatoria "+ obl[i]
 
     for i in no_obl.keys():
-        form.element(_name=i)['_class']= form.element(_name=i)['_class'] + ' ' + obl[i]
+        form.element(_name=i)['_class']= form.element(_name=i)['_class'] + ' ' + no_obl[i]
 
     for f in form.elements("input"):
         print f
