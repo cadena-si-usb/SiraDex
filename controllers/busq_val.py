@@ -54,10 +54,7 @@ def busqueda():
         elif (session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador"):
             sql += ";"
 
-        print sql
         productos = db.executesql(sql)
-        print sql
-        print productos
 
         graficaPie = URL(c='busq_val',f='graficaPie',vars=dict(productos=productos))
         graficaBar = URL(c='busq_val',f='graficaBar',vars=dict(productos=productos))
@@ -120,7 +117,6 @@ def ver_producto():
         else :
              elementos.append(Field(nombre_campo, default=campo_valor.valor_campo, writable=False))
     
-    print(documento)
     if len(elementos) != 0:
         form_datos = SQLFORM.factory(*elementos, readonly=True)
 
@@ -273,7 +269,7 @@ def rechazar(id_producto):
 
 def graficaPie():
     productos = request.vars.productos
-    print productos
+
     pie_chart = pygal.Pie()
 
     if productos == None:
