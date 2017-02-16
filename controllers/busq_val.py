@@ -57,7 +57,8 @@ def busqueda():
 
         productos = db.executesql(sql)
 
-        graficaPie = URL(c='busq_val',f='graficaPie',vars=dict(productos=productos))
+        a = graficaPie(productos)
+        #graficaPie = URL(c='busq_val',f='graficaPie',vars=dict(productos=productos))
         graficaBar = URL(c='busq_val',f='graficaBar',vars=dict(productos=productos))
         tabla = URL(c='busq_val',f='tabla',vars=dict(productos=productos))
 
@@ -284,9 +285,9 @@ def rechazar(id_producto):
     session.message = 'Producto rechazado'
     redirect(URL('gestionar_validacion.html'))
 
-def graficaPie():
-    productos = request.vars.productos
-
+def graficaPie(productos):
+    #productos = request.vars.productos
+    print productos
     pie_chart = pygal.Pie()
 
     if productos == None:
@@ -306,12 +307,15 @@ def graficaPie():
         total_productos = len(productos)
 
         for producto in productos:
-            id_programa = producto.split('\'')[4].split(',')[-2]
+            #id_programa = producto.split('\'')[4].split(',')[-2]
+            id_programa = producto[5]
             try:
                 programas[id_programa]['repeticiones'] += 1
             except:
-                nombre = producto.split('\'')[-4]
-                abrev  = producto.split('\'')[-2]
+                #nombre = producto.split('\'')[-4]
+                #abrev  = producto.split('\'')[-2]
+                nombre = producto[6]
+                abrev = producto[7]
                 programas[id_programa] = {'nombre':nombre,'abreviacion':abrev,'repeticiones':1}
 
 
@@ -319,7 +323,7 @@ def graficaPie():
         porcentaje = (programas[key]['repeticiones']*100)//total_productos
         pie_chart.add(programas[key]['abreviacion'],[{'value':porcentaje, 'label':programas[key]['nombre']}])
 
-    return pie_chart.render()
+    return programas
 
 def graficaBar():
     productos = request.vars.productos
