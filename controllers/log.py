@@ -22,8 +22,9 @@ def consultar():
     if formulario_periodo.process(formname = "formulario_periodo").accepted:
         periodo = request.vars.periodo
         if periodo == "Hoy":
-            download(None)
-
+            today = datetime.date.today()
+            query = "SELECT * FROM LOG_SIRADEX WHERE accion_fecha = '" + str(today) + "';"
+            download(query)
 
     return dict(admin=admin, log_entries = log_entries, formulario_periodo = formulario_periodo)
 
@@ -31,8 +32,14 @@ def download(query):
 
     insertar_log(db, 'LOG', datetime.datetime.now(), request.client, 'DESCARGA DE LOG', session.usuario['usbid'])
 
+    print query
     # creamos el archivo con el backup
-    rows = db.executesql("SELECT * FROM LOG_SIRADEX;", fields=db.LOG_SIRADEX)
+    rows = db.executesql(query, fields=db.LOG_SIRADEX)
+
+    #Aqui verifico si la consulta se hizo bien, y si fue asi.
+    for row in rows:
+        print row
+
     tempfile = StringIO.StringIO()
     rows.export_to_csv_file(tempfile)
     response.headers['Content-Type'] = 'text/csv'
