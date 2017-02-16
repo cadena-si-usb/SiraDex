@@ -27,13 +27,13 @@
         <!-- Datos del usuario -->
                 <div>
                   <!-- <a href="{{=URL(c='usuarios',f ='agregar')}}"> -->
-                  <button type="button" id="agregarProgBtn" class="btn btn-default green btn-border"  style="margin-bottom: 1em;" >
+                 <!-- <button type="button" id="agregarProgBtn" class="btn btn-default green btn-border"  style="margin-bottom: 1em;" >-->
                   <!-- Agregar cuando se vaya a implementar la funcion de restaurar desde
                        archivo al boton: data-toggle="modal" data-target="#myModalAgregar"
                   -->
-
+<!--
                     <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Restaurar desde archivo
-                  </button>
+                  </button>-->
                   <!-- </a> -->
                 </div>
             <!-- <p class="text-justify">
@@ -45,71 +45,69 @@
 {{block contenido}}
     <div class="tab-content card">
       <div role="tabpanel" class="tab-pane active" id="esp">
-        {{if len(backups) == 0:}}
+        
             No hay Backups 
         {{else:}}
+
           <table class="table table-condensed table-striped table-hover sortable">
-            <thead>
-              <tr>
-              <th>Fecha</th>
-              <th>Hora</th>
-              <th><center>Restaurar</center></th>
-              <th><center>Descargar</center></th>
-              <th><center>Eliminar</center></th>
-              </tr>
-            </thead>
-            <tbody>
-                {{for backup in backups: }}
+          <table class="table table-hover table-striped borde-tabla">
+              <thead>
 
-                  {{if backup.endswith(".sql"):}}
-                    <tr>
-                    <td class="detalles">
-                        {{=backup.replace("_"," ").split()[1]}}/
-                        {{=backup.replace("_"," ").split()[2]}}/
-                        {{=backup.replace("_"," ").split()[4][0:4]}} 
-                    </td> 
-                    <td>
-                        {{=backup.replace("_"," ").split()[3][0:2]}}:
-                        {{=backup.replace("_"," ").split()[3][2:4]}}:
-                        {{=backup.replace("_"," ").split()[3][4:6]}}
-                    </td>                                      
-                        
-                    <td class="center-vertically">
-                     <a href="#">
-                      <center>
-                      <span class="glyphicon glyphicon-refresh restaurar" 
-                            style="color:#F44336" 
-                            data-toggle="modal" 
-                            data-target="#ModalRestaurarBackup"
-                            data-link-restaurar-backup="{{=URL(c='backup',f='restaurar_backup',args=[ backup ])}}"></span>
+                    <th class="hColumns">Fecha </th>
+                    <th class="hColumns">Hora </th>
+                    <th class="hColumns text-center">Restaurar </th>
+                    <th class="hColumns text-center">Descargar </th>
+                    <th class="hColumns text-center">Eliminar </th>
+              </thead>
 
-                      </center>
-                    </a>
-                    </td>
-                    <td class="center-vertically">
-                        <center>
-                        <a href="{{=URL(c='backup',f='descargar_backup',args=[ backup ] )}}"
-                        class="glyphicon glyphicon-save blue" target="blanck" title="Descargar Backup"></a>
-                        </center>
-                    </td>
-                    <td class="center-vertically">
-                    <a href="#">
-                      <center>
-                      <span class="glyphicon glyphicon-remove eliminar" 
-                            style="color:#F44336" 
-                            data-toggle="modal" 
-                            data-target="#ModalEliminarBackup"
-                            data-link-eliminar-backup="{{=URL(c='backup',f='eliminar',args=[ backup ])}}"></span>
+              <tbody>
+                {{if len(backups) == 0:}}
+                  <center>
+                      <td colspan="5" class="text-center"> No hay registros del Backups.</td>
+                  </center>
+                {{else:}}
 
-                      </center>
-                    </a>
-
-                    </tr>
+                  {{for backup in backups: }}
+                    {{if backup.endswith(".sql"):}}
+                      <tr class="clickable">
+                        <td class="detalles">
+                          {{=backup.replace("_"," ").split()[1]}}/
+                          {{=backup.replace("_"," ").split()[2]}}/
+                          {{=backup.replace("_"," ").split()[4][0:4]}} 
+                        </td>
+                        <td>
+                            {{=backup.replace("_"," ").split()[3][0:2]}}:
+                            {{=backup.replace("_"," ").split()[3][2:4]}}:
+                            {{=backup.replace("_"," ").split()[3][4:6]}}
+                        </td>       
+                        <td class="hColumns text-center center-vertically">
+                          <span class="glyphicon glyphicon-refresh restaurar"
+                                data-toggle="modal" 
+                                data-target="#ModalRestaurarBackup"
+                                data-link-restaurar-backup="{{=URL(c='backup',f='restaurar_backup',args=[ backup ])}}">
+                          </span>
+                        </td>
+                        <td class="hColumns text-center center-vertically">
+                          <a  class="glyphicon glyphicon-save blue"
+                              href="{{=URL(c='backup',f='descargar_backup',args=[ backup ] )}}"
+                              target="blanck"
+                              title="Descargar Backup">
+                          </a>
+                        </td>
+                        <td class="hColumns text-centercenter-vertically">
+                          <span class="glyphicon glyphicon-remove red"
+                                data-toggle="modal" 
+                                data-target="#ModalEliminarBackup"
+                                data-link-eliminar-backup="{{=URL(c='backup',f='eliminar',args=[ backup ])}}">
+                          </span>
+                        </td>                              
+                      </tr>
                   {{pass}}
                 {{pass}}
+              {{pass}}
             </tbody>
           </table>
-        {{pass}}
+
 
         <div class="text-center">
           <ul class="pagination pagination-lg pager" id="myPager"></ul>
