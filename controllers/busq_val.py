@@ -299,15 +299,12 @@ def graficaPie(productos):
             abrev = producto[7]
             programas[id_programa] = {'id':id_programa,'nombre':nombre,'abreviacion':abrev,'repeticiones':1}
 
-
     return programas
 
 def graficaBar(productos):    
 
     fecha_hasta = date.today().year
     fecha_desde = fecha_hasta - 10
-
-    line_chart = pygal.Bar()
 
     fechas={}
     programas = db(db.PROGRAMA['papelera']==False).select().as_list()

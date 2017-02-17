@@ -38,7 +38,7 @@
                           style="margin-bottom: 1em;" 
                           data-toggle="modal" 
                           data-target="#modalAuto"
-                          onclick="location.href='{{=URL('backup_aut')}}'">
+                          >
 
                     <span class="glyphicon glyphicon-time" aria-hidden="true" data-toggle="modal" data-target="#ModalCrearBackup"></span> Automatizar backup
                   </button>
@@ -170,7 +170,7 @@
       </div>
 
       <div class="modal-body">
-      <form method="post" class="form-horizontal" role="form">
+      <form method="post" class="form-horizontal" role="form" action={{=URL(c='backup',f='backup_aut')}}>
           <!-- Seleccion de Fecha -->
           <div class="form-group">
               <label for="programa" class = "control-label col-sm-4"> Dia</label>
@@ -194,13 +194,22 @@
 
               <label for="programa" class = "control-label col-sm-4"> Hora</label>
               <div class="col-sm-8">
-                  <input type="time" name="fecha" id="focusedInput" class="form-control datepicker" style="width: 100%"/>
+                  <input type="time" name="hora" id="focusedInput" class="form-control datepicker" style="width: 100%"/>
               </div>
               <br><br>
 
               <label for="programa" class = "control-label col-sm-4"> Modo</label>
               <div class="col-sm-8">
-                  <!-- NI IDEA DE QUE VA AQUI -->
+                    <select name="modo" 
+                            class="form-control"
+                            id="modo" 
+                            style="width: 100%">
+                    <option value="None" selected="">--Ninguno--</option>
+                    <option value=diario>Diario</option>
+                    <option value=semanal>Semanal</option>
+                    <option value=mensual>Mensual</option>
+                    
+                  </select>
               </div>
               <br><br>
 
@@ -208,7 +217,7 @@
               <div class="col-sm-8">
               <!-- Rounded switch -->
               <label class="switch">
-                <input type="checkbox">
+                <input type="checkbox" name="activar">
                 <div class="slider round"></div>
               </label>              
               </div>
