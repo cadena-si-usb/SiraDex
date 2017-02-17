@@ -59,7 +59,8 @@ def busqueda():
 
         productos = db.executesql(sql)
 
-        infoPieChart = graficaPie(productos)        
+        infoPieChart = graficaPie(productos)     
+
         infoTabla = tabla(productos)
 
         return locals()
@@ -286,13 +287,9 @@ def rechazar(id_producto):
     redirect(URL('gestionar_validacion.html'))
 
 def graficaPie(productos):
-    pie_chart = pygal.Pie()
-
-    if productos == None:
-        return pie_chart.render()
 
     programas = {}
-
+ 
     for producto in productos:
         id_programa = producto[5]
         try:
@@ -302,15 +299,9 @@ def graficaPie(productos):
             abrev = producto[7]
             programas[id_programa] = {'id':id_programa,'nombre':nombre,'abreviacion':abrev,'repeticiones':1}
 
-
-    for key in programas:
-        porcentaje = (programas[key]['repeticiones']*100)//total_productos
-        pie_chart.add(programas[key]['abreviacion'],[{'value':porcentaje, 'label':programas[key]['nombre']}])
-
     return programas
 
-def graficaBar():
-    productos = request.vars.productos
+def graficaBar(productos):
     fecha_hasta = date.today().year
     fecha_desde = fecha_hasta - 10
 
@@ -375,8 +366,7 @@ def tabla(productos):
 
     for producto in productos:
         id_programa = producto[5]
-        print producto[4]
-        anio = int(producto.split('\'')[4].split(',')[3][15:])
+        anio = int(str(producto[4])[:4])
         i = anio-fecha_desde
 
         if (i <= 0):
@@ -384,12 +374,7 @@ def tabla(productos):
        
         programas_dict[id_programa]['repeticiones'][i]+=1
 
-
-    for key in programas_dict.keys():
-        line_chart.add(programas_dict[key]['abreviacion'], programas_dict[key]['repeticiones'])
-
-
-    return line_chart.render_table(transpose=True,style=True,total=True)
+    return programas_dict
 
 def eliminar():
 
