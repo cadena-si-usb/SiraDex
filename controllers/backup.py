@@ -12,14 +12,14 @@ def index():
 
     backups = os.listdir("./applications/SiraDex/backup")
 
-    form = formulario_restaurar_backup()
+    # form = 
 
-    if form.process(formname = "form", table_name='archivos').accepted:
+    # if form.process(formname = "form", table_name='archivos').accepted:
 
-        print form.vars.backup
-    #        comando = "psql -d Siradex -U Siradex -h localhost -w < ./applications/SiraDex/backup/" + archivo
+    #     print form.vars.backup
+    # #        comando = "psql -d Siradex -U Siradex -h localhost -w < ./applications/SiraDex/backup/" + archivo
 
-    #        resp = os.system(comando)
+    # #        resp = os.system(comando)
 
         redirect(URL('index'))
 
@@ -44,23 +44,6 @@ def generar_backup():
     session.flash = "Backup generado exitosamente"
     insertar_log(db, 'BACKUP', datetime.datetime.now(), request.client, 'GENERACION DE BACKUP EXITOSA', session.usuario['usbid'])
     redirect(URL('index'))
-
-def formulario_restaurar_backup():
-
-    admin = get_tipo_usuario(session)
-
-    if(admin==0 or admin==2):
-        redirect(URL(c ="default",f="index"))
-
-    fields = []
-
-    fields.append(Field("backup", 'upload', autodelete=True, uploadfolder="./applications/SiraDex/backup/", label=''))
-
-    form=SQLFORM.factory(*fields,upload=URL('download'))
-    form.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
-    form.element(_type='submit')['_value']="Agregar"
-
-    return form
 
 def restaurar_backup():
 
