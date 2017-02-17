@@ -90,50 +90,39 @@
                 {{if cant_val == 0:}}
                     No tienes productos validados
                 {{else:}}
-                    <table class="table table-striped table-condensed table-hover sortable" >
+                    <table class="table table-hover table-striped borde-tabla">
                         <thead>
                             <tr>
-                                <th>Nombre</th>
-                                <th><center>Editar</center></th>
-                                <th><center>Descargar</center></th>
-                                <th><center>Eliminar</center></th>
+                                <th class="hColumns">Nombre</th>
+                                <th class="hColumns text-center">Editar</th>
+                                <th class="hColumns text-center">Descargar</th>
+                                <th class="hColumns text-center">Eliminar</th>
                         </thead>
                         <tbody id="actividades">
                             {{for x in rows:}}
                                 {{if x.estado == 'Validado':}}
-                                <tr >
+                                <tr class="clickable">
                                     <!-- Nombre
 
                                     <td class="center-vertically detalles" data-toggle="modal"
                                     data-target="#myModal" data-producto={{=x.id_producto}}> -->
-                                    <td class="center-vertically detalles">
-                                    {{=x.nombre}}</td>
+                                    <td class="hColumns center-vertically detalles">{{=x.nombre}}</td>
 
                                     <!-- Boton Modificar -->
-                                    <td class="center-vertically">
-                                    <center>
-                                    <span class="glyphicon glyphicon-edit" style="color:#9E9E9E"></span>
-                                    </center>
+                                    <td class="hColumns text-center center-vertically">
+                                        <span class="glyphicon glyphicon-edit" style="color:#9E9E9E"></span>
                                     </td>
 
                                     <!-- Boton Descargar -->
-                                    <td class="center-vertically">
-                                    <center>
+                                    <td class="hColumns text-center center-vertically">
                                   <!--  {{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }} -->
-
-                                    <a href='/{{=request.application}}/{{=request.controller}}/get_pdf/{{=x.id_producto}}'
-                                    class="glyphicon glyphicon-save blue" target="blanck" title="Imprimir Producto {{=x.id_producto}}"></a>
-
-
-
-                                </a>
-                                    </center>
+                                        <a href='/{{=request.application}}/{{=request.controller}}/get_pdf/{{=x.id_producto}}'
+                                        class="glyphicon glyphicon-save blue" target="blanck" title="Imprimir Producto {{=x.id_producto}}"></a>
                                     </td>
+
                                     <!-- Boton Eliminar -->
-                                    <td class="center-vertically">
-                                    <center>
-                                    <span class="glyphicon glyphicon-remove" style="color:#9E9E9E"></span>
-                                    </center>
+                                    <td class="hColumns text-center center-vertically">
+                                        <span class="glyphicon glyphicon-remove" style="color:#9E9E9E"></span>
                                     </td>
                                 </tr>
                                 {{pass}}
@@ -156,50 +145,43 @@
                 {{if cant_esp == 0:}}
                     No tienes productos por validar
                 {{else:}}
-                    <table class="table table-striped table-condensed table-hover sortable">
+                    <table class="table table-hover table-striped borde-tabla">
                         <thead>
                             <tr>
-                                <th>Nombre</th>
-                                <th>Tipo Actividad</th>
-                                <th>Modificación</th>
-                                <th>Finalización</th>
-                                <th><center>Editar</center></th>
-                                <th><center>Descargar</center></th>
-                                <th><center>Eliminar</center></th>
+                                <th class="hColumns">Nombre</th>
+                                <th class="hColumns">Tipo Actividad</th>
+                                <th class="hColumns">Modificación</th>
+                                <th class="hColumns">Finalización</th>
+                                <th class="hColumns text-center">Editar</th>
+                                <th class="hColumns text-center">Descargar</th>
+                                <th class="hColumns text-center">Eliminar</th>
+                            </tr>
                         </thead>
                         <tbody id="actividades">
                             {{for x in rows:}}
                                 {{if x.estado == 'Por Validar':}}
-                                    <tr>
+                                    <tr class="clickable">
                                         <!-- Nombre Producto -->
 
-                                        <td class="center-vertically detalles">
-                                        {{=x.nombre}}
-                                        </td>
+                                        <td class="hColumns center-vertically detalles">{{=x.nombre}}</td>
                                         <!-- Nombre Actividad -->
-                                        <td class="center-vertically detalles"> {{=nombres[x]}}</td>
+                                        <td class="hColumns center-vertically detalles"> {{=nombres[x]}}</td>
                                         <!-- Modificacion -->
-                                        <td class="center-vertically"> {{=x.fecha_realizacion}}</td>
+                                        <td class="hColumns center-vertically"> {{=x.fecha_realizacion}}</td>
                                         <!-- Realizacion  -->
-                                        <td class="center-vertically"> {{=x.fecha_modificacion}}</td>
+                                        <td class="hColumns center-vertically"> {{=x.fecha_modificacion}}</td>
                                         <!-- Boton Modificar -->
-                                        <td class="center-vertically">
-                                        <center>
-                                        <span class="glyphicon glyphicon-edit" style="color:#9E9E9E"></span>
-                                        </center>
+                                        <td class="hColumns text-center center-vertically">
+                                            <span class="glyphicon glyphicon-edit" style="color:#9E9E9E"></span>
                                         </td>
                                         <!-- Boton Descargar -->
-                                        <td class="center-vertically">
-                                        <center>
-                                        <a href='/{{=request.application}}/{{=request.controller}}/get_pdf/{{=x.id_producto}}'
-                                    class="glyphicon glyphicon-save blue" title="Imprimir Producto {{=x.id_producto}}"></a>
-                                        </center>
+                                        <td class="hColumns text-center center-vertically">
+                                            <a href='/{{=request.application}}/{{=request.controller}}/get_pdf/{{=x.id_producto}}'
+                                            class="glyphicon glyphicon-save blue" title="Imprimir Producto {{=x.id_producto}}"></a>
                                         </td>
                                         <!-- Boton Eliminar -->
-                                        <td class="center-vertically">
-                                            <center>
-                                                <span class="glyphicon glyphicon-remove" style="color:#9E9E9E"></span>
-                                            </center>
+                                        <td class="hColumns text-center center-vertically">
+                                            <span class="glyphicon glyphicon-remove" style="color:#9E9E9E"></span>
                                         </td>
                                     </tr>
                                 {{pass}}
@@ -221,50 +203,42 @@
                 {{if cant_rec == 0:}}
                     No tienes productos no validados
                 {{else:}}
-                    <table class="table table-striped table-condensed table-hover sortable">
+                    <table class="table table-hover table-striped borde-tabla">
                         <thead>
                             <tr>
-                                <th>Nombre</th>
-                                <th>Tipo Actividad</th>
-                                <th>Ult. Modificación</th>
-                                <th><center>Editar</center></th>
-                                <th><center>Descargar</center></th>
-                                <th><center>Eliminar</center></th>
+                                <th class="hColumns">Nombre</th>
+                                <th class="hColumns">Tipo Actividad</th>
+                                <th class="hColumns">Ult. Modificación</th>
+                                <th class="hColumns text-center">Editar</th>
+                                <th class="hColumns text-center">Descargar</th>
+                                <th class="hColumns text-center">Eliminar</th>
                         </thead>
                         <tbody id="actividades">
                             {{for x in rows:}}
                                 {{if x.estado == 'No Validado':}}
-                                <tr>
-                                    <td class="center-vertically detalles"> {{=x.nombre}}</td>
-                                    <td class="center-vertically detalles"> {{=nombres[x]}}</td>
-                                    <td class="center-vertically"> <!-- Modificacion --> {{=x.fecha_modificacion}}</td>
+                                <tr class="clickable">
+                                    <td class="hColumns center-vertically detalles"> {{=x.nombre}}</td>
+                                    <td class="hColumns center-vertically detalles"> {{=nombres[x]}}</td>
+                                    <td class="hColumns center-vertically"> <!-- Modificacion --> {{=x.fecha_modificacion}}</td>
                                     <!-- Boton Modificar -->
-                                    <td class="center-vertically">
-                                    <center>
-                                    <a href="{{=URL('modificar',args=x.id)}}">
-                                    <!-- {{=IMG(_src=URL('static', 'icon/i_edit.png'),_height='25',_title="Modificar") }} -->
-                                    <span class="glyphicon glyphicon-edit green-icn"></span>
-                                    </a>
-                                    </center>
+                                    <td class="hColumns text-center center-vertically">
+                                        <a href="{{=URL('modificar',args=x.id)}}">
+                                        <!-- {{=IMG(_src=URL('static', 'icon/i_edit.png'),_height='25',_title="Modificar") }} -->
+                                            <span class="glyphicon glyphicon-edit green-icn"></span>
+                                        </a>
                                     </td>
                                     <!-- Boton Descargar -->
-                                    <td class="center-vertically">
-                                    <center>
-                              <!--      {{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }} -->
-
-                                    <a href='/{{=request.application}}/{{=request.controller}}/get_pdf/{{=x.id_producto}}'
-                                    class="glyphicon glyphicon-save blue" target="blanck" title="Imprimir Producto {{=x.id_producto}}"></a>
-
-                                    </center>
+                                    <td class="hColumns text-center center-vertically">
+                                        <!--      {{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }} -->
+                                        <a href='/{{=request.application}}/{{=request.controller}}/get_pdf/{{=x.id_producto}}'
+                                        class="glyphicon glyphicon-save blue" target="blanck" title="Imprimir Producto {{=x.id_producto}}"></a>
                                     </td>
                                     <!-- Boton Eliminar -->
-                                    <td class="center-vertically">
-                                    <center>
-                                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar este producto?')) {window.location.href = '{{=URL(f='eliminar',args=[ x.id ] )}}';}">
-                                    <!-- {{=IMG(_src=URL('static', 'icon/i_delete.png'),_height='25',_title="Eliminar") }} -->
-                                    <span class="glyphicon glyphicon-remove red"></span>
-                                    </a>
-                                    </center>
+                                    <td class="hColumns text-center center-vertically">
+                                        <a onClick = "if(confirm('¿Está seguro de que desea eliminar este producto?')) {window.location.href = '{{=URL(f='eliminar',args=[ x.id ] )}}';}">
+                                        <!-- {{=IMG(_src=URL('static', 'icon/i_delete.png'),_height='25',_title="Eliminar") }} -->
+                                            <span class="glyphicon glyphicon-remove red"></span>
+                                        </a>
                                     </td>
                                 </tr>
                                 {{pass}}
@@ -286,39 +260,35 @@
                 {{if cant_bor == 0:}}
                     No tienes productos guardados como borrador
                 {{else:}}
-                    <table class="table table-striped table-condensed table-hover sortable">
+                    <table class="table table-hover table-striped borde-tabla">
                         <thead>
                             <tr>
-                                <th>Nombre</th>
-                                <th>Tipo Actividad</th>
-                                <th>Ult. Modificación</th>
-                                <th><center>Editar</center></th>
-                                <th><center>Eliminar</center></th>
+                                <th class="hColumns">Nombre</th>
+                                <th class="hColumns">Tipo Actividad</th>
+                                <th class="hColumns">Ult. Modificación</th>
+                                <th class="hColumns text-center">Editar</th>
+                                <th class="hColumns text-center">Eliminar</th>
                         </thead>
                         <tbody id="actividades">
                             {{for x in rows:}}
                                 {{if x.estado == 'Borrador':}}
-                                <tr>
-                                    <td class="center-vertically detalles"> {{=x.nombre}}</td>
-                                    <td class="center-vertically detalles"> {{=nombres[x]}}</td>
-                                    <td class="center-vertically"> <!-- Modificacion --> {{=x.fecha_modificacion}}</td>
+                                <tr class="clickable">
+                                    <td class="hColumns center-vertically detalles"> {{=x.nombre}}</td>
+                                    <td class="hColumns center-vertically detalles"> {{=nombres[x]}}</td>
+                                    <td class="hColumns center-vertically"> <!-- Modificacion --> {{=x.fecha_modificacion}}</td>
                                     <!-- Boton Modificar -->
-                                    <td class="center-vertically">
-                                    <center>
-                                    <a href="{{=URL('modificar',args=x.id)}}">
-                                    <!-- {{=IMG(_src=URL('static', 'icon/i_edit.png'),_height='25',_title="Modificar") }} -->
-                                    <span class="glyphicon glyphicon-edit green-icn"></span>
-                                    </a>
-                                    </center>
+                                    <td class="hColumns text-center center-vertically">
+                                        <a href="{{=URL('modificar',args=x.id)}}">
+                                        <!-- {{=IMG(_src=URL('static', 'icon/i_edit.png'),_height='25',_title="Modificar") }} -->
+                                            <span class="glyphicon glyphicon-edit green-icn"></span>
+                                        </a>
                                     </td>
                                     <!-- Boton Eliminar -->
-                                    <td class="center-vertically">
-                                    <center>
-                                    <a onClick = "if(confirm('¿Está seguro de que desea eliminar este producto?')) {window.location.href = '{{=URL(f='eliminar',args=[ x.id ] )}}';}">
-                                    <!-- {{=IMG(_src=URL('static', 'icon/i_delete.png'),_height='25',_title="Eliminar") }} -->
-                                    <span class="glyphicon glyphicon-remove red"></span>
-                                    </a>
-                                    </center>
+                                    <td class="hColumns text-center center-vertically">
+                                        <a onClick = "if(confirm('¿Está seguro de que desea eliminar este producto?')) {window.location.href = '{{=URL(f='eliminar',args=[ x.id ] )}}';}">
+                                        <!-- {{=IMG(_src=URL('static', 'icon/i_delete.png'),_height='25',_title="Eliminar") }} -->
+                                            <span class="glyphicon glyphicon-remove red"></span>
+                                        </a>
                                     </td>
                                 </tr>
                                 {{pass}}
