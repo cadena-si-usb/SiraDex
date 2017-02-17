@@ -113,7 +113,7 @@ def agregar():
     fields.append(Field('fecha_realizacion','date',label="Fecha de Culminación (*)",requires=[IS_NOT_EMPTY(error_message='Debe seleccionar una fecha'),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
     fields.append(Field('lugar','string',label="Lugar (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(50)]))
     fields.append(Field("colaboradores",label="Colaboradores"))
-    
+
     # Otros Autores de la Actividad
     lista_usuarios = db(db.USUARIO.tipo == 'Usuario').select()
     usuarios = {}
@@ -155,7 +155,7 @@ def agregar():
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
             elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
             elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'text',label=rows_campo.nombre+" (*)",requires=IS_NOT_EMPTY()))
-            
+
         else:
             no_obl[nombre] = tipo_campo
             if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',requires=IS_EMPTY_OR(IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha inválida, debe ser: AAA-MM-DD'))))
@@ -202,7 +202,7 @@ def agregar():
             estado = "Borrador"
         dicc_producto = db.PRODUCTO.insert(id_tipo = tipo,nombre=form.vars.nombre, descripcion=form.vars.descripcion,\
                                       estado= estado, fecha_realizacion=form.vars.fecha_realizacion, fecha_modificacion=now, \
-                                      lugar = form.vars.lugar,colaboradores=form.vars.colaboradores, 
+                                      lugar = form.vars.lugar,colaboradores=form.vars.colaboradores,
                                       usbid_usu_creador= session.usuario['usbid'])
         id_producto = dicc_producto['id_producto']
 
@@ -325,9 +325,9 @@ def modificar():
         fields.append(Field("autor_"+str(i+1),
                             label = 'Autor ',
                             requires = IS_EMPTY_OR(IS_IN_SET(usuarios, zero="Seleccione usuario", error_message = 'Debes elegir uno de los usuarios listados.'))))
-    
-    
-    
+
+
+
     #Obtenemos los valores de los otros autores, si exiten
     otros_autores = db(db.PARTICIPA_PRODUCTO.id_producto == producto.id_producto).select()
     num_aut = 0
@@ -653,6 +653,12 @@ def get_pdf():
         autorAux = db(db.USUARIO.usbid == autor.usbid_usuario).select().first()
         nombres_autores  = nombres_autores + ', ' + autorAux.nombres +' '+ autorAux.apellidos
 
+    colaboradores = ""
+    if producto.colaboradores == None:
+        colaboradores = " - "
+    else:
+        colaboradores = producto.colaboradores
+
     tmpfilename = os.path.join(request.folder,'private',str(uuid4()))
     doc = SimpleDocTemplate(tmpfilename)
     elements = []
@@ -703,6 +709,7 @@ def get_pdf():
     [''],
     ['', Paragraph('<b>NOMBRE DEL PRODUCTO:</b> ', estilo_tabla),  Paragraph(str(producto.nombre), estilo_tabla), ''],
     ['', Paragraph('<b>AUTOR(ES):</b> ', estilo_tabla),  Paragraph(nombres_autores, estilo_tabla), ''],
+    ['', Paragraph('<b>COLABORADOR(ES):</b> ', estilo_tabla),  Paragraph(str(colaboradores), estilo_tabla), ''],
     ['', Paragraph('<b>REGISTRADO POR: </b>' , estilo_tabla),  Paragraph(str(creador.nombres +' '+ creador.apellidos), estilo_tabla),''],
     ['', Paragraph('<b>CI:</b> ' , estilo_tabla),  Paragraph(str(creador.ci), estilo_tabla),''],
     ['', Paragraph('<b>DESCRIPCIÓN:</b> ', estilo_tabla) ,  Paragraph(str (producto.descripcion), estilo_tabla), ''],

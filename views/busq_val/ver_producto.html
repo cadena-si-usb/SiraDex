@@ -1,7 +1,11 @@
 {{extend 'layoutSIRADEXloged.html'}}
 
 {{block titulo}}
-    Evaluando Productos
+    {{if admin in [1,2]:}}
+      Evaluando Productos
+    {{else:}}
+      Vista de Productos
+    {{pass}}
 {{end}}
 
 {{block subtitulo}}
@@ -13,6 +17,9 @@
     <div class="row">
         <div class="col-sm-12">
             <p><b>Autor(es): </b> {{=nombres_autores}}</p>
+            {{if producto.colaboradores != None:}}
+                <p><b>Colaboradores:</b> {{=producto.colaboradores}}</p>
+            {{pass}}
             <p><b>Programa: </b> {{=programa_nombre}}</p>
             <p><b>Tipo de Actividad: </b>{{=tipo_actividad.nombre}}</p>
         </div>
@@ -56,58 +63,59 @@
                     <hr class="col-sm-offset-2 col-sm-8"><br>
                 </div>
 
-                <h4 class="col-sm-offset-2">Comprobantes:</h4>
-                <ul class="list-group col-sm-offset-3" style="list-style-type: none">.
+                {{if admin in [1,2]:}}
+                  <h4 class="col-sm-offset-2">Comprobantes:</h4>
+                  <ul class="list-group col-sm-offset-3" style="list-style-type: none">.
 
-                {{for comprobante in comprobantes:}}
-                    <li>
-                        <div class = "col-sm-8">
-                            <a  href='/{{=request.application}}/producto/get_comprobante/{{=comprobante[0]}}' target="blanck">
-                                {{=comprobante[1]}}
-                            </a>
-                        </div>
-                        <span >
-                            <a href='/{{=request.application}}/producto/descargar_comprobante/{{=comprobante[0]}}'
-                                 title="Descargar Comprobante}" class="glyphicon glyphicon-save blue"></a>
+                  {{for comprobante in comprobantes:}}
+                      <li>
+                          <div class = "col-sm-8">
+                              <a  href='/{{=request.application}}/producto/get_comprobante/{{=comprobante[0]}}' target="blanck">
+                                  {{=comprobante[1]}}
+                              </a>
+                          </div>
+                          <span >
+                              <a href='/{{=request.application}}/producto/descargar_comprobante/{{=comprobante[0]}}'
+                                   title="Descargar Comprobante}" class="glyphicon glyphicon-save blue"></a>
 
-                        </span>
-                    </li>
+                          </span>
+                      </li>
+                  {{pass}}
+                  </ul>
+                  <br>
+                  <!--<h4 class="col-sm-offset-2">Comprobantes:</h4>-->
+
+                  {{if producto.estado=='Por Validar':}}
+                  <center>
+
+                      <a href="#">
+                          <button id="button_validar" type="button" class="btn btn-default btn-border green-validar "
+                                                      data-toggle="modal"
+                                                      data-target="#modalValidarProducto"
+                                                      data-nombre="{{=producto.nombre}}"
+                                                      data-id-producto="{{=producto.id_producto}}"
+                                                      style="color:#7CB342">
+                              <span class="glyphicon glyphicon-ok" aria-hidden="true" ></span> Validar
+                          </button>
+                      </a>
+
+                      <a href="#">
+                      <button type="button" class="btn btn-default red-trash btn-border"
+                                            data-toggle="modal"
+                                            data-target="#modalRechazarProducto"
+                                            data-id-producto="{{=producto.id_producto}}"
+                                            style="color:#F44336">
+                          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> No Validar
+                      </button>
+                          </a>
+                  </center>
+                  <br>
+
+                  <div id='div_validar' class="hidden">
+                      {{=form_validado}}
+                  </div>
+                  {{pass}}
                 {{pass}}
-                </ul>
-                <br>
-                <!--<h4 class="col-sm-offset-2">Comprobantes:</h4>-->
-
-                {{if producto.estado=='Por Validar':}}
-                <center>
-
-                    <a href="#">
-                        <button id="button_validar" type="button" class="btn btn-default btn-border green-validar "
-                                                    data-toggle="modal"
-                                                    data-target="#modalValidarProducto"
-                                                    data-nombre="{{=producto.nombre}}"
-                                                    data-id-producto="{{=producto.id_producto}}"
-                                                    style="color:#7CB342">
-                            <span class="glyphicon glyphicon-ok" aria-hidden="true" ></span> Validar
-                        </button>
-                    </a>
-
-                    <a href="#">
-                    <button type="button" class="btn btn-default red-trash btn-border"
-                                          data-toggle="modal"
-                                          data-target="#modalRechazarProducto"
-                                          data-id-producto="{{=producto.id_producto}}"
-                                          style="color:#F44336">
-                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> No Validar
-                    </button>
-                        </a>
-                </center>
-                <br>
-
-                <div id='div_validar' class="hidden">
-                    {{=form_validado}}
-                </div>
-                {{pass}}
-
             </div>
         </div>
     </div>

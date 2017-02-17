@@ -98,7 +98,7 @@ def ver_producto():
             Field('Fecha_de_Relizacion', default=producto.fecha_realizacion,writable=False),
             Field('Lugar', default=producto.lugar,writable=False),
             readonly=True,
-            label = labels = {'Descripcion' : 'Descripción',
+            labels = {'Descripcion' : 'Descripción',
                             'Fecha_de_Relizacion' : 'Fecha de Realización'})
 
     #Agregamos los otros elementos de los campos
@@ -367,7 +367,7 @@ def graficaBar():
 
             if (i <= 0):
                 i=0
-           
+
             programas_dict[id_programa]['repeticiones'][i]+=1
 
 
@@ -387,7 +387,7 @@ def tabla():
     line_chart = pygal.Bar()
 
     if productos == None:
-        return line_chart.render_table(transpose=True) 
+        return line_chart.render_table(transpose=True)
 
     line_chart.x_labels = map(str, range(fecha_desde, fecha_hasta + 1))
 
@@ -418,7 +418,7 @@ def tabla():
 
             if (i <= 0):
                 i=0
-           
+
             programas_dict[id_programa]['repeticiones'][i]+=1
 
 
