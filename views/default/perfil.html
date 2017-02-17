@@ -65,16 +65,18 @@
         <div class="col-md-4">
           <div class="tab-content card" style="text-align: center;">
             
-            <embed type="image/svg+xml" src="{{=grafica }}" />
-           <button type="button" id="btn-pieChart" class="btn btn-default green btn-border" data-toggle="modal" data-target="#grafica" style="margin-top: -5em;">
+          <div id="pieChart">
+          </div>
+
+          <!--<button type="button" id="btn-pieChart" class="btn btn-default green btn-border" data-toggle="modal" data-target="#grafica" style="margin-top: -5em;">
             <span class="glyphicon glyphicon-resize-full"></span> Aumentar
-          </button>
+          </button>-->
           </div>
         </div>
 
         <!-- botones -->
           <div class="col-md-3">
-            <div class="row">
+            <!--<div class="row">
               <span style="margin-left: 42.99em;">
                           
                     <button type="button" class="btn btn-default green btn-border center-block" data-toggle="modal" data-target="#tabla">
@@ -82,7 +84,7 @@
                         Ver Actividades por año
                     </button>
               </span>            
-            </div>
+            </div>-->
             <br>      
             <div class="row">
               <span style="margin-left: 42.99em;">
@@ -133,9 +135,7 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title"><center>Grafica de Actividades</center></h4>
       </div>
-      <div class="modal-body">
-        <embed type="image/svg+xml" src="{{=grafica }}" style="min-height:31em" />
-      </div>
+      <div id="pieChartB"></div>
       <div class="modal-footer">
       <center>
         <button type="button" class="btn btn-default green btn-border " data-dismiss="modal">
@@ -264,5 +264,57 @@
       $("#dv-esp").toggle(300);
           });
     });
+
+    // Load the Visualization API and the corechart package.
+  google.charts.load('current', {'packages':['corechart']});
+  // Set a callback to run when the Google Visualization API is loaded.
+  google.charts.setOnLoadCallback(PieChart);
+
+  // Grafica de torta
+  function PieChart() {
+    // Inicialziar datos
+    var dataTable = new google.visualization.DataTable();
+    dataTable.addColumn('string', 'Programa');
+    dataTable.addColumn('number', 'Productos');
+    dataTable.addColumn({type: 'string', role: 'tooltip'});
+
+    // Generar color para cada slice
+    var colorsArray = [];
+    {{for i in infoPieChart:}}
+      dataTable.addRows([['{{=infoPieChart[i]["abreviacion"]}}',parseInt({{=infoPieChart[i]['repeticiones']}},10),'{{=infoPieChart[i]["nombre"]}}\nTotal: {{=infoPieChart[i]["repeticiones"]}}']]);
+      var new_light_color = 'rgb(' +  (Math.floor((255-111)*Math.random()) + 28) + ',' + 
+                                      (Math.floor((255-170)*Math.random()) + 42) + ',' + 
+                                      (Math.floor((255-109)*Math.random()) + 64) + ')';
+      colorsArray.push(new_light_color);
+    {{pass}}
+
+      // Set opciones de las graficas
+      var options =  {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent'};
+      var options2 = {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent'};
+
+      // Instanciar las graficas, dibujarlas usando opciones
+      var chart = new google.visualization.PieChart(document.getElementById('pieChart'));
+      chart.draw(dataTable, options);
+
+      // grafica dentro del modal
+      var chartBig = new google.visualization.PieChart(document.getElementById('pieChartB'));
+      chartBig.draw(dataTable, options2);
+
+      // Agregando funcion para redirigir al hacer click
+      google.visualization.events.addListener(chart, 'select', selectHandler);
+      function selectHandler() {
+        var selectedItem = chart.getSelection()[0];
+        
+        if (selectedItem) {
+          var topping = dataTable.getValue(selectedItem.row, 0);
+        
+          {{for i in infoPieChart:}}
+            if(topping == '{{=infoPieChart[i]["abreviacion"]}}'){
+              window.location = "http://localhost:8000/tipo_actividad/gestionar/"+{{=infoPieChart[i]["id"]}};
+            }
+          {{pass}}
+        }
+      }
+  }
   </script>
 {{end}}

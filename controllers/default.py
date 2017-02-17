@@ -145,7 +145,6 @@ def grafica_pie():
     #     porcentaje = (producto[2]*100)//num_productos
     #     pie_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])
 
-    print programas
     return programas
 
 def perfil():
@@ -178,7 +177,7 @@ def perfil():
                     "Por Validar":[]
                     }
 
-        grafica = grafica_pie()
+        infoPieChart = grafica_pie()
         tabla = URL('default','tabla')
 
         for row in rows:
