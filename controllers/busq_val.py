@@ -4,6 +4,8 @@ from funciones_siradex import get_tipo_usuario,get_tipo_usuario_not_loged
 from log import insertar_log
 import pygal
 from datetime  import date
+import time
+import os
 
 # Funcion para busquedas publicas
 def busqueda():
@@ -57,11 +59,10 @@ def busqueda():
 
         productos = db.executesql(sql)
 
-        infoPieChart = graficaPie(productos)
+
+        infoPieChart = graficaPie(productos)        
         infoBarChart = graficaBar(productos)       
-        #graficaPie = URL(c='busq_val',f='graficaPie',vars=dict(productos=productos))
-        #graficaBar = URL(c='busq_val',f='graficaBar',vars=dict(productos=productos))
-        tabla = URL(c='busq_val',f='tabla',vars=dict(productos=productos))
+        infoTabla = tabla(productos)
 
         return locals()
     except:
@@ -289,19 +290,6 @@ def rechazar(id_producto):
 def graficaPie(productos):
     programas = {}
 
-    # En caso de que producto sea mandado como string
-    # if type(productos) is str:
-
-    #     total_productos = 1
-    #     id_programa = productos.split('\'')[4].split(',')[-2]
-    #     nombre = productos.split('\'')[-4]
-    #     abrev = productos.split('\'')[-2]
-    #     programas[id_programa] = {'id':id_programa,'nombre':nombre,'abreviacion':abrev,'repeticiones':1}
-
-    # else:
-
-    total_productos = len(productos)
-
     for producto in productos:
         id_programa = producto[5]
         try:
@@ -315,15 +303,34 @@ def graficaPie(productos):
     return programas
 
 def graficaBar(productos):    
-    print productos
     fecha_hasta = date.today().year
     fecha_desde = fecha_hasta - 10
 
     line_chart = pygal.Bar()
 
+    fechas={}
+    programas = db(db.PROGRAMA['papelera']==False).select().as_list()
     
+    for fecha in range(fecha_desde, fecha_hasta + 1):
+        fechas[fecha]={}
+        for programa in programas:
+            ident = int(programa['id_programa'])
+            nombre = programa['nombre']
+            abrev = programa['abreviacion']
+            fechas[fecha][ident]= {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':0}
+
     
-    line_chart.x_labels = map(str, range(fecha_desde, fecha_hasta + 1))
+    for producto in productos:
+        anio = producto[4].year
+        id_programa = producto[5]
+        fechas[anio][id_programa]['repeticiones'] += 1
+
+    return fechas
+
+def tabla(producto):
+
+    fecha_hasta = date.today().year
+    fecha_desde = fecha_hasta - 10
 
     programas = db(db.PROGRAMA['papelera']==False).select().as_list()
 
@@ -334,78 +341,16 @@ def graficaBar(productos):
         abrev = programa['abreviacion']
         programas_dict[ident] = {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':[0 for x in range(11)]}
 
-    if type(productos) is str:
-
-        id_programa = int(productos.split('\'')[4].split(',')[-2])
-        anio = int(productos.split('\'')[4].split(',')[3][15:])
+    for producto in productos:
+        id_programa = producto[5]
+        print producto[4]
+        anio = int(producto.split('\'')[4].split(',')[3][15:])
         i = anio-fecha_desde
 
         if (i <= 0):
             i=0
-
+       
         programas_dict[id_programa]['repeticiones'][i]+=1
-
-    else:
-        for producto in productos:
-            id_programa = int(producto.split('\'')[4].split(',')[-2])
-            anio = int(producto.split('\'')[4].split(',')[3][15:])
-            i = anio-fecha_desde
-
-            if (i <= 0):
-                i=0
-           
-            programas_dict[id_programa]['repeticiones'][i]+=1
-
-
-    for key in programas_dict.keys():
-        line_chart.add(programas_dict[key]['abreviacion'], programas_dict[key]['repeticiones'])
-
-
-    return programas
-
-def tabla():
-
-    productos = request.vars.productos
-
-    fecha_hasta = date.today().year
-    fecha_desde = fecha_hasta - 10
-
-    line_chart = pygal.Bar()
-
-    if productos == None:
-        return line_chart.render_table(transpose=True) 
-
-    line_chart.x_labels = map(str, range(fecha_desde, fecha_hasta + 1))
-
-    programas = db(db.PROGRAMA['papelera']==False).select().as_list()
-
-    programas_dict = {}
-    for programa in programas:
-        ident = programa['id_programa']
-        nombre = programa['nombre']
-        abrev = programa['abreviacion']
-        programas_dict[ident] = {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':[0 for x in range(11)]}
-
-    if type(productos) is str:
-        id_programa = int(productos.split('\'')[4].split(',')[-2])
-        anio = int(productos.split('\'')[4].split(',')[3][15:])
-        i = anio-fecha_desde
-
-        if (i <= 0):
-            i=0
-
-        programas_dict[id_programa]['repeticiones'][i]+=1
-    else:
-
-        for producto in productos:
-            id_programa = int(producto.split('\'')[4].split(',')[-2])
-            anio = int(producto.split('\'')[4].split(',')[3][15:])
-            i = anio-fecha_desde
-
-            if (i <= 0):
-                i=0
-           
-            programas_dict[id_programa]['repeticiones'][i]+=1
 
 
     for key in programas_dict.keys():
@@ -425,3 +370,32 @@ def eliminar():
     comando = "rm ./applications/SiraDex/backup/" + archivo
     resp = os.system(comando)
     redirect(URL('index'))
+
+def backup_aut():
+    modo = request.vars.modo
+    dia = request.vars.dia
+    hora = request.hora
+
+    if modo=='diario':
+        fecha = time.asctime(time.localtime(time.time()))
+        archivo = "_".join(fecha.split()[1:]).replace(":","") + ".sql"
+        comando = "pg_dump --dbname=postgres://Siradex:Siradex@localhost/Siradex -w > ./applications/SiraDex/backup/backup" + archivo
+        linea = "* " ++ str(hora) ++ " * * * " ++ comando
+
+    elif modo=='semanal':
+        fecha = time.asctime(time.localtime(time.time()))
+        archivo = "_".join(fecha.split()[1:]).replace(":","") + ".sql"
+        comando = "pg_dump --dbname=postgres://Siradex:Siradex@localhost/Siradex -w > ./applications/SiraDex/backup/backup" + archivo
+        linea = "* " ++ str(hora) ++ " * * 1 " ++ comando
+
+    else:
+        fecha = time.asctime(time.localtime(time.time()))
+        archivo = "_".join(fecha.split()[1:]).replace(":","") + ".sql"
+        comando = "pg_dump --dbname=postgres://Siradex:Siradex@localhost/Siradex -w > ./applications/SiraDex/backup/backup" + archivo
+        linea = "* " ++ str(hora) ++ " " ++ str(dia) ++ " * * " ++ comando
+
+    comando2 = 'echo "' ++ linea ++ '" > ./applications/SiraDex/backup/script'
+    comando3 = "crontab ./applications/SiraDex/backup/script"
+    os.system(comando3)
+
+
