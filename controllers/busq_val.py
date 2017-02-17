@@ -460,6 +460,7 @@ def backup_aut():
         linea = "* " ++ str(hora) ++ " " ++ str(dia) ++ " * * " ++ comando
 
     comando2 = 'echo "' ++ linea ++ '" > ./applications/SiraDex/backup/script'
-    os.system(comando2)
+    comando3 = "crontab ./applications/SiraDex/backup/script"
+    os.system(comando3)
 
 
