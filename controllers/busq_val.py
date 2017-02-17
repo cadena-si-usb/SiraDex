@@ -57,7 +57,8 @@ def busqueda():
 
         productos = db.executesql(sql)
 
-        infoPieChart = graficaPie(productos)        
+        infoPieChart = graficaPie(productos)
+        infoBarChart = graficaBar(productos)       
         #graficaPie = URL(c='busq_val',f='graficaPie',vars=dict(productos=productos))
         #graficaBar = URL(c='busq_val',f='graficaBar',vars=dict(productos=productos))
         tabla = URL(c='busq_val',f='tabla',vars=dict(productos=productos))
@@ -286,50 +287,42 @@ def rechazar(id_producto):
     redirect(URL('gestionar_validacion.html'))
 
 def graficaPie(productos):
-    pie_chart = pygal.Pie()
-
-    if productos == None:
-        return pie_chart.render()
-
     programas = {}
 
-    if type(productos) is str:
+    # En caso de que producto sea mandado como string
+    # if type(productos) is str:
 
-        total_productos = 1
-        id_programa = productos.split('\'')[4].split(',')[-2]
-        nombre = productos.split('\'')[-4]
-        abrev = productos.split('\'')[-2]
-        programas[id_programa] = {'id':id_programa,'nombre':nombre,'abreviacion':abrev,'repeticiones':1}
+    #     total_productos = 1
+    #     id_programa = productos.split('\'')[4].split(',')[-2]
+    #     nombre = productos.split('\'')[-4]
+    #     abrev = productos.split('\'')[-2]
+    #     programas[id_programa] = {'id':id_programa,'nombre':nombre,'abreviacion':abrev,'repeticiones':1}
 
-    else:
-        total_productos = len(productos)
+    # else:
 
-        for producto in productos:
-            id_programa = producto[5]
-            try:
-                programas[id_programa]['repeticiones'] += 1
-            except:
-                nombre = producto[6]
-                abrev = producto[7]
-                programas[id_programa] = {'id':id_programa,'nombre':nombre,'abreviacion':abrev,'repeticiones':1}
+    total_productos = len(productos)
 
+    for producto in productos:
+        id_programa = producto[5]
+        try:
+            programas[id_programa]['repeticiones'] += 1
+        except:
+            nombre = producto[6]
+            abrev = producto[7]
+            programas[id_programa] = {'id':id_programa,'nombre':nombre,'abreviacion':abrev,'repeticiones':1}
 
-    for key in programas:
-        porcentaje = (programas[key]['repeticiones']*100)//total_productos
-        pie_chart.add(programas[key]['abreviacion'],[{'value':porcentaje, 'label':programas[key]['nombre']}])
 
     return programas
 
-def graficaBar():
-    productos = request.vars.productos
+def graficaBar(productos):    
+    print productos
     fecha_hasta = date.today().year
     fecha_desde = fecha_hasta - 10
 
     line_chart = pygal.Bar()
 
-    if productos == None:
-        return line_chart.render()
-
+    
+    
     line_chart.x_labels = map(str, range(fecha_desde, fecha_hasta + 1))
 
     programas = db(db.PROGRAMA['papelera']==False).select().as_list()
