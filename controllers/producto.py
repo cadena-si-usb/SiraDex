@@ -111,7 +111,8 @@ def agregar():
     fields.append(Field('descripcion','string',label="Descripción (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(250)]))
     fields.append(Field('fecha_realizacion','date',label="Fecha de Culminación (*)",requires=[IS_NOT_EMPTY(error_message='Debe seleccionar una fecha'),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
     fields.append(Field('lugar','string',label="Lugar (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(50)]))
-
+    fields.append(Field("colaboradores",label="Colaboradores"))
+    
     # Otros Autores de la Actividad
     lista_usuarios = db(db.USUARIO.tipo == 'Usuario').select()
     usuarios = {}
@@ -192,7 +193,7 @@ def agregar():
         print f
 
     if form.process().accepted:
-        no = ['nombre','descripcion','fecha_realizacion','lugar']
+        no = ['nombre','descripcion','fecha_realizacion','lugar','colaboradores']
 
         estado = "Por Validar"
         if request.vars.borrador:
@@ -200,7 +201,8 @@ def agregar():
             estado = "Borrador"
         dicc_producto = db.PRODUCTO.insert(id_tipo = tipo,nombre=form.vars.nombre, descripcion=form.vars.descripcion,\
                                       estado= estado, fecha_realizacion=form.vars.fecha_realizacion, fecha_modificacion=now, \
-                                      lugar = form.vars.lugar, usbid_usu_creador= session.usuario['usbid'])
+                                      lugar = form.vars.lugar,colaboradores=form.vars.colaboradores, 
+                                      usbid_usu_creador= session.usuario['usbid'])
         id_producto = dicc_producto['id_producto']
 
         for var in form.vars:
@@ -292,6 +294,7 @@ def modificar():
     fields.append(Field('descripcion','string',label="Descripción (*)",requires=[IS_NOT_EMPTY(),IS_LENGTH(250)]))
     fields.append(Field('fecha_realizacion','date',label="Fecha de Culminación (*)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
     fields.append(Field('lugar','string',label="Lugar (*)",requires=[IS_NOT_EMPTY(),IS_LENGTH(50)]))
+    fields.append(Field("colaboradores",label="Colaboradores"))
     obl = {}
     no_obl = {}
 
@@ -300,6 +303,7 @@ def modificar():
     valores['descripcion'] = producto.descripcion
     valores['fecha_realizacion'] = producto.fecha_realizacion
     valores['lugar'] = producto.lugar
+    valores['colaboradores'] = producto.colaboradores
     documento=[]
 
     # Otros Autores de la Actividad
@@ -315,7 +319,9 @@ def modificar():
         fields.append(Field("autor_"+str(i+1),
                             label = 'Autor ',
                             requires = IS_EMPTY_OR(IS_IN_SET(usuarios, zero="Seleccione usuario", error_message = 'Debes elegir uno de los usuarios listados.'))))
-
+    
+    
+    
     #Obtenemos los valores de los otros autores, si exiten
     otros_autores = db(db.PARTICIPA_PRODUCTO.id_producto == producto.id_producto).select()
     num_aut = 0
@@ -393,7 +399,7 @@ def modificar():
 
     # Al aceptar el formulario
     if form.process().accepted:
-        no = ['nombre','descripcion','fecha_realizacion','fecha_modificacion','lugar']
+        no = ['nombre','descripcion','fecha_realizacion','fecha_modificacion','lugar', 'colaboradores']
         sql = ''
         if request.vars.borrador:
             sql = "UPDATE PRODUCTO SET estado = 'Borrador' WHERE id_producto = '"+str(id_producto)+"';"

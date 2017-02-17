@@ -61,14 +61,14 @@ function textoRestante1(maxLong, idDivUsar){
 
   // Selecciono el div que es "hermano" del textfield de nombre.
   var longitudTextoAct = $(idDivUsar).val().length;
-  $(idDivUsar).siblings(".help-block").html((maxLong - longitudTextoAct) + " caracteres");
+  $(idDivUsar).siblings(".help-block").first().html((maxLong - longitudTextoAct) + " caracteres");
 
   // Si estoy escribiendo en el textfield de nombre, entonces...
   $(idDivUsar).on('keypress keyup keydown', function(e){
     var longitudTexto = $(idDivUsar).val().length;
     var textoRestante = maxLong - longitudTexto;
 
-    $(idDivUsar).siblings(".help-block").html(textoRestante + " caracteres.");
+    $(idDivUsar).siblings(".help-block").first().html(textoRestante + " caracteres.");
 
     /* keyCode.46: delete, keyCode.8: enter, keyCode.37 al keyCode.40: arrows. */
     if (textoRestante <= 0 && e.keyCode != 46 && e.keyCode != 8 && e.keyCode != 37
@@ -89,6 +89,7 @@ $(document).ready(function () {
 
 	var maxLongNombre  = 50;    // Longitud máxima que tendrá el campo nombre.
 	var maxLongDescrip = 2048;   // Longitud máxima que tendrá el campo descripción.
+	var maxLongColaboradores = 200;
 	var comprobante_mostrado = 0;
 	var error_comprobante = 0;
 	var error_descripcion = 0;
@@ -99,8 +100,9 @@ $(document).ready(function () {
 	// Muestra la cantidad de caracteres disponible en el textfield de nombre.
 
 
-	$("#no_table_fecha_realizacion").siblings(".help-block").html( "                                         El formato para la fecha es de YYYY-MM-DD");	
+	$("#no_table_fecha_realizacion").siblings(".help-block").html( "                                         El formato para la fecha es de YYYY-MM-DD");
 
+	
 
 	$(".Cedula").click(function(){
 
@@ -119,6 +121,11 @@ $(document).ready(function () {
 	textoRestante1(maxLongDescrip, $("#no_table_descripcion"));
 
 	textoRestante1(maxLongNombre, $("#no_table_lugar"));
+	
+	textoRestante1(maxLongColaboradores, $("#no_table_colaboradores"));
+
+
+	$("#no_table_colaboradores").siblings(".help-block").after("<span class=help-block> Nombres completos y separados por comas de personas ajenas a la USB que colaboraron con usted.</span>");
 
 	// agregar autores adicionales
 	$('#no_table_autor_1__row').before('<div id="autores_row" class="form-group">\
