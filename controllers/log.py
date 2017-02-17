@@ -3,7 +3,7 @@
     Este controlador provee las funciones necesarias para la consulta del LOG.
 '''
 from funciones_siradex import get_tipo_usuario
-from log import insertar_log, download_logfile
+from log import insertar_log
 import StringIO
 
 '''
@@ -60,6 +60,7 @@ def download():
 
     #Excecute query
     rows = db.executesql(query, fields=db.LOG_SIRADEX)
+    print len(rows)
 
     #convert query to csv
     tempfile = StringIO.StringIO()
@@ -86,3 +87,53 @@ def formulario_descargar_log_periodo():
                    )
 
     return formulario
+
+def graficas():
+
+    admin = get_tipo_usuario(session)
+
+    if (admin==0):
+        redirect(URL(c ="default",f="index"))
+
+
+    # Reistro de login la ultima semana.
+    login_last_week = []
+    for i in range(6,-1,-1):
+        date = datetime.date.today() - datetime.timedelta(days=i)
+        query = "SELECT * FROM LOG_SIRADEX WHERE accion = 'LOGIN' AND descripcion = 'LOGIN SATISFACTORIO' AND accion_fecha = '" + str(date) + "';"
+        rows = db.executesql(query, fields=db.LOG_SIRADEX)
+        login_last_week.append([str(date), len(rows)])
+
+    # Reistro de login trimestre
+    login_last_trim = []
+    sem = 12
+    for i in range(84,0,-7):
+        date  = datetime.date.today() - datetime.timedelta(days=i)
+        date2 = datetime.date.today() - datetime.timedelta(days=i - 7)
+        print date
+        query = "SELECT * FROM LOG_SIRADEX WHERE accion = 'LOGIN' AND descripcion = 'LOGIN SATISFACTORIO' AND accion_fecha BETWEEN '" + str(date) + "' AND '" + str(date2) + "';"
+        rows = db.executesql(query, fields=db.LOG_SIRADEX)
+        login_last_trim.append([sem, len(rows)])
+        sem = sem - 1
+
+    # Reistro de PRoductos la ultima semana.
+    prod_last_week = []
+    for i in range(6,-1,-1):
+        date = datetime.date.today() - datetime.timedelta(days=i)
+        query = "SELECT * FROM LOG_SIRADEX WHERE accion = 'PRODUCTO' AND descripcion ~ 'NUEVO PRODUCTO' AND accion_fecha = '" + str(date) + "';"
+        rows = db.executesql(query, fields=db.LOG_SIRADEX)
+        prod_last_week.append([str(date), len(rows)])
+
+    # Reistro de PRoductos trimestre
+    prod_last_trim = []
+    sem = 12
+    for i in range(84,0,-7):
+        date  = datetime.date.today() - datetime.timedelta(days=i)
+        date2 = datetime.date.today() - datetime.timedelta(days=i - 7)
+        print date
+        query = "SELECT * FROM LOG_SIRADEX WHERE accion = 'PRODUCTO' AND descripcion ~ 'NUEVO PRODUCTO' AND accion_fecha BETWEEN '" + str(date) + "' AND '" + str(date2) + "';"
+        rows = db.executesql(query, fields=db.LOG_SIRADEX)
+        prod_last_trim.append([sem, len(rows)])
+        sem = sem - 1
+
+    return dict(admin=admin, login_last_week=login_last_week, login_last_trim=login_last_trim, prod_last_week=prod_last_week, prod_last_trim = prod_last_trim)
