@@ -22,9 +22,9 @@
 
     <script src="{{=URL('static','js/global.js')}}"></script>
     <script src="{{=URL('static','js/list.js')}}"></script>
-    <script src="{{=URL('static','js/tipo_actividad.js')}}"></script>
+    <script src="{{=URL('static','js/log.js')}}"></script>
 
-    <div id="tipo_actividad">
+    <div id="log">
       <div class="row">
         <div class="col-sm-6">
              <form class="navbar-form" role="search">
@@ -47,7 +47,7 @@
         </div>
         {{ if admin in [1,2]: }}
           <div class="col-sm-5 col-sm-push-1" style="margin-top:10px;margin-left:50px">
-              <a href="#" >
+              <a href="{{=URL(f='graficas')}}" >
               <button type="button"  class="btn btn-default green btn-border">
                 <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Ver Gráficas
               </button>
@@ -69,7 +69,7 @@
         <!-- Tabla con los tipos de actividad disponibles en el sistema -->
         <div class="container-fluid card">
 
-            <table id ="TipoActividadTable" class="table table-hover table-striped borde-tabla">
+            <table id ="LogTable" class="table table-hover table-striped borde-tabla">
                 <thead>
                     <th class="hColumns text-center">Acción </th>
                     <th class="hColumns text-center">Fecha </th>
@@ -78,7 +78,7 @@
                     <th class="hColumns text-center">Descripción </th>
                 </thead>
 
-                <tbody class="clickable">
+                <tbody class="clickable list">
                   {{if len(log_entries) == 0:}}
                   <tr>
                       <td colspan="5" class="text-center"> No hay registros en el Log para mostrar.</td>
@@ -86,11 +86,11 @@
                   {{else:}}
                       {{for entry in log_entries:}}
                         <tr>
-                            <td class="hColumns text-center">{{=entry.accion}}</td>
-                            <td class="hColumns text-center">{{=entry.accion_fecha}}</td>
-                            <td class="hColumns text-center">{{=entry.usbid_usuario}}</td>
-                            <td class="hColumns text-center">{{=entry.accion_ip}}</td>
-                            <td class="hColumns text-center">{{=entry.descripcion}}</td>
+                            <td class="hColumns text-center accion">{{=entry.accion}}</td>
+                            <td class="hColumns text-center fecha">{{=entry.accion_fecha}}</td>
+                            <td class="hColumns text-center usuario">{{=entry.usbid_usuario}}</td>
+                            <td class="hColumns text-center ip">{{=entry.accion_ip}}</td>
+                            <td class="hColumns text-center descripcion">{{=entry.descripcion}}</td>
                         </tr>
                         {{pass}}
                       {{pass}}

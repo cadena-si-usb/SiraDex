@@ -1,0 +1,67 @@
+{{extend 'layoutSIRADEXloged.html'}}
+
+{{block titulo}}
+
+    Consulta de Eventos - Gráficas
+
+{{end}}
+
+{{block descripcion}}
+    <div class="col-sm-12">
+          <h4>
+             <p>
+               Gráficas con información extraida del sistema SIRADEx.
+             </p>
+           </h4>
+          <br>
+    </div>
+    <br>
+{{end}}
+
+{{block contenido}}
+
+    <script src="{{=URL('static','js/global.js')}}"></script>
+    <script src="{{=URL('static','js/list.js')}}"></script>
+    <script src="{{=URL('static','js/tipo_actividad.js')}}"></script>
+
+    <div id="tipo_actividad">
+      <div class="row">
+        <div class="col-sm-6">
+             <form class="navbar-form" role="search">
+                <div class="input-group col-lg-12">
+                    <!-- barra de busqueda -->
+                        <input  type="text"
+                                class="form-control search"
+                                placeholder="Buscar entrada en el Log"
+                                id="form-busqueda">
+
+                    <!-- Lupa -->
+                    <span class="input-group-btn">
+                        <span
+                              class="btn btn-default glyphicon glyphicon-search"
+                              id="btn-lupa" style="top:0px !important;">
+                        </span>
+                    </span>
+                 </div>
+            </form>
+        </div>
+        {{ if admin in [1,2]: }}
+          <div class="col-sm-5 col-sm-push-1" style="margin-top:10px;margin-left:50px">
+              <a href="{{=URL(f='consultar')}}" >
+              <button type="button"  class="btn btn-default green btn-border">
+                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Ver Log
+              </button>
+              </a>
+              <button type="button"
+                      class="btn btn-default green btn-border"
+                      id = "agregarTipoActividadBtn"
+                      data-toggle="modal"
+                      data-target="#myModal"
+                      >
+                <span class="glyphicon glyphicon-download-alt"
+                      aria-hidden="true"></span> Descargar
+              </button>
+          </div>
+        {{pass}}
+    </div>
+{{end}}
