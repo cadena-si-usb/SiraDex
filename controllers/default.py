@@ -15,8 +15,8 @@ from funciones_siradex import get_tipo_usuario,get_tipo_usuario_not_loged
 from log import insertar_log
 import urllib2
 from notificaciones import *
-import pygal
-from pygal.style import Style
+# import pygal
+# from pygal.style import Style
 
 ### required - do no delete
 def user(): return dict(form=auth())

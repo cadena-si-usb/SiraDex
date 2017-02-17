@@ -1,0 +1,176 @@
+{{extend 'layoutSIRADEXloged.html'}}
+
+{{block titulo}}
+
+    Consulta de Eventos - Gráficas
+
+{{end}}
+
+{{block descripcion}}
+    <div class="col-sm-12">
+          <h4>
+             <p>
+               Gráficas con información extraida del registro de eventos en el sistema SIRADEx.
+             </p>
+           </h4>
+          <br>
+    </div>
+    <br>
+{{end}}
+
+{{block contenido}}
+
+    <script src="{{=URL('static','js/global.js')}}"></script>
+    <h2>Inicios de sesión durante la última semana </h2>
+      <div id="chart_login_diario"></div>
+    <h2>Inicios de sesión durante las últimas 12 semanas</h2>
+      <div id="chart_login_trimestre"></div>
+
+    <h2>Registro de productos nuevos durante la última semana </h2>
+      <div id="chart_prod_diario"></div>
+    <h2>Registro de productos nuevas durante las últimas 12 semanas</h2>
+      <div id="chart_prod_trimestre"></div>
+
+
+    <!-- Google Chart API -->
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(drawChartLoginDiario);
+      google.charts.setOnLoadCallback(drawChartLoginTrimestre);
+      google.charts.setOnLoadCallback(drawChartProdDiario);
+      google.charts.setOnLoadCallback(drawChartProdTrimestre);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChartLoginDiario() {
+        var data = google.visualization.arrayToDataTable(
+          [['Fecha', 'Numero'],
+          {{ for i in login_last_week:}}
+            ['{{= str(i[0])}}', {{=str(i[1])}}],
+          {{pass}}
+        ]);
+
+        var view = new google.visualization.DataView(data);
+        view.setColumns([0, 1])
+
+        var options = {
+          title: "Inicios de sesión durante la última semana",
+          width: 850,
+          height: 400,
+          bar: {groupWidth: "90%"},
+          legend: { position: "none" },
+          hAxis: {
+            title: 'Fecha',
+          },
+          vAxis: {
+            title: 'Número de Inicios',
+            viewWindow: {
+              min:0
+            }
+          }
+        };
+        var chart = new google.visualization.ColumnChart(document.getElementById("chart_login_diario"));
+        chart.draw(view, options);
+      }
+
+      function drawChartLoginTrimestre() {
+        var data = google.visualization.arrayToDataTable(
+          [['Semana', 'Numero'],
+          {{ for i in login_last_trim:}}
+            ['{{= str(i[0])}}', {{=str(i[1])}}],
+          {{pass}}
+        ]);
+
+        var view = new google.visualization.DataView(data);
+        view.setColumns([0, 1])
+
+        var options = {
+          title: "Inicios de sesión durante las últimas 12 semanas.",
+          width: 850,
+          height: 400,
+          bar: {groupWidth: "90%"},
+          legend: { position: "none" },
+          hAxis: {
+            title: 'Semana',
+          },
+          vAxis: {
+            title: 'Número de Inicios',
+            viewWindow: {
+              min:0
+            }
+          }
+        };
+        var chart = new google.visualization.ColumnChart(document.getElementById("chart_login_trimestre"));
+        chart.draw(view, options);
+      }
+
+      function drawChartProdDiario() {
+        var data = google.visualization.arrayToDataTable(
+          [['Fecha', 'Numero'],
+          {{ for i in prod_last_week:}}
+            ['{{= str(i[0])}}', {{=str(i[1])}}],
+          {{pass}}
+        ]);
+
+        var view = new google.visualization.DataView(data);
+        view.setColumns([0, 1])
+
+        var options = {
+          title: "Registro de productos durante la última semana",
+          width: 850,
+          height: 400,
+          bar: {groupWidth: "90%"},
+          legend: { position: "none" },
+          hAxis: {
+            title: 'Fecha',
+          },
+          vAxis: {
+            title: 'Número de Productos',
+            viewWindow: {
+              min:0
+            }
+          }
+        };
+        var chart = new google.visualization.ColumnChart(document.getElementById("chart_prod_diario"));
+        chart.draw(view, options);
+      }
+
+      function drawChartProdTrimestre() {
+        var data = google.visualization.arrayToDataTable(
+          [['Semana', 'Numero'],
+          {{ for i in prod_last_trim:}}
+            ['{{= str(i[0])}}', {{=str(i[1])}}],
+          {{pass}}
+        ]);
+
+        var view = new google.visualization.DataView(data);
+        view.setColumns([0, 1])
+
+        var options = {
+          title: "Registro de productos durante las últimas 12 semanas.",
+          width: 850,
+          height: 400,
+          bar: {groupWidth: "90%"},
+          legend: { position: "none" },
+          hAxis: {
+            title: 'Semana',
+          },
+          vAxis: {
+            title: 'Número de Productos',
+            viewWindow: {
+              min:0
+            }
+          }
+        };
+        var chart = new google.visualization.ColumnChart(document.getElementById("chart_prod_trimestre"));
+        chart.draw(view, options);
+      }
+    </script>
+{{end}}
