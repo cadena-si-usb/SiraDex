@@ -74,33 +74,33 @@
       {{if len(productos) == 0:}}
         No hay actividades 
       {{else:}}
-        <table class="table table-striped table-condensed table-hover sortable">
+        <table class="table table-hover table-striped borde-tabla">
           <thead>
-          <tr>
-            <th>Nombre Producto</th>
-            <th>Descripcion</th>
-            <th>Fecha</th>
-            <th><center>Mostrar</center></th>
-          </tr>
+	          <tr>
+	            <th class="hColumns">Nombre Producto</th>
+	            <th class="hColumns">Descripcion</th>
+	            <th class="hColumns">Fecha</th>
+	            <th class="hColumns text-center">Mostrar</th>
+	          </tr>
           </thead>
           <tbody>
           {{for producto in productos: }}
-            <tr>
-                <td class="detalles">
+            <tr class="clickable">
+                <td class="hColumns text-center detalles">
                     {{=producto[1]}}
                 </td>
 
-                <td class="detalles">
+                <td class="hColumns text-center detalles">
                     {{=producto[0]}}
                 </td>
 
-                 <td class="detalles">
+                 <td class="hColumns text-center detalles">
                     {{=producto[4]}}
                 </td>                                           
                     
-                <td>
+                <td class="hColumns text-center center-vertically">
                     <a href="{{=URL(f='ver_producto', args=[producto[3]])}}">
-                        <center><span class="glyphicon glyphicon-eye-open" style="color:#9E9E9E"></span></center>
+                        <span class="glyphicon glyphicon-eye-open" style="color:#9E9E9E"></span>
                     </a>
                 </td>
             </tr>
