@@ -25,11 +25,11 @@ def construir_formulario_agregar_tipo():
     formulario_agregar_tipo = SQLFORM.factory(
                         Field('Nombre',
                                requires = [IS_NOT_EMPTY(error_message='El nombre del tipo de actividad no puede quedar vacío.'),
-                                           IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin números ni caracteres especiales."),
+                                           IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use sólo letras, sin números ni caracteres especiales."),
                                            IS_LENGTH(128)]),
                         Field('Codigo',
-                               requires = [IS_NOT_EMPTY(error_message='El tipo de actividad debe tener un codigo.'),
-                                           IS_MATCH('^[A-z0-9À-ÿŸ\s-]*$', error_message="Use solo letras, el caracter '-' y números."),
+                               requires = [IS_NOT_EMPTY(error_message='El tipo de actividad debe tener un código.'),
+                                           IS_MATCH('^[A-z0-9À-ÿŸ\s-]*$', error_message="Use sólo letras, el caracter '-' y números."),
                                            IS_LENGTH(10, error_message="Use como máximo diez caracteres")]),
                         Field('Tipo', default = 'Seleccione...',
                               requires = IS_IN_SET({'P':'(P) Evaluables por pares académicos', 'R':'(R) No evaluables por pares académicos'},
@@ -40,9 +40,10 @@ def construir_formulario_agregar_tipo():
                                           IS_LENGTH(2048)]),
                         Field('Programa',
                               requires = IS_IN_SET(programas, zero="Seleccione...",
-                                                   error_message = 'Debes elegir uno de los programas listados.')),
+                                                   error_message = 'Debe elegir uno de los programas listados.')),
                         submit_button = 'Agregar',
-                        labels = {'Descripcion' : 'Descripción'}
+                        labels = {'Descripcion' : 'Descripción',
+                                  'Codigo' : 'Código'}
                 )
     formulario_agregar_tipo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
     formulario_agregar_tipo.element(_type='submit')['_value']="Agregar"
@@ -64,7 +65,7 @@ def construir_formulario_editar_tipo():
     formulario_editar_tipo = SQLFORM.factory(
                         Field('Nombre',
                               requires = [IS_NOT_EMPTY(error_message='El nombre del tipo de actividad no puede quedar vacío.'),
-                                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin números ni caracteres especiales."),
+                                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use sólo letras, sin números ni caracteres especiales."),
                                           IS_LENGTH(128)]),
                         Field('Codigo',
                              requires = [IS_NOT_EMPTY(error_message='El tipo de actividad debe tener un codigo.'),
@@ -73,16 +74,17 @@ def construir_formulario_editar_tipo():
                         Field('Tipo',
                               requires = IS_IN_SET({'P':'Evaluables por pares académicos', 'R':'No evaluables por pares académicos'},
                                                     zero=T('Seleccione...'),
-                                                    error_message = 'Debes elegir entre "Evaluables por pares académicos" o "No evaluables por pares académicos"')),
+                                                    error_message = 'Debe elegir entre "Evaluables por pares académicos" o "No evaluables por pares académicos"')),
                         Field('Descripcion', type="text",
                               requires = [IS_NOT_EMPTY(error_message='La descripción del tipo de actividad no puede quedar vacía.'),
                                           IS_LENGTH(2048)]),
                         Field('Programa',
                               requires = IS_IN_SET(programas, zero="Seleccione...",
-                                                   error_message = 'Debes elegir uno de los programas listados.')),
+                                                   error_message = 'Debe elegir uno de los programas listados.')),
                         Field('Id_tipo',type="hidden"),
                         submit_button = 'Actualizar',
-                        labels = {'Descripcion' : 'Descripción'}
+                        labels = {'Descripcion' : 'Descripción',
+                                  'Codigo' : 'Código'}
                 )
 
     formulario_editar_tipo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
@@ -180,18 +182,18 @@ def agregar_tipo():
     formulario_agregar_tipo = SQLFORM.factory(
                         Field('Nombre',
                                requires = [IS_NOT_EMPTY(error_message='El nombre del tipo de actividad no puede quedar vacío.'),
-                                           IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin números ni caracteres especiales."),
+                                           IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use sólo letras, sin números ni caracteres especiales."),
                                            IS_LENGTH(128)]),
                         Field('Tipo', default = 'Seleccione...',
                               requires = IS_IN_SET({'P':'Evaluables por pares académicos', 'R':'No evaluables por pares académicos'},
                                                     zero=T('Seleccione...'),
-                                                    error_message = 'Debes elegir entre "Evaluables por pares académicos" o "No evaluables por pares académicos"')),
+                                                    error_message = 'Debe elegir entre "Evaluables por pares académicos" o "No evaluables por pares académicos"')),
                         Field('Descripcion', type="text",
                               requires = [IS_NOT_EMPTY(error_message='La descripción del tipo de actividad no puede quedar vacía.'),
                                           IS_LENGTH(2048)]),
                         Field('Programa',
                               requires = IS_IN_SET(programas, zero="Seleccione...",
-                                                   error_message = 'Debes elegir uno de los programas listados.')),
+                                                   error_message = 'Debe elegir uno de los programas listados.')),
                         submit_button = 'Agregar',
                         labels = {'Descripcion' : 'Descripción'}
                 )
@@ -245,7 +247,7 @@ def formulario_agregar_tipo_campos():
     # Si no se utiliza catálogo.
     formSimple = SQLFORM.factory(
                     Field('Nombre', requires=[IS_NOT_EMPTY(error_message="Por favor elija un nombre para el campo."),
-                                              IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin números ni caracteres especiales.")]),
+                                              IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use sólo letras, sin números ni caracteres especiales.")]),
                     Field('Tipo', requires = IS_IN_SET(tipo_campos, zero="Seleccione...", error_message="Seleccione un tipo para el campo")),
                     Field('Obligatorio', widget=SQLFORM.widgets.boolean.widget),
                     submit_button = 'Agregar'
@@ -461,7 +463,7 @@ def editar_tipo():
                         Field('Nombre',
                               default = tipo.nombre,
                               requires = [IS_NOT_EMPTY(error_message='El nombre del tipo de actividad no puede quedar vacío.'),
-                                           IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin números ni caracteres especiales."),
+                                           IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use sólo letras, sin números ni caracteres especiales."),
                                            IS_LENGTH(128)]),
                         Field('Tipo', default = tipo.tipo_p_r,
                               requires = IS_IN_SET({'P':'Evaluables por pares académicos', 'R':'No evaluables por pares académicos'},
@@ -473,7 +475,7 @@ def editar_tipo():
                                           IS_LENGTH(2048)]),
                         Field('Programa', default = tipo.id_programa,
                               requires = IS_IN_SET(programas, zero="Seleccione...",
-                                                   error_message = 'Debes elegir uno de los programas listados.')),
+                                                   error_message = 'Debe elegir uno de los programas listados.')),
                         submit_button = 'Actualizar',
                         labels = {'Descripcion' : 'Descripción'}
                 )
@@ -520,8 +522,8 @@ def formularioEditarCampo():
 
     formulario = SQLFORM.factory(
                     Field('nombre',
-                          requires = [IS_NOT_EMPTY(error_message='El nombre del campo no puede quedar vacio.'),
-                                      IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin números ni caracteres especiales.")]),
+                          requires = [IS_NOT_EMPTY(error_message='El nombre del campo no puede quedar vacío.'),
+                                      IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use sólo letras, sin números ni caracteres especiales.")]),
                     Field('tipo_campo',
                            requires = [IS_IN_SET(tipo_campos, zero='Seleccione...', error_message="Debe seleccionar un tipo para el campo.")],
                            widget = SQLFORM.widgets.options.widget),

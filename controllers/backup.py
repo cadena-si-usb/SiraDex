@@ -24,7 +24,7 @@ def index():
         redirect(URL('index'))
 
     elif form.errors:
-        session.flash = 'el formulario tiene errores'
+        session.flash = 'El formulario tiene errores'
 
 
     return locals()
@@ -42,7 +42,7 @@ def generar_backup():
     comando = "pg_dump --dbname=postgres://Siradex:Siradex@localhost/Siradex -w > ./applications/SiraDex/backup/backup_" + archivo
     resp = os.system(comando)
     session.flash = "Backup generado exitosamente"
-    insertar_log(db, 'BACKUP', datetime.datetime.now(), request.client, 'GENERACION DE BACKUP EXITOSA', session.usuario['usbid'])
+    insertar_log(db, 'BACKUP', datetime.datetime.now(), request.client, 'GENERACIÓN DE BACKUP EXITOSA', session.usuario['usbid'])
     redirect(URL('index'))
 
 def formulario_restaurar_backup():
@@ -76,10 +76,10 @@ def restaurar_backup():
     resp = os.system(comando)
     #resp = 0
     if (resp == 0):
-        insertar_log(db, 'BACKUP', datetime.datetime.now(), request.client, 'RESTAURACION DEL SISTEMA DESDE DE BACKUP EXITOSA', session.usuario['usbid'])
+        insertar_log(db, 'BACKUP', datetime.datetime.now(), request.client, 'RESTAURACIÓN DEL SISTEMA DESDE DE BACKUP EXITOSA', session.usuario['usbid'])
         session.flash="Restaurado."
     else:
-        insertar_log(db, 'BACKUP', datetime.datetime.now(), request.client, 'RESTAURACION DEL SISTEMA DESDE DE BACKUP FALLIDA', session.usuario['usbid'])
+        insertar_log(db, 'BACKUP', datetime.datetime.now(), request.client, 'RESTAURACIÓN DEL SISTEMA DESDE DE BACKUP FALLIDA', session.usuario['usbid'])
         session.flash="No se pudo restaurar."
 
     redirect(URL('index'))
@@ -93,7 +93,7 @@ def eliminar():
     archivo = request.args[0]
     comando = "rm ./applications/SiraDex/backup/" + archivo
     resp = os.system(comando)
-    insertar_log(db, 'BACKUP', datetime.datetime.now(), request.client, 'ELIMINACION DE BACKUP', session.usuario['usbid'])
+    insertar_log(db, 'BACKUP', datetime.datetime.now(), request.client, 'ELIMINACIÓN DE BACKUP', session.usuario['usbid'])
     session.flash="Backup eliminado exitosamente"
     redirect(URL('index'))
 
