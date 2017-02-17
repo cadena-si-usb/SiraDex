@@ -15,35 +15,57 @@ def consultar():
     if (admin==0):
         redirect(URL(c ="default",f="index"))
 
-    log_entries =  db().select(db.LOG_SIRADEX.ALL, orderby=~db.LOG_SIRADEX.id_log)
+    formulario = formulario_descargar_log_periodo()
 
-    formulario_periodo = formulario_descargar_log_periodo()
-
-    if formulario_periodo.process(formname = "formulario_periodo").accepted:
+    if formulario.process(formname="formulario_descargar_log_periodo").accepted:
         periodo = request.vars.periodo
-        if periodo == "Hoy":
-            today = datetime.date.today()
-            query = "SELECT * FROM LOG_SIRADEX WHERE accion_fecha = '" + str(today) + "';"
-            download(query)
+        if periodo == "Todo":
+            redirect(URL(c ="log",f="download", args=[0]))
+        elif periodo == "Hoy":
+            redirect(URL(c ="log",f="download", args=[1]))
+        elif periodo == "Semana pasada":
+            redirect(URL(c ="log",f="download", args=[2]))
+        elif periodo == "Mes pasado":
+            redirect(URL(c ="log",f="download", args=[3]))
+        elif periodo == "Hace 3 meses":
+            redirect(URL(c ="log",f="download", args=[4]))
 
-    return dict(admin=admin, log_entries = log_entries, formulario_periodo = formulario_periodo)
+    log_entries =  db().select(db.LOG_SIRADEX.ALL, orderby=~db.LOG_SIRADEX.id_log)
+    return dict(admin=admin, log_entries = log_entries, formulario_periodo = formulario)
 
-def download(query):
+def download():
+
+    admin = get_tipo_usuario(session)
+
+    if (admin==0):
+        redirect(URL(c ="default",f="index"))
+
+    periodo = request.args[0]
+    if periodo == "0":
+        query = "SELECT * FROM LOG_SIRADEX;"
+    elif periodo == "1":
+        date = datetime.date.today()
+        query = "SELECT * FROM LOG_SIRADEX WHERE accion_fecha = '" + str(date) + "';"
+    elif periodo == "2":
+        date = datetime.date.today() - datetime.timedelta(days=7)
+        query = "SELECT * FROM LOG_SIRADEX WHERE accion_fecha >= '" + str(date) + "';"
+    elif periodo == "3":
+        date = datetime.date.today() - datetime.timedelta(days=31)
+        query = "SELECT * FROM LOG_SIRADEX WHERE accion_fecha >= '" + str(date) + "';"
+    elif periodo == "4":
+        date = datetime.date.today() - datetime.timedelta(days=93)
+        query = "SELECT * FROM LOG_SIRADEX WHERE accion_fecha >= '" + str(date) + "';"
 
     insertar_log(db, 'LOG', datetime.datetime.now(), request.client, 'DESCARGA DE LOG', session.usuario['usbid'])
 
-    print query
-    # creamos el archivo con el backup
+    #Excecute query
     rows = db.executesql(query, fields=db.LOG_SIRADEX)
 
-    #Aqui verifico si la consulta se hizo bien, y si fue asi.
-    for row in rows:
-        print row
-
+    #convert query to csv
     tempfile = StringIO.StringIO()
     rows.export_to_csv_file(tempfile)
     response.headers['Content-Type'] = 'text/csv'
-    attachment = 'attachment; filename="LOGSIRADEx.csv"'
+    attachment = 'attachment; filename="LOGSIRADEX.csv"'
     response.headers['Content-Disposition'] = attachment
     return tempfile.getvalue()
 
