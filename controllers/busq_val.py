@@ -59,10 +59,11 @@ def busqueda():
 
         productos_sql = db.executesql(sql)
 
-        productos = graficaPie(productos_sql)
+        infoPieChart = graficaPie(productos)        
         #graficaPie = URL(c='busq_val',f='graficaPie',vars=dict(productos=productos))
-        graficaBar = URL(c='busq_val',f='graficaBar',vars=dict(productos=productos_sql))
-        tabla = URL(c='busq_val',f='tabla',vars=dict(productos=productos_sql))
+        #graficaBar = URL(c='busq_val',f='graficaBar',vars=dict(productos=productos))
+        tabla = URL(c='busq_val',f='tabla',vars=dict(productos=productos))
+
 
         return locals()
     except:
@@ -288,8 +289,6 @@ def rechazar(id_producto):
     redirect(URL('gestionar_validacion.html'))
 
 def graficaPie(productos):
-    #productos = request.vars.productos
-    print productos
     pie_chart = pygal.Pie()
 
     if productos == None:
@@ -303,22 +302,19 @@ def graficaPie(productos):
         id_programa = productos.split('\'')[4].split(',')[-2]
         nombre = productos.split('\'')[-4]
         abrev = productos.split('\'')[-2]
-        programas[id_programa] = {'nombre':nombre,'abreviacion':abrev,'repeticiones':1}
+        programas[id_programa] = {'id':id_programa,'nombre':nombre,'abreviacion':abrev,'repeticiones':1}
 
     else:
         total_productos = len(productos)
 
         for producto in productos:
-            #id_programa = producto.split('\'')[4].split(',')[-2]
             id_programa = producto[5]
             try:
                 programas[id_programa]['repeticiones'] += 1
             except:
-                #nombre = producto.split('\'')[-4]
-                #abrev  = producto.split('\'')[-2]
                 nombre = producto[6]
                 abrev = producto[7]
-                programas[id_programa] = {'nombre':nombre,'abreviacion':abrev,'repeticiones':1}
+                programas[id_programa] = {'id':id_programa,'nombre':nombre,'abreviacion':abrev,'repeticiones':1}
 
 
     for key in programas:
@@ -375,7 +371,7 @@ def graficaBar():
         line_chart.add(programas_dict[key]['abreviacion'], programas_dict[key]['repeticiones'])
 
 
-    return line_chart.render()
+    return programas
 
 def tabla():
 
