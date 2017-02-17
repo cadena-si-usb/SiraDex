@@ -112,7 +112,8 @@ def agregar():
     fields.append(Field('descripcion','string',label="Descripción (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(250)]))
     fields.append(Field('fecha_realizacion','date',label="Fecha de Culminación (*)",requires=[IS_NOT_EMPTY(error_message='Debe seleccionar una fecha'),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
     fields.append(Field('lugar','string',label="Lugar (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(50)]))
-
+    fields.append(Field("colaboradores",label="Colaboradores"))
+    
     # Otros Autores de la Actividad
     lista_usuarios = db(db.USUARIO.tipo == 'Usuario').select()
     usuarios = {}
@@ -146,25 +147,25 @@ def agregar():
 
         if obligatorio:
             obl[nombre]= tipo_campo
-            if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date', label=rows_campo.nombre+"  (**)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
+            if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date', label=rows_campo.nombre+"  (**)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha inválida, debe ser: AAA-MM-DD')]))
             elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
-            elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX')]))
+            elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI inválida, debe ser: XX.XXX.XXX')]))
             elif tipo_campo in ['Documento']:         fields.append(Field(nombre,'upload',label=rows_campo.nombre+" (*)",uploadfolder=os.path.join(request.folder,'uploads') ,requires=[IS_NOT_EMPTY(error_message='Debe subirse un archivo')]))
-            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xxxx')]))
+            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Teléfeno invélido, debe ser: (0xxx)xxx-xxxx')]))
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
             elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
-            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'texto',label=rows_campo.nombre+" (*)",requires=IS_NOT_EMPTY()))
-
+            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'text',label=rows_campo.nombre+" (*)",requires=IS_NOT_EMPTY()))
+            
         else:
             no_obl[nombre] = tipo_campo
-            if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',requires=IS_EMPTY_OR(IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD'))))
+            if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',requires=IS_EMPTY_OR(IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha inválida, debe ser: AAA-MM-DD'))))
             elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string'))
-            elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX'))))
+            elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI inválida, debe ser: XX.XXX.XXX'))))
             elif tipo_campo in ['Documento']:         fields.append(Field(nombre,'upload',requires=IS_EMPTY_OR(IS_UPLOAD_FILENAME()),uploadfolder=os.path.join(request.folder,'uploads')))
-            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xxxx'))))
+            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Teléfeno inválido, debe ser: (0xxx)xxx-xxxx'))))
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807))))
-            elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807'))))
-            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'texto',requires=IS_NOT_EMPTY()))
+            elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El número debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807'))))
+            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'text'))
 
 
     for i in range(5):
@@ -187,13 +188,13 @@ def agregar():
         form.element(_name=i)['_class']= form.element(_name=i)['_class'] + " obligatoria "+ obl[i]
 
     for i in no_obl.keys():
-        form.element(_name=i)['_class']= form.element(_name=i)['_class'] + ' ' + obl[i]
+        form.element(_name=i)['_class']= form.element(_name=i)['_class'] + ' ' + no_obl[i]
 
     for f in form.elements("input"):
         print f
 
     if form.process().accepted:
-        no = ['nombre','descripcion','fecha_realizacion','lugar']
+        no = ['nombre','descripcion','fecha_realizacion','lugar','colaboradores']
 
         estado = "Por Validar"
         if request.vars.borrador:
@@ -201,7 +202,8 @@ def agregar():
             estado = "Borrador"
         dicc_producto = db.PRODUCTO.insert(id_tipo = tipo,nombre=form.vars.nombre, descripcion=form.vars.descripcion,\
                                       estado= estado, fecha_realizacion=form.vars.fecha_realizacion, fecha_modificacion=now, \
-                                      lugar = form.vars.lugar, usbid_usu_creador= session.usuario['usbid'])
+                                      lugar = form.vars.lugar,colaboradores=form.vars.colaboradores, 
+                                      usbid_usu_creador= session.usuario['usbid'])
         id_producto = dicc_producto['id_producto']
 
         if request.vars.borrador:
@@ -296,8 +298,9 @@ def modificar():
     fields = []
     fields.append(Field('nombre','string',label="Nombre (*)",requires=[IS_NOT_EMPTY(),IS_LENGTH(50)]))
     fields.append(Field('descripcion','string',label="Descripción (*)",requires=[IS_NOT_EMPTY(),IS_LENGTH(250)]))
-    fields.append(Field('fecha_realizacion','date',label="Fecha de Culminación (*)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
+    fields.append(Field('fecha_realizacion','date',label="Fecha de Culminación (*)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha inválida, debe ser: AAA-MM-DD')]))
     fields.append(Field('lugar','string',label="Lugar (*)",requires=[IS_NOT_EMPTY(),IS_LENGTH(50)]))
+    fields.append(Field("colaboradores",label="Colaboradores"))
     obl = {}
     no_obl = {}
 
@@ -306,6 +309,7 @@ def modificar():
     valores['descripcion'] = producto.descripcion
     valores['fecha_realizacion'] = producto.fecha_realizacion
     valores['lugar'] = producto.lugar
+    valores['colaboradores'] = producto.colaboradores
     documento=[]
 
     # Otros Autores de la Actividad
@@ -321,7 +325,9 @@ def modificar():
         fields.append(Field("autor_"+str(i+1),
                             label = 'Autor ',
                             requires = IS_EMPTY_OR(IS_IN_SET(usuarios, zero="Seleccione usuario", error_message = 'Debes elegir uno de los usuarios listados.'))))
-
+    
+    
+    
     #Obtenemos los valores de los otros autores, si exiten
     otros_autores = db(db.PARTICIPA_PRODUCTO.id_producto == producto.id_producto).select()
     num_aut = 0
@@ -340,37 +346,37 @@ def modificar():
                 nombre = "campo_"+nombre
         except:
             pass
-
+        print("rows_campo", rows_campo)
         obligatorio = rows_campo.obligatorio
         tipo_campo = rows_campo.tipo_campo
 
         if obligatorio:
             obl[nombre]= tipo_campo
-            if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD')]))
+            if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha inválida, debe ser: AAA-MM-DD')]))
             elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
-            elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX')]))
+            elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI inválida, debe ser: XX.XXX.XXX')]))
             elif tipo_campo in ['Documento']:
                 temp= [str(rows_campo.id_campo), nombre]
                 documento+= temp
                 fields.append(Field(nombre,'upload',label=rows_campo.nombre+" (*)",uploadfolder=os.path.join(request.folder,'uploads'),requires=[IS_NOT_EMPTY(error_message='Debe subirse un archivo')]))
-            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xxxx')]))
+            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Teléfeno inválido, debe ser: (0xxx)xxx-xxxx')]))
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
-            elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
-            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'texto',label=nombre+" (*)",requires=IS_NOT_EMPTY()))
+            elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El número debe ser de la forma X.X, donde X está entre -9223372036854775800 y 9223372036854775807')]))
+            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'text',label=nombre+" (*)",requires=IS_NOT_EMPTY()))
 
         else:
             no_obl[nombre] = tipo_campo
-            if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',requires=IS_EMPTY_OR(IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAA-MM-DD'))))
+            if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',requires=IS_EMPTY_OR(IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha inválida, debe ser: AAA-MM-DD'))))
             elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string'))
-            elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI invalida, debe ser: XX.XXX.XXX'))))
+            elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI inválida, debe ser: XX.XXX.XXX'))))
             elif tipo_campo in ['Documento']:
                 temp= [str(rows_campo.id_campo), nombre]
                 documento+= temp
                 fields.append(Field(nombre,'upload',requires=IS_EMPTY_OR(IS_UPLOAD_FILENAME()),uploadfolder=os.path.join(request.folder,'uploads')))
-            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Telefeno invalido, debe ser: (0xxx)xxx-xxxx'))))
+            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Teléfeno inválido, debe ser: (0xxx)xxx-xxxx'))))
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807))))
-            elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807'))))
-            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'texto',requires=IS_NOT_EMPTY()))
+            elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El número debe ser de la forma X.X, donde X está entre -9223372036854775800 y 9223372036854775807'))))
+            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'text'))
 
         valores[nombre]=row.valor_campo
     print(documento)
@@ -386,20 +392,21 @@ def modificar():
     # Le escribimos la informacion a las vistas
     for nombre_campo in valores.keys():
         setattr(form.vars, nombre_campo, valores[nombre_campo])
-
+    print("obl", obl)
+    print("no_obl",no_obl)
     #fix para el datepicker de las fechas:
     for i in obl.keys():
         form.element(_name=i)['_class']= form.element(_name=i)['_class'] + " obligatoria "+ obl[i]
 
     for i in no_obl.keys():
-        form.element(_name=i)['_class']= form.element(_name=i)['_class'] + ' ' + obl[i]
+        form.element(_name=i)['_class']= form.element(_name=i)['_class'] + ' ' + no_obl[i]
 
     for f in form.elements("input"):
         print f
 
     # Al aceptar el formulario
     if form.process().accepted:
-        no = ['nombre','descripcion','fecha_realizacion','fecha_modificacion','lugar']
+        no = ['nombre','descripcion','fecha_realizacion','fecha_modificacion','lugar', 'colaboradores']
         sql = ''
         if request.vars.borrador:
             sql = "UPDATE PRODUCTO SET estado = 'Borrador' WHERE id_producto = '"+str(id_producto)+"';"
@@ -531,7 +538,7 @@ def obtener_actividades():
     print programa
     print '<<'
     aux = programa.descripcion.split('\r\n')[0]
-    descripcion = "<div class=\"col-sm-offset-1\"><h4>Descripcion del Programa:</h4><p>"+aux+"</p></div>"
+    descripcion = "<div class=\"col-sm-offset-1\"><h4>Descripción del Programa:</h4><p>"+aux+"</p></div>"
     html = "jQuery('#lista_tipos').empty().append('"+concat+"');jQuery('#descripcion_programa').empty().append('"+descripcion+"')"
     return html
 
@@ -688,7 +695,7 @@ def get_pdf():
     elements.append(usblogo)
     elements.append(Paragraph('Universidad Simón Bolívar' , estilo_titulo))
     elements.append(Paragraph('Vicerrectorado Académico' , estilo_titulo))
-    elements.append(Paragraph('Deacanato de Extensión' , estilo_titulo))
+    elements.append(Paragraph('Decanato de Extensión' , estilo_titulo))
     elements.append(Paragraph('Sistema de Registro de Actividades de Extensión (SIRADEx)' , estilo_titulo))
     elements.append(Paragraph('<br/><br/>DATOS DEL PRODUCTO' , estilo_titulo))
 
@@ -702,7 +709,7 @@ def get_pdf():
     ['', Paragraph('<b>LUGAR DE REALIZACIÓN:</b>', estilo_tabla),  Paragraph(str (producto.lugar), estilo_tabla), ''],
     ['', Paragraph('<b>FECHA DE CULMINACIÓN:</b> ', estilo_tabla) ,  Paragraph(str (producto.fecha_realizacion), estilo_tabla), ''],
     ['', Paragraph('<b>ÚLTIMA FECHA DE MODIFICACIÓN: </b>' , estilo_tabla) ,  Paragraph(str (producto.fecha_modificacion), estilo_tabla), ''],
-    ['', Paragraph('<b>STATUS DE VALIDACION: </b>', estilo_tabla) ,  Paragraph(str (producto.estado), estilo_tabla), '']
+    ['', Paragraph('<b>STATUS DE VALIDACIÓN: </b>', estilo_tabla) ,  Paragraph(str (producto.estado), estilo_tabla), '']
     ]
 
     t=Table(data, colWidths=(2.5*inch))

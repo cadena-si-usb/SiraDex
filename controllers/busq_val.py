@@ -97,7 +97,9 @@ def ver_producto():
             Field('Descripcion',default=producto.descripcion,writable = False),
             Field('Fecha_de_Relizacion', default=producto.fecha_realizacion,writable=False),
             Field('Lugar', default=producto.lugar,writable=False),
-            readonly=True)
+            readonly=True,
+            label = labels = {'Descripcion' : 'Descripción',
+                            'Fecha_de_Relizacion' : 'Fecha de Realización'})
 
     #Agregamos los otros elementos de los campos
     campos = db(db.PRODUCTO_TIENE_CAMPO.id_prod == producto.id_producto).select()
@@ -129,7 +131,7 @@ def ver_producto():
             db.PRODUCTO,
             fields=['nombre'],
             labels={'nombre':'Nuevo nombre'},
-            col3={'nombre':'Este es el nombre que aparecera al momento de exportar las actividades'}
+            col3={'nombre':'Este es el nombre que aparecerá al momento de exportar las actividades'}
 
     )
     form_validado.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
@@ -140,7 +142,7 @@ def ver_producto():
     ## Formulario para colocar la razon de rechazo de un producto.
     formulario_validar = SQLFORM.factory(
                           Field('nombre','string',
-                                    requires=[IS_NOT_EMPTY(error_message="El nombre del producto no puede quedar vacio."),
+                                    requires=[IS_NOT_EMPTY(error_message="El nombre del producto no puede quedar vacío."),
                                               IS_LENGTH(50, error_message="El nombre del producto no puede superar los 50 caracteres.")]),
                           Field('id_producto',type="string"),
                           submit_button = 'Validar',
