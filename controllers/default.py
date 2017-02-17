@@ -116,6 +116,37 @@ def logout_cas():
     session.usuario = None
     return response.render()
 
+def grafica_pie():
+
+    query = "select  programa.id_programa, programa.nombre, programa.abreviacion, count(producto.nombre)" + \
+    " from ((programa inner join tipo_actividad on programa.id_programa=tipo_actividad.id_programa)" + \
+    " inner join producto on producto.id_tipo=tipo_actividad.id_tipo and producto.usbid_usu_creador=\'"+ session.usuario["usbid"] +\
+    "\' and producto.estado=\'Validado\') group by programa.id_programa, programa.nombre, programa.abreviacion;"
+
+    query2 = "select count(producto.nombre) from producto where producto.usbid_usu_creador=\'"+ session.usuario["usbid"]+"\' and producto.estado=\'Validado\';"
+
+    datos = db.executesql(query)
+    num_productos = db.executesql(query2)[0][0]
+
+    programas={}
+
+    for producto in datos:
+        print producto
+        id_programa = producto[0]
+        try:
+            programas[id_programa]['repeticiones'] += 1
+        except:
+            nombre = producto[1]
+            abrev = producto[2]
+            programas[id_programa] = {'id':id_programa,'nombre':nombre,'abreviacion':abrev,'repeticiones':1}
+
+    
+    # for producto in datos:
+    #     porcentaje = (producto[2]*100)//num_productos
+    #     pie_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])
+
+    return programas
+
 def perfil():
     if session.usuario != None:
         admin = get_tipo_usuario(session)
@@ -146,7 +177,7 @@ def perfil():
                     "Por Validar":[]
                     }
 
-        grafica = URL('default','grafica')
+        infoPieChart = grafica_pie()
         tabla = URL('default','tabla')
 
         for row in rows:
@@ -160,26 +191,6 @@ def perfil():
         return locals()
     else:
         redirect(URL("index"))
-
-def grafica():
-
-        query = "select programa.nombre, programa.abreviacion, count(producto.nombre)" + \
-        " from ((programa inner join tipo_actividad on programa.id_programa=tipo_actividad.id_programa)" + \
-        " inner join producto on producto.id_tipo=tipo_actividad.id_tipo and producto.usbid_usu_creador=\'"+ session.usuario["usbid"] +\
-        "\' and producto.estado=\'Validado\') group by programa.nombre, programa.abreviacion;"
-
-        query2 = "select count(producto.nombre) from producto where producto.usbid_usu_creador=\'"+ session.usuario["usbid"]+"\' and producto.estado=\'Validado\';"
-
-        datos = db.executesql(query)
-        num_productos = db.executesql(query2)[0][0]
-
-        pie_chart = pygal.Pie()
-        pie_chart.title = 'Productos del usuario'
-        for producto in datos:
-            porcentaje = (producto[2]*100)//num_productos
-            pie_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])
-
-        return pie_chart.render()
 
 def tabla():
     fecha_hasta = datetime.date.today().year

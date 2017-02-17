@@ -16,7 +16,12 @@
         <!-- Datos del usuario -->
                 <div>
                   <!-- <a href="{{=URL(c='usuarios',f ='agregar')}}"> -->
-                  <button type="button" id="agregarProgBtn" class="btn btn-default green btn-border"  style="margin-bottom: 1em;" onclick="location.href='{{=URL('generar_backup')}}'">
+                  <button type="button" 
+                          id="agregarProgBtn" 
+                          class="btn btn-default green btn-border"  
+                          style="margin-bottom: 1em;" 
+                          onclick="location.href='{{=URL('generar_backup')}}'">
+                    
                     <span class="glyphicon glyphicon-plus-sign" aria-hidden="true" data-toggle="modal" data-target="#ModalCrearBackup"></span> Generar backup
                   </button>
                   <!-- </a> -->
@@ -24,6 +29,22 @@
         </div>
 
         <div class="col-md-3 ">
+
+                <div>
+                  <!-- <a href="{{=URL(c='usuarios',f ='agregar')}}"> -->
+                  <button type="button" 
+                          id="agregarProgBtn" 
+                          class="btn btn-default green btn-border"  
+                          style="margin-bottom: 1em;" 
+                          data-toggle="modal" 
+                          data-target="#modalAuto"
+                          >
+
+                    <span class="glyphicon glyphicon-time" aria-hidden="true" data-toggle="modal" data-target="#ModalCrearBackup"></span> Automatizar backup
+                  </button>
+                  <!-- </a> -->
+                </div>        
+          
         <!-- Datos del usuario -->
                 <div>
                   <!-- <a href="{{=URL(c='usuarios',f ='agregar')}}"> -->
@@ -135,6 +156,94 @@
   </div>
 </div>
 </div>
+
+<!-- Modal Automatizar -->
+<div class="container">
+  <div id="modalAuto" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content -->
+    <div class="modal-content">
+      
+      <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"><center>Frecuencia de Automatizacion</center></h4> 
+      </div>
+
+      <div class="modal-body">
+      <form method="post" class="form-horizontal" role="form" action={{=URL(c='backup',f='backup_aut')}}>
+          <!-- Seleccion de Fecha -->
+          <div class="form-group">
+              <label for="programa" class = "control-label col-sm-4"> Modo</label>
+              <div class="col-sm-8">
+                    <select name="modo" 
+                            class="form-control"
+                            id="modo" 
+                            style="width: 100%">
+                    <option value="None" selected="">--Ninguno--</option>
+                    <option value=diario>Diario</option>
+                    <option value=semanal>Semanal</option>
+                    <option value=mensual>Mensual</option>
+                    
+                  </select>
+              </div>
+              <br><br>
+
+              <label for="programa" class = "control-label col-sm-4"> Hora</label>
+              <div class="col-sm-8">
+                  <input type="time" name="hora" id="focusedInput" class="form-control datepicker" style="width: 100%"/>
+              </div>
+              <br><br>
+
+              <label for="programa" class = "control-label col-sm-4"> Dia</label>
+              <div class="col-sm-8">
+                  <select name="dias_automatizar" 
+                          class="form-control"
+                          id="dias" 
+                          style="width: 100%"
+                          disabled="">
+                    <option value="None" selected="">--Ninguno--</option>
+                    <option value=1>Lunes</option>
+                    <option value=2>Martes</option>
+                    <option value=3>Miercoles</option>
+                    <option value=4>Jueves</option>
+                    <option value=5>Viernes</option>
+                    <option value=6>Sabado</option>
+                    <option value=7>Domingo</option>
+                    
+                  </select>
+              </div>
+              <br><br>
+
+              <label for="programa" class = "control-label col-sm-4"> Activar</label>
+              <div class="col-sm-8">
+              <!-- Rounded switch -->
+              <label class="switch">
+                <input type="checkbox" name="activar">
+                <div class="slider round"></div>
+              </label>              
+              </div>
+          </div>
+
+          <div class="form-group ">
+              <input type="submit" class="col-sm-offset-3 col-sm-8 btn blue-add btn-border " value="Automatizar" />
+              <input type="hidden" name="_formname" value="crear_tipo" />
+          </div>
+      </form>
+      </div>
+      
+      <div class="modal-footer">
+         <center>
+        <button type="button" class="btn btn-default green btn-border " data-dismiss="modal">
+          <span class="glyphicon glyphicon-resize-small"></span>
+          Cerrar
+          </button>
+        </center> 
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
 			     
 <!-- Modal Eliminar-->
 <div class="container">
@@ -263,27 +372,38 @@
 
         });
 
-  $('.upload').change(function(){
-    var ext = $(this).val().split('.').pop().toLowerCase();
-    if(ext != 'sql') {
-        alert('solo se permite cargar archivos SQL');
-        $(this).val('');
-        $(this).filestyle('clear');
-    }
-  });
+      $('.upload').change(function(){
+        var ext = $(this).val().split('.').pop().toLowerCase();
+        if(ext != 'sql') {
+            alert('solo se permite cargar archivos SQL');
+            $(this).val('');
+            $(this).filestyle('clear');
+        }
+      });
 
-  // Pasamos los argumentos para eliminar campo
-  $('#ModalEliminarBackup').on('show.bs.modal', function(e){
-      var linkEliminar = $(e.relatedTarget).data('link-eliminar-backup');
-      $("#BotonEliminar").attr("href", linkEliminar);
-  });
 
-  // Pasamos los argumentos para eliminar campo
-  $('#ModalRestaurarBackup').on('show.bs.modal', function(e){
-      var linkRestaurar = $(e.relatedTarget).data('link-restaurar-backup');
-      $("#BotonRestaurar").attr("href", linkRestaurar);
-      
-  });
+      // Pasamos los argumentos para eliminar campo
+      $('#ModalEliminarBackup').on('show.bs.modal', function(e){
+          var linkEliminar = $(e.relatedTarget).data('link-eliminar-backup');
+          $("#BotonEliminar").attr("href", linkEliminar);
+      });
+
+      // Pasamos los argumentos para eliminar campo
+      $('#ModalRestaurarBackup').on('show.bs.modal', function(e){
+          var linkRestaurar = $(e.relatedTarget).data('link-restaurar-backup');
+          $("#BotonRestaurar").attr("href", linkRestaurar);
+      });
+
+      $('#modo').on('change',function(){
+        if($(this).val()!='semanal'){
+          console.log('no semanal');
+          $('#dias').attr('disabled','');
+        }
+        else{
+          console.log('semanal');
+          $('#dias').removeAttr( "disabled");
+        };
+      })
 
     </script>
 

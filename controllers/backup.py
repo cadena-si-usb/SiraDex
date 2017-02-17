@@ -12,21 +12,6 @@ def index():
 
     backups = os.listdir("./applications/SiraDex/backup")
 
-    form = formulario_restaurar_backup()
-
-    if form.process(formname = "form", table_name='archivos').accepted:
-
-        print form.vars.backup
-    #        comando = "psql -d Siradex -U Siradex -h localhost -w < ./applications/SiraDex/backup/" + archivo
-
-    #        resp = os.system(comando)
-
-        redirect(URL('index'))
-
-    elif form.errors:
-        session.flash = 'el formulario tiene errores'
-
-
     return locals()
 
 def generar_backup():
@@ -44,23 +29,6 @@ def generar_backup():
     session.flash = "Backup generado exitosamente"
     insertar_log(db, 'BACKUP', datetime.datetime.now(), request.client, 'GENERACION DE BACKUP EXITOSA', session.usuario['usbid'])
     redirect(URL('index'))
-
-def formulario_restaurar_backup():
-
-    admin = get_tipo_usuario(session)
-
-    if(admin==0 or admin==2):
-        redirect(URL(c ="default",f="index"))
-
-    fields = []
-
-    fields.append(Field("backup", 'upload', autodelete=True, uploadfolder="./applications/SiraDex/backup/", label=''))
-
-    form=SQLFORM.factory(*fields,upload=URL('download'))
-    form.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
-    form.element(_type='submit')['_value']="Agregar"
-
-    return form
 
 def restaurar_backup():
 
@@ -105,3 +73,35 @@ def descargar_backup():
     response.headers['Content-Disposition']= "attachment; filename=" + nombre_archivo
     insertar_log(db, 'BACKUP', datetime.datetime.now(), request.client, 'DESCARGA DE BACKUP', session.usuario['usbid'])
     return response.stream(open(direccion),chunk_size=4096)
+
+def backup_aut():
+    dia = request.vars.dias_automatizar
+    hora = request.vars.hora
+    activar = request.vars.activar
+    modo = request.vars.modo
+
+    fecha = time.asctime(time.localtime(time.time()))
+    archivo = "_".join(fecha.split()[1:]).replace(":","") + ".sql"
+
+    if activar == None:
+        os.system("crontab -r")
+    else:
+        comando = "pg_dump --dbname=postgres://Siradex:Siradex@localhost/Siradex -w > ./applications/SiraDex/backup/backup_" + archivo
+
+        if modo == "mensual":
+            crontab_line = "* " + str(hora) + " 1 * * " + comando
+
+        elif modo == "diario":
+            crontab_line = "* " + str(hora) + " * * * " + comando
+
+        else:
+            crontab_line = "* " + str(hora) + " " + str(dia) + " * * " + comando
+
+
+
+        echo_crontab_file = "echo \"" + crontab_line + "\" > ./applications/SiraDex/backup/auto_backup_file.txt"
+        print echo_crontab_file
+        os.system(echo_crontab_file)
+        os.system("crontab ./applications/SiraDex/backup/auto_backup_file.txt")
+
+    redirect(URL('index'))
