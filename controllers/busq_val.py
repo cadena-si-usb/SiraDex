@@ -57,7 +57,7 @@ def busqueda():
         elif (session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador"):
             sql += ";"
 
-        productos_sql = db.executesql(sql)
+        productos = db.executesql(sql)
 
         infoPieChart = graficaPie(productos)        
         #graficaPie = URL(c='busq_val',f='graficaPie',vars=dict(productos=productos))
