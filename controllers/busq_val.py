@@ -4,6 +4,8 @@ from funciones_siradex import get_tipo_usuario,get_tipo_usuario_not_loged
 from log import insertar_log
 import pygal
 from datetime  import date
+import time
+import os
 
 # Funcion para busquedas publicas
 def busqueda():
@@ -55,12 +57,12 @@ def busqueda():
         elif (session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador"):
             sql += ";"
 
-        productos = db.executesql(sql)
+        productos_sql = db.executesql(sql)
 
-        a = graficaPie(productos)
+        productos = graficaPie(productos_sql)
         #graficaPie = URL(c='busq_val',f='graficaPie',vars=dict(productos=productos))
-        graficaBar = URL(c='busq_val',f='graficaBar',vars=dict(productos=productos))
-        tabla = URL(c='busq_val',f='tabla',vars=dict(productos=productos))
+        graficaBar = URL(c='busq_val',f='graficaBar',vars=dict(productos=productos_sql))
+        tabla = URL(c='busq_val',f='tabla',vars=dict(productos=productos_sql))
 
         return locals()
     except:
@@ -437,3 +439,31 @@ def eliminar():
     comando = "rm ./applications/SiraDex/backup/" + archivo
     resp = os.system(comando)
     redirect(URL('index'))
+
+def backup_aut():
+    modo = request.vars.modo
+    dia = request.vars.dia
+    hora = request.hora
+
+    if modo=='diario':
+        fecha = time.asctime(time.localtime(time.time()))
+        archivo = "_".join(fecha.split()[1:]).replace(":","") + ".sql"
+        comando = "pg_dump --dbname=postgres://Siradex:Siradex@localhost/Siradex -w > ./applications/SiraDex/backup/backup" + archivo
+        linea = "* " ++ str(hora) ++ " * * * " ++ comando
+
+    elif modo=='semanal':
+        fecha = time.asctime(time.localtime(time.time()))
+        archivo = "_".join(fecha.split()[1:]).replace(":","") + ".sql"
+        comando = "pg_dump --dbname=postgres://Siradex:Siradex@localhost/Siradex -w > ./applications/SiraDex/backup/backup" + archivo
+        linea = "* " ++ str(hora) ++ " * * 1 " ++ comando
+
+    else:
+        fecha = time.asctime(time.localtime(time.time()))
+        archivo = "_".join(fecha.split()[1:]).replace(":","") + ".sql"
+        comando = "pg_dump --dbname=postgres://Siradex:Siradex@localhost/Siradex -w > ./applications/SiraDex/backup/backup" + archivo
+        linea = "* " ++ str(hora) ++ " " ++ str(dia) ++ " * * " ++ comando
+
+    comando2 = 'echo "' ++ linea ++ '" > ./applications/SiraDex/backup/script'
+    os.system(comando2)
+
+
