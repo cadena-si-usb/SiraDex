@@ -57,7 +57,7 @@ def formulario_descargar_log_periodo():
     # Genero formulario para los campos
     formulario = SQLFORM.factory(
                     Field('periodo',
-                           requires = [IS_IN_SET(["Hoy", "Semana pasada", "Mes pasado", "Hace 3 meses", "Todo"], zero='Seleccione...', error_message="Debe seleccionar un periodo para el descargar el Log.")],
+                           requires = [IS_IN_SET(["Hoy", "Semana pasada", "Mes pasado", "Hace 3 meses", "Todo"], zero='Seleccione...', error_message="Debe seleccionar un periodo para descargar el Log.")],
                            widget = SQLFORM.widgets.options.widget),
                     labels = {'periodo'      : 'Periodo'},
                     submit_button='Descargar'

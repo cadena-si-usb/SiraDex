@@ -38,7 +38,7 @@ def login_cas():
         pass
     try:
         import urllib2, ssl
-#        ssl._create_default_https_context = ssl._create_unverified_context
+        ssl._create_default_https_context = ssl._create_unverified_context
 
         url = "https://secure.dst.usb.ve/validate?ticket="+\
         request.vars.getfirst('ticket') +\
