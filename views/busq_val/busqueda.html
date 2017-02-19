@@ -11,14 +11,6 @@
 
 {{block contenido}}
 
-<style type="text/css">
-
-.chart {
-  width: 100%; 
-}
-
-</style>
-
 <!-- GRAFICAS Y TABLA -->
 {{try:}}
   {{if productos != () or len(productos)!=0:}}  
@@ -48,7 +40,6 @@
       <center>
         <div class="tab-content card" style="text-align: center;">
           
-          <div class="clearfix"></div>
           <div id="barChart" class="chart"></div>
           
           <button type="button" id="btn-pieChart" class="btn btn-default green btn-border" data-toggle="modal" data-target="#modalBar">
