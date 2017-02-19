@@ -264,7 +264,10 @@ function PieChart() {
       
         {{for i in infoPieChart:}}
           if(topping == '{{=infoPieChart[i]["abreviacion"]}}'){
-            window.location = "http://localhost:8000/tipo_actividad/gestionar/"+{{=infoPieChart[i]["id"]}};
+            /* SERVIDOR */
+            /*window.location = "http://localhost:8000/tipo_actividad/gestionar/"+{{=infoPieChart[i]["id"]}};*/
+            /* DESARROLLO */
+            window.location = "/tipo_actividad/gestionar/"+{{=infoPieChart[i]["id"]}};
           }
         {{pass}}
       }
