@@ -26,9 +26,9 @@ def call(): return service()
 
 # URLS DE RETORNO PARA EL CAS ##
 # PARA EL SERVIDOR:
-# URL_RETORNO = "http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas"
+URL_RETORNO = "http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas"
 # PARA DESSARROLLO. Cambiar el puerto 8000 si es necesario.
-URL_RETORNO = "https%3A%2F%2Fsiradex-al3x4nd3r.c9users.io%3A8080%2FSiraDex%2Fdefault%2Flogin_cas"
+# URL_RETORNO = "https%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas"
 
 # FUNCIONES USUARIO
 
@@ -140,7 +140,7 @@ def grafica_pie():
             abrev = producto[2]
             programas[id_programa] = {'id':id_programa,'nombre':nombre,'abreviacion':abrev,'repeticiones':1}
 
-    
+
     # for producto in datos:
     #     porcentaje = (producto[2]*100)//num_productos
     #     pie_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])
@@ -244,7 +244,7 @@ def EditarPerfil():
         # Modificar datos del perfil
         usuario = db(db.USUARIO.ci==session.usuario['cedula']).select().first()
 
-            
+
         forma=SQLFORM.factory(
             Field('telefono',
                    requires=[IS_NOT_EMPTY(error_message='El teléfono no puede quedar vacío.'),
@@ -256,7 +256,7 @@ def EditarPerfil():
             submit_button='Agregar',
             labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'}
             )
-            
+
         forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
         forma.element(_type='submit')['_value']="Actualizar"
 
@@ -280,7 +280,7 @@ def EditarPerfil():
             redirect(URL('perfil'))
         else :
             message = T("Debe colocar su teléfono y correo alternativo.")
-            
+
 
         return dict(form1 = form, form = forma, admin = admin)
     else:
