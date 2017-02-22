@@ -28,7 +28,7 @@ def call(): return service()
 # PARA EL SERVIDOR:
 #URL_RETORNO = "http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas"
 # PARA DESSARROLLO. Cambiar el puerto 8000 si es necesario.
-URL_RETORNO = "http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas"
+URL_RETORNO = "https%3A%2F%2Fsiradex-al3x4nd3r.c9users.io%3A8080%2FSiraDex%2Fdefault%2Flogin_cas"
 
 # FUNCIONES USUARIO
 
@@ -38,7 +38,7 @@ def login_cas():
         pass
     try:
         import urllib2, ssl
-        ssl._create_default_https_context = ssl._create_unverified_context
+        #ssl._create_default_https_context = ssl._create_unverified_context
 
         url = "https://secure.dst.usb.ve/validate?ticket="+\
         request.vars.getfirst('ticket') +\
@@ -233,26 +233,31 @@ def EditarPerfil():
         # Modificar datos del perfil
         usuario = db(db.USUARIO.ci==session.usuario['cedula']).select().first()
 
-        forma=SQLFORM(
-            db.USUARIO,
-            record=usuario,
-
-            fields=['telefono','correo_alter'],
-
-
-            labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'})
+            
+        forma=SQLFORM.factory(
+            Field('telefono',
+                   requires=[IS_NOT_EMPTY(error_message='El teléfono no puede quedar vacío.'),
+                             IS_LENGTH(20),
+                             IS_MATCH('^[0-9]+$', error_message="Use sólo números.")]),
+            Field('correo_alter',
+                   requires=[IS_NOT_EMPTY(error_message='El correo no puede quedar vacío.'),
+                             IS_MATCH('^[.A-z0-9À-ÿŸ\s-]+@[.A-z0-9À-ÿŸ\s-]+$', error_message="Este correo no es válido.")]),
+            submit_button='Agregar',
+            labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'}
+            )
+            
         forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
         forma.element(_type='submit')['_value']="Actualizar"
 
 
-        if request.vars:
+        if forma.accepts(request.vars, session,formname="forma"):
             nuevoTelefono = request.vars.telefono
             nuevoCorreoAlter = request.vars.correo_alter
 
-            valor_telefono = None if ((nuevoTelefono == "") | (nuevoTelefono== None)) else nuevoTelefono
+            valor_telefono = "" if (nuevoTelefono== None) else nuevoTelefono
             session.usuario["phone"] = valor_telefono
 
-            valor_correo = None if ((nuevoCorreoAlter == "") | (nuevoCorreoAlter== None)) else nuevoCorreoAlter
+            valor_correo = "" if (nuevoCorreoAlter== None) else nuevoCorreoAlter
             session.usuario["alternativo"] = valor_correo
 
             db(db.USUARIO.ci == session.usuario["cedula"]).update(telefono=valor_telefono, correo_alter=valor_correo)
@@ -262,6 +267,9 @@ def EditarPerfil():
 
             insertar_log(db, 'PERFIL', datetime.datetime.now(), request.client, 'ACT. PERFIL SATISFACTORIA', session.usuario['usbid'])
             redirect(URL('perfil'))
+        else :
+            message = T("Debe colocar su teléfono y correo alternativo.")
+            
 
         return dict(form1 = form, form = forma, admin = admin)
     else:
