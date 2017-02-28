@@ -98,7 +98,7 @@ def ver_producto():
             Field('Fecha_de_Relizacion', default=producto.fecha_realizacion,writable=False),
             Field('Lugar', default=producto.lugar,writable=False),
             readonly=True,
-            label = labels = {'Descripcion' : 'Descripción',
+            labels = {'Descripcion' : 'Descripción',
                             'Fecha_de_Relizacion' : 'Fecha de Realización'})
 
     #Agregamos los otros elementos de los campos
