@@ -168,10 +168,15 @@ def eliminar():
         if request.args[0] != session.usuario["usbid"]:
             session.message = ""
             print request.args[0]
-            if (not db(db.USUARIO.usbid == request.args[0]).isempty()):
-                db(db.USUARIO.usbid == request.args[0]).delete()
-                insertar_log(db, 'USUARIO', datetime.datetime.now(), request.client, 'ELIMINACION DE USUARIO ' + request.args[0], session.usuario['usbid'])
-                redirect(URL('gestionar'))
+            if (not db(db.USUARIO.usbid == request.args[0]).isempty()) :
+                if (not db(db.PRODUCTO.usbid_usu_creador == request.args[0]).isempty()) :
+                    db(db.USUARIO.usbid == request.args[0]).delete()
+                    insertar_log(db, 'USUARIO', datetime.datetime.now(), request.client, 'ELIMINACION DE USUARIO ' + request.args[0], session.usuario['usbid'])
+                    session.message = T("Usuario eliminado exitosamente.")
+                    redirect(URL('gestionar'))
+                else :
+                    session.message = T("No puede eliminar usuarios que hayan creado productos.")
+                    redirect(URL('gestionar'))
         else:
             session.message = T("Para eliminar su cuenta, por favor comuníquese con un administrador")
             redirect(URL('gestionar'))
