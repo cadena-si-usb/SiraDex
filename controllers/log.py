@@ -40,7 +40,7 @@ def consultar():
     items_per_page = 5
     
     limitby=(page*items_per_page,(page+1)*items_per_page+1)
-    #log_entries=db().select(db.prime.ALL,limitby=limitby)
+    
     log_entries =  db().select(db.LOG_SIRADEX.ALL, orderby=~db.LOG_SIRADEX.id_log, limitby=limitby)
     return dict(admin=admin, log_entries = log_entries, formulario_periodo = formulario, \
                 page=page,items_per_page=items_per_page)

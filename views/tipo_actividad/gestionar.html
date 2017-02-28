@@ -152,6 +152,16 @@
                             {{pass}}
                         </tr>
                         {{pass}}
+                        
+                        <ul class="pager">
+                            {{if page:}}
+                          <li><a href="{{=URL(args=[id_programa,page-1])}}">Anterior</a></li>
+                            {{pass}}
+                            {{if len(listaTipoActividades)>items_per_page:}}
+                          <li><a href="{{=URL(args=[id_programa,page+1])}}">Siguiente</a></li>
+                            {{pass}}
+                        </ul>
+                        
                     {{pass}}
                 </tbody>
             </table>

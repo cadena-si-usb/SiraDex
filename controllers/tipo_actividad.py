@@ -103,6 +103,15 @@ def gestionar():
     formulario_agregar_tipo = construir_formulario_agregar_tipo()
     formulario_editar_tipo = construir_formulario_editar_tipo()
 
+    if len(request.args) == 2: 
+        page=int(request.args[1])
+    else: 
+        page=0
+    
+    items_per_page = 5
+    
+    limitby=(page*items_per_page,(page+1)*items_per_page+1)
+
     # Vista básica
     if formulario_editar_tipo.accepts(request.vars, session,formname="formulario_editar_tipo"):
       tipo = db(db.TIPO_ACTIVIDAD.id_tipo == request.vars.Id_tipo).select()[0]
@@ -124,23 +133,23 @@ def gestionar():
                                id_programa = id_programa)
       insertar_log(db, 'ACTIVIDAD', datetime.datetime.now(), request.client, 'NUEVO TIPO DE ACTIVIDAD '+ request.vars.Nombre.upper(), session.usuario['usbid'])
 
-    if len(request.args) == 0:
-
-        listaTipoActividades = db(db.TIPO_ACTIVIDAD.papelera == False).select(db.TIPO_ACTIVIDAD.ALL)
+    if (len(request.args) == 0) or (request.args[0] == 'None'):
+        
+        listaTipoActividades = db(db.TIPO_ACTIVIDAD.papelera == False).select(db.TIPO_ACTIVIDAD.ALL,limitby=limitby)
         programa = dict()
         programa["nombre"] = None
         programa["descripcion"] = None
         id_programa = None
 
-    else :
-
+    elif  (request.args[0] != None):
+        
         id_programa = request.args[0]
 
         listaTipoActividades =   db((db.TIPO_ACTIVIDAD.papelera == False)
-                                 & (db.TIPO_ACTIVIDAD.id_programa == id_programa)).select(db.TIPO_ACTIVIDAD.ALL)
+                                 & (db.TIPO_ACTIVIDAD.id_programa == id_programa)).select(db.TIPO_ACTIVIDAD.ALL,limitby=limitby)
 
         programa = db(db.PROGRAMA.id_programa == id_programa).select(db.PROGRAMA.ALL).first()
-
+    
 
     return dict(admin = get_tipo_usuario(session)
           , listaTipoActividades = listaTipoActividades
@@ -149,7 +158,8 @@ def gestionar():
           , formulario_editar_tipo = formulario_editar_tipo
           , hayErroresAgregar = formulario_agregar_tipo.errors
           , hayErroresEditar = formulario_editar_tipo.errors
-          , id_programa = id_programa)
+          , id_programa = id_programa \
+          , page=page,items_per_page=items_per_page)
 
 #. --------------------------------------------------------------------------- .
 '''
