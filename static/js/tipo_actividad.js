@@ -31,7 +31,9 @@ $(document).ready(function(){
 
     // Se muestra valor por defecto del programa desde el cual se ve la vista 
   $('#myModal').on('show.bs.modal', function(e){
-      if ($("#identificador_de_programa").length > 0){
+    
+      if (($("#identificador_de_programa").length > 0 ) &&
+           $("#identificador_de_programa").attr("data-programa") != "None"){
         var id_programa = $("#identificador_de_programa").attr("data-programa");
         var opcion = $("#myModal .generic-widget.form-control#no_table_Programa option[value='"+ id_programa +"']");
         opcion.attr("selected", true);
@@ -123,7 +125,7 @@ $(document).ready(function(){
       var restTitulo = splitTitulo[0];
       amountText = splitTitulo[0].length;
       i = 1;
-
+      
       while (true){
         if (splitTitulo.length >= i && amountText + splitTitulo[i].length + 1 < 18){
             restTitulo += " " + splitTitulo[i];
@@ -132,6 +134,7 @@ $(document).ready(function(){
         }else{
           restTitulo += '\n';
           amountText = 0;
+          break;
         }
 
         if (splitTitulo.length <= i)
@@ -188,6 +191,7 @@ $(document).ready(function(){
           }else{
             result += '\n';
             amountText = 0;
+            break;
           }
 
           if (splitDescription.length <= i)
