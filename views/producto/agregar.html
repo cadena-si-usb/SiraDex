@@ -100,7 +100,7 @@ $(document).ready(function () {
 	// Muestra la cantidad de caracteres disponible en el textfield de nombre.
 
 
-	$("#no_table_fecha_realizacion").siblings(".help-block").html( "                                         El formato para la fecha es de YYYY-MM-DD");
+	$("#no_table_fecha_realizacion").siblings(".help-block").html( "                                         El formato para la fecha es de AAAA-MM-DD");
 
 	
 
@@ -203,7 +203,7 @@ $(document).ready(function () {
 		});
 
 	 $('#no_table_c0mpr0bant3_1__row').before('	<div id="comprobantes__row" class="form-group">\
-													<h3 class="col-sm-offset-3">Comprobantes</h3>\
+													<h3 class="col-sm-offset-3">Comprobantes (*)</h3>\
 													\
 													<div class="row">\
 														<div class="col-sm-10 col-sm-offset-2" style="margin-left:15em;">\
@@ -230,6 +230,8 @@ $(document).ready(function () {
     	$('#no_table_c0mpr0bant3_'+i+'__row').addClass("hidden");
     	$('#no_table_d3scr1pc10n_comprobante_'+i+'__row').addClass("hidden");
 	}
+
+
 
 	$('#agregar_comprobante').click(function(){
 
@@ -260,11 +262,14 @@ $(document).ready(function () {
 				};
 			};
 		};
+
+		$('#num_cant').remove();
+		$('#cant_restante').append('<b id="num_cant">'+(5-comprobante_mostrado )+'</b>');
+
 		if (comprobante_mostrado==cantidad_comprobantes){
 			$('#agregar_comprobante').addClass("hidden");
 		}
-		$('#num_cant').remove();
-		$('#cant_restante').append('<b id="num_cant">'+(5-comprobante_mostrado )+'</b>');
+
 	});
 
 	$('.upload').change(function(){
