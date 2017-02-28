@@ -231,6 +231,8 @@ $(document).ready(function () {
     	$('#no_table_d3scr1pc10n_comprobante_'+i+'__row').addClass("hidden");
 	}
 
+
+
 	$('#agregar_comprobante').click(function(){
 
 		if (comprobante_mostrado<cantidad_comprobantes){
@@ -260,11 +262,14 @@ $(document).ready(function () {
 				};
 			};
 		};
+
+		$('#num_cant').remove();
+		$('#cant_restante').append('<b id="num_cant">'+(5-comprobante_mostrado )+'</b>');
+
 		if (comprobante_mostrado==cantidad_comprobantes){
 			$('#agregar_comprobante').addClass("hidden");
 		}
-		$('#num_cant').remove();
-		$('#cant_restante').append('<b id="num_cant">'+(5-comprobante_mostrado )+'</b>');
+
 	});
 
 	$('.upload').change(function(){

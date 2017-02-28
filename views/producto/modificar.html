@@ -234,6 +234,10 @@
 		    	$('#no_table_d3scr1pc10n_comprobante_'+i+'__row').addClass("hidden");
 			}
 
+			if (comprobante_mostrado==cantidad_comprobantes){
+				$('#agregar_comprobante').addClass("hidden");
+			}
+
 			$('#agregar_comprobante').click(function(){
 				if (comprobante_mostrado<cantidad_comprobantes){
 
@@ -273,6 +277,7 @@
 													Puede subir <b>'+(cantidad_comprobantes-comprobante_mostrado)+'</b> comprobantes más\
 													<br>\
 													Sólo puede subir documentos PDF</span>');
+
 
 			});
 
