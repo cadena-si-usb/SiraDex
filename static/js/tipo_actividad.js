@@ -184,7 +184,7 @@ $(document).ready(function(){
         i += 1;
 
         while (true){
-          if (splitDescription.length >= i && amountText + splitDescription[i].length + 1 < 30){
+          if (splitDescription[i] && splitDescription.length >= i && amountText + splitDescription[i].length + 1 < 30){
               result += " " + splitDescription[i];
               amountText += splitDescription[i].length;
               i++;
