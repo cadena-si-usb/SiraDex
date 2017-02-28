@@ -92,8 +92,17 @@
                             <td class="hColumns text-center ip">{{=entry.accion_ip}}</td>
                             <td class="hColumns text-center descripcion">{{=entry.descripcion}}</td>
                         </tr>
-                        {{pass}}
                       {{pass}}
+                        <ul class="pager">
+                            {{if page:}}
+                          <li><a href="{{=URL(args=[page-1])}}">Anterior</a></li>
+                            {{pass}}
+                            {{if len(log_entries)>items_per_page:}}
+                          <li><a href="{{=URL(args=[page+1])}}">Siguiente</a></li>
+                            {{pass}}
+                        </ul>
+
+                  {{pass}}
                 </tbody>
             </table>
 
