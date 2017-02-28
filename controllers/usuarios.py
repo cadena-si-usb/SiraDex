@@ -169,7 +169,8 @@ def eliminar():
             session.message = ""
             print request.args[0]
             if (not db(db.USUARIO.usbid == request.args[0]).isempty()) :
-                if (not db(db.PRODUCTO.usbid_usu_creador == request.args[0]).isempty()) :
+                if ((db(db.PRODUCTO.usbid_usu_creador != request.args[0]).isempty()) \
+                        and ((db(db.PARTICIPA_PRODUCTO.usbid_usuario != request.args[0]).isempty()))) :
                     db(db.USUARIO.usbid == request.args[0]).delete()
                     insertar_log(db, 'USUARIO', datetime.datetime.now(), request.client, 'ELIMINACION DE USUARIO ' + request.args[0], session.usuario['usbid'])
                     session.message = T("Usuario eliminado exitosamente.")
