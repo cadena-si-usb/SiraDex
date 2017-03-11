@@ -184,10 +184,10 @@ def ver_producto():
 
         # parseamos los datos para la notificacion
         datos_usuario = {'nombres' : usuario.nombres + ' ' + usuario.apellidos}
+        datos_usuario['correo_inst'] = usuario.correo_inst
+        datos_usuario['correo_alter'] = None
         if usuario.correo_alter != None:
-            datos_usuario['email'] = usuario.correo_alter
-        else:
-            datos_usuario['email'] = usuario.correo_inst
+            datos_usuario['correo_alter'] = usuario.correo_alter
 
         producto = {'nombre': producto.nombre}
 
@@ -253,11 +253,12 @@ def validar(id_producto):
 
     # parseamos los datos para la notificacion
     datos_usuario = {'nombres' : usuario.nombres + ' ' + usuario.apellidos}
+    datos_usuario['correo_inst'] = usuario.correo_inst
+    datos_usuario['correo_alter'] = None
     if usuario.correo_alter != None:
-        datos_usuario['email'] = usuario.correo_alter
-    else:
-        datos_usuario['email'] = usuario.correo_inst
-
+        datos_usuario['correo_alter'] = usuario.correo_alter
+    
+        
     producto = {'nombre': producto.nombre}
 
     # enviamos la notificacion al usuario creador
@@ -270,10 +271,10 @@ def validar(id_producto):
         usuario = db(db.USUARIO.usbid == participacion.usbid_usuario).select().first()
 
         datos_coautor = {'nombres' : usuario.nombres + ' ' + usuario.apellidos }
+        datos_coautor['correo_inst'] = usuario.correo_inst
+        datos_coautor['correo_alter'] = None
         if usuario.correo_alter != None:
-            datos_coautor['email'] = usuario.correo_alter
-        else:
-            datos_coautor['email'] = usuario.correo_inst
+            datos_coautor['correo_alter'] = usuario.correo_alter
         # Enviamos el correo.
         enviar_correo_validacion_coautor(mail, datos_coautor, datos_usuario, producto)
 
