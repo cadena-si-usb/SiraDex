@@ -653,10 +653,11 @@ def get_pdf():
         nombres_autores  = nombres_autores + ', ' + autorAux.nombres +' '+ autorAux.apellidos
 
     colaboradores = ""
-    if producto.colaboradores == None:
-        colaboradores = " - "
+    if not producto.colaboradores :
+        colaboradores = "--Campo no Suministrado--"
     else:
         colaboradores = producto.colaboradores
+        
 
     tmpfilename = os.path.join(request.folder,'private',str(uuid4()))
     doc = SimpleDocTemplate(tmpfilename)
@@ -708,7 +709,7 @@ def get_pdf():
     [''],
     ['', Paragraph('<b>NOMBRE DEL PRODUCTO:</b> ', estilo_tabla),  Paragraph(str(producto.nombre), estilo_tabla), ''],
     ['', Paragraph('<b>AUTOR(ES):</b> ', estilo_tabla),  Paragraph(nombres_autores, estilo_tabla), ''],
-    ['', Paragraph('<b>COLABORADOR(ES):</b> ', estilo_tabla),  Paragraph(str(colaboradores), estilo_tabla), ''],
+    ['', Paragraph('<b>COLABORADOR(ES):</b>', estilo_tabla),  Paragraph(str(colaboradores), estilo_tabla), ''],
     ['', Paragraph('<b>REGISTRADO POR: </b>' , estilo_tabla),  Paragraph(str(creador.nombres +' '+ creador.apellidos), estilo_tabla),''],
     ['', Paragraph('<b>CI:</b> ' , estilo_tabla),  Paragraph(str(creador.ci), estilo_tabla),''],
     ['', Paragraph('<b>DESCRIPCIÓN:</b> ', estilo_tabla) ,  Paragraph(str (producto.descripcion), estilo_tabla), ''],
