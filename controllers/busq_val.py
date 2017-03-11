@@ -71,7 +71,8 @@ def busqueda():
 def ver_producto():
 
     admin = get_tipo_usuario_not_loged(session)
-
+    if not request.args:
+        raise HTTP(404)
     id_producto = int(request.args(0))
     producto = db(db.PRODUCTO.id_producto == id_producto).select().first()
     usuario_producto = db(db.USUARIO.usbid == producto.usbid_usu_creador).select().first()

@@ -98,9 +98,10 @@ def agregar():
         dia = "-" +  str(now.month)
     fecha_max = str(now.year) + mes + dia
 
-
+    if not request.args:
+        raise HTTP(404)
     tipo =  int(request.args(0))
-
+    
     campos_id = db(db.ACT_POSEE_CAMPO.id_tipo_act == tipo).select()
     tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == tipo).select().first()
 
@@ -267,7 +268,9 @@ def agregar():
 
 def modificar():
     admin = get_tipo_usuario(session)
-
+    
+    if not request.args:
+        raise HTTP(404)
     id_producto = int(request.args(0))
 
     now = datetime.datetime.now()
@@ -495,6 +498,8 @@ def modificar():
 def eliminar():
     admin = get_tipo_usuario(session)
 
+    if not request.args:
+        raise HTTP(404)
     id_act = int(request.args(0))
 
     query = "SELECT archivo FROM COMPROBANTE WHERE producto="+str(id_act)+";"
@@ -640,7 +645,8 @@ def descargar_documento():
 #Funcion para exportar PDF de un producto
 def get_pdf():
     admin = get_tipo_usuario(session)
-
+    if not request.args:
+        raise HTTP(404)
     id_producto = request.args(0)
     producto = db.PRODUCTO(id_producto)
     creador = db(db.USUARIO.usbid == producto.usbid_usu_creador).select().first()
