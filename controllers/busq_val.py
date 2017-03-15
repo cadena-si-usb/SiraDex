@@ -324,51 +324,35 @@ def graficaBar():
     productos = request.vars.productos
     fecha_hasta = date.today().year
     fecha_desde = fecha_hasta - 10
-
     line_chart = pygal.Bar()
-
     if productos == None:
         return line_chart.render()
-
     line_chart.x_labels = map(str, range(fecha_desde, fecha_hasta + 1))
-
     programas = db(db.PROGRAMA['papelera']==False).select().as_list()
-
     programas_dict = {}
     for programa in programas:
         ident = programa['id_programa']
         nombre = programa['nombre']
         abrev = programa['abreviacion']
         programas_dict[ident] = {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':[0 for x in range(11)]}
-
     if type(productos) is str:
-
         id_programa = int(productos.split('\'')[4].split(',')[-2])
         anio = int(productos.split('\'')[4].split(',')[3][15:])
         i = anio-fecha_desde
-
         if (i <= 0):
             i=0
-
         programas_dict[id_programa]['repeticiones'][i]+=1
-
     else:
         for producto in productos:
             id_programa = int(producto.split('\'')[4].split(',')[-2])
             anio = int(producto.split('\'')[4].split(',')[3][15:])
             i = anio-fecha_desde
-
             if (i <= 0):
                 i=0
-           
             programas_dict[id_programa]['repeticiones'][i]+=1
-
-
     for key in programas_dict.keys():
         line_chart.add(programas_dict[key]['abreviacion'], programas_dict[key]['repeticiones'])
-
-
-    return programas
+    return programas_dict
 
 def tabla():
 
