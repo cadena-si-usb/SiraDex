@@ -57,8 +57,10 @@ def busqueda():
 
         productos = db.executesql(sql)
 
+
         infoPieChart = graficaPie(productos)
         graficaBar = graficaBar(productos)
+        print "hola"
         #graficaPie = URL(c='busq_val',f='graficaPie',vars=dict(productos=productos))
         #graficaBar = URL(c='busq_val',f='graficaBar',vars=dict(productos=productos))
         tabla = URL(c='busq_val',f='tabla',vars=dict(productos=productos))
@@ -332,7 +334,6 @@ def graficaPie(productos):
     return programas
 
 def graficaBar(productos):
-    print productos
     fecha_hasta = date.today().year
     fecha_desde = fecha_hasta - 10
 
@@ -348,13 +349,10 @@ def graficaBar(productos):
             abrev = programa['abreviacion']
             fechas[fecha][ident]= {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':0}
 
-    
     for producto in productos:
         anio = producto[4].year
         id_programa = producto[5]
         fechas[anio][id_programa]['repeticiones'] += 1
-
-    print fechas
 
     return fechas
 
