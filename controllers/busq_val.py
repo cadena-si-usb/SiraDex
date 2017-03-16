@@ -48,6 +48,8 @@ def busqueda():
             if request.vars.fecha != "":
                 sql += " AND prod.fecha_realizacion <= '" + request.vars.fecha +"'"
 
+        if request.vars.anio != None:
+            sql += " AND extract(year FROM prod.fecha_realizacion)==" + request.vars.anio
         # Ahora dependiendo del usuario anadimos las restricciones del estado (no se contempla cuando
         # el usuario esta bloqueado porqu no deberia llegar aqui)
         if (session.usuario == None or session.usuario["tipo"] == "Usuario"):
@@ -57,11 +59,10 @@ def busqueda():
 
         productos = db.executesql(sql)
 
+        infoTabla = tabla(productos)
         infoBarChart = graficaBar(productos)
         infoPieChart = graficaPie(productos)
-        print("comienza tabla")
         #graficaPie = URL(c='busq_val',f='graficaPie',vars=dict(productos=productos))
-        tabla = tabla(productos)
 
         return locals()
     except:
@@ -355,19 +356,17 @@ def graficaBar(productos):
     return fechas
 
 def tabla(productos):
-    print productos
     fecha_hasta = date.today().year
     fecha_desde = fecha_hasta - 10
     programas={}
     programas_db = db(db.PROGRAMA['papelera']==False).select().as_list()
-    print "\n\n=================================\n\n"
-    print programas_db
 
     for programa in programas_db:
         ident = int(programa['id_programa'])
         programas[ident]={'nombre':programa['nombre']}
         for fecha in range(fecha_desde, fecha_hasta + 1):
             programas[ident][fecha]= 0
+        programas[ident]['total']=0
 
     for producto in productos:
         anio = producto[4].year
@@ -377,8 +376,8 @@ def tabla(productos):
             anio = fecha_hasta            
         id_programa = producto[5]
         programas[id_programa][anio]+= 1
+        programas[id_programa]['total']+=1
 
-    print programas
     return programas
 
 

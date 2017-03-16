@@ -333,24 +333,24 @@ function Table() {
         data.addColumn('number', 'Total');
         
   var programas = [];
-  {{for k0 in sorted(infoBarChart.keys()):}}
-      {{for v1 in infoBarChart[k0].values():}}
-        if ( programas.indexOf('{{=v1["nombre"]}}') == -1){
-          programas.push('{{=v1["nombre"]}}');
-        }
-
+  {{for k0,v0 in infoTabla.iteritems():}}
+    var b = ['{{=v0["nombre"]}}'];
+    {{for i in sorted(v0):}}
+      {{if i != "nombre":}}
+          {{if v0[i] != 0 and i != "total":}}
+          b.push({v:parseInt('{{=v0[i]}}'),f:'<a href="{{=URL(c="busq_val",f="busqueda",vars={"Producto":k0,"anio":i})}}">{{=v0[i]}}</a>'});
+          {{else:}}
+          b.push(parseInt('{{=v0[i]}}'));
+          {{pass}}
       {{pass}}
+    {{pass}}
+    programas.push(b);
   {{pass}}
   console.log(programas);
-        /*data.addRows([
-          ['Mike',10000, true],
-          ['Jim', 8000,  false],
-          ['Alice',12500, true],
-          ['Bob', 7000,  true]
-        ]);*/
+  data.addRows(programas);
 
   var table = new google.visualization.Table(document.getElementById('table'));
-  table.draw(data, {showRowNumber: true, width: '100%',pageSize: 5});
+  table.draw(data, {showRowNumber: true, width: '100%',pageSize: 5,allowHtml:true});
 
 }
 
