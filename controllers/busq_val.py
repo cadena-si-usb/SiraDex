@@ -57,12 +57,9 @@ def busqueda():
 
         productos = db.executesql(sql)
 
-
+        infoBarChart = graficaBar(productos)
         infoPieChart = graficaPie(productos)
-        graficaBar = graficaBar(productos)
-        print "hola"
         #graficaPie = URL(c='busq_val',f='graficaPie',vars=dict(productos=productos))
-        #graficaBar = URL(c='busq_val',f='graficaBar',vars=dict(productos=productos))
         tabla = URL(c='busq_val',f='tabla',vars=dict(productos=productos))
 
         return locals()
@@ -336,11 +333,8 @@ def graficaPie(productos):
 def graficaBar(productos):
     fecha_hasta = date.today().year
     fecha_desde = fecha_hasta - 10
-
     fechas={}
-
     programas = db(db.PROGRAMA['papelera']==False).select().as_list()
-
     for fecha in range(fecha_desde, fecha_hasta + 1):
         fechas[fecha]={}
         for programa in programas:
@@ -351,11 +345,13 @@ def graficaBar(productos):
 
     for producto in productos:
         anio = producto[4].year
+        if anio < fecha_desde:
+            anio = fecha_desde
+        if anio > fecha_hasta:
+            anio = fecha_hasta            
         id_programa = producto[5]
         fechas[anio][id_programa]['repeticiones'] += 1
-
     return fechas
-
 
 def tabla():
 

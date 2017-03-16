@@ -10,7 +10,6 @@
 
 
 {{block contenido}}
-
 <!-- GRAFICAS Y TABLA -->
 {{try:}}
   {{if productos != () or len(productos)!=0:}}  
@@ -160,14 +159,14 @@
 <div id="modalBar" class="modal fade" role="dialog">
   <div class="modal-dialog">
   <!-- Modal content -->
-  <div class="modal-content">
+  <div class="modal-content" style="width: 55em; margin-left: -5.8em">
     
     <div class="modal-header">
        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      <h4 class="modal-title"><center>Gráfica de Productos por Programa</center></h4> 
+      <h4 class="modal-title"><center>Gráfica de Productos por Programa y Años</center></h4> 
     </div>
 
-    <div class="modal-body">
+    <div class="modal-body" style="margin-left: -6em;">
     <center>
       
       <div id="barChartB"></div>
@@ -246,7 +245,7 @@ function PieChart() {
 
     // Set opciones de las graficas
     var options =  {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent'};
-    var options2 = {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent'};
+    var options2 = {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent',width:700,height:350};
 
     // Instanciar las graficas, dibujarlas usando opciones
     var chart = new google.visualization.PieChart(document.getElementById('pieChart'));
@@ -274,46 +273,48 @@ function PieChart() {
 }
 
 function BarChart() {
-  var dataTable = new google.visualization.DataTable();
-  dataTable.addColumn('string', 'Programa');
-  dataTable.addColumn('number', 'Productos');
-  dataTable.addColumn({type: 'string', role: 'tooltip'});
-
+  var b = [['Programa']];
   var colorsArray = [];
-  {{for i in infoPieChart:}}
-    dataTable.addRows([['{{=infoPieChart[i]["abreviacion"]}}',parseInt({{=infoPieChart[i]['repeticiones']}},10),'{{=infoPieChart[i]["nombre"]}}\nTotal: {{=infoPieChart[i]["repeticiones"]}}']]);
-
-    var new_light_color = 'rgb(' +  (Math.floor((255-111)*Math.random()) + 28) + ',' + 
-                                    (Math.floor((255-170)*Math.random()) + 42) + ',' + 
-                                    (Math.floor((255-109)*Math.random()) + 64) + ')';
-    colorsArray.push(new_light_color);
+  
+  {{for v0 in infoBarChart.values():}}
+    {{for v1 in v0.values():}}
+      if (b[0].indexOf('{{=v1["nombre"]}}') == -1){
+        b[0].push('{{=v1["nombre"]}}');
+      }
+      var new_light_color = 'rgb(' +  (Math.floor((255-111)*Math.random()) + 28) + ',' + 
+                                      (Math.floor((255-170)*Math.random()) + 42) + ',' + 
+                                      (Math.floor((255-109)*Math.random()) + 64) + ')';
+      colorsArray.push(new_light_color);
+    {{pass}}
   {{pass}}
-    // Set opciones de las graficas
-    var options =  {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent'};
-    var options2 = {'title':'Productos por Programa\n ',colors: colorsArray};
+  
+  b[0].push({ role: 'annotation' } );
 
-    // INstanciar las graficas, dibujarlas usando opciones
+  {{for k0 in sorted(infoBarChart.keys()):}}
+    var d = ['{{=k0}}'];
+    {{for v1 in infoBarChart[k0].values():}}
+      d.push(parseInt('{{=v1["repeticiones"]}}'));
+    {{pass}}
+    d.push('');
+    b.push(d);
+  {{pass}}
+
+  var data = google.visualization.arrayToDataTable(b);
+    // Set opciones de las graficas
+    var options =  {'title':'Productos por Año\n ',colors: colorsArray,backgroundColor:'transparent',legend: { maxLines: 3 },bar: { groupWidth: '75%' },isStacked: true,};
+    var options2 =  {'title':'Productos por Año\n ',colors: colorsArray,backgroundColor:'transparent',legend: { maxLines: 3 },bar: { groupWidth: '75%' },isStacked: true,width:700,height:350};
+    //var options2 = {'title':'Productos por Anio\n ',colors: colorsArray};
+
+    // Instanciar las graficas, dibujarlas usando opciones
     var chart = new google.visualization.ColumnChart(document.getElementById('barChart'));
-    chart.draw(dataTable, options);
+    chart.draw(data, options);
 
     // grafica dentro del modal
-    var chartBig = new google.visualization.BarChart(document.getElementById('barChartB'));
-    chartBig.draw(dataTable, options2);
+    var chartBig = new google.visualization.ColumnChart(document.getElementById('barChartB'));
+    chartBig.draw(data, options2);
 
     // Agregando funcion para redirigir al hacer click
-    google.visualization.events.addListener(chart, 'select', selectHandler);
-    function selectHandler() {
-      var selectedItem = chart.getSelection()[0];
-      if (selectedItem) {
-      var topping = dataTable.getValue(selectedItem.row, 0);
-      {{for i in infoPieChart:}}
-        if(topping == '{{=infoPieChart[i]["abreviacion"]}}'){ 
-            window.location = "/tipo_actividad/gestionar/"+{{=infoPieChart[i]["id"]}};
-          
-        }
-      {{pass}}
-        }
-    }
+    
 }
 
 $(window).resize(function(){
