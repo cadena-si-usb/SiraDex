@@ -337,8 +337,10 @@ function Table() {
     var b = ['{{=v0["nombre"]}}'];
     {{for i in sorted(v0):}}
       {{if i != "nombre":}}
-          {{if v0[i] != 0 and i != "total":}}
-          b.push({v:parseInt('{{=v0[i]}}'),f:'<a href="{{=URL(c="busq_val",f="busqueda",vars={"Producto":"","Programa":k0,"anio":i})}}">{{=v0[i]}}</a>'});
+          {{if v0[i] != 0 and i != "total":}}            
+            {{dictionary["anio"]= i}}
+            {{dictionary["Programa"] = k0 }}
+          b.push({v:parseInt('{{=v0[i]}}'),f:'<a href="{{=URL(c="busq_val",f="busqueda",vars=dictionary) }}">{{=v0[i]}}</a>'});
           {{else:}}
           b.push(parseInt('{{=v0[i]}}'));
           {{pass}}

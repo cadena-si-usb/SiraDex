@@ -7,6 +7,15 @@ from datetime  import date
 
 # Funcion para busquedas publicas
 def busqueda():
+    print request.vars 
+
+    dictionary = {}
+    for key in request.vars:
+        dictionary[key] = request.vars[key]
+
+    print dictionary
+
+
     admin = get_tipo_usuario_not_loged(session)
     try:
         sql = "SELECT prod.descripcion," + \
@@ -50,7 +59,7 @@ def busqueda():
 
         if request.vars.anio != None:
             sql += " AND extract(year FROM prod.fecha_realizacion)=" + request.vars.anio
-            sql += " AND p.id_programa=" + str(request.vars.Programa)
+            
         # Ahora dependiendo del usuario anadimos las restricciones del estado (no se contempla cuando
         # el usuario esta bloqueado porqu no deberia llegar aqui)
         if (session.usuario == None or session.usuario["tipo"] == "Usuario"):
