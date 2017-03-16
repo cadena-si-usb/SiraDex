@@ -51,39 +51,49 @@
                     {{if len(productosE) == 0:}}
                         No hay productos por validar
                     {{else:}}
-                        <table class="table table-striped table-condensed table-hover sortable">
+                        <table class="table table-hover table-striped borde-tabla">
                             <thead>
-                            <tr>
-                                <th>ID Producto</th>
-                                <th>Nombre Producto</th>
-                                <th>Tipo Producto</th>
-                                <th><center>Mostrar</center></th>
-                            </tr>
+	                            <tr>
+	                                <th class="hColumns">ID Producto</th>
+	                                <th class="hColumns">Nombre Producto</th>
+	                                <th class="hColumns">Tipo Producto</th>
+	                                <th class="hColumns text-center">Mostrar</center></th>
+	                            </tr>
                             </thead>
                             <tbody>
                                 {{for producto in productosE:}}
                                    
-                                    <tr>
-                                        <td>
+                                    <tr class="clickable">
+                                        <td class="hColumns center-vertically">
                                             {{=producto[0]}}
                                         </td>
 
-                                        <td class="detalles">
+                                        <td class="hColumns center-vertically detalles">
                                             {{=producto[1]}}
                                         </td>
                                             
-                                        <td class="detalles">
+                                        <td class="hColumns center-vertically detalles">
                                            {{=producto[2]}}
                                         </td>
                                             
-                                        <td>
+                                        <td class="hColumns text-center center-vertically">
                                             <a href="{{=URL(f='ver_producto', args=[producto[0]])}}">
-                                                <center><span class="glyphicon glyphicon-eye-open" style="color:#9E9E9E"></span></center>
+                                               <span class="glyphicon glyphicon-eye-open" style="color:#9E9E9E"></span>
                                             </a>
                                         </td>
-                                        {{pass}}
+                                        
                                     </tr>
                                 {{pass}}
+                                
+                                    <ul class="pager">
+                                        {{if page:}}
+                                      <li><a href="{{=URL(args=[page-1])}}">Anterior</a></li>
+                                        {{pass}}
+                                        {{if len(productosE)>items_per_page:}}
+                                      <li><a href="{{=URL(args=[page+1])}}">Siguiente</a></li>
+                                        {{pass}}
+                                    </ul>
+                                    
                             </tbody>
                         </table>
                     {{pass}}
@@ -94,39 +104,49 @@
                     {{if len(productosV) == 0:}}        
                         No hay productos validados
                     {{else:}}
-                        <table class="table table-striped table-condensed table-hover sortable">
+                        <table class="table table-hover table-striped borde-tabla">
                             <thead>
-                            <tr>
-                                <th>ID Producto</th>
-                                <th>Nombre Producto</th>
-                                <th>Tipo Producto</th>
-                                <th><center>Mostrar</center></th>
-                            </tr>
+	                            <tr>
+	                                <th class="hColumns">ID Producto</th>
+	                                <th class="hColumns">Nombre Producto</th>
+	                                <th class="hColumns">Tipo Producto</th>
+	                                <th class="hColumns text-center">Mostrar</th>
+	                            </tr>
                             </thead>
                             <tbody>
                                 {{for producto in productosV:}}
-                                    <tr>                       
-                                        <td>
+                                    <tr class="clickable">                      
+                                        <td class="hColumns center-vertically">
                                             {{=producto[0]}}
                                         </td>
 
-                                        <td class="detalles">
+                                        <td class="hColumns center-vertically detalles">
                                             {{=producto[1]}}
                                         </td> 
                                             
-                                        <td class="detalles">
+                                        <td class="hColumns center-vertically detalles">
                                             {{=producto[2]}}
                                         </td> 
                                             
-                                        <td>
+                                        <td class="hColumns text-center center-vertically">
                                             <a href="{{=URL(f='ver_producto', args=[producto[0]])}}">
-                                                <center><span class="glyphicon glyphicon-eye-open" style="color:#9E9E9E"></span></center>
+                                                <span class="glyphicon glyphicon-eye-open" style="color:#9E9E9E"></span>
                                             </a>
                                         </td>
 
-                                        {{pass}}
+                                        
                                     </tr>
                                 {{pass}}
+                                
+                                    <ul class="pager">
+                                        {{if page:}}
+                                      <li><a href="{{=URL(args=[page-1])}}">Anterior</a></li>
+                                        {{pass}}
+                                        {{if len(productosV)>items_per_page:}}
+                                      <li><a href="{{=URL(args=[page+1])}}">Siguiente</a></li>
+                                        {{pass}}
+                                    </ul>
+                                    
                             </tbody>
                         </table>
                     {{pass}}
@@ -137,38 +157,49 @@
                     {{if len(productosR) == 0:}}        
                         No hay productos no validados
                     {{else:}}
-                        <table class="table table-striped table-condensed table-hover sortable">
+                        <table class="table table-hover table-striped borde-tabla">
                             <thead>
-                            <tr>
-                                <th>ID Producto</th>
-                                <th>Nombre Producto</th>
-                                <th>Tipo Producto</th>
-                                <th><center>Mostrar</center></th>
-                            </tr>
+	                            <tr>
+	                                <th class="hColumns">ID Producto</th>
+	                                <th class="hColumns">Nombre Producto</th>
+	                                <th class="hColumns">Tipo Producto</th>
+	                                <th class="hColumns text-center">Mostrar</th>
+	                            </tr>
                             </thead>
                             <tbody>
                                 {{for producto in productosR:}}
-                                    <tr>                                            
-                                        <td class="detalles">
+                                    <tr class="clickable">                                     
+                                        <td class="hColumns center-vertically detalles">
                                             {{=producto[0]}}
                                         </td>
 
-                                        <td class="detalles">
+                                        <td class="hColumns center-vertically detalles">
                                             {{=producto[1]}}
                                         </td>
                                             
-                                        <td class="detalles">
+                                        <td class="hColumns center-vertically detalles">
                                             {{=producto[2]}}
                                         </td>    
                                             
-                                        <td>
+                                        <td class="hColumns text-center center-vertically">
                                             <a href="{{=URL(f='ver_producto', args=[producto[0]])}}">
-                                                <center><span class="glyphicon glyphicon-eye-open" style="color:#9E9E9E"></span></center></a>
+                                            	<span class="glyphicon glyphicon-eye-open" style="color:#9E9E9E"></span>
+                                            </a>
                                         </td>
                                        
-                                        {{pass}}
+                                        
                                     </tr>
                                 {{pass}}
+                                
+                                    <ul class="pager">
+                                        {{if page:}}
+                                      <li><a href="{{=URL(args=[page-1])}}">Anterior</a></li>
+                                        {{pass}}
+                                        {{if len(productosR)>items_per_page:}}
+                                      <li><a href="{{=URL(args=[page+1])}}">Siguiente</a></li>
+                                        {{pass}}
+                                    </ul>
+                                
                             </tbody>
                         </table>
                     {{pass}}

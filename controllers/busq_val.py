@@ -57,9 +57,9 @@ def busqueda():
 
         productos = db.executesql(sql)
 
-        infoPieChart = graficaPie(productos)        
+        infoBarChart = graficaBar(productos)
+        infoPieChart = graficaPie(productos)
         #graficaPie = URL(c='busq_val',f='graficaPie',vars=dict(productos=productos))
-        graficaBar = URL(c='busq_val',f='graficaBar',vars=dict(productos=productos))
         tabla = URL(c='busq_val',f='tabla',vars=dict(productos=productos))
 
         return locals()
@@ -95,7 +95,9 @@ def ver_producto():
             Field('Descripcion',default=producto.descripcion,writable = False),
             Field('Fecha_de_Relizacion', default=producto.fecha_realizacion,writable=False),
             Field('Lugar', default=producto.lugar,writable=False),
-            readonly=True)
+            readonly=True,
+            labels = {'Descripcion' : 'Descripción',
+                            'Fecha_de_Relizacion' : 'Fecha de Realización'})
 
     #Agregamos los otros elementos de los campos
     campos = db(db.PRODUCTO_TIENE_CAMPO.id_prod == producto.id_producto).select()
@@ -126,7 +128,7 @@ def ver_producto():
             db.PRODUCTO,
             fields=['nombre'],
             labels={'nombre':'Nuevo nombre'},
-            col3={'nombre':'Este es el nombre que aparecera al momento de exportar las actividades'}
+            col3={'nombre':'Este es el nombre que aparecerá al momento de exportar las actividades'}
 
     )
     form_validado.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
@@ -137,7 +139,7 @@ def ver_producto():
     ## Formulario para colocar la razon de rechazo de un producto.
     formulario_validar = SQLFORM.factory(
                           Field('nombre','string',
-                                    requires=[IS_NOT_EMPTY(error_message="El nombre del producto no puede quedar vacio."),
+                                    requires=[IS_NOT_EMPTY(error_message="El nombre del producto no puede quedar vacío."),
                                               IS_LENGTH(50, error_message="El nombre del producto no puede superar los 50 caracteres.")]),
                           Field('id_producto',type="string"),
                           submit_button = 'Validar',
@@ -207,6 +209,14 @@ def gestionar_validacion():
     if (admin==0):
         redirect(URL(c ="default",f="index"))
 
+    if len(request.args): 
+        page=int(request.args[0])
+    else: 
+        page=0
+    
+    items_per_page = 5
+    
+    limitby=(page*items_per_page,(page+1)*items_per_page+1)
 
     # Hago el query Espera
 
@@ -216,9 +226,9 @@ def gestionar_validacion():
     + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='Por Validar';"
     sqlRechazadas = "select producto.id_producto, producto.nombre, tipo_actividad.nombre from producto inner join tipo_actividad"\
     + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='No Validado';"
-    productosV= db.executesql(sqlValidadas)
-    productosE = db.executesql(sqlEspera)
-    productosR = db.executesql(sqlRechazadas)
+    productosV = db.executesql(sqlValidadas)[limitby[0]:limitby[1]]
+    productosE = db.executesql(sqlEspera)[limitby[0]:limitby[1]]
+    productosR = db.executesql(sqlRechazadas)[limitby[0]:limitby[1]]
 
     return locals()
 
@@ -320,43 +330,33 @@ def graficaPie(productos):
 
     return programas
 
-def graficaBar():
-    productos = request.vars.productos
+def graficaBar(productos):
     fecha_hasta = date.today().year
     fecha_desde = fecha_hasta - 10
-    line_chart = pygal.Bar()
-    if productos == None:
-        return line_chart.render()
-    line_chart.x_labels = map(str, range(fecha_desde, fecha_hasta + 1))
+    fechas={}
     programas = db(db.PROGRAMA['papelera']==False).select().as_list()
-    programas_dict = {}
-    for programa in programas:
-        ident = programa['id_programa']
-        nombre = programa['nombre']
-        abrev = programa['abreviacion']
-        programas_dict[ident] = {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':[0 for x in range(11)]}
-    if type(productos) is str:
-        id_programa = int(productos.split('\'')[4].split(',')[-2])
-        anio = int(productos.split('\'')[4].split(',')[3][15:])
-        i = anio-fecha_desde
-        if (i <= 0):
-            i=0
-        programas_dict[id_programa]['repeticiones'][i]+=1
-    else:
-        for producto in productos:
-            id_programa = int(producto.split('\'')[4].split(',')[-2])
-            anio = int(producto.split('\'')[4].split(',')[3][15:])
-            i = anio-fecha_desde
-            if (i <= 0):
-                i=0
-            programas_dict[id_programa]['repeticiones'][i]+=1
-    for key in programas_dict.keys():
-        line_chart.add(programas_dict[key]['abreviacion'], programas_dict[key]['repeticiones'])
-    return programas_dict
+    for fecha in range(fecha_desde, fecha_hasta + 1):
+        fechas[fecha]={}
+        for programa in programas:
+            ident = int(programa['id_programa'])
+            nombre = programa['nombre']
+            abrev = programa['abreviacion']
+            fechas[fecha][ident]= {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':0}
+    for producto in productos:
+        anio = producto[4].year
+        if anio < fecha_desde:
+            anio = fecha_desde
+        if anio > fecha_hasta:
+            anio = fecha_hasta            
+        id_programa = producto[5]
+        fechas[anio][id_programa]['repeticiones'] += 1
+    print fechas
+    return fechas
 
 def tabla():
 
     productos = request.vars.productos
+
 
     fecha_hasta = date.today().year
     fecha_desde = fecha_hasta - 10

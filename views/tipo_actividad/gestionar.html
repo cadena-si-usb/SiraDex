@@ -4,6 +4,7 @@
 
         {{if programa_nombre != None:}}
            Programa: {{=programa_nombre}}
+           <div id="identificador_de_programa" data-programa="{{=id_programa}}"></div>
 
        {{else:}}
            Tipos de Actividades del Sistema
@@ -83,84 +84,84 @@
     <div>
         <!-- Tabla con los tipos de actividad disponibles en el sistema -->
         <div class="container-fluid card">
-            <table id ="TipoActividadTable" class="table table-striped table-condensed table-hover sortable">
+            <table id ="TipoActividadTable" class="table table-hover table-striped borde-tabla">
                 <thead>
                     <tr>
-                        <th><center>Código</center></th>
-                        <th><center>Nombre</center></th>
-                        <th><center>Descripción</center></th>
+                        <th class="hColumns">Código</th>
+                        <th class="hColumns">Nombre</th>
+                        <th class="hColumns">Descripción</th>
                         <th></th>
-                        <th><center>Crear Producto</center></th>
+                        <th class="hColumns text-center">Crear Producto</th>
                         {{ if admin in [1,2]: }}
-                          <th><center>Editar</center></th>
-                          <th><center>Inhabilitar</center></th>
+                          <th class="hColumns text-center">Editar</th>
+                          <th class="hColumns text-center">Inhabilitar</th>
                         {{pass}}
                     </tr>
                 </thead>
                 <tbody class="list">
                     {{if len(listaTipoActividades) == 0:}}
                     <tr>
-                        <td colspan="4"> No hay Tipos de Actividades que mostrar.</td>
+                        <td colspan="7"> No hay Tipos de Actividades que mostrar.</td>
                     </tr>
                     {{else:}}
                         {{for tipoActividad in listaTipoActividades: }}
-                        <tr>
-                            <td class="col-md-1">
-                              <center>
-                                  {{=tipoActividad.codigo}}
-                              </center>
-                            </td>
-                            <td class="col-md-3 nombre_tipo">
-                                <center><a class="a_table" href="{{=URL(c='tipo_actividad', f='ver_tipo_actividad',args=[tipoActividad.id_tipo])}}">
+                        <tr class="clickable">
+                            <td class="col-md-1 hColumns center-vertically">{{=tipoActividad.codigo}}</td>
+                            <td class="col-md-3 nombre_tipo hColumns center-vertically">
+                                <a class="a_table" href="{{=URL(c='tipo_actividad', f='ver_tipo_actividad',args=[tipoActividad.id_tipo])}}">
                                     {{=tipoActividad.nombre}}
-                                </a></center>
+                                </a>
                             </td>
-                            <td class="descripcion_tipo">
-                              <center>
+                            <td class="descripcion_tipo hColumns center-vertically">
                                 <span class="hideContent">{{=tipoActividad.descripcion}}</span>
                                 <span class="restContent" style="display:none;"></span>
-                              </center>
                             </td>
-                            <td><button class="glyphicon glyphicon-eye-open showMoreContent"
+
+                            <td class="hColumns text-center center-vertically">
+                              <button class="glyphicon glyphicon-eye-open showMoreContent"
                                       style="border:none;background:none;"></button></td>
-                            <td>
-                              <center>
-                                    <a href="{{=URL(c='producto', f='agregar',args=[tipoActividad.id_tipo])}}">
-                                       <span class="glyphicon glyphicon-plus-sign"></span>
-                                    </a>
-                                <center>
+                            <td class="hColumns text-center center-vertically">
+                                <a href="{{=URL(c='producto', f='agregar',args=[tipoActividad.id_tipo])}}">
+                                   <span class="glyphicon glyphicon-plus-sign"></span>
+                                </a>
                             </td>
                             {{ if admin in [1,2]: }}
-                              <td>
-                                  <center>
-                                      <a href="#">
-                                          <span class="glyphicon glyphicon-edit blue"
-                                                data-toggle="modal"
-                                                data-target="#myModalEditar"
-                                                data-idtipo="{{=tipoActividad.id_tipo}}"
-                                                data-nombre="{{=tipoActividad.nombre}}"
-                                                data-codigo="{{=tipoActividad.codigo}}"
-                                                data-descripcion="{{=tipoActividad.descripcion}}"
-                                                data-idprograma="{{=tipoActividad.id_programa}}"
-                                                data-tipopr="{{=tipoActividad.tipo_p_r}}">
-                                          </span>
-                                      </a>
-                                  <center>
+                            <td class="hColumns text-center center-vertically">
+                                <a href="#">
+                                    <span class="glyphicon glyphicon-edit blue"
+                                          data-toggle="modal"
+                                          data-target="#myModalEditar"
+                                          data-idtipo="{{=tipoActividad.id_tipo}}"
+                                          data-nombre="{{=tipoActividad.nombre}}"
+                                          data-codigo="{{=tipoActividad.codigo}}"
+                                          data-descripcion="{{=tipoActividad.descripcion}}"
+                                          data-idprograma="{{=tipoActividad.id_programa}}"
+                                          data-tipopr="{{=tipoActividad.tipo_p_r}}">
+                                    </span>
+                                </a>
                               </td>
-                              <td>
-                                  <center>
-                                      <a href="#">
-                                         <span class="glyphicon glyphicon-remove red"
-                                               data-toggle="modal"
-                                               data-target="#myModalInhabilitar"
-                                               data-enlace-inhabilitar="{{=URL(f='enviar_tipo_papelera', args=[tipoActividad.id_tipo])}}">
-                                         </span>
-                                      </a>
-                                  <center>
+                              <td class="hColumns text-center center-vertically">
+                                <a href="#">
+                                   <span class="glyphicon glyphicon-remove red"
+                                         data-toggle="modal"
+                                         data-target="#myModalInhabilitar"
+                                         data-enlace-inhabilitar="{{=URL(f='enviar_tipo_papelera', args=[tipoActividad.id_tipo])}}">
+                                   </span>
+                                </a>
                               </td>
                             {{pass}}
                         </tr>
                         {{pass}}
+                        
+                        <ul class="pager">
+                            {{if page:}}
+                          <li><a href="{{=URL(args=[id_programa,page-1])}}">Anterior</a></li>
+                            {{pass}}
+                            {{if len(listaTipoActividades)>items_per_page:}}
+                          <li><a href="{{=URL(args=[id_programa,page+1])}}">Siguiente</a></li>
+                            {{pass}}
+                        </ul>
+                        
                     {{pass}}
                 </tbody>
             </table>
@@ -222,4 +223,10 @@
       </div>
     </div>
 </div>
+
+
+
+
+
 {{end}}
+

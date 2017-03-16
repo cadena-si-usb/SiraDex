@@ -149,6 +149,7 @@
 'Demo': 'Demostración',
 'Deploy on Google App Engine': 'Despliegue en Google App Engine',
 'Deployment Recipes': 'Recetas de despliegue',
+'Descargar': 'Descargar',
 'Description': 'Descripción',
 'design': 'diseño',
 'DESIGN': 'DISEÑO',

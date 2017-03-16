@@ -1,5 +1,6 @@
 $(document).ready(function(){
 
+
   var maxLongNombre  = 128;    // Longitud máxima que tendrá el campo nombre.
   var maxLongDescrip = 2048;   // Longitud máxima que tendrá el campo descripción.
   var maxLongCodigo = 10;      // Longitud máxima que tendrá el campo código.
@@ -27,6 +28,17 @@ $(document).ready(function(){
   {
     $(".formularioTipo").hide();
   }
+
+    // Se muestra valor por defecto del programa desde el cual se ve la vista 
+  $('#myModal').on('show.bs.modal', function(e){
+    
+      if (($("#identificador_de_programa").length > 0 ) &&
+           $("#identificador_de_programa").attr("data-programa") != "None"){
+        var id_programa = $("#identificador_de_programa").attr("data-programa");
+        var opcion = $("#myModal .generic-widget.form-control#no_table_Programa option[value='"+ id_programa +"']");
+        opcion.attr("selected", true);
+      }
+  });
 
    // Pasamos los argumentos para eliminar catalogo.
   $('#myModalDelete').on('show.bs.modal', function(e){
@@ -113,7 +125,7 @@ $(document).ready(function(){
       var restTitulo = splitTitulo[0];
       amountText = splitTitulo[0].length;
       i = 1;
-
+      
       while (true){
         if (splitTitulo.length >= i && amountText + splitTitulo[i].length + 1 < 18){
             restTitulo += " " + splitTitulo[i];
@@ -122,6 +134,7 @@ $(document).ready(function(){
         }else{
           restTitulo += '\n';
           amountText = 0;
+          break;
         }
 
         if (splitTitulo.length <= i)
@@ -171,13 +184,14 @@ $(document).ready(function(){
         i += 1;
 
         while (true){
-          if (splitDescription.length >= i && amountText + splitDescription[i].length + 1 < 30){
+          if (splitDescription[i] && splitDescription.length >= i && amountText + splitDescription[i].length + 1 < 30){
               result += " " + splitDescription[i];
               amountText += splitDescription[i].length;
               i++;
           }else{
             result += '\n';
             amountText = 0;
+            break;
           }
 
           if (splitDescription.length <= i)
@@ -207,4 +221,6 @@ $(document).ready(function(){
       $(this).closest('tr').find(".descripcion_tipo").find(".restContent").hide();
     }
   });
+  
+  
 });

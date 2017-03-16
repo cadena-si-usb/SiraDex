@@ -175,11 +175,8 @@ CREATE TABLE LOG_SIRADEX(
   accion_fecha  DATE,
   accion_ip     VARCHAR(256),
   descripcion   TEXT,
-  usbid_usuario    VARCHAR(20),
+  usbid_usuario VARCHAR(20),
 
   CONSTRAINT PK_LOG
-             PRIMARY KEY (id_log),
-  CONSTRAINT FK_LOG_USBID_USUARIO
-             FOREIGN KEY (usbid_usuario)
-             REFERENCES  USUARIO(usbid)
+             PRIMARY KEY (id_log)
 );

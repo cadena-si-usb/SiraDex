@@ -9,9 +9,12 @@
     <!-- Nombre del usuario -->
     {{=session.usuario['first_name']}}
     {{=session.usuario['last_name']}}
+    <div id=div_correo_alternativo data-correo-alternativo="{{=session.usuario['alternativo']}}"></div>
+    <div id=div_telefono data-telefono="{{=session.usuario['phone']}}"></div>
 {{end}}
 
 {{block descripcion}}
+
     <div class="card">
     <div class="container-fluid">
         
@@ -32,10 +35,13 @@
 {{end}}
 
 {{block contenido}}
+
+<!--<script src="{{=URL('static','js/editarPerfil.js')}}"> </script>-->
+
     <div class="row">
         <div class="col-lg-12 center-block">
         <center>
-     	OPCIONES DE GRAFICAS
+     	OPCIONES DE GRÁFICAS
         </center>
         </div>           
     </div>
@@ -59,8 +65,15 @@
 
             $("#btn-esp").click(function(){
             $("#dv-esp").toggle(300);
-                });                            
+                });
+            
+            var telefono = $("#div_telefono").attr("data-telefono");
+            $("#no_table_telefono__row input[name='telefono']").val(telefono);
+            var correo = $("#div_correo_alternativo").attr("data-correo-alternativo");
+            $("#no_table_correo_alter__row input[name='correo_alter']").val(correo);
+            
             });
+
     </script>
 {{end}}
 

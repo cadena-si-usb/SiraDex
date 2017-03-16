@@ -15,8 +15,8 @@ from funciones_siradex import get_tipo_usuario,get_tipo_usuario_not_loged
 from log import insertar_log
 import urllib2
 from notificaciones import *
-import pygal
-from pygal.style import Style
+# import pygal
+# from pygal.style import Style
 
 ### required - do no delete
 def user(): return dict(form=auth())
@@ -139,7 +139,7 @@ def grafica_pie():
             abrev = producto[2]
             programas[id_programa] = {'id':id_programa,'nombre':nombre,'abreviacion':abrev,'repeticiones':1}
 
-    
+
     # for producto in datos:
     #     porcentaje = (producto[2]*100)//num_productos
     #     pie_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])
@@ -243,26 +243,31 @@ def EditarPerfil():
         # Modificar datos del perfil
         usuario = db(db.USUARIO.ci==session.usuario['cedula']).select().first()
 
-        forma=SQLFORM(
-            db.USUARIO,
-            record=usuario,
 
-            fields=['telefono','correo_alter'],
+        forma=SQLFORM.factory(
+            Field('telefono',
+                   requires=[IS_NOT_EMPTY(error_message='El teléfono no puede quedar vacío.'),
+                             IS_LENGTH(20),
+                             IS_MATCH('^[0-9]+$', error_message="Use sólo números.")]),
+            Field('correo_alter',
+                   requires=[IS_NOT_EMPTY(error_message='El correo no puede quedar vacío.'),
+                             IS_MATCH('^[.A-z0-9À-ÿŸ\s-]+@[.A-z0-9À-ÿŸ\s-]+$', error_message="Este correo no es válido.")]),
+            submit_button='Agregar',
+            labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'}
+            )
 
-
-            labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'})
         forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
         forma.element(_type='submit')['_value']="Actualizar"
 
 
-        if request.vars:
+        if forma.accepts(request.vars, session,formname="forma"):
             nuevoTelefono = request.vars.telefono
             nuevoCorreoAlter = request.vars.correo_alter
 
-            valor_telefono = None if ((nuevoTelefono == "") | (nuevoTelefono== None)) else nuevoTelefono
+            valor_telefono = "" if (nuevoTelefono== None) else nuevoTelefono
             session.usuario["phone"] = valor_telefono
 
-            valor_correo = None if ((nuevoCorreoAlter == "") | (nuevoCorreoAlter== None)) else nuevoCorreoAlter
+            valor_correo = "" if (nuevoCorreoAlter== None) else nuevoCorreoAlter
             session.usuario["alternativo"] = valor_correo
 
             db(db.USUARIO.ci == session.usuario["cedula"]).update(telefono=valor_telefono, correo_alter=valor_correo)
@@ -272,6 +277,9 @@ def EditarPerfil():
 
             insertar_log(db, 'PERFIL', datetime.datetime.now(), request.client, 'ACT. PERFIL SATISFACTORIA', session.usuario['usbid'])
             redirect(URL('perfil'))
+        else :
+            message = T("Debe colocar su teléfono y correo alternativo.")
+
 
         return dict(form1 = form, form = forma, admin = admin)
     else:
