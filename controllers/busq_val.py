@@ -209,6 +209,14 @@ def gestionar_validacion():
     if (admin==0):
         redirect(URL(c ="default",f="index"))
 
+    if len(request.args): 
+        page=int(request.args[0])
+    else: 
+        page=0
+    
+    items_per_page = 5
+    
+    limitby=(page*items_per_page,(page+1)*items_per_page+1)
 
     # Hago el query Espera
 
@@ -218,9 +226,9 @@ def gestionar_validacion():
     + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='Por Validar';"
     sqlRechazadas = "select producto.id_producto, producto.nombre, tipo_actividad.nombre from producto inner join tipo_actividad"\
     + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='No Validado';"
-    productosV= db.executesql(sqlValidadas)
-    productosE = db.executesql(sqlEspera)
-    productosR = db.executesql(sqlRechazadas)
+    productosV = db.executesql(sqlValidadas)[limitby[0]:limitby[1]]
+    productosE = db.executesql(sqlEspera)[limitby[0]:limitby[1]]
+    productosR = db.executesql(sqlRechazadas)[limitby[0]:limitby[1]]
 
     return locals()
 

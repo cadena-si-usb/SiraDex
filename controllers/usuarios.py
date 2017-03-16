@@ -85,7 +85,7 @@ def agregar():
                          IS_MATCH('^[0-9]+$', error_message="Use sólo números.")]),
         Field('correo_alter',
                requires=[IS_NOT_EMPTY(error_message='El correo no puede quedar vacío.'),
-                         IS_MATCH('^[@.A-z0-9À-ÿŸ\s-]*$', error_message="Use sólo letras, el caracter '-' y números.")]),
+                         IS_MATCH('^[.A-z0-9À-ÿŸ\s-]+@[.A-z0-9À-ÿŸ\s-]+$', error_message="Use sólo letras, el caracter '-' y números.")]),
         Field('tipo',
                requires=IS_IN_SET({'Usuario':'Usuario', 'DEX':'DEX', 'Administrador':'Administrador', 'Bloqueado':'Bloqueado'},
                                                     zero=T('Seleccione...'),
@@ -168,10 +168,16 @@ def eliminar():
         if request.args[0] != session.usuario["usbid"]:
             session.message = ""
             print request.args[0]
-            if (not db(db.USUARIO.usbid == request.args[0]).isempty()):
-                db(db.USUARIO.usbid == request.args[0]).delete()
-                insertar_log(db, 'USUARIO', datetime.datetime.now(), request.client, 'ELIMINACION DE USUARIO ' + request.args[0], session.usuario['usbid'])
-                redirect(URL('gestionar'))
+            if (not db(db.USUARIO.usbid == request.args[0]).isempty()) :
+                if ((db(db.PRODUCTO.usbid_usu_creador == request.args[0]).isempty()) \
+                        and ((db(db.PARTICIPA_PRODUCTO.usbid_usuario == request.args[0]).isempty()))) :
+                    db(db.USUARIO.usbid == request.args[0]).delete()
+                    insertar_log(db, 'USUARIO', datetime.datetime.now(), request.client, 'ELIMINACION DE USUARIO ' + request.args[0], session.usuario['usbid'])
+                    session.message = T("Usuario eliminado exitosamente.")
+                    redirect(URL('gestionar'))
+                else :
+                    session.message = T("No puede eliminar usuarios que hayan creado productos.")
+                    redirect(URL('gestionar'))
         else:
             session.message = T("Para eliminar su cuenta, por favor comuníquese con un administrador")
             redirect(URL('gestionar'))

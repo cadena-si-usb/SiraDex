@@ -30,8 +30,20 @@ def consultar():
         elif periodo == "Hace 3 meses":
             redirect(URL(c ="log",f="download", args=[4]))
 
-    log_entries =  db().select(db.LOG_SIRADEX.ALL, orderby=~db.LOG_SIRADEX.id_log)
-    return dict(admin=admin, log_entries = log_entries, formulario_periodo = formulario)
+    #log_entries =  db().select(db.LOG_SIRADEX.ALL, orderby=~db.LOG_SIRADEX.id_log)
+    
+    if len(request.args): 
+        page=int(request.args[0])
+    else: 
+        page=0
+    
+    items_per_page = 5
+    
+    limitby=(page*items_per_page,(page+1)*items_per_page+1)
+    
+    log_entries =  db().select(db.LOG_SIRADEX.ALL, orderby=~db.LOG_SIRADEX.id_log, limitby=limitby)
+    return dict(admin=admin, log_entries = log_entries, formulario_periodo = formulario, \
+                page=page,items_per_page=items_per_page)
 
 def download():
 
