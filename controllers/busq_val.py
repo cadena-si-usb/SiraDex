@@ -355,19 +355,17 @@ def graficaBar(productos):
     return fechas
 
 def tabla(productos):
-    print productos
     fecha_hasta = date.today().year
     fecha_desde = fecha_hasta - 10
     programas={}
     programas_db = db(db.PROGRAMA['papelera']==False).select().as_list()
-    print "\n\n=================================\n\n"
-    print programas_db
 
     for programa in programas_db:
         ident = int(programa['id_programa'])
         programas[ident]={'nombre':programa['nombre']}
         for fecha in range(fecha_desde, fecha_hasta + 1):
             programas[ident][fecha]= 0
+        programas[ident]['total']=0
 
     for producto in productos:
         anio = producto[4].year
@@ -377,8 +375,7 @@ def tabla(productos):
             anio = fecha_hasta            
         id_programa = producto[5]
         programas[id_programa][anio]+= 1
-
-    print programas
+        programas[id_programa]['total']+=1
     return programas
 
 
