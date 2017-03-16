@@ -245,7 +245,7 @@ function PieChart() {
 
     // Set opciones de las graficas
     var options =  {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent'};
-    var options2 = {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent'};
+    var options2 = {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent',width:700,height:350};
 
     // Instanciar las graficas, dibujarlas usando opciones
     var chart = new google.visualization.PieChart(document.getElementById('pieChart'));
@@ -274,12 +274,17 @@ function PieChart() {
 
 function BarChart() {
   var b = [['Programa']];
+  var colorsArray = [];
   
   {{for v0 in infoBarChart.values():}}
     {{for v1 in v0.values():}}
       if (b[0].indexOf('{{=v1["nombre"]}}') == -1){
         b[0].push('{{=v1["nombre"]}}');
       }
+      var new_light_color = 'rgb(' +  (Math.floor((255-111)*Math.random()) + 28) + ',' + 
+                                      (Math.floor((255-170)*Math.random()) + 42) + ',' + 
+                                      (Math.floor((255-109)*Math.random()) + 64) + ')';
+      colorsArray.push(new_light_color);
     {{pass}}
   {{pass}}
   
@@ -290,31 +295,23 @@ function BarChart() {
     {{for v1 in infoBarChart[k0].values():}}
       d.push(parseInt('{{=v1["repeticiones"]}}'));
     {{pass}}
-    console.log(d);
     d.push('');
     b.push(d);
   {{pass}}
 
   var data = google.visualization.arrayToDataTable(b);
-
-  var colorsArray = [];
-  
-  {{for i in infoBarChart:}}
-
-    var new_light_color = 'rgb(' +  (Math.floor((255-111)*Math.random()) + 28) + ',' + 
-                                    (Math.floor((255-170)*Math.random()) + 42) + ',' + 
-                                    (Math.floor((255-109)*Math.random()) + 64) + ')';
-    colorsArray.push(new_light_color);
-  {{pass}}
-
     // Set opciones de las graficas
-    var options =  {'title':'Productos por Anio\n ',colors: colorsArray,backgroundColor:'transparent',legend: { maxLines: 3 },bar: { groupWidth: '75%' },isStacked: true,};
+    var options =  {'title':'Productos por Año\n ',colors: colorsArray,backgroundColor:'transparent',legend: { maxLines: 3 },bar: { groupWidth: '75%' },isStacked: true,};
+    var options2 =  {'title':'Productos por Año\n ',colors: colorsArray,backgroundColor:'transparent',legend: { maxLines: 3 },bar: { groupWidth: '75%' },isStacked: true,width:700,height:350};
     //var options2 = {'title':'Productos por Anio\n ',colors: colorsArray};
 
     // Instanciar las graficas, dibujarlas usando opciones
     var chart = new google.visualization.ColumnChart(document.getElementById('barChart'));
     chart.draw(data, options);
 
+    // grafica dentro del modal
+    var chartBig = new google.visualization.ColumnChart(document.getElementById('barChartB'));
+    chartBig.draw(data, options2);
 
     // Agregando funcion para redirigir al hacer click
     
