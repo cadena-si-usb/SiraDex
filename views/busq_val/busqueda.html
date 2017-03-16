@@ -26,7 +26,7 @@
       <div class="col-md-6"  > 
       <center>
         <div class="tab-content card" style="text-align: center;">
-          <div id="pieChart">
+          <div id="pieChart" style="width: 100%">
           </div>
           
           <button type="button" id="btn-pieChart" class="btn btn-default green btn-border" data-toggle="modal" data-target="#modalPie">
@@ -39,8 +39,8 @@
       <div class="col-md-6"  > 
       <center>
         <div class="tab-content card" style="text-align: center;">
-          <div id="barChart">
-          </div>
+          
+          <div id="barChart" class="chart"></div>
           
           <button type="button" id="btn-pieChart" class="btn btn-default green btn-border" data-toggle="modal" data-target="#modalBar">
             <span class="glyphicon glyphicon-resize-full"></span> Aumentar
@@ -266,7 +266,7 @@ function PieChart() {
       
         {{for i in infoPieChart:}}
           if(topping == '{{=infoPieChart[i]["abreviacion"]}}'){
-            window.location = "http://localhost:8000/tipo_actividad/gestionar/"+{{=infoPieChart[i]["id"]}};
+            window.location = "/tipo_actividad/gestionar/"+{{=infoPieChart[i]["id"]}};
           }
         {{pass}}
       }
@@ -308,12 +308,18 @@ function BarChart() {
       var topping = dataTable.getValue(selectedItem.row, 0);
       {{for i in infoPieChart:}}
         if(topping == '{{=infoPieChart[i]["abreviacion"]}}'){ 
-          window.location = "http://localhost:8000/tipo_actividad/gestionar/"+{{=infoPieChart[i]["id"]}};
+            window.location = "/tipo_actividad/gestionar/"+{{=infoPieChart[i]["id"]}};
+          
         }
       {{pass}}
         }
     }
 }
+
+$(window).resize(function(){
+  PieChart();
+  BarChart();
+});
 </script>
 
 <!-- SCRIPT PARA MOSTRAR Y OCULTAR DETALLES -->
