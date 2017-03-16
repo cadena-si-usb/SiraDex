@@ -9,7 +9,6 @@ from datetime  import date
 def busqueda():
     admin = get_tipo_usuario_not_loged(session)
     try:
-
         sql = "SELECT prod.descripcion," + \
                      "prod.nombre," +\
                      "prod.id_tipo," +\
@@ -33,6 +32,7 @@ def busqueda():
            request.vars.fecha != None and\
            request.vars.Autor != None:
 
+
             # Anadimos el filtro del usuario
             if request.vars.Autor != "all":
                 sql += " AND prod.usbid_usu_creador=\'" + request.vars.Autor + "\'"
@@ -48,6 +48,9 @@ def busqueda():
             if request.vars.fecha != "":
                 sql += " AND prod.fecha_realizacion <= '" + request.vars.fecha +"'"
 
+        if request.vars.anio != None:
+            sql += " AND extract(year FROM prod.fecha_realizacion)=" + request.vars.anio
+            sql += " AND p.id_programa=" + str(request.vars.Programa)
         # Ahora dependiendo del usuario anadimos las restricciones del estado (no se contempla cuando
         # el usuario esta bloqueado porqu no deberia llegar aqui)
         if (session.usuario == None or session.usuario["tipo"] == "Usuario"):
@@ -55,13 +58,16 @@ def busqueda():
         elif (session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador"):
             sql += ";"
 
+        print "\nsql"
+        print sql
         productos = db.executesql(sql)
+        print "\nLo resultante"
+        print productos
 
+        infoTabla = tabla(productos)
         infoBarChart = graficaBar(productos)
         infoPieChart = graficaPie(productos)
-        print("comienza tabla")
         #graficaPie = URL(c='busq_val',f='graficaPie',vars=dict(productos=productos))
-        tabla = tabla(productos)
 
         return locals()
     except:
