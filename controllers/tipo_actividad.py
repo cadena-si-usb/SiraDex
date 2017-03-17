@@ -406,7 +406,7 @@ def ver_tipo_actividad():
         for campo in campos_catalogo:
 
             db.CAMPO.insert(nombre = campo.nombre,
-                            nombre_interno = "C"+str(abs(convertToNumber(request.vars.nombre))),
+                            nombre_interno = "C"+str(abs(convertToNumber(campo.nombre))),
                             obligatorio = campo.obligatorio,
                             tipo_campo = campo.tipo_campo,
                             id_catalogo = id_catalogo
