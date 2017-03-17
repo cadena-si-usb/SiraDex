@@ -16,7 +16,8 @@
 
     <script type="text/javascript">
       $(document).ready(function(){
-        $("#TipoActividadTable").DataTable({
+        
+        var opciones = {
           responsive: true,
             "language": {
                 search:         "Buscar:",
@@ -49,8 +50,16 @@
                 { "orderable": false },
                 { "orderable": false }
             ]
-        });
-      })
+        };
+        
+        var cantidadColumnas = $("#ProgramaTable thead th").length;
+        columnas = [{"width" : "30%"}];
+        for (var i = 1; i<cantidadColumnas; i++){
+          columnas.push({ "orderable": false });
+        }
+        opciones["columns"] = columnas;
+        $("#ProgramaTable").DataTable();
+      });
     </script>
 
     <br>
@@ -94,7 +103,7 @@
         </div>
       </div>
       <div class="container-fluid card">
-        <table id="TipoActividadTable" class="table table-hover table-striped borde-tabla">
+        <table id="ProgramaTable" class="table table-hover table-striped borde-tabla">
             <thead>
                 <tr>
                     <th class="hColumns text-center">Título</th>

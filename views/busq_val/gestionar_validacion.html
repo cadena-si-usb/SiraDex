@@ -10,6 +10,66 @@
     </div>
 {{end}}
 {{block contenido}}
+
+
+    <!-- Custom DataTables plugin -->
+    <script src="{{=URL('static','DataTables/datatables.js')}}"></script>
+    <link rel="stylesheet" type="text/css" href="{{=URL('static','DataTables/datatables.css')}}">
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+        var opciones = {
+          responsive: true,
+            "language": {
+                search:         "Buscar:",
+                searchPlaceholder: "",
+                lengthMenu:     "Mostrar _MENU_ entradas",
+                info:           "Mostrando _START_ a _END_ de _TOTAL_ entradas.",
+                infoEmpty:      "Mostrando 0 a 0 de 0 entradas",
+                infoFiltered:   "(filtradas de _MAX_ entradas en total)",
+                infoPostFix:    "",
+                loadingRecords: "Carga en curso...",
+                zeroRecords:    "No se encontraron programas en la busqueda",
+                emptyTable:     "No hay informacion disponible en la tabla",
+                processing:     "Procesando...",
+                paginate: {
+                    first:      "Primero",
+                    previous:   "Anterior",
+                    next:       "Siguiente",
+                    last:       "Ultimo"
+                },
+                aria: {
+                    sortAscending:  ": Se ordenan las columnas por orden creciente",
+                    sortDescending: ": Se ordenan las columnas por orden decreciente"
+                }
+            },
+             "columns": [
+                { "orderable": false },
+                { "orderable": false },
+                {"width" : "30%"},
+                { "orderable": false }
+            ]
+        };
+        
+        // Se asume que tienen la misma cantidad de columnas los distintos
+        // tipos de solicitudes
+        var cantidadColumnas = $("#porValidarTable thead th").length;
+        
+        columnas = [];
+        for (var i = 0; i<cantidadColumnas; i++){
+          if (i == 2) {
+              columnas.push({"width" : "30%"});
+          }else{
+            columnas.push({ "orderable": false });
+          }
+        }
+        opciones["columns"] = columnas;
+        $("#porValidarTable").DataTable(opciones);
+        $("#validadoTable").DataTable(opciones);
+        $("#rechazadoTable").DataTable(opciones);
+      });
+    </script>
+
 <div class="row">
     <div class="col-md-12">
         <div class="card">
@@ -51,7 +111,7 @@
                     {{if len(productosE) == 0:}}
                         No hay productos por validar
                     {{else:}}
-                        <table class="table table-hover table-striped borde-tabla">
+                        <table id="porValidarTable" class="table table-hover table-striped borde-tabla">
                             <thead>
 	                            <tr>
 	                                <th class="hColumns">ID Producto</th>
@@ -96,7 +156,7 @@
                     {{if len(productosV) == 0:}}        
                         No hay productos validados
                     {{else:}}
-                        <table class="table table-hover table-striped borde-tabla">
+                        <table id="validadoTable" class="table table-hover table-striped borde-tabla">
                             <thead>
 	                            <tr>
 	                                <th class="hColumns">ID Producto</th>
@@ -141,7 +201,7 @@
                     {{if len(productosR) == 0:}}        
                         No hay productos no validados
                     {{else:}}
-                        <table class="table table-hover table-striped borde-tabla">
+                        <table id="rechazadoTable" class="table table-hover table-striped borde-tabla">
                             <thead>
 	                            <tr>
 	                                <th class="hColumns">ID Producto</th>
