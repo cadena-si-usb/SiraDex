@@ -20,7 +20,6 @@ import os
 '''
 
 def enviar_correo_validacion(mail, usuario, producto):
-		email  = usuario['email']
 		asunto = '[SIRADEx] Producto Validado'
 
 		# Mensaje del Correo
@@ -38,8 +37,9 @@ def enviar_correo_validacion(mail, usuario, producto):
 							 '''  % {'nombres': usuario['nombres'], 'nombreProducto' : producto['nombre']}
 
 		body   =  get_plantilla_html(mensaje)
-
-		mail.send(email, asunto, body)
+		if usuario['correo_alter'] :
+			mail.send(usuario['correo_alter'], asunto, body)
+		mail.send(usuario['correo_inst'], asunto, body)
 
 '''
 		Envia un correo que indica que una producto fue validado a los coautores
@@ -52,7 +52,6 @@ def enviar_correo_validacion(mail, usuario, producto):
 '''
 
 def enviar_correo_validacion_coautor(mail, coautor, creador, producto):
-		email  = coautor['email']
 		asunto = '[SIRADEx] Producto Validado'
 
 		# Mensaje del Correo
@@ -71,8 +70,9 @@ def enviar_correo_validacion_coautor(mail, coautor, creador, producto):
 							 '''  % {'nombres': coautor['nombres'], 'nombreProducto' : producto['nombre'], 'usuarioCreador' : creador['nombres'] }
 
 		body   =  get_plantilla_html(mensaje)
-
-		mail.send(email, asunto, body)
+		if coautor['correo_alter'] :
+			mail.send(coautor['correo_alter'], asunto, body)
+		mail.send(coautor['correo_inst'], asunto, body)
 
 '''
 		Envia un correo que indica si una producto fue rechazado.
@@ -82,7 +82,6 @@ def enviar_correo_validacion_coautor(mail, coautor, creador, producto):
 				Razon    = ''
 '''
 def enviar_correo_rechazo(mail, usuario, producto, razon):
-		email  = usuario['email']
 		asunto = '[SIRADEx] Producto no Validado'
 
 		# Mensaje del Correo
@@ -110,8 +109,9 @@ def enviar_correo_rechazo(mail, usuario, producto, razon):
 								'''
 
 		body   =  get_plantilla_html(mensaje)
-
-		mail.send(email, asunto, body)
+		if usuario['correo_alter'] :
+			mail.send(usuario['correo_alter'], asunto, body)
+		mail.send(usuario['correo_inst'], asunto, body)
 
 
 def enviar_correo_contacto(mail, usuario, asunto, mensaje):

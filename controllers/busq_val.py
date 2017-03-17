@@ -71,7 +71,8 @@ def busqueda():
 def ver_producto():
 
     admin = get_tipo_usuario_not_loged(session)
-
+    if not request.args:
+        raise HTTP(404)
     id_producto = int(request.args(0))
     producto = db(db.PRODUCTO.id_producto == id_producto).select().first()
     usuario_producto = db(db.USUARIO.usbid == producto.usbid_usu_creador).select().first()
@@ -184,10 +185,10 @@ def ver_producto():
 
         # parseamos los datos para la notificacion
         datos_usuario = {'nombres' : usuario.nombres + ' ' + usuario.apellidos}
+        datos_usuario['correo_inst'] = usuario.correo_inst
+        datos_usuario['correo_alter'] = None
         if usuario.correo_alter != None:
-            datos_usuario['email'] = usuario.correo_alter
-        else:
-            datos_usuario['email'] = usuario.correo_inst
+            datos_usuario['correo_alter'] = usuario.correo_alter
 
         producto = {'nombre': producto.nombre}
 
@@ -253,11 +254,12 @@ def validar(id_producto):
 
     # parseamos los datos para la notificacion
     datos_usuario = {'nombres' : usuario.nombres + ' ' + usuario.apellidos}
+    datos_usuario['correo_inst'] = usuario.correo_inst
+    datos_usuario['correo_alter'] = None
     if usuario.correo_alter != None:
-        datos_usuario['email'] = usuario.correo_alter
-    else:
-        datos_usuario['email'] = usuario.correo_inst
-
+        datos_usuario['correo_alter'] = usuario.correo_alter
+    
+        
     producto = {'nombre': producto.nombre}
 
     # enviamos la notificacion al usuario creador
@@ -270,10 +272,10 @@ def validar(id_producto):
         usuario = db(db.USUARIO.usbid == participacion.usbid_usuario).select().first()
 
         datos_coautor = {'nombres' : usuario.nombres + ' ' + usuario.apellidos }
+        datos_coautor['correo_inst'] = usuario.correo_inst
+        datos_coautor['correo_alter'] = None
         if usuario.correo_alter != None:
-            datos_coautor['email'] = usuario.correo_alter
-        else:
-            datos_coautor['email'] = usuario.correo_inst
+            datos_coautor['correo_alter'] = usuario.correo_alter
         # Enviamos el correo.
         enviar_correo_validacion_coautor(mail, datos_coautor, datos_usuario, producto)
 

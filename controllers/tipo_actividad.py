@@ -337,6 +337,8 @@ def ver_tipo_actividad():
     if (admin==0):
         redirect(URL(c ="default",f="index"))
 
+    if not request.args:
+        raise HTTP(404)
     id_tipo = request.args[0]
 
     query = reduce(lambda a, b: (a & b), [db.TIPO_ACTIVIDAD.id_tipo == id_tipo,
