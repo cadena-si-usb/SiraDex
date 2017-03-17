@@ -1,4 +1,4 @@
-# coding: utf8
+# -*- coding: utf-8 -*-
 # try something like
 
 import datetime
@@ -140,6 +140,8 @@ def agregar():
         except:
             pass
 
+        print(nombre)
+
         obligatorio = rows_campo.obligatorio
         tipo_campo = rows_campo.tipo_campo.replace(" ", "_")
 
@@ -147,7 +149,7 @@ def agregar():
             obl[nombre]= tipo_campo
             if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date', label=rows_campo.nombre+"  (**)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha inválida, debe ser: AAA-MM-DD')]))
             elif tipo_campo in ['Texto_Corto']:       fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
-            elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI inválida, debe ser: XX.XXX.XXX')]))
+            elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',label=rows_campo.nombre +" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI inválida, debe ser: XX.XXX.XXX')]))
             elif tipo_campo in ['Documento']:         fields.append(Field(nombre,'upload',label=rows_campo.nombre+" (*)",uploadfolder=os.path.join(request.folder,'uploads') ,requires=[IS_NOT_EMPTY(error_message='Debe subirse un archivo')]))
             elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Teléfeno invélido, debe ser: (0xxx)xxx-xxxx')]))
             elif tipo_campo in ['Cantidad_Entera']:   fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
@@ -355,8 +357,9 @@ def modificar():
             elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
             elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI inválida, debe ser: XX.XXX.XXX')]))
             elif tipo_campo in ['Documento']:
-                temp= [str(rows_campo.id_campo), nombre]
-                documento+= temp
+                if(row.valor_campo!=''):
+                    temp= [str(rows_campo.id_campo), nombre]
+                    documento+= temp
                 fields.append(Field(nombre,'upload',label=rows_campo.nombre+" (*)",uploadfolder=os.path.join(request.folder,'uploads'),requires=[IS_NOT_EMPTY(error_message='Debe subirse un archivo')]))
             elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Teléfeno inválido, debe ser: (0xxx)xxx-xxxx')]))
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
@@ -369,8 +372,9 @@ def modificar():
             elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string'))
             elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI inválida, debe ser: XX.XXX.XXX'))))
             elif tipo_campo in ['Documento']:
-                temp= [str(rows_campo.id_campo), nombre]
-                documento+= temp
+                if(row.valor_campo!=''):
+                    temp= [str(rows_campo.id_campo), nombre]
+                    documento+= temp
                 fields.append(Field(nombre,'upload',requires=IS_EMPTY_OR(IS_UPLOAD_FILENAME()),uploadfolder=os.path.join(request.folder,'uploads')))
             elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Teléfeno inválido, debe ser: (0xxx)xxx-xxxx'))))
             elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807))))
