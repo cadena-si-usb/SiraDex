@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from funciones_siradex import get_tipo_usuario
+from funciones_siradex import get_tipo_usuario,convertFromNumber,convertToNumber
 from log import insertar_log
 
 #. --------------------------------------------------------------------------- .
@@ -362,10 +362,11 @@ def ver_tipo_actividad():
 
         # Se inserta el campo, en la base de datos, que se desea utilizar.
         db.CAMPO.insert(nombre = request.vars.Nombre,
+                        nombre_interno = "C"+str(abs(convertToNumber(request.vars.Nombre))),
                         obligatorio = request.vars.Obligatorio,
                         tipo_campo = request.vars.Tipo,
                         id_catalogo = None)
-
+        
         # Se busca el id del campo.
         queryCampo = reduce(lambda a, b: (a&b),[db.CAMPO.nombre == request.vars.Nombre,
                                             db.CAMPO.tipo_campo == request.vars.Tipo,
@@ -405,6 +406,7 @@ def ver_tipo_actividad():
         for campo in campos_catalogo:
 
             db.CAMPO.insert(nombre = campo.nombre,
+                            nombre_interno = "C"+str(abs(convertToNumber(request.vars.nombre))),
                             obligatorio = campo.obligatorio,
                             tipo_campo = campo.tipo_campo,
                             id_catalogo = id_catalogo
@@ -433,7 +435,8 @@ def ver_tipo_actividad():
 
         campo.update_record(nombre      = request.vars.nombre,
                             tipo_campo  = request.vars.tipo_campo,
-                            obligatorio = request.vars.obligatorio)
+                            obligatorio = request.vars.obligatorio,
+                            nombre_interno = "C"+str(abs(convertToNumber(request.vars.nombre))))
 
         # Se obtiene el id del tipo de actividad asociado al campo para
         # hacer un redirect

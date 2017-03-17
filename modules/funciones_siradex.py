@@ -3,6 +3,13 @@
   Define funciones generales, disponibles para todos los controladoes.
 '''
 from gluon import *
+import math
+
+
+
+# No en python3
+def convertToNumber(s):
+    return int(s.encode('hex'), 16)
 
 def get_tipo_usuario(session):
 

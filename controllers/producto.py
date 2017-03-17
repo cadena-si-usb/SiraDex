@@ -14,8 +14,9 @@ from reportlab.lib.units  import *
 from reportlab.lib        import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.enums  import *
-from funciones_siradex import get_tipo_usuario
+from funciones_siradex import get_tipo_usuario,convertFromNumber
 from log import insertar_log
+
 
 def gestionar():
     session.message=""
@@ -135,7 +136,7 @@ def agregar():
     no_obl = {}
     for row in campos_id:
         rows_campo = db(db.CAMPO.id_campo == row.id_campo).select().first()
-        nombre = rows_campo.nombre.replace(" ", "_")
+        nombre = rows_campo.nombre_interno.replace(" ", "_")
         try :
             if int(nombre[0]):
                 nombre = "c4mp0_"+nombre
@@ -255,7 +256,7 @@ def agregar():
                 if campo[0:5] != 'autor' and campo[0:8] != 'borrador':
                     campo = campo.replace("_"," ")
                     print "Lo imprimes: " + campo
-                    id_camp = db(db.CAMPO.nombre==campo).select().first().id_campo
+                    id_camp = db(db.CAMPO.nombre_interno==campo).select().first().id_campo
                     print id_camp
                     valor = getattr(form.vars ,var)
                     db.PRODUCTO_TIENE_CAMPO.insert(id_prod=id_producto,id_campo=id_camp,valor_campo= valor)
@@ -351,7 +352,7 @@ def modificar():
     hay_uploads = False
     for row in rows:
         rows_campo = db(db.CAMPO.id_campo == row.id_campo).select().first()
-        nombre = rows_campo.nombre.replace(" ", "_")
+        nombre = rows_campo.nombre_interno.replace(" ", "_")
         try :
             if int(nombre[0]):
                 nombre = "campo_"+nombre
@@ -482,7 +483,7 @@ def modificar():
                     print "El valor es: " + str(valor_nuevo)
                     if valor_nuevo != valor_anterior:
                         campo = campo.replace("_"," ")
-                        id_campo = db(db.CAMPO.nombre==campo).select().first().id_campo
+                        id_campo = db(db.CAMPO.nombre_interno==campo).select().first().id_campo
 
                         sql = "UPDATE PRODUCTO_TIENE_CAMPO SET valor_campo = '" + str(valor_nuevo)
                         sql = sql + "' WHERE id_prod = '" + str(id_producto) + "' AND id_campo = '" + str(id_campo) + "';"
