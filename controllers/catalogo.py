@@ -51,7 +51,7 @@ def vGestionarCatalogos():
         redirect(URL('vGestionarCatalogos',args=[id_catalogo]))
     # En caso de que el formulario no sea aceptado
     else:
-        message = 'Error en el Formulario de Agregar Catálogo'
+        session.message = 'Error en el Formulario de Agregar Catálogo'
 
     #Formulario para agregar un campo a un catalogo
     if formulario_agregar_campo.process(formname = "formulario_agregar_campo").accepted:
@@ -66,19 +66,19 @@ def vGestionarCatalogos():
 
         # Si el nombre no esta repetido, lo eliminamos.
         if nombre_repetido:
-            message = 'Ya existe el campo'
+            session.message = 'Ya existe el campo'
         else:
             db.CAMPO_CATALOGO.insert(id_catalogo = id_catalogo,
                                      nombre =  nombre_campo_nuevo,
                                      tipo_campo = request.vars.tipo_campo,
                                      obligatorio = request.vars.obligatorio)
-            message = ""
+            session.message = ""
         # Redirijo a la misma pagina para seguir agregando campos
         insertar_log(db, 'CAMPO', datetime.datetime.now(), request.client, 'NUEVO CAMPO '+ nombre_campo_nuevo.upper() + ' PARA CATALOGO CON ID '+ id_catalogo, session.usuario['usbid'])
         redirect(URL('vGestionarCatalogos',args=[id_catalogo]))
     # En caso de que el formulario no sea aceptado
     else:
-        message = 'Error en el Formulario de Agregar Campo'
+        session.message = 'Error en el Formulario de Agregar Campo'
 
     if formulario_editar_campo.process(formname = "formulario_editar_campo").accepted:
         nombre_nuevo = request.vars.nombre
@@ -112,7 +112,7 @@ def vGestionarCatalogos():
         # Redirijo a la misma pagina para seguir agregando campos
         redirect(URL('vGestionarCatalogos',args=[id_catalogo]))
     else:
-        message = 'Error en el Formulario de Editar Campo'
+        session.message = 'Error en el Formulario de Editar Campo'
 
     if formulario_cambiar_nombre.process(formname = "formulario_cambiar_nombre").accepted:
         nombre_nuevo = request.vars.nombre
@@ -123,7 +123,7 @@ def vGestionarCatalogos():
         insertar_log(db, 'CATALOGO', datetime.datetime.now(), request.client, 'CATALOGO CON ID '+ str(id_catalogo) + ' RENOMBRADO A ' + nombre_nuevo.upper(), session.usuario['usbid'])
         redirect(URL('vGestionarCatalogos',args=[id_catalogo]))
     else:
-        message = 'Error en el Formulario de Editar Nombre Catálogo'
+        session.message = 'Error en el Formulario de Editar Nombre Catálogo'
 
 
     formulario_agregar_catalogo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
