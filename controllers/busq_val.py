@@ -378,7 +378,7 @@ def graficaBar():
         line_chart.add(programas_dict[key]['abreviacion'], programas_dict[key]['repeticiones'])
 
 
-    return programas
+    return programas_dict
 
 def tabla():
 
