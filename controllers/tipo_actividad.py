@@ -103,14 +103,6 @@ def gestionar():
     formulario_agregar_tipo = construir_formulario_agregar_tipo()
     formulario_editar_tipo = construir_formulario_editar_tipo()
 
-    if len(request.args) == 2: 
-        page=int(request.args[1])
-    else: 
-        page=0
-    
-    items_per_page = 5
-    
-    limitby=(page*items_per_page,(page+1)*items_per_page+1)
 
     # Vista básica
     if formulario_editar_tipo.accepts(request.vars, session,formname="formulario_editar_tipo"):
@@ -135,7 +127,7 @@ def gestionar():
 
     if (len(request.args) == 0) or (request.args[0] == 'None'):
         
-        listaTipoActividades = db(db.TIPO_ACTIVIDAD.papelera == False).select(db.TIPO_ACTIVIDAD.ALL,limitby=limitby)
+        listaTipoActividades = db(db.TIPO_ACTIVIDAD.papelera == False).select(db.TIPO_ACTIVIDAD.ALL)
         programa = dict()
         programa["nombre"] = None
         programa["descripcion"] = None
@@ -146,7 +138,7 @@ def gestionar():
         id_programa = request.args[0]
 
         listaTipoActividades =   db((db.TIPO_ACTIVIDAD.papelera == False)
-                                 & (db.TIPO_ACTIVIDAD.id_programa == id_programa)).select(db.TIPO_ACTIVIDAD.ALL,limitby=limitby)
+                                 & (db.TIPO_ACTIVIDAD.id_programa == id_programa)).select(db.TIPO_ACTIVIDAD.ALL)
 
         programa = db(db.PROGRAMA.id_programa == id_programa).select(db.PROGRAMA.ALL).first()
     
@@ -158,8 +150,7 @@ def gestionar():
           , formulario_editar_tipo = formulario_editar_tipo
           , hayErroresAgregar = formulario_agregar_tipo.errors
           , hayErroresEditar = formulario_editar_tipo.errors
-          , id_programa = id_programa \
-          , page=page,items_per_page=items_per_page)
+          , id_programa = id_programa)
 
 #. --------------------------------------------------------------------------- .
 '''
