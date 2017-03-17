@@ -18,6 +18,7 @@ from funciones_siradex import get_tipo_usuario
 from log import insertar_log
 
 def gestionar():
+    session.message=""
     admin = get_tipo_usuario(session)
 
     # Productos registrados por el usuario.

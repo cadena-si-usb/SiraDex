@@ -99,7 +99,7 @@ def construir_formulario_editar_tipo():
 def gestionar():
 
     admin = get_tipo_usuario(session)
-
+    session.message=""
     formulario_agregar_tipo = construir_formulario_agregar_tipo()
     formulario_editar_tipo = construir_formulario_editar_tipo()
 
@@ -166,7 +166,7 @@ def gestionar():
     Permite añadir un nuevo tipo de actividad.
 '''
 def agregar_tipo():
-
+    session.message=""
     admin = get_tipo_usuario(session)
 
     if (admin==0):
@@ -450,7 +450,7 @@ def ver_tipo_actividad():
                 formulario_editar_campo=formulario_editar_campo)
 
 def editar_tipo():
-
+    session.message=""
     admin = get_tipo_usuario(session)
 
     if (admin==0):

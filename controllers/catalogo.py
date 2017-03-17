@@ -11,7 +11,7 @@ que existen en el sistema.
 '''
 
 def vGestionarCatalogos():
-
+    session.message=""
     admin = get_tipo_usuario(session)
 
     if (admin==0):
