@@ -83,8 +83,14 @@
         for (var i = 1; i<cantidadColumnas; i++){
           columnas.push({ "orderable": false });
         }
-        opciones["columns"] = columnas;
-        $("#TipoActividadTable").DataTable(opciones);
+        
+        // Por si la tabla está vacía
+        // En este caso se debe verificar porque si len es cero abajo, entonces
+        // se ponen menos columnas en el tbody que en el theader
+        if ($("#TipoActividadTable tbody tr:first-child td").length ==  cantidadColumnas){
+          opciones["columns"] = columnas;
+          $("#TipoActividadTable").DataTable(opciones);
+        }
       });
     </script>
 
