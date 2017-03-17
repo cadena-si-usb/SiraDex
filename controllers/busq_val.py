@@ -351,6 +351,7 @@ def graficaBar(productos):
     fecha_desde = fecha_hasta - 10
     fechas={}
     programas = db(db.PROGRAMA['papelera']==False).select().as_list()
+
     for fecha in range(fecha_desde, fecha_hasta + 1):
         fechas[fecha]={}
         for programa in programas:
@@ -370,6 +371,7 @@ def graficaBar(productos):
     return fechas
 
 def tabla(productos):
+
     fecha_hasta = date.today().year
     fecha_desde = fecha_hasta - 10
     programas={}
