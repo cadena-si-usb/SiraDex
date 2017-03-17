@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # this file is released under public domain and you can use without limitations
 
 # -------------------------------------------------------------------------
@@ -12,11 +12,10 @@ import datetime
 import re
 from usbutils import get_ldap_data, random_key
 from funciones_siradex import get_tipo_usuario,get_tipo_usuario_not_loged
-from log import insertar_log
 import urllib2
 from notificaciones import *
-# import pygal
-# from pygal.style import Style
+import pygal
+from pygal.style import Style
 
 ### required - do no delete
 def user(): return dict(form=auth())
@@ -26,7 +25,11 @@ def call(): return service()
 
 # URLS DE RETORNO PARA EL CAS ##
 # PARA EL SERVIDOR:
+<<<<<<< HEAD
+# URL_RETORNO = "http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas"
+=======
 #URL_RETORNO = "http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas"
+>>>>>>> 2654eb19defd27e4243461a4a503de25b9e90c47
 # PARA DESSARROLLO. Cambiar el puerto 8000 si es necesario.
 URL_RETORNO = "http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas"
 
@@ -79,18 +82,16 @@ def login_cas():
 
 
             if datosUsuario.tipo == "Bloqueado":
-                insertar_log(db, 'LOGIN', datetime.datetime.now(), request.client, 'LOGIN USUARIO BLOQUEADO', usbid)
                 response.flash = T("Usuario bloqueado")
                 redirect(URL(c = "default",f="index"))
             else:
-                insertar_log(db, 'LOGIN', datetime.datetime.now(), request.client, 'LOGIN SATISFACTORIO', usbid)
                 redirect(URL('perfil'))
         else:
 
             session.usuario['tipo'] = "Usuario"
             session.usuario['alternativo'] = None
            # Para el envio de notificacion
-            datos_usuario = {'nombres' : session.usuario['first_name'] + ' ' + session.usuario['last_name']}
+            datos_usuario = {'nombres' : session.usuario['first_name']}
             datos_usuario['email'] = session.usuario['email']
 
 
@@ -103,49 +104,14 @@ def login_cas():
             telefono=session.usuario["phone"],
             tipo = "Usuario")
 
-            insertar_log(db, 'REGISTRO', datetime.datetime.now(), request.client, 'REGISTRO SATISFACTORIO', usbid)
-
             # Se envia correo de bienvenida al usuario
             enviar_correo_bienvenida(mail,datos_usuario)
 
-            insertar_log(db, 'LOGIN', datetime.datetime.now(), request.client, 'LOGIN SATISFACTORIO', usbid)
             redirect(URL('perfil'))
 
 def logout_cas():
-    insertar_log(db, 'LOGOUT', datetime.datetime.now(), request.client, 'LOGOUT SATISFACTORIO', session.usuario['usbid'])
     session.usuario = None
     return response.render()
-
-def grafica_pie():
-
-    query = "select  programa.id_programa, programa.nombre, programa.abreviacion, count(producto.nombre)" + \
-    " from ((programa inner join tipo_actividad on programa.id_programa=tipo_actividad.id_programa)" + \
-    " inner join producto on producto.id_tipo=tipo_actividad.id_tipo and producto.usbid_usu_creador=\'"+ session.usuario["usbid"] +\
-    "\' and producto.estado=\'Validado\') group by programa.id_programa, programa.nombre, programa.abreviacion;"
-
-    query2 = "select count(producto.nombre) from producto where producto.usbid_usu_creador=\'"+ session.usuario["usbid"]+"\' and producto.estado=\'Validado\';"
-
-    datos = db.executesql(query)
-    num_productos = db.executesql(query2)[0][0]
-
-    programas={}
-
-    for producto in datos:
-        print producto
-        id_programa = producto[0]
-        try:
-            programas[id_programa]['repeticiones'] += 1
-        except:
-            nombre = producto[1]
-            abrev = producto[2]
-            programas[id_programa] = {'id':id_programa,'nombre':nombre,'abreviacion':abrev,'repeticiones':1}
-
-
-    # for producto in datos:
-    #     porcentaje = (producto[2]*100)//num_productos
-    #     pie_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])
-
-    return programas
 
 def perfil():
     if session.usuario != None:
@@ -177,7 +143,7 @@ def perfil():
                     "Por Validar":[]
                     }
 
-        infoPieChart = grafica_pie()
+        grafica = URL('default','grafica')
         tabla = URL('default','tabla')
 
         for row in rows:
@@ -192,6 +158,26 @@ def perfil():
     else:
         redirect(URL("index"))
 
+def grafica():
+
+        query = "select programa.nombre, programa.abreviacion, count(producto.nombre)" + \
+        " from ((programa inner join tipo_actividad on programa.id_programa=tipo_actividad.id_programa)" + \
+        " inner join producto on producto.id_tipo=tipo_actividad.id_tipo and producto.usbid_usu_creador=\'"+ session.usuario["usbid"] +\
+        "\' and producto.estado=\'Validado\') group by programa.nombre, programa.abreviacion;"
+
+        query2 = "select count(producto.nombre) from producto where producto.usbid_usu_creador=\'"+ session.usuario["usbid"]+"\' and producto.estado=\'Validado\';"
+
+        datos = db.executesql(query)
+        num_productos = db.executesql(query2)[0][0]
+
+        pie_chart = pygal.Pie()
+        #pie_chart.title = 'Productos del usuario'
+        for producto in datos:
+            porcentaje = (producto[2]*100)//num_productos
+            pie_chart.add(producto[1],[{'value':porcentaje, 'label':producto[0]}])
+
+        return pie_chart.render()
+
 def tabla():
     fecha_hasta = datetime.date.today().year
     fecha_desde = fecha_hasta - 10
@@ -200,7 +186,7 @@ def tabla():
         " inner join producto as prod on prod.id_tipo=a.id_tipo and prod.usbid_usu_creador=\'"+ session.usuario["usbid"] +\
         "\' and prod.estado=\'Validado\') group by p.id_programa, extract(year from prod.fecha_realizacion);"
 
-
+    
     productos = db.executesql(query)
 
     #programas = db(db.PROGRAMA['papelera']==False).select().as_list()
@@ -212,16 +198,16 @@ def tabla():
         nombre = programa['nombre']
         abrev = programa['abreviacion']
         programas_dict[ident] = {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':[0 for x in range(11)]}
-
+    
     for producto in productos:
         identificador = producto[0]
         anio = int(producto[2])
         index = anio-fecha_desde
         if (index <= 0):
-            index=0
+            index=0        
         programas_dict[identificador]['repeticiones'][index]+= producto[1]
 
-
+    
     line_chart = pygal.Bar()
     line_chart.x_labels = map(str, range(fecha_desde, fecha_hasta + 1))
 
@@ -244,43 +230,33 @@ def EditarPerfil():
         # Modificar datos del perfil
         usuario = db(db.USUARIO.ci==session.usuario['cedula']).select().first()
 
+        forma=SQLFORM(
+            db.USUARIO,
+            record=usuario,
 
-        forma=SQLFORM.factory(
-            Field('telefono',
-                   requires=[IS_NOT_EMPTY(error_message='El teléfono no puede quedar vacío.'),
-                             IS_LENGTH(20),
-                             IS_MATCH('^[0-9]+$', error_message="Use sólo números.")]),
-            Field('correo_alter',
-                   requires=[IS_NOT_EMPTY(error_message='El correo no puede quedar vacío.'),
-                             IS_MATCH('^[.A-z0-9À-ÿŸ\s-]+@[.A-z0-9À-ÿŸ\s-]+$', error_message="Este correo no es válido.")]),
-            submit_button='Agregar',
-            labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'}
-            )
+            fields=['telefono','correo_alter'],
 
+
+            labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'})
         forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
         forma.element(_type='submit')['_value']="Actualizar"
 
 
-        if forma.accepts(request.vars, session,formname="forma"):
+        if request.vars:
             nuevoTelefono = request.vars.telefono
             nuevoCorreoAlter = request.vars.correo_alter
 
-            valor_telefono = "" if (nuevoTelefono== None) else nuevoTelefono
+            valor_telefono = None if ((nuevoTelefono == "") | (nuevoTelefono== None)) else nuevoTelefono
             session.usuario["phone"] = valor_telefono
 
-            valor_correo = "" if (nuevoCorreoAlter== None) else nuevoCorreoAlter
+            valor_correo = None if ((nuevoCorreoAlter == "") | (nuevoCorreoAlter== None)) else nuevoCorreoAlter
             session.usuario["alternativo"] = valor_correo
 
             db(db.USUARIO.ci == session.usuario["cedula"]).update(telefono=valor_telefono, correo_alter=valor_correo)
 
             print "\n\nEl nuevo usuario quedo: "
             print session.usuario
-
-            insertar_log(db, 'PERFIL', datetime.datetime.now(), request.client, 'ACT. PERFIL SATISFACTORIA', session.usuario['usbid'])
             redirect(URL('perfil'))
-        else :
-            message = T("Debe colocar su teléfono y correo alternativo.")
-
 
         return dict(form1 = form, form = forma, admin = admin)
     else:
