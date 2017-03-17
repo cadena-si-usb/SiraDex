@@ -66,10 +66,6 @@ def login_cas():
 
         session.usuario = usuario
         session.usuario['usbid'] = usbid
-        try:
-            print usuario['carrera']
-        except:
-            print('Es una esceocion')
         if not db(tablaUsuarios.usbid == usbid).isempty():
             datosUsuario = db(tablaUsuarios.usbid==usbid).select()[0]
             session.usuario['tipo'] = datosUsuario.tipo
@@ -131,7 +127,6 @@ def grafica_pie():
     programas={}
 
     for producto in datos:
-        print producto
         id_programa = producto[0]
         try:
             programas[id_programa]['repeticiones'] += 1
@@ -273,9 +268,6 @@ def EditarPerfil():
 
             db(db.USUARIO.ci == session.usuario["cedula"]).update(telefono=valor_telefono, correo_alter=valor_correo)
 
-            print "\n\nEl nuevo usuario quedo: "
-            print session.usuario
-
             insertar_log(db, 'PERFIL', datetime.datetime.now(), request.client, 'ACT. PERFIL SATISFACTORIA', session.usuario['usbid'])
             redirect(URL('perfil'))
         else :
@@ -319,7 +311,6 @@ def obtener_actividades():
                 option = tipo.nombre
                 if len(option)>88:
                     option = option[0:88]+"..."
-                    print option
                 concat += '<option value="'+str(tipo.id_tipo)+'">'+option+'</option>'
 
     return "jQuery('#lista_tipos').empty().append('"+concat+"')"

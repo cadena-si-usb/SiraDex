@@ -54,7 +54,6 @@ def gestionar():
                     & (db.PRODUCTO.id_producto == row.id_producto)).select()
 
         for nombre in nombres_act:
-            print nombre.TIPO_ACTIVIDAD.nombre
             nombres[row] = nombre.TIPO_ACTIVIDAD.nombre
 
         if row["estado"] == "Por Validar":
@@ -184,16 +183,11 @@ def agregar():
     form.element()
 
     #fix para el datepicker de las fechas:
-    print obl
-    print no_obl
     for i in obl.keys():
         form.element(_name=i)['_class']= form.element(_name=i)['_class'] + " obligatoria "+ obl[i]
 
     for i in no_obl.keys():
         form.element(_name=i)['_class']= form.element(_name=i)['_class'] + ' ' + no_obl[i]
-
-    for f in form.elements("input"):
-        print f
 
     if form.process().accepted:
         no = ['nombre','descripcion','fecha_realizacion','lugar','colaboradores']
@@ -255,9 +249,7 @@ def agregar():
                 #Ignora campos de autor
                 if campo[0:5] != 'autor' and campo[0:8] != 'borrador':
                     campo = campo.replace("_"," ")
-                    print "Lo imprimes: " + campo
                     id_camp = db(db.CAMPO.nombre_interno==campo).select().first().id_campo
-                    print id_camp
                     valor = getattr(form.vars ,var)
                     db.PRODUCTO_TIENE_CAMPO.insert(id_prod=id_producto,id_campo=id_camp,valor_campo= valor)
 
@@ -358,7 +350,6 @@ def modificar():
                 nombre = "campo_"+nombre
         except:
             pass
-        print("rows_campo", rows_campo)
         obligatorio = rows_campo.obligatorio
         tipo_campo = rows_campo.tipo_campo
 
@@ -391,7 +382,6 @@ def modificar():
             elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'text',label=rows_campo.nombre))
 
         valores[nombre]=row.valor_campo
-    print(documento)
     for i in range(5):
         fields.append(Field("c0mpr0bant3_"+str(i+1), 'upload', autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads'), label=''))
         fields.append(Field("d3scr1pc10n_comprobante_"+str(i+1), 'string', label="Descripción"))
@@ -400,12 +390,9 @@ def modificar():
                                                          INPUT(_value='Enviar Producto',_type="submit", _class="btn blue-add btn-block btn-border ")])
     form.element()
 
-    print valores
     # Le escribimos la informacion a las vistas
     for nombre_campo in valores.keys():
         setattr(form.vars, nombre_campo, valores[nombre_campo])
-    print("obl", obl)
-    print("no_obl",no_obl)
     #fix para el datepicker de las fechas:
     for i in obl.keys():
         form.element(_name=i)['_class']= form.element(_name=i)['_class'] + " obligatoria "+ obl[i]
@@ -413,8 +400,6 @@ def modificar():
     for i in no_obl.keys():
         form.element(_name=i)['_class']= form.element(_name=i)['_class'] + ' ' + no_obl[i]
 
-    for f in form.elements("input"):
-        print f
 
     # Al aceptar el formulario
     if form.process().accepted:
@@ -462,10 +447,7 @@ def modificar():
                 print e
 
             if var[0:5] != 'autor' and var[0:8] != 'borrador':
-                print "trabajare con: " + var
                 valor_anterior = valores[var]
-                print "valor anterior: " + str(valor_anterior)
-                print "entrara " + str(not(var in no))
                 if not(var in no):
 
                     try:
@@ -478,9 +460,7 @@ def modificar():
                         print e
                         campo = var
 
-                    print "var:" + var
                     valor_nuevo = getattr(form.vars ,var)
-                    print "El valor es: " + str(valor_nuevo)
                     if valor_nuevo != valor_anterior:
                         campo = campo.replace("_"," ")
                         id_campo = db(db.CAMPO.nombre_interno==campo).select().first().id_campo
@@ -490,16 +470,16 @@ def modificar():
                         db.executesql(sql)
 
                     else:
-                        print "next"
+                        pass
                 else:
                     valor_nuevo = getattr(form.vars ,var)
                     if valor_nuevo != valor_anterior:
                         sql = "UPDATE PRODUCTO SET "+var+"= '"+str(valor_nuevo)+\
                               "' WHERE id_producto = '"+str(id_producto)+"';"
                         db.executesql(sql)
-                        print " agregada "+ str(var)
+                        
                     else:
-                        print "next "+ str(var)
+                        pass
 
         redirect(URL('gestionar'))
 
@@ -548,9 +528,7 @@ def obtener_actividades():
     for tipo in tiposA:
         if tipo['papelera']==False :
             concat += '<option value='+str(tipo['id_tipo'])+'>'+tipo['nombre']+'</option>'
-    print '>>'
-    print programa
-    print '<<'
+    
     aux = programa.descripcion.split('\r\n')[0]
     descripcion = "<div class=\"col-sm-offset-1\"><h4>Descripción del Programa:</h4><p>"+aux+"</p></div>"
     html = "jQuery('#lista_tipos').empty().append('"+concat+"');jQuery('#descripcion_programa').empty().append('"+descripcion+"')"
@@ -753,15 +731,13 @@ def eliminar_comprobante():
     if not request.args:
         raise HTTP(404)
     id_comprobante = request.args(0)
-    print ("============")
-    print id_comprobante
 
     admin = get_tipo_usuario(session)
 
     query = "SELECT archivo FROM COMPROBANTE WHERE id_comprobante="+id_comprobante+";"
     comprobante = db.executesql(query)
 
-    print comprobante
+    
     pdf = os.path.join(request.folder,'uploads',comprobante[0][0][0:22],comprobante[0][0][23:25],comprobante[0][0])
     try:
         os.unlink(pdf)
