@@ -7,9 +7,17 @@ from datetime  import date
 
 # Funcion para busquedas publicas
 def busqueda():
+    print request.vars 
+
+    dictionary = {}
+    for key in request.vars:
+        dictionary[key] = request.vars[key]
+
+    print dictionary
+
+
     admin = get_tipo_usuario_not_loged(session)
     try:
-
         sql = "SELECT prod.descripcion," + \
                      "prod.nombre," +\
                      "prod.id_tipo," +\
@@ -33,6 +41,7 @@ def busqueda():
            request.vars.fecha != None and\
            request.vars.Autor != None:
 
+
             # Anadimos el filtro del usuario
             if request.vars.Autor != "all":
                 sql += " AND prod.usbid_usu_creador=\'" + request.vars.Autor + "\'"
@@ -48,6 +57,9 @@ def busqueda():
             if request.vars.fecha != "":
                 sql += " AND prod.fecha_realizacion <= '" + request.vars.fecha +"'"
 
+        if request.vars.anio != None:
+            sql += " AND extract(year FROM prod.fecha_realizacion)=" + request.vars.anio
+            
         # Ahora dependiendo del usuario anadimos las restricciones del estado (no se contempla cuando
         # el usuario esta bloqueado porqu no deberia llegar aqui)
         if (session.usuario == None or session.usuario["tipo"] == "Usuario"):
@@ -55,12 +67,16 @@ def busqueda():
         elif (session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador"):
             sql += ";"
 
+        print "\nsql"
+        print sql
         productos = db.executesql(sql)
+        print "\nLo resultante"
+        print productos
 
-        infoPieChart = graficaPie(productos)        
+        infoTabla = tabla(productos)
+        infoBarChart = graficaBar(productos)
+        infoPieChart = graficaPie(productos)
         #graficaPie = URL(c='busq_val',f='graficaPie',vars=dict(productos=productos))
-        graficaBar = URL(c='busq_val',f='graficaBar',vars=dict(productos=productos))
-        tabla = URL(c='busq_val',f='tabla',vars=dict(productos=productos))
 
         return locals()
     except:
@@ -330,107 +346,56 @@ def graficaPie(productos):
 
     return programas
 
-def graficaBar():
-    productos = request.vars.productos
+def graficaBar(productos):
     fecha_hasta = date.today().year
     fecha_desde = fecha_hasta - 10
-
-    line_chart = pygal.Bar()
-
-    if productos == None:
-        return line_chart.render()
-
-    line_chart.x_labels = map(str, range(fecha_desde, fecha_hasta + 1))
-
+    fechas={}
     programas = db(db.PROGRAMA['papelera']==False).select().as_list()
 
-    programas_dict = {}
-    for programa in programas:
-        ident = programa['id_programa']
-        nombre = programa['nombre']
-        abrev = programa['abreviacion']
-        programas_dict[ident] = {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':[0 for x in range(11)]}
+    for fecha in range(fecha_desde, fecha_hasta + 1):
+        fechas[fecha]={}
+        for programa in programas:
+            ident = int(programa['id_programa'])
+            nombre = programa['nombre']
+            abrev = programa['abreviacion']
+            fechas[fecha][ident]= {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':0}
 
-    if type(productos) is str:
+    for producto in productos:
+        anio = producto[4].year
+        if anio < fecha_desde:
+            anio = fecha_desde
+        if anio > fecha_hasta:
+            anio = fecha_hasta            
+        id_programa = producto[5]
+        fechas[anio][id_programa]['repeticiones'] += 1
+    return fechas
 
-        id_programa = int(productos.split('\'')[4].split(',')[-2])
-        anio = int(productos.split('\'')[4].split(',')[3][15:])
-        i = anio-fecha_desde
-
-        if (i <= 0):
-            i=0
-
-        programas_dict[id_programa]['repeticiones'][i]+=1
-
-    else:
-        for producto in productos:
-            id_programa = int(producto.split('\'')[4].split(',')[-2])
-            anio = int(producto.split('\'')[4].split(',')[3][15:])
-            i = anio-fecha_desde
-
-            if (i <= 0):
-                i=0
-           
-            programas_dict[id_programa]['repeticiones'][i]+=1
-
-
-    for key in programas_dict.keys():
-        line_chart.add(programas_dict[key]['abreviacion'], programas_dict[key]['repeticiones'])
-
-
-    return programas_dict
-
-def tabla():
-
-    productos = request.vars.productos
-
+def tabla(productos):
 
     fecha_hasta = date.today().year
     fecha_desde = fecha_hasta - 10
+    programas={}
+    programas_db = db(db.PROGRAMA['papelera']==False).select().as_list()
 
-    line_chart = pygal.Bar()
+    for programa in programas_db:
+        ident = int(programa['id_programa'])
+        programas[ident]={'nombre':programa['nombre']}
+        for fecha in range(fecha_desde, fecha_hasta + 1):
+            programas[ident][fecha]= 0
+        programas[ident]['total']=0
 
-    if productos == None:
-        return line_chart.render_table(transpose=True) 
-
-    line_chart.x_labels = map(str, range(fecha_desde, fecha_hasta + 1))
-
-    programas = db(db.PROGRAMA['papelera']==False).select().as_list()
-
-    programas_dict = {}
-    for programa in programas:
-        ident = programa['id_programa']
-        nombre = programa['nombre']
-        abrev = programa['abreviacion']
-        programas_dict[ident] = {'nombre':nombre, 'abreviacion':abrev, 'repeticiones':[0 for x in range(11)]}
-
-    if type(productos) is str:
-        id_programa = int(productos.split('\'')[4].split(',')[-2])
-        anio = int(productos.split('\'')[4].split(',')[3][15:])
-        i = anio-fecha_desde
-
-        if (i <= 0):
-            i=0
-
-        programas_dict[id_programa]['repeticiones'][i]+=1
-    else:
-
-        for producto in productos:
-            id_programa = int(producto.split('\'')[4].split(',')[-2])
-            anio = int(producto.split('\'')[4].split(',')[3][15:])
-            i = anio-fecha_desde
-
-            if (i <= 0):
-                i=0
-           
-            programas_dict[id_programa]['repeticiones'][i]+=1
+    for producto in productos:
+        anio = producto[4].year
+        if anio < fecha_desde:
+            anio = fecha_desde
+        if anio > fecha_hasta:
+            anio = fecha_hasta            
+        id_programa = producto[5]
+        programas[id_programa][anio]+= 1
+        programas[id_programa]['total']+=1
+    return programas
 
 
-    for key in programas_dict.keys():
-        line_chart.add(programas_dict[key]['abreviacion'], programas_dict[key]['repeticiones'])
-
-
-    return line_chart.render_table(transpose=True,style=True,total=True)
 
 def eliminar():
 

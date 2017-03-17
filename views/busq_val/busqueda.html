@@ -10,7 +10,6 @@
 
 
 {{block contenido}}
-
 <!-- GRAFICAS Y TABLA -->
 {{try:}}
   {{if productos != () or len(productos)!=0:}}  
@@ -61,7 +60,7 @@
       <!-- tabla -->
       <div class="col-md-12">
         <div class="tab-content card" style="text-align: center">
-          <embed type="image/svg+xml" src="{{=tabla }}" style="margin-left: 0%;height: auto;width: 100%" /> 
+        <div id="table" style="width: 100%"></div>
         </div>
       </div>
     </div>
@@ -160,14 +159,14 @@
 <div id="modalBar" class="modal fade" role="dialog">
   <div class="modal-dialog">
   <!-- Modal content -->
-  <div class="modal-content">
+  <div class="modal-content" style="width: 55em; margin-left: -5.8em">
     
     <div class="modal-header">
        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      <h4 class="modal-title"><center>Gráfica de Productos por Programa</center></h4> 
+      <h4 class="modal-title"><center>Gráfica de Productos por Programa y Años</center></h4> 
     </div>
 
-    <div class="modal-body">
+    <div class="modal-body" style="margin-left: -6em;">
     <center>
       
       <div id="barChartB"></div>
@@ -221,10 +220,11 @@
 
 <script type="text/javascript">
 // Load the Visualization API and the corechart package.
-google.charts.load('current', {'packages':['corechart']});
+google.charts.load('current', {'packages':['corechart','table']});
 // Set a callback to run when the Google Visualization API is loaded.
 google.charts.setOnLoadCallback(PieChart);
 google.charts.setOnLoadCallback(BarChart);
+google.charts.setOnLoadCallback(Table);
 
 // Grafica de torta
 function PieChart() {
@@ -237,7 +237,10 @@ function PieChart() {
   // Generar color para cada slice
   var colorsArray = [];
   {{for i in infoPieChart:}}
-    dataTable.addRows([['{{=infoPieChart[i]["abreviacion"]}}',parseInt({{=infoPieChart[i]['repeticiones']}},10),'{{=infoPieChart[i]["nombre"]}}\nTotal: {{=infoPieChart[i]["repeticiones"]}}']]);
+    dataTable.addRows([[  '{{=infoPieChart[i]["abreviacion"]}}',
+                          parseInt({{=infoPieChart[i]['repeticiones']}},10),
+                          '{{=infoPieChart[i]["nombre"]}}\nTotal: {{=infoPieChart[i]["repeticiones"]}}'
+                      ]]);
     var new_light_color = 'rgb(' +  (Math.floor((255-111)*Math.random()) + 28) + ',' + 
                                     (Math.floor((255-170)*Math.random()) + 42) + ',' + 
                                     (Math.floor((255-109)*Math.random()) + 64) + ')';
@@ -246,7 +249,7 @@ function PieChart() {
 
     // Set opciones de las graficas
     var options =  {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent'};
-    var options2 = {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent'};
+    var options2 = {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent',width:700,height:350};
 
     // Instanciar las graficas, dibujarlas usando opciones
     var chart = new google.visualization.PieChart(document.getElementById('pieChart'));
@@ -274,51 +277,89 @@ function PieChart() {
 }
 
 function BarChart() {
-  var dataTable = new google.visualization.DataTable();
-  dataTable.addColumn('string', 'Programa');
-  dataTable.addColumn('number', 'Productos');
-  dataTable.addColumn({type: 'string', role: 'tooltip'});
-
+  var b = [['Programa']];
   var colorsArray = [];
-  {{for i in infoPieChart:}}
-    dataTable.addRows([['{{=infoPieChart[i]["abreviacion"]}}',parseInt({{=infoPieChart[i]['repeticiones']}},10),'{{=infoPieChart[i]["nombre"]}}\nTotal: {{=infoPieChart[i]["repeticiones"]}}']]);
-
-    var new_light_color = 'rgb(' +  (Math.floor((255-111)*Math.random()) + 28) + ',' + 
-                                    (Math.floor((255-170)*Math.random()) + 42) + ',' + 
-                                    (Math.floor((255-109)*Math.random()) + 64) + ')';
-    colorsArray.push(new_light_color);
+  
+  {{for v0 in infoBarChart.values():}}
+    {{for v1 in v0.values():}}
+      if (b[0].indexOf('{{=v1["abreviacion"]}}') == -1){
+        b[0].push('{{=v1["abreviacion"]}}');
+      }
+      var new_light_color = 'rgb(' +  (Math.floor((255-111)*Math.random()) + 28) + ',' + 
+                                      (Math.floor((255-170)*Math.random()) + 42) + ',' + 
+                                      (Math.floor((255-109)*Math.random()) + 64) + ')';
+      colorsArray.push(new_light_color);
+    {{pass}}
   {{pass}}
-    // Set opciones de las graficas
-    var options =  {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent'};
-    var options2 = {'title':'Productos por Programa\n ',colors: colorsArray};
+  
+  b[0].push({ role: 'annotation' } );
+  // Este deberia ser la leyenda del njombre completo
+  b[0].push({ role: 'tooltip' } );
+  console.log(b);
 
-    // INstanciar las graficas, dibujarlas usando opciones
+  {{for k0 in sorted(infoBarChart.keys()):}}
+    var d = ['{{=k0}}'];
+    {{for v1 in infoBarChart[k0].values():}}
+      d.push(parseInt('{{=v1["repeticiones"]}}'));
+    {{pass}}
+      d.push('');
+      d.push('');
+    b.push(d);
+  {{pass}}
+
+  var data = google.visualization.arrayToDataTable(b);
+    // Set opciones de las graficas
+    var options =  {'title':'Productos por Año\n ',colors: colorsArray,backgroundColor:'transparent',legend: { maxLines: 3 },bar: { groupWidth: '75%' },isStacked: true,};
+    var options2 =  {'title':'Productos por Año\n ',colors: colorsArray,backgroundColor:'transparent',legend: { maxLines: 3 },bar: { groupWidth: '75%' },isStacked: true,width:700,height:350};
+    //var options2 = {'title':'Productos por Anio\n ',colors: colorsArray};
+
+    // Instanciar las graficas, dibujarlas usando opciones
     var chart = new google.visualization.ColumnChart(document.getElementById('barChart'));
-    chart.draw(dataTable, options);
+    chart.draw(data, options);
 
     // grafica dentro del modal
-    var chartBig = new google.visualization.BarChart(document.getElementById('barChartB'));
-    chartBig.draw(dataTable, options2);
+    var chartBig = new google.visualization.ColumnChart(document.getElementById('barChartB'));
+    chartBig.draw(data, options2);
 
-    // Agregando funcion para redirigir al hacer click
-    google.visualization.events.addListener(chart, 'select', selectHandler);
-    function selectHandler() {
-      var selectedItem = chart.getSelection()[0];
-      if (selectedItem) {
-      var topping = dataTable.getValue(selectedItem.row, 0);
-      {{for i in infoPieChart:}}
-        if(topping == '{{=infoPieChart[i]["abreviacion"]}}'){ 
-            window.location = "/tipo_actividad/gestionar/"+{{=infoPieChart[i]["id"]}};
-          
-        }
+    // Agregando funcion para redirigir al hacer click  
+}
+
+function Table() {
+  var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Programa');
+        {{for k0 in sorted(infoBarChart.keys()):}}
+          data.addColumn('number', '{{=k0}}');
+        {{pass}}
+        data.addColumn('number', 'Total');
+        
+  var programas = [];
+  {{for k0,v0 in infoTabla.iteritems():}}
+    var b = ['{{=v0["nombre"]}}'];
+    {{for i in sorted(v0):}}
+      {{if i != "nombre":}}
+          {{if v0[i] != 0 and i != "total":}}            
+            {{dictionary["anio"]= i}}
+            {{dictionary["Programa"] = k0 }}
+          b.push({v:parseInt('{{=v0[i]}}'),f:'<a href="{{=URL(c="busq_val",f="busqueda",vars=dictionary) }}">{{=v0[i]}}</a>'});
+          {{else:}}
+          b.push(parseInt('{{=v0[i]}}'));
+          {{pass}}
       {{pass}}
-        }
-    }
+    {{pass}}
+    programas.push(b);
+  {{pass}}
+  console.log(programas);
+  data.addRows(programas);
+
+  var table = new google.visualization.Table(document.getElementById('table'));
+  table.draw(data, {showRowNumber: true, width: '100%',pageSize: 5,allowHtml:true});
+
 }
 
 $(window).resize(function(){
   PieChart();
   BarChart();
+  Table();
 });
 </script>
 
