@@ -286,6 +286,14 @@ def modificar():
 
     # Obtenemos los productos para mostrarlos en el html
     producto = db(db.PRODUCTO.id_producto==id_producto).select().first()
+    
+    # Si el producto no existe
+    if not producto :
+        redirect(URL('gestionar'))
+        # Si no soy el creador del producto
+    elif producto["usbid_usu_creador"] != session.usuario["usbid"] :
+        redirect(URL('gestionar'))
+    
     query = "SELECT id_comprobante, descripcion FROM COMPROBANTE WHERE producto="+str(id_producto)+";"
     comprobantes = db.executesql(query)
 
