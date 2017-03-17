@@ -103,13 +103,13 @@ def gestionar():
     formulario_agregar_tipo = construir_formulario_agregar_tipo()
     formulario_editar_tipo = construir_formulario_editar_tipo()
 
-    if len(request.args) == 2: 
+    if len(request.args) == 2:
         page=int(request.args[1])
-    else: 
+    else:
         page=0
-    
+
     items_per_page = 5
-    
+
     limitby=(page*items_per_page,(page+1)*items_per_page+1)
 
     # Vista básica
@@ -134,7 +134,7 @@ def gestionar():
       insertar_log(db, 'ACTIVIDAD', datetime.datetime.now(), request.client, 'NUEVO TIPO DE ACTIVIDAD '+ request.vars.Nombre.upper(), session.usuario['usbid'])
 
     if (len(request.args) == 0) or (request.args[0] == 'None'):
-        
+
         listaTipoActividades = db(db.TIPO_ACTIVIDAD.papelera == False).select(db.TIPO_ACTIVIDAD.ALL,limitby=limitby)
         programa = dict()
         programa["nombre"] = None
@@ -142,14 +142,14 @@ def gestionar():
         id_programa = None
 
     elif  (request.args[0] != None):
-        
+
         id_programa = request.args[0]
 
         listaTipoActividades =   db((db.TIPO_ACTIVIDAD.papelera == False)
                                  & (db.TIPO_ACTIVIDAD.id_programa == id_programa)).select(db.TIPO_ACTIVIDAD.ALL,limitby=limitby)
 
         programa = db(db.PROGRAMA.id_programa == id_programa).select(db.PROGRAMA.ALL).first()
-    
+
 
     return dict(admin = get_tipo_usuario(session)
           , listaTipoActividades = listaTipoActividades
@@ -334,8 +334,8 @@ def ver_tipo_actividad():
 
     admin = get_tipo_usuario(session)
 
-    if (admin==0):
-        redirect(URL(c ="default",f="index"))
+    # if (admin==0):
+    #     redirect(URL(c ="default",f="index"))
 
     if not request.args:
         raise HTTP(404)
@@ -366,7 +366,7 @@ def ver_tipo_actividad():
                         obligatorio = request.vars.Obligatorio,
                         tipo_campo = request.vars.Tipo,
                         id_catalogo = None)
-        
+
         # Se busca el id del campo.
         queryCampo = reduce(lambda a, b: (a&b),[db.CAMPO.nombre == request.vars.Nombre,
                                             db.CAMPO.tipo_campo == request.vars.Tipo,
@@ -425,11 +425,11 @@ def ver_tipo_actividad():
     if formulario_editar_campo.accepts(request.vars, session,formname="formulario_editar_campo"):
 
         id_campo = request.vars.id_campo
-        
+
         # Verifico si se seleccionó el campo "Obligatorio".
         if request.vars.obligatorio == None:
            request.vars.obligatorio = 'f'
-           
+
         # Los atributos del campo son puestos por defecto en el formulario
         campo = db(db.CAMPO.id_campo == id_campo).select(db.CAMPO.ALL).first()
 
@@ -453,11 +453,7 @@ def ver_tipo_actividad():
                 formulario_editar_campo=formulario_editar_campo)
 
 def editar_tipo():
-    session.message=""
-    admin = get_tipo_usuario(session)
-
-    if (admin==0):
-        redirect(URL(c ="default",f="index"))
+    session.message = ""
 
     id = request.args[0]        # Se identifica cual tipo de actividad se identificará.
 
@@ -530,11 +526,6 @@ Funcion que se encarga de modificar las caracteriticas de un
 campo de un catalogo.
 '''
 def formularioEditarCampo():
-
-    admin = get_tipo_usuario(session)
-
-    if (admin==0):
-        redirect(URL(c ="default",f="index"))
 
     formulario = SQLFORM.factory(
                     Field('nombre',

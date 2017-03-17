@@ -112,12 +112,12 @@ CREATE TABLE CAMPO_CATALOGO(
 );
 
 CREATE TABLE CAMPO(
-  id_campo      SERIAL NOT NULL,
-  id_catalogo   INT,
-  nombre        VARCHAR(256),
-  nombre_interno        VARCHAR(256),
-  tipo_campo    VARCHAR(64),
-  obligatorio   BOOLEAN DEFAULT FALSE,
+  id_campo       SERIAL NOT NULL,
+  id_catalogo    INT,
+  nombre         VARCHAR(256),
+  nombre_interno VARCHAR(256),
+  tipo_campo     VARCHAR(64),
+  obligatorio    BOOLEAN DEFAULT FALSE,
 
   CONSTRAINT PK_CAMPO
              PRIMARY KEY (id_campo),
