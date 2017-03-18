@@ -125,4 +125,10 @@
   </div>
 </div>
 
+<script>
+  // reloads page after downloading log data
+  $('input[type=submit]' ).click(function() {
+    setTimeout(function(){window.location.reload();},1000)
+  });
+</script>
 {{end}}
