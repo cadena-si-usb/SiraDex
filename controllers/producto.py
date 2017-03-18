@@ -631,7 +631,7 @@ def descargar_documento():
 
     if not request.args:
         raise HTTP(404)
-    query = "SELECT valor_campo FROM PRODUCTO_TIENE_CAMPO WHERE id_campo="+request.args(0)+";"
+    query = "SELECT valor_campo FROM PRODUCTO_TIENE_CAMPO WHERE id_campo="+request.args(0)+" AND id_prod ="+request.args(1)+";"
     documento = db.executesql(query)
 
     pdf = os.path.join(request.folder,'uploads',documento[0][0])
@@ -785,8 +785,12 @@ def get_documento():
 
     if not request.args:
         raise HTTP(404)
-    query = "SELECT valor_campo FROM PRODUCTO_TIENE_CAMPO WHERE id_campo    ="+request.args(0)+";"
+    print "request:"
+    print request.args
+    query = "SELECT valor_campo FROM PRODUCTO_TIENE_CAMPO WHERE id_campo    ="+request.args(0)+" AND id_prod ="+request.args(1)+";"
     documento = db.executesql(query)
+    print query
+    print documento
 
     pdf = os.path.join(request.folder,'uploads',documento[0][0])
     data = open(pdf,"rb").read()

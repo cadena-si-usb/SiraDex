@@ -118,6 +118,7 @@ def ver_producto():
     #Agregamos los otros elementos de los campos
     campos = db(db.PRODUCTO_TIENE_CAMPO.id_prod == producto.id_producto).select()
 
+    hayDoc = False
     elementos = []
     documento= []
     for campo_valor in campos:
@@ -132,10 +133,14 @@ def ver_producto():
             pass
 
         if campo.tipo_campo=="Documento":
-            temp=[str(campo.id_campo), nombre_campo ]
+            hayDoc = True
+            temp=[campo.id_campo,campo_valor.valor_campo, nombre_campo,campo_valor.id_prod]
             documento += [temp]
         else :
-             elementos.append(Field(nombre_campo, default=campo_valor.valor_campo, writable=False))
+            if campo_valor.valor_campo!='':
+                elementos.append(Field(nombre_campo, default=campo_valor.valor_campo, writable=False))
+            else:
+                elementos.append(Field(nombre_campo, default="-- Información no proporcionada --", writable=False))
 
     if len(elementos) != 0:
         form_datos = SQLFORM.factory(*elementos, readonly=True)
@@ -188,29 +193,36 @@ def ver_producto():
         hayErrores = formulario_validar.errors
 
     if formulario_rechazar.accepts(request.vars, session, formname="formulario_rechazar"):
+        print "se rechazo"
+        print request.vars
         id_producto = request.vars.id_producto_r
         razon = request.vars.razon
 
         ## Enviamos notificacion de rechazo
         # obtenemos el producto a rehazar
         producto =  db(db.PRODUCTO.id_producto == id_producto).select().first()
-
+        print producto
         # obtenemos el usuario que realizo el producto
         usuario = db(db.USUARIO.usbid == producto.usbid_usu_creador).select().first()
 
+        print usuario
         # parseamos los datos para la notificacion
         datos_usuario = {'nombres' : usuario.nombres + ' ' + usuario.apellidos}
+        datos_usuario['correo_inst'] = usuario.correo_inst
+        datos_usuario['correo_alter'] = None
         if usuario.correo_alter != None:
-            datos_usuario['email'] = usuario.correo_alter
-        else:
-            datos_usuario['email'] = usuario.correo_inst
+            if usuario.correo_alter != "":
+                datos_usuario['correo_alter'] = usuario.correo_alter
+
 
         producto = {'nombre': producto.nombre}
 
         # enviamos la notificacion
+        print "enviar correo"
         enviar_correo_rechazo(mail, datos_usuario, producto, razon)
-
+        print "se envio el correo"
         # rechazamos efectimavamente el producto.
+        print "llamando a rechazar"
         rechazar(id_producto)
 
     ## Fin formulario de rechazo
@@ -300,7 +312,7 @@ def validar(id_producto):
 
 # Metodo para rechazar una producto
 def rechazar(id_producto):
-
+    print "entre a rechazar"
     admin = get_tipo_usuario(session)
 
     if (admin==0):
@@ -309,6 +321,7 @@ def rechazar(id_producto):
     db(db.PRODUCTO.id_producto == id_producto).update(estado='No Validado')
     insertar_log(db, 'VALIDACION', datetime.datetime.now(), request.client, 'PRODUCTO CON ID ' + str(id_producto) + ' NO VALIDADO', session.usuario['usbid'])
     session.message = 'Producto rechazado'
+    print "\n\n\nA redirigir en rechazar"
     redirect(URL('gestionar_validacion.html'))
 
 def graficaPie(productos):
