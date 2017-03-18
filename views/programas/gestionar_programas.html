@@ -47,8 +47,7 @@
                 { "orderable": false },
                 { "orderable": false },
                 null,
-                { "orderable": false },
-                { "orderable": false }
+                null
             ]
         };
         
@@ -115,7 +114,6 @@
                 <tr>
                     <th class="hColumns text-center">Título</th>
                     <th class="hColumns text-center">Descripción</th>
-                    <th class="hColumns text-center"></th>
                     <th class="hColumns text-center">Abreviación</th>
                     {{ if admin in [1,2]: }}
                       <th class="hColumns text-center">Editar</th>
@@ -141,12 +139,6 @@
                             <td class="hColumns text-center center-vertically descripcion_programa">
                                 <span class="hideContent">{{=programa.descripcion}}</span>
                                 <span class="restContent" style="display:none;"></span>
-                            </td>
-
-                            <td class="hColumns text-center center-vertically" > 
-                                <button class="glyphicon glyphicon-eye-open showMoreContent"
-                                        style="border:none;background:none;">
-                                </button>
                             </td>
 
                             <td class="hColumns text-center center-vertically">

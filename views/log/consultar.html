@@ -24,6 +24,45 @@
     <script src="{{=URL('static','js/list.js')}}"></script>
     <script src="{{=URL('static','js/log.js')}}"></script>
 
+    <!-- Custom DataTables plugin -->
+    <script src="{{=URL('static','DataTables/datatables.js')}}"></script>
+    <link rel="stylesheet" type="text/css" href="{{=URL('static','DataTables/datatables.css')}}">
+
+    <script type="text/javascript">
+    $(document).ready(function() {
+      alert("entre");
+        $('#tabla_materiales').DataTable( {
+            responsive: true,
+            "language": {
+                search:         "Buscar:",
+                searchPlaceholder: "",
+                lengthMenu:     "Mostrar _MENU_ entradas",
+                info:           "Mostrando _START_ a _END_ de _TOTAL_ entradas.",
+                infoEmpty:      "Mostrando 0 a 0 de 0 entradas",
+                infoFiltered:   "(filtradas de _MAX_ entradas en total)",
+                infoPostFix:    "",
+                loadingRecords: "Carga en curso...",
+                zeroRecords:    "No se encontraron elementos que concuerden con su busqueda",
+                emptyTable:     "No hay informacion disponible en la tabla",
+                processing:     "Procesando...",
+                paginate: {
+                    first:      "Primero",
+                    previous:   "Anterior",
+                    next:       "Siguiente",
+                    last:       "Ultimo"
+                },
+                aria: {
+                    sortAscending:  ": Se ordenan las columnas por orden creciente",
+                    sortDescending: ": Se ordenan las columnas por orden decreciente"
+                }
+            }
+        } );
+    } );
+</script>
+
+
+
+
     <div id="log">
       <div class="row">
         <div class="col-sm-6">
