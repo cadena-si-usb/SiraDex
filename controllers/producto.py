@@ -378,17 +378,17 @@ def modificar():
 
         else:
             no_obl[nombre] = tipo_campo
-            if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',requires=IS_EMPTY_OR(IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha inválida, debe ser: AAA-MM-DD'))))
-            elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string'))
-            elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI inválida, debe ser: XX.XXX.XXX'))))
+            if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',label=rows_campo.nombre,requires=IS_EMPTY_OR(IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha inválida, debe ser: AAA-MM-DD'))))
+            elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string',label=rows_campo.nombre))
+            elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',label=rows_campo.nombre,requires=IS_EMPTY_OR(IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI inválida, debe ser: XX.XXX.XXX'))))
             elif tipo_campo in ['Documento']:
                 temp= [str(rows_campo.id_campo), nombre]
                 documento+= temp
-                fields.append(Field(nombre,'upload',requires=IS_EMPTY_OR(IS_UPLOAD_FILENAME()),uploadfolder=os.path.join(request.folder,'uploads')))
-            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Teléfeno inválido, debe ser: (0xxx)xxx-xxxx'))))
-            elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807))))
-            elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',requires=IS_EMPTY_OR(IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El número debe ser de la forma X.X, donde X está entre -9223372036854775800 y 9223372036854775807'))))
-            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'text'))
+                fields.append(Field(nombre,'upload',label=rows_campo.nombre,requires=IS_EMPTY_OR(IS_UPLOAD_FILENAME()),uploadfolder=os.path.join(request.folder,'uploads')))
+            elif tipo_campo in ['Telefono']:          fields.append(Field(nombre,'string',label=rows_campo.nombre,requires=IS_EMPTY_OR(IS_MATCH('\(0\d{3}\)\d{3}-\d{4}$', error_message='Teléfeno inválido, debe ser: (0xxx)xxx-xxxx'))))
+            elif tipo_campo in ['Cantidad Entera']:   fields.append(Field(nombre,'string',label=rows_campo.nombre,requires=IS_EMPTY_OR(IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807))))
+            elif tipo_campo in ['Cantidad Decimal']:  fields.append(Field(nombre,'string',label=rows_campo.nombre,requires=IS_EMPTY_OR(IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El número debe ser de la forma X.X, donde X está entre -9223372036854775800 y 9223372036854775807'))))
+            elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'text',label=rows_campo.nombre))
 
         valores[nombre]=row.valor_campo
     print(documento)
