@@ -21,19 +21,21 @@
     </table>
 
     <br>
+
+{{ if admin in [1,2]: }}
     <h3> Campos </h3>
 
 <div class="row">
 
     <div class="col-sm-5 col-sm-push-9" style="margin-top:10px;margin-left:50px">
-      {{ if admin in [1,2]: }}
+
         <button type="button" class="btn btn-default green btn-border"
                 data-target="#modalAgregarCampo"
                 data-toggle="modal">
           <span class="glyphicon glyphicon-plus-sign"></span>  Agregar Campo
         </button>
         <br></br>
-      {{pass}}
+
     </div>
 
     <div class="container-fluid card">
@@ -89,6 +91,7 @@
           </table>
       </div>
 </div>
+{{pass}}
 
 
 <!-- Modal Editar-->

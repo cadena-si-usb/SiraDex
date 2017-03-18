@@ -11,7 +11,8 @@ que existen en el sistema.
 '''
 
 def vGestionarCatalogos():
-
+    message=session.message
+    session.message=""
     admin = get_tipo_usuario(session)
 
     if (admin==0):
@@ -101,7 +102,7 @@ def vGestionarCatalogos():
 
         # Si el nombre no esta repetido, modificamos el campo
         if nombre_repetido:
-            session.message = 'Ya existe un campo llamado "' + nombre_nuevo + '" en el catálogo.'
+            message = 'Ya existe un campo llamado "' + nombre_nuevo + '" en el catálogo.'
         else:
             #Actualizamos el campo
             db.CAMPO_CATALOGO[id_campo] = dict(nombre      = nombre_nuevo,
@@ -145,7 +146,8 @@ def vGestionarCatalogos():
                 formulario_editar_campo     = formulario_editar_campo,
                 formulario_cambiar_nombre   = formulario_cambiar_nombre,
                 hayErroresAgregar=formulario_agregar_catalogo.errors,
-                admin = admin)
+                admin = admin,
+                message=message)
 
 '''
 Funcion que se encarga de agregar un catalogo a la

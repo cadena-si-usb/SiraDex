@@ -204,7 +204,7 @@ def ver_producto():
 
 # Vista de validaciones
 def gestionar_validacion():
-
+    session.message=""
     admin = get_tipo_usuario(session)
 
     if (admin==0):

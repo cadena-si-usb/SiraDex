@@ -28,7 +28,11 @@ $(document).ready(function(){
       $("#agregarProgBtn").click();
       $(".error_wrapper").css('color','red');
   }
-
+  //$("#modalAgregar input.form-control").val("");
+  $('#agregarProgBtn').on('click', function(e){
+    $("#modalAgregar input.form-control").val("");
+  });
+  
   // Pasamos los argumentos para editar el catalogo.
   $('#ModalEditarPrograma').on('show.bs.modal', function(e){
       var id_programa = $(e.relatedTarget).data('id-programa');
