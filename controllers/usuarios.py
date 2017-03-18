@@ -69,7 +69,7 @@ def gestionar():
     return dict(form_editar=form_editar, hayErrores=hayErrores, formulario_contactar=formulario_contactar,usuarios = aux,message = message, admin=get_tipo_usuario(session))
 
 def agregar():
-
+    # (0212)363-7827
     admin = get_tipo_usuario(session)
 
     if (admin==0 or admin==2):
@@ -80,18 +80,17 @@ def agregar():
         Field('usbid',
                requires=[IS_NOT_EMPTY(error_message='El USBID no puede quedar vacío.')]),
         Field('telefono',
-               requires=[IS_NOT_EMPTY(error_message='El teléfono no puede quedar vacío.'),
-                         IS_LENGTH(20),
-                         IS_MATCH('^[0-9]+$', error_message="Use sólo números.")]),
+               requires=[IS_LENGTH(20),
+                         IS_MATCH('^\(0[0-9]{3}\)[0-9]{3}-[0-9]{4}$|^$', error_message="El formato es inválido")]),
         Field('correo_alter',
-               requires=[IS_NOT_EMPTY(error_message='El correo no puede quedar vacío.'),
-                         IS_MATCH('^[.A-z0-9À-ÿŸ\s-]+@[.A-z0-9À-ÿŸ\s-]+$', error_message="Use sólo letras, el caracter '-' y números.")]),
+               requires=[IS_MATCH('^[.A-z0-9À-ÿŸ\s-]+@[.A-z0-9À-ÿŸ\s-]+\.[.A-z0-9À-ÿŸ\s-]+$|^$',error_message="El formato inválido")]),
         Field('tipo',
                requires=IS_IN_SET({'Usuario':'Usuario', 'DEX':'DEX', 'Administrador':'Administrador', 'Bloqueado':'Bloqueado'},
                                                     zero=T('Seleccione...'),
                                                     error_message = 'Debe elegir un tipo de usuario')),
         submit_button='Agregar',
-        labels={'usbid':'USBID','telefono':'Teléfono', 'correo_alter':'Correo alternativo','tipo':'Tipo'}
+        labels={'usbid':'USBID (*)','telefono':'Teléfono', 'correo_alter':'Correo alternativo','tipo':'Tipo (*)'},
+        col3={'telefono':'Ej: (0212)123-1234','correo_alter':'Ej: ejemplo@gmail.com'}
         )
 
     """
