@@ -11,7 +11,7 @@
 <script src="{{=URL('static','js/catalogo.js')}}"></script>
 
 <!-- Nav tabs -->
-{{=session.message if session.message else ""}}
+{{=session.message if response.flash else ""}}
 <div class="row">
   
     <div class="col-sm-5 col-sm-push-9" style="margin-top:10px; ; margin-left:30px">
