@@ -11,6 +11,7 @@ que existen en el sistema.
 '''
 
 def vGestionarCatalogos():
+    message=session.message
     session.message=""
     admin = get_tipo_usuario(session)
 
@@ -51,7 +52,7 @@ def vGestionarCatalogos():
         redirect(URL('vGestionarCatalogos',args=[id_catalogo]))
     # En caso de que el formulario no sea aceptado
     else:
-        session.message = 'Error en el Formulario de Agregar Catálogo'
+        message = 'Error en el Formulario de Agregar Catálogo'
 
     #Formulario para agregar un campo a un catalogo
     if formulario_agregar_campo.process(formname = "formulario_agregar_campo").accepted:
@@ -66,19 +67,19 @@ def vGestionarCatalogos():
 
         # Si el nombre no esta repetido, lo eliminamos.
         if nombre_repetido:
-            session.message = 'Ya existe el campo'
+            message = 'Ya existe el campo'
         else:
             db.CAMPO_CATALOGO.insert(id_catalogo = id_catalogo,
                                      nombre =  nombre_campo_nuevo,
                                      tipo_campo = request.vars.tipo_campo,
                                      obligatorio = request.vars.obligatorio)
-            session.message = ""
+            message = ""
         # Redirijo a la misma pagina para seguir agregando campos
         insertar_log(db, 'CAMPO', datetime.datetime.now(), request.client, 'NUEVO CAMPO '+ nombre_campo_nuevo.upper() + ' PARA CATALOGO CON ID '+ id_catalogo, session.usuario['usbid'])
         redirect(URL('vGestionarCatalogos',args=[id_catalogo]))
     # En caso de que el formulario no sea aceptado
     else:
-        session.message = 'Error en el Formulario de Agregar Campo'
+        message = 'Error en el Formulario de Agregar Campo'
 
     if formulario_editar_campo.process(formname = "formulario_editar_campo").accepted:
         nombre_nuevo = request.vars.nombre
@@ -101,7 +102,7 @@ def vGestionarCatalogos():
 
         # Si el nombre no esta repetido, modificamos el campo
         if nombre_repetido:
-            session.message = 'Ya existe un campo llamado "' + nombre_nuevo + '" en el catálogo.'
+            message = 'Ya existe un campo llamado "' + nombre_nuevo + '" en el catálogo.'
         else:
             #Actualizamos el campo
             db.CAMPO_CATALOGO[id_campo] = dict(nombre      = nombre_nuevo,
@@ -112,7 +113,7 @@ def vGestionarCatalogos():
         # Redirijo a la misma pagina para seguir agregando campos
         redirect(URL('vGestionarCatalogos',args=[id_catalogo]))
     else:
-        session.message = 'Error en el Formulario de Editar Campo'
+        message = 'Error en el Formulario de Editar Campo'
 
     if formulario_cambiar_nombre.process(formname = "formulario_cambiar_nombre").accepted:
         nombre_nuevo = request.vars.nombre
@@ -123,7 +124,7 @@ def vGestionarCatalogos():
         insertar_log(db, 'CATALOGO', datetime.datetime.now(), request.client, 'CATALOGO CON ID '+ str(id_catalogo) + ' RENOMBRADO A ' + nombre_nuevo.upper(), session.usuario['usbid'])
         redirect(URL('vGestionarCatalogos',args=[id_catalogo]))
     else:
-        session.message = 'Error en el Formulario de Editar Nombre Catálogo'
+        message = 'Error en el Formulario de Editar Nombre Catálogo'
 
 
     formulario_agregar_catalogo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
@@ -145,7 +146,8 @@ def vGestionarCatalogos():
                 formulario_editar_campo     = formulario_editar_campo,
                 formulario_cambiar_nombre   = formulario_cambiar_nombre,
                 hayErroresAgregar=formulario_agregar_catalogo.errors,
-                admin = admin)
+                admin = admin,
+                message=message)
 
 '''
 Funcion que se encarga de agregar un catalogo a la
