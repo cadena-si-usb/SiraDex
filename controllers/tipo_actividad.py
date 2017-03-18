@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from funciones_siradex import get_tipo_usuario,convertFromNumber,convertToNumber
+from funciones_siradex import get_tipo_usuario,convertToNumber
 from log import insertar_log
 
 #. --------------------------------------------------------------------------- .
