@@ -246,14 +246,13 @@ def EditarPerfil():
 
         forma=SQLFORM.factory(
             Field('telefono',
-                   requires=[IS_NOT_EMPTY(error_message='El teléfono no puede quedar vacío.'),
-                             IS_LENGTH(20),
-                             IS_MATCH('^[0-9]+$', error_message="Use sólo números.")]),
+                   requires=[IS_LENGTH(20),
+                             IS_MATCH('^\(0[0-9]{3}\)[0-9]{3}-[0-9]{4}$|^$', error_message="Formato inválido")]),
             Field('correo_alter',
-                   requires=[IS_NOT_EMPTY(error_message='El correo no puede quedar vacío.'),
-                             IS_MATCH('^[.A-z0-9À-ÿŸ\s-]+@[.A-z0-9À-ÿŸ\s-]+$', error_message="Este correo no es válido.")]),
+                   requires=[IS_MATCH('^[.A-z0-9À-ÿŸ\s-]+@[.A-z0-9À-ÿŸ\s-]+$|^$', error_message="Formato inválido")]),
             submit_button='Agregar',
-            labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'}
+            labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'},
+            col3={'telefono':'Ej: (0212)123-1234','correo_alter':'Ej: ejemplo@gmail.com'}
             )
 
         forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
