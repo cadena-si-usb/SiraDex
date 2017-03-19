@@ -230,8 +230,19 @@
 			$('#no_table_c0mpr0bant3_1__row').before(html);
 			for (i = 1; i <= cantidad_comprobantes; i++) {
 		    	$('#no_table_c0mpr0bant3_'+i+'__row').addClass("hidden");
+		    	$('#no_table_c0mpr0bant3_'+i+'__row').find(".bootstrap-filestyle").addClass("col-sm-11").css("float","left").after('<div class="col-sm-1"> <a class="remove-tag-comprobante" data-comprobante="'+i+'" onClick = "">\
+					                                              <span class="glyphicon glyphicon-remove red"></span>\
+					                                    				</a></div>\
+					                                    			');
 		    	$('#no_table_d3scr1pc10n_comprobante_'+i+'__row').addClass("hidden");
 			}
+
+			$('.remove-tag-comprobante').click(function(e){
+					var comprobante = $(this).data('comprobante');
+					console.log($('#no_table_c0mpr0bant3_'+ comprobante).val())
+					$('#no_table_c0mpr0bant3_'+ comprobante).val('');
+					$('#no_table_c0mpr0bant3_'+ comprobante).closest(":file").filestyle('clear');
+			});
 
 			if (comprobante_mostrado==cantidad_comprobantes){
 				$('#agregar_comprobante').addClass("hidden");
@@ -242,7 +253,7 @@
 
 					if($('#no_table_c0mpr0bant3_'+agregados_aqui).val()=="" ){
 						if (!error_comprobante){
-							$('#no_table_c0mpr0bant3_'+agregados_aqui).parent().append('<span id="error_archivo_'+agregados_aqui+'" class="help-block error">Primero debe cargar el comprobante</span>');
+							$('#no_table_c0mpr0bant3_'+agregados_aqui).parent().append('<div class="col-sm-12"><span id="error_archivo_'+agregados_aqui+'" class="help-block error">Primero debe cargar el comprobante</span></div>');
 							error_comprobante = 1;
 						}
 					}
