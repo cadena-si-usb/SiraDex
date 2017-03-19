@@ -228,6 +228,7 @@ db.define_table('CAMPO',
     Field('id_campo', type='id'),
     Field('id_catalogo', db.CATALOGO.id_catalogo),
     Field('nombre', type='string', length=256),
+    Field('nombre_interno', type='string', length=256),
     Field('tipo_campo',type='string', length=64,
            requires = [IS_IN_SET(tipo_campos)],
            widget = SQLFORM.widgets.options.widget),
@@ -269,6 +270,15 @@ db.define_table('LOG_SIRADEX',
     primarykey=['id_log'],
     migrate=False
 );
+
+"""
+db.define_table('NOMBRE_CAMPO_ADICIONAL',
+    Field('nombre_interno',type='string'),
+    Field('nombre_mostrado',type="string"),
+    primarykey=['id_campo_adicional'],
+    migrate=False
+)
+"""
 
 #Nota: Preguntarle a los desarrolladores sobre la necesidad de comprobaciones
 #con notnull=TRUE, unique=TRUE aqui o NOT NULL en schema, de modo que pueda modificarse

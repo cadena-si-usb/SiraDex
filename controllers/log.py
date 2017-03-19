@@ -72,7 +72,6 @@ def download():
 
     #Excecute query
     rows = db.executesql(query, fields=db.LOG_SIRADEX)
-    print len(rows)
 
     #convert query to csv
     tempfile = StringIO.StringIO()
@@ -122,7 +121,6 @@ def graficas():
     for i in range(84,0,-7):
         date  = datetime.date.today() - datetime.timedelta(days=i)
         date2 = datetime.date.today() - datetime.timedelta(days=i - 7)
-        print date
         query = "SELECT * FROM LOG_SIRADEX WHERE accion = 'LOGIN' AND descripcion = 'LOGIN SATISFACTORIO' AND accion_fecha BETWEEN '" + str(date) + "' AND '" + str(date2) + "';"
         rows = db.executesql(query, fields=db.LOG_SIRADEX)
         login_last_trim.append([sem, len(rows)])
@@ -142,7 +140,6 @@ def graficas():
     for i in range(84,0,-7):
         date  = datetime.date.today() - datetime.timedelta(days=i)
         date2 = datetime.date.today() - datetime.timedelta(days=i - 7)
-        print date
         query = "SELECT * FROM LOG_SIRADEX WHERE accion = 'PRODUCTO' AND descripcion ~ 'NUEVO PRODUCTO' AND accion_fecha BETWEEN '" + str(date) + "' AND '" + str(date2) + "';"
         rows = db.executesql(query, fields=db.LOG_SIRADEX)
         prod_last_trim.append([sem, len(rows)])
