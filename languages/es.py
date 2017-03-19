@@ -490,6 +490,7 @@
 'Upload existing application': 'Suba esta aplicación',
 'upload file:': 'suba archivo:',
 'Use (...)&(...) for AND, (...)|(...) for OR, and ~(...)  for NOT to build more complex queries.': 'Use (...)&(...) para AND, (...)|(...) para OR, y ~(...) para NOT, para crear consultas más complejas.',
+'Use como máximo diez caracteres': 'Use como máximo diez caracteres',
 'Use solo letras, sin numeros ni caracteres especiales.': 'Use solo letras, sin numeros ni caracteres especiales.',
 'Use solo letras, sin números ni caracteres especiales.': 'Use solo letras, sin números ni caracteres especiales.',
 'Use sólo letras, sin números ni caracteres especiales.': 'Use sólo letras, sin números ni caracteres especiales.',
