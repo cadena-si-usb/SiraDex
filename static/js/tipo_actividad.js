@@ -29,9 +29,9 @@ $(document).ready(function(){
     $(".formularioTipo").hide();
   }
 
-    // Se muestra valor por defecto del programa desde el cual se ve la vista 
+    // Se muestra valor por defecto del programa desde el cual se ve la vista
   $('#myModal').on('show.bs.modal', function(e){
-    
+
       if (($("#identificador_de_programa").length > 0 ) &&
            $("#identificador_de_programa").attr("data-programa") != "None"){
         var id_programa = $("#identificador_de_programa").attr("data-programa");
@@ -97,6 +97,18 @@ $(document).ready(function(){
       $(".error_wrapper").css('color','red');
   }
 
+  // Para limpiar el modal de agregar cuando se cierra.
+  $("#myModal").on("hidden.bs.modal", function(){
+    $("#no_table_Nombre").val("");
+    $("#no_table_Codigo").val("");
+    $("#no_table_Descripcion").val("");
+    $(".error").html("");
+  });
+
+  // Para limpiar el modal de editar cuando se cierra.
+  $("#myModalEditar").on("hidden.bs.modal", function(){
+    $(".error").html("");
+  });
 
   // -.........................................................................-
   // Para realizar la búsqueda.
@@ -125,7 +137,7 @@ $(document).ready(function(){
       var restTitulo = splitTitulo[0];
       amountText = splitTitulo[0].length;
       i = 1;
-      
+
       while (true){
         if (splitTitulo.length >= i && amountText + splitTitulo[i].length + 1 < 18){
             restTitulo += " " + splitTitulo[i];
@@ -221,6 +233,6 @@ $(document).ready(function(){
       $(this).closest('tr').find(".descripcion_tipo").find(".restContent").hide();
     }
   });
-  
-  
+
+
 });
