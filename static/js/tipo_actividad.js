@@ -161,13 +161,14 @@ $(document).ready(function(){
     // Si la descripción es menor a 46 se muestra sin modificación.
     // Si es mayor a 46 entonces se hace el split y se muestra restContent y
     // result dependiendo si se quiere ver más o si no.
-    if (descripcionLong < 36){
+    if (descripcionLong < 46){
       $(this).find(".showMoreContent").hide();
     }else{
       var restContent = '';
       var result = '';
 
       var splitDescription = descripcion.split(" ");
+      console.log (splitDescription)
       amountText = 0;
       i = 1;
 
@@ -176,7 +177,7 @@ $(document).ready(function(){
       amountText += splitDescription[0].length;
 
       while (true){
-        if (splitDescription.length >= i && amountText + splitDescription[i].length + 1 < 30){
+        if (splitDescription.length >= i && amountText + splitDescription[i].length + 1 < 58){
             restContent += " " + splitDescription[i];
             amountText += splitDescription[i].length;
             i++;
@@ -185,7 +186,6 @@ $(document).ready(function(){
           break;
         }
       }
-
 
       amountText = 0;
 
@@ -196,14 +196,13 @@ $(document).ready(function(){
         i += 1;
 
         while (true){
-          if (splitDescription[i] && splitDescription.length >= i && amountText + splitDescription[i].length + 1 < 30){
+          if (splitDescription.length >= i && amountText + splitDescription[i].length + 1 < 58){
               result += " " + splitDescription[i];
               amountText += splitDescription[i].length;
               i++;
           }else{
             result += '\n';
             amountText = 0;
-            break;
           }
 
           if (splitDescription.length <= i)
