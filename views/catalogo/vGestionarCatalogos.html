@@ -13,7 +13,7 @@
 <!-- Nav tabs -->
 {{=message}}
 <div class="row">
-  
+
     <div class="col-sm-5 col-sm-push-9" style="margin-top:10px; ; margin-left:30px">
         <button type="button" id="agregarCatalogoBtn" class="btn btn-default green btn-border" data-toggle="modal" data-target="#modalAgregarCatalogo">
             <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Catálogo
@@ -110,9 +110,10 @@
                         </button>
                     </div>
                     <div class="col-sm-2">
-                      <button type="button" class="btn btn-default btn-block renombrar btn-border"
+                      <button type="button" id="renombrarNombreBtn" class="btn btn-default btn-block renombrar btn-border"
                               data-toggle="modal" data-target="#modalCambiarNombre"
                               data-id-catalogo = "{{=catalogo[0].id}}"
+                              data-hayErroresEditarNombre="{{=hayErroresEditarNombre}}"
                               data-nombre = "{{=catalogo[0].nombre}}">
                           <span class="glyphicon glyphicon-edit " aria-hidden="true"></span> Renombrar
                       </button>
