@@ -86,7 +86,7 @@ $(document).ready(function () {
 	  });
 
 	var maxLongNombre  = 50;    // Longitud máxima que tendrá el campo nombre.
-	var maxLongDescrip = 2048;   // Longitud máxima que tendrá el campo descripción.
+	var maxLongDescrip = 250;   // Longitud máxima que tendrá el campo descripción.
 	var maxLongColaboradores = 200;
 	var comprobante_mostrado = 0;
 	var error_comprobante = 0;
@@ -100,7 +100,7 @@ $(document).ready(function () {
 
 	$("#no_table_fecha_realizacion").siblings(".help-block").html( "El formato para la fecha es de AAAA-MM-DD");
 
-	
+
 
 	$(".Cedula").click(function(){
 
@@ -119,7 +119,7 @@ $(document).ready(function () {
 	textoRestante1(maxLongDescrip, $("#no_table_descripcion"));
 
 	textoRestante1(maxLongNombre, $("#no_table_lugar"));
-	
+
 	textoRestante1(maxLongColaboradores, $("#no_table_colaboradores"));
 
 
@@ -277,7 +277,7 @@ $(document).ready(function () {
 		    $(this).val('');
 		    $(this).filestyle('clear');
 		}
-		
+
 		if (this.files[0].size > 2097152){
 			var text = 'Sólo se permiten archivos de hasta 2 MB, el archivo que se cargo es de '+((this.files[0].size)/1024/1024).toFixed(1)+' MB';
 	        alert(text);
