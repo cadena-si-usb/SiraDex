@@ -349,7 +349,13 @@ def ver_tipo_actividad():
 
     tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
     programa = db(db.PROGRAMA.id_programa == tipo.id_programa).select(db.PROGRAMA.ALL).first()
-
+    
+    # Se determina si hay productos con este tipo de actividad
+    # De haber, entonces no se puede editar porque se alteran los demas
+    # productos
+    editable = not db((db.PRODUCTO_TIENE_CAMPO.id_campo == db.ACT_POSEE_CAMPO.id_campo) & \
+                  (db.ACT_POSEE_CAMPO.id_tipo_act == id_tipo)).select()
+    
     # Formularios para agregar campos o catalogos
     formSimple, formMultiple = formulario_agregar_tipo_campos()
     formulario_editar_campo  = formularioEditarCampo()
@@ -450,7 +456,8 @@ def ver_tipo_actividad():
                 admin = get_tipo_usuario(session), tipo_nombre = tipo.nombre,
                 programa_nombre = programa.nombre,
                 formSimple = formSimple, formMultiple = formMultiple,
-                formulario_editar_campo=formulario_editar_campo)
+                formulario_editar_campo=formulario_editar_campo,
+                editable = editable)
 
 def editar_tipo():
     session.message = ""
