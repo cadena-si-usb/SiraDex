@@ -98,7 +98,7 @@ $(document).ready(function(){
 
   // Para el show more y show less en descripción.
   // Y mostrar un titulo con longitud larga sin que se modifique la vista.
-  $("#TipoActividadTable tr").not(":eq(0)").each(function(){ //.not(":eq(0)") first is header of table
+  $("#ProgramaTable tr").not(":eq(0)").each(function(){ //.not(":eq(0)") first is header of table
     var titulo = $(this).find(".a-table").text();
     var tituloLong = titulo.length;
     var descripcion = $(this).find(".hideContent").text();

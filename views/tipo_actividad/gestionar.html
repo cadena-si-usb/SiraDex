@@ -36,6 +36,64 @@
     <script src="{{=URL('static','js/list.js')}}"></script>
     <script src="{{=URL('static','js/tipo_actividad.js')}}"></script>
 
+    <!-- Custom DataTables plugin -->
+    <script src="{{=URL('static','DataTables/datatables.js')}}"></script>
+    <link rel="stylesheet" type="text/css" href="{{=URL('static','DataTables/datatables.css')}}">
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+        var opciones = {
+          responsive: true,
+            "language": {
+                search:         "Buscar:",
+                searchPlaceholder: "",
+                lengthMenu:     "Mostrar _MENU_ entradas",
+                info:           "Mostrando _START_ a _END_ de _TOTAL_ entradas.",
+                infoEmpty:      "Mostrando 0 a 0 de 0 entradas",
+                infoFiltered:   "(filtradas de _MAX_ entradas en total)",
+                infoPostFix:    "",
+                loadingRecords: "Carga en curso...",
+                zeroRecords:    "No se encontraron programas en la busqueda",
+                emptyTable:     "No hay informacion disponible en la tabla",
+                processing:     "Procesando...",
+                paginate: {
+                    first:      "Primero",
+                    previous:   "Anterior",
+                    next:       "Siguiente",
+                    last:       "Ultimo"
+                },
+                aria: {
+                    sortAscending:  ": Se ordenan las columnas por orden creciente",
+                    sortDescending: ": Se ordenan las columnas por orden decreciente"
+                }
+            },
+             "columns": [
+                { "orderable": false },
+                { "orderable": false },
+                { "orderable": false },
+                null,
+                null,
+                null,
+                null
+            ]
+        };
+
+        var cantidadColumnas = $("#TipoActividadTable thead th").length;
+        columnas = [{}];
+        for (var i = 1; i<cantidadColumnas; i++){
+          columnas.push({ "orderable": false });
+        }
+
+        // Por si la tabla está vacía
+        // En este caso se debe verificar porque si len es cero abajo, entonces
+        // se ponen menos columnas en el tbody que en el theader
+        if ($("#TipoActividadTable tbody tr:first-child td").length ==  cantidadColumnas){
+          opciones["columns"] = columnas;
+          $("#TipoActividadTable").DataTable(opciones);
+        }
+      });
+    </script>
+
     <div id="tipo_actividad">
       <div class="row">
         <div class="col-sm-6">
@@ -88,10 +146,10 @@
     <div>
         <!-- Tabla con los tipos de actividad disponibles en el sistema -->
         <div class="container-fluid card">
-            <table id ="TipoActividadTable" class="table table-hover table-striped borde-tabla">
+            <table id ="TipoActividadTable" class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
                 <thead>
                     <tr>
-                        <th class="hColumns">Código</th>
+                        <th class="hColumns" >Código</th>
                         <th class="hColumns">Nombre</th>
                         <th class="hColumns">Descripción</th>
                         <th></th>
@@ -110,13 +168,13 @@
                     {{else:}}
                         {{for tipoActividad in listaTipoActividades: }}
                         <tr class="clickable">
-                            <td class="col-md-1 hColumns center-vertically">{{=tipoActividad.codigo}}</td>
-                            <td class="col-md-3 nombre_tipo hColumns center-vertically">
+                            <td class="hColumns center-vertically">{{=tipoActividad.codigo}}</td>
+                            <td class="hColumns center-vertically">
                                 <a class="a_table" href="{{=URL(c='tipo_actividad', f='ver_tipo_actividad',args=[tipoActividad.id_tipo])}}">
                                     {{=tipoActividad.nombre}}
                                 </a>
                             </td>
-                            <td class="descripcion_tipo hColumns center-vertically">
+                            <td class="hColumns center-vertically">
                                 <span class="hideContent">{{=tipoActividad.descripcion}}</span>
                                 <span class="restContent" style="display:none;"></span>
                             </td>
@@ -156,16 +214,9 @@
                             {{pass}}
                         </tr>
                         {{pass}}
-                        
-                        <ul class="pager">
-                            {{if page:}}
-                          <li><a href="{{=URL(args=[id_programa,page-1])}}">Anterior</a></li>
-                            {{pass}}
-                            {{if len(listaTipoActividades)>items_per_page:}}
-                          <li><a href="{{=URL(args=[id_programa,page+1])}}">Siguiente</a></li>
-                            {{pass}}
-                        </ul>
-                        
+
+
+
                     {{pass}}
                 </tbody>
             </table>
@@ -233,4 +284,3 @@
 
 
 {{end}}
-
