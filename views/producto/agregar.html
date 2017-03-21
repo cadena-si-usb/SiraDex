@@ -94,6 +94,7 @@ $(document).ready(function () {
 	var cantidad_comprobantes = 5;
 	var autores_agregados = 0
 	var cantidad_autores  = 5;
+	var maxDescripcion = 550;
 
 	// Muestra la cantidad de caracteres disponible en el textfield de nombre.
 
@@ -121,6 +122,10 @@ $(document).ready(function () {
 	textoRestante1(maxLongNombre, $("#no_table_lugar"));
 
 	textoRestante1(maxLongColaboradores, $("#no_table_colaboradores"));
+
+	for (i = 1; i <= cantidad_comprobantes; i++) {
+			textoRestante1(maxDescripcion, $('#no_table_d3scr1pc10n_comprobante_'+i));
+	}
 
 
 	$("#no_table_colaboradores").siblings(".help-block").after("<span class=help-block> Nombres completos y separados por comas de personas ajenas a la USB que colaboraron con usted.</span>");
