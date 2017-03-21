@@ -68,7 +68,7 @@
                 }
             },
              "columns": [
-                {"width" : "30%"},
+                { "orderable": false },
                 { "orderable": false },
                 { "orderable": false },
                 null,
@@ -77,13 +77,13 @@
                 null
             ]
         };
-        
+
         var cantidadColumnas = $("#TipoActividadTable thead th").length;
-        columnas = [{"width" : "30%"}];
+        columnas = [{}];
         for (var i = 1; i<cantidadColumnas; i++){
           columnas.push({ "orderable": false });
         }
-        
+
         // Por si la tabla está vacía
         // En este caso se debe verificar porque si len es cero abajo, entonces
         // se ponen menos columnas en el tbody que en el theader
@@ -149,9 +149,9 @@
             <table id ="TipoActividadTable" class="table table-hover table-striped borde-tabla">
                 <thead>
                     <tr>
-                        <th class="hColumns">Código</th>
+                        <th class="hColumns" style="max-width:75px !important!">Código</th>
                         <th class="hColumns">Nombre</th>
-                        <th class="hColumns">Descripción</th>
+                        <th class="hColumns" style="max-width:75px !important!">Descripción</th>
                         <th></th>
                         <th class="hColumns text-center">Crear Producto</th>
                         {{ if admin in [1,2]: }}
@@ -168,14 +168,14 @@
                     {{else:}}
                         {{for tipoActividad in listaTipoActividades: }}
                         <tr class="clickable">
-                            <td class="col-md-1 hColumns center-vertically">{{=tipoActividad.codigo}}</td>
-                            <td class="col-md-3 nombre_tipo hColumns center-vertically">
+                            <td class="hColumns center-vertically" style="max-width:75px!important!">{{=tipoActividad.codigo}}</td>
+                            <td class="hColumns center-vertically">
                                 <a class="a_table" href="{{=URL(c='tipo_actividad', f='ver_tipo_actividad',args=[tipoActividad.id_tipo])}}">
                                     {{=tipoActividad.nombre}}
                                 </a>
                             </td>
-                            <td class="descripcion_tipo hColumns center-vertically">
-                                <span class="hideContent">{{=tipoActividad.descripcion}}</span>
+                            <td class="hColumns center-vertically">
+                                <span class="hideContent" style="max-width:75px !important!">{{=tipoActividad.descripcion}}</span>
                                 <span class="restContent" style="display:none;"></span>
                             </td>
 
@@ -214,9 +214,9 @@
                             {{pass}}
                         </tr>
                         {{pass}}
-                        
-            
-                        
+
+
+
                     {{pass}}
                 </tbody>
             </table>
@@ -284,4 +284,3 @@
 
 
 {{end}}
-
