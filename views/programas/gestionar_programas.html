@@ -16,7 +16,7 @@
 
     <script type="text/javascript">
       $(document).ready(function(){
-        
+
         var opciones = {
           responsive: true,
             "language": {
@@ -50,21 +50,21 @@
                 null
             ]
         };
-        
+
         var cantidadColumnas = $("#ProgramaTable thead th").length;
         columnas = [{"width" : "30%"}];
         for (var i = 1; i<cantidadColumnas; i++){
           columnas.push({ "orderable": false });
         }
-        
+
         // Por si la tabla está vacía
         // En este caso se debe verificar porque si len es cero abajo, entonces
         // se ponen menos columnas en el tbody que en el theader
         if ($("#ProgramaTable tbody tr:first-child td").length ==  cantidadColumnas){
           opciones["columns"] = columnas;
-          $("#ProgramaTable").DataTable();
+          $("#ProgramaTable").DataTable(opciones);
         }
-        
+
       });
     </script>
 
@@ -109,7 +109,7 @@
         </div>
       </div>
       <div class="container-fluid card">
-        <table id="ProgramaTable" class="table table-hover table-striped borde-tabla">
+        <table id="ProgramaTable" class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
             <thead>
                 <tr>
                     <th class="hColumns text-center">Título</th>
@@ -165,8 +165,8 @@
                             {{pass}}
                         </tr>
                     {{pass}}
-                    
-                    
+
+
                 {{pass}}
             </tbody>
         </table>
