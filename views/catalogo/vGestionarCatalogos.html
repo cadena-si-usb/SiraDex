@@ -103,7 +103,7 @@
               <div class="row">
                   <center>
                     <div class="col-sm-2 col-sm-offset-3">
-                        <button type="button" class="btn btn-default btn-block green btn-border"
+                        <button id="agregarCampoCatalogoBtn" type="button" class="btn btn-default btn-block green btn-border"
                                 data-toggle="modal" data-target="#modalAgregarCampo"
                                 data-id-catalogo="{{=catalogo[0].id}}">
                             <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Campo
@@ -168,10 +168,10 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <button type="button" id="agregarCatalogoBtn" class="close" data-dismiss="modal">&times;</button>
         <center><h4 class="modal-title"> Agregar Campo </h4><center>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" id="modalAgregarCampoCat" data-hayErroresAgregarCampo="{{=hayErroresAgregarCampo}}">
         {{=formulario_agregar_campo.custom.begin}}
 
           <div class="row">

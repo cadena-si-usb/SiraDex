@@ -5,6 +5,10 @@ $(document).ready(function(){
   var mensajeErrorAgregar = $("#modalAgregar").attr("data-hayErroresAgregar");
   mensajeErrorAgregar = mensajeErrorAgregar.replace(/<Storage |>/gi, "").replace(/'/g, '"')
 
+  // Obtengo la lista de errores generados por el formulario de agregar.
+  var mensajeErrorAgregarCampo = $("#modalAgregarCampoCat").attr("data-hayErroresAgregarCampo");
+  mensajeErrorAgregarCampo = mensajeErrorAgregarCampo.replace(/<Storage |>/gi, "").replace(/'/g, '"')
+
   // Obtengo la lista de errores generados por el formulario de editar nombre.
   var mensajeErrorEditarNombre = $("#renombrarNombreBtn").attr("data-hayErroresEditarNombre");
   mensajeErrorEditarNombre = mensajeErrorEditarNombre.replace(/<Storage |>/gi, "").replace(/'/g, '"')
@@ -33,6 +37,13 @@ $(document).ready(function(){
   if (mensajeErrorAgregar != '{}'){
       console.log("OK")
       $("#agregarCatalogoBtn").click();        // Abre el modal (da click en el botón agregar).
+      $(".error_wrapper").css('color','red');  // Se pone el error en rojo.
+  }
+
+  // Si hay errores en el formulario agregar...
+  if (mensajeErrorAgregarCampo != '{}'){
+      console.log("OK")
+      $("#agregarCampoCatalogoBtn").click();        // Abre el modal (da click en el botón agregar).
       $(".error_wrapper").css('color','red');  // Se pone el error en rojo.
   }
 
