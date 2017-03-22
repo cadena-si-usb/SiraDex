@@ -124,7 +124,8 @@ def ver_producto():
     documento= []
     for campo_valor in campos:
         campo = db(db.CAMPO.id_campo == campo_valor.id_campo).select().first()
-        nombre_campo = campo.nombre
+        nombre_campo = campo.nombre_interno
+        label_campo = campo.nombre
         nombre_campo = nombre_campo.replace(" ", "_")
 
         try :
@@ -135,13 +136,13 @@ def ver_producto():
 
         if campo.tipo_campo=="Documento":
             hayDoc = True
-            temp=[campo.id_campo,campo_valor.valor_campo, nombre_campo,campo_valor.id_prod]
+            temp=[campo.id_campo,campo_valor.valor_campo, nombre_campo,campo_valor.id_prod,label_campo]
             documento += [temp]
         else :
             if campo_valor.valor_campo!='' and  campo_valor.valor_campo!=None :
-                elementos.append(Field(nombre_campo, default=campo_valor.valor_campo, writable=False))
+                elementos.append(Field(nombre_campo, label=label_campo, default=campo_valor.valor_campo, writable=False))
             else:
-                elementos.append(Field(nombre_campo, default="-- Información no proporcionada --", writable=False))
+                elementos.append(Field(nombre_campo, label=label_campo, default="-- Información no proporcionada --", writable=False))
 
     if len(elementos) != 0:
         form_datos = SQLFORM.factory(*elementos, readonly=True)
