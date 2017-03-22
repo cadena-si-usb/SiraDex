@@ -102,7 +102,7 @@ def agregar():
     if not request.args:
         raise HTTP(404)
     tipo =  int(request.args(0))
-    
+
     campos_id = db(db.ACT_POSEE_CAMPO.id_tipo_act == tipo).select()
     tipo_actividad = db(db.TIPO_ACTIVIDAD.id_tipo == tipo).select().first()
 
@@ -157,6 +157,7 @@ def agregar():
             elif tipo_campo in ['Cantidad_Entera']:   fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_INT_IN_RANGE(-9223372036854775800, 9223372036854775807)]))
             elif tipo_campo in ['Cantidad_Decimal']:  fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DECIMAL_IN_RANGE(-9223372036854775800, 9223372036854775807, dot=".",error_message='El numero debe ser de la forma X.X, donde X esta entre -9223372036854775800 y 9223372036854775807')]))
             elif tipo_campo in ['Texto_Largo']:       fields.append(Field(nombre,'text',label=rows_campo.nombre+" (*)",requires=IS_NOT_EMPTY()))
+
 
         else:
             no_obl[nombre] = tipo_campo
@@ -265,7 +266,7 @@ def agregar():
 
 def modificar():
     admin = get_tipo_usuario(session)
-    
+
     if not request.args:
         raise HTTP(404)
     id_producto = int(request.args(0))
@@ -283,14 +284,14 @@ def modificar():
 
     # Obtenemos los productos para mostrarlos en el html
     producto = db(db.PRODUCTO.id_producto==id_producto).select().first()
-    
+
     # Si el producto no existe
     if not producto :
         redirect(URL('gestionar'))
         # Si no soy el creador del producto
     elif producto["usbid_usu_creador"] != session.usuario["usbid"] :
         redirect(URL('gestionar'))
-    
+
     query = "SELECT id_comprobante, descripcion FROM COMPROBANTE WHERE producto="+str(id_producto)+";"
     comprobantes = db.executesql(query)
 
@@ -356,9 +357,8 @@ def modificar():
         obligatorio = rows_campo.obligatorio
         tipo_campo = rows_campo.tipo_campo
 
-
         if obligatorio:
-            obl[nombre]= tipo_campo
+            obl[nombre.replace(" ", "_")]= tipo_campo
             if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha inválida, debe ser: AAA-MM-DD')]))
             elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto')]))
             elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',label=rows_campo.nombre+" (*)",requires=[IS_NOT_EMPTY(),IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI inválida, debe ser: XX.XXX.XXX')]))
@@ -373,7 +373,7 @@ def modificar():
             elif tipo_campo in ['Texto Largo']:       fields.append(Field(nombre,'text',label=rows_campo.nombre+" (*)",requires=IS_NOT_EMPTY()))
 
         else:
-            no_obl[nombre] = tipo_campo
+            no_obl[nombre.replace(" ", "_")] = tipo_campo
             if tipo_campo in   ['Fecha']:             fields.append(Field(nombre,'date',label=rows_campo.nombre,requires=IS_EMPTY_OR(IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha inválida, debe ser: AAA-MM-DD'))))
             elif tipo_campo in ['Texto Corto']:       fields.append(Field(nombre,'string',label=rows_campo.nombre))
             elif tipo_campo in ['Cedula']:            fields.append(Field(nombre,'string',label=rows_campo.nombre,requires=IS_EMPTY_OR(IS_MATCH('\d{2}.\d{3}.\d{3}$', error_message='CI inválida, debe ser: XX.XXX.XXX'))))
@@ -403,10 +403,10 @@ def modificar():
         setattr(form.vars, nombre_campo, valores[nombre_campo])
     #fix para el datepicker de las fechas:
     for i in obl.keys():
-        form.element(_name=i)['_class']= form.element(_name=i)['_class'] + " obligatoria "+ obl[i]
+        form.element(_name=i)['_class']= form.element(_name=i)['_class'] + " obligatoria "+ obl[i].replace(" ", "_")
 
     for i in no_obl.keys():
-        form.element(_name=i)['_class']= form.element(_name=i)['_class'] + ' ' + no_obl[i]
+        form.element(_name=i)['_class']= form.element(_name=i)['_class'] + ' ' + no_obl[i].replace(" ", "_")
 
 
     # Al aceptar el formulario
@@ -485,7 +485,7 @@ def modificar():
                         sql = "UPDATE PRODUCTO SET "+var+"= '"+str(valor_nuevo)+\
                               "' WHERE id_producto = '"+str(id_producto)+"';"
                         db.executesql(sql)
-                        
+
                     else:
                         pass
 
@@ -536,7 +536,7 @@ def obtener_actividades():
     for tipo in tiposA:
         if tipo['papelera']==False :
             concat += '<option value='+str(tipo['id_tipo'])+'>'+tipo['nombre']+'</option>'
-    
+
     aux = programa.descripcion.split('\r\n')[0]
     descripcion = "<div class=\"col-sm-offset-1\"><h4>Descripción del Programa:</h4><p>"+aux+"</p></div>"
     html = "jQuery('#lista_tipos').empty().append('"+concat+"');jQuery('#descripcion_programa').empty().append('"+descripcion+"')"
@@ -659,7 +659,7 @@ def get_pdf():
         colaboradores = "--Campo no Suministrado--"
     else:
         colaboradores = producto.colaboradores
-        
+
 
     tmpfilename = os.path.join(request.folder,'private',str(uuid4()))
     doc = SimpleDocTemplate(tmpfilename)
@@ -745,7 +745,7 @@ def eliminar_comprobante():
     query = "SELECT archivo FROM COMPROBANTE WHERE id_comprobante="+id_comprobante+";"
     comprobante = db.executesql(query)
 
-    
+
     pdf = os.path.join(request.folder,'uploads',comprobante[0][0][0:22],comprobante[0][0][23:25],comprobante[0][0])
     try:
         os.unlink(pdf)
