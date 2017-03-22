@@ -1,0 +1,9 @@
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+    z-index: 3 ;
+    color: #fff !important;
+    cursor: default;
+    background: #286090 !important;
+    border-color: #286090 !important;
+    border-radius: 1em;
+}

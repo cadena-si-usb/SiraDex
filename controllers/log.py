@@ -31,16 +31,16 @@ def consultar():
             redirect(URL(c ="log",f="download", args=[4]))
 
     #log_entries =  db().select(db.LOG_SIRADEX.ALL, orderby=~db.LOG_SIRADEX.id_log)
-    
-    if len(request.args): 
+
+    if len(request.args):
         page=int(request.args[0])
-    else: 
+    else:
         page=0
-    
-    items_per_page = 5
-    
+
+    items_per_page = 20
+
     limitby=(page*items_per_page,(page+1)*items_per_page+1)
-    
+
     log_entries =  db().select(db.LOG_SIRADEX.ALL, orderby=~db.LOG_SIRADEX.id_log, limitby=limitby)
     return dict(admin=admin, log_entries = log_entries, formulario_periodo = formulario, \
                 page=page,items_per_page=items_per_page)
@@ -145,4 +145,26 @@ def graficas():
         prod_last_trim.append([sem, len(rows)])
         sem = sem - 1
 
-    return dict(admin=admin, login_last_week=login_last_week, login_last_trim=login_last_trim, prod_last_week=prod_last_week, prod_last_trim = prod_last_trim)
+    # Reistro de PRoductos trimestre
+    # [rechazados, validados]
+    apr_vs_rech = [0,0]
+    sem = 12
+    for i in range(84,0,-7):
+        date  = datetime.date.today() - datetime.timedelta(days=i)
+        date2 = datetime.date.today() - datetime.timedelta(days=i - 7)
+        query = "SELECT * FROM LOG_SIRADEX WHERE accion = 'VALIDACION' AND descripcion ~ 'NO VALIDADO' AND accion_fecha BETWEEN '" + str(date) + "' AND '" + str(date2) + "';"
+        rows = db.executesql(query, fields=db.LOG_SIRADEX)
+        apr_vs_rech[0] += len(rows)
+        sem = sem - 1
+    sem = 12
+    for i in range(84,0,-7):
+        date  = datetime.date.today() - datetime.timedelta(days=i)
+        date2 = datetime.date.today() - datetime.timedelta(days=i - 7)
+        query = "SELECT * FROM LOG_SIRADEX WHERE accion = 'VALIDACION' AND descripcion ~ 'VALIDADO' AND accion_fecha BETWEEN '" + str(date) + "' AND '" + str(date2) + "';"
+        rows = db.executesql(query, fields=db.LOG_SIRADEX)
+        apr_vs_rech[1] += len(rows)
+        sem = sem - 1
+
+    apr_vs_rech[1] = apr_vs_rech[1] - apr_vs_rech[0]
+
+    return dict(admin=admin, login_last_week=login_last_week, login_last_trim=login_last_trim, prod_last_week=prod_last_week, prod_last_trim = prod_last_trim, apr_vs_rech=apr_vs_rech)

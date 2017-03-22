@@ -7,7 +7,7 @@ from datetime  import date
 
 # Funcion para busquedas publicas
 def busqueda():
-    print request.vars 
+    print request.vars
 
     dictionary = {}
     for key in request.vars:
@@ -59,7 +59,7 @@ def busqueda():
 
         if request.vars.anio != None:
             sql += " AND extract(year FROM prod.fecha_realizacion)=" + request.vars.anio
-            
+
         # Ahora dependiendo del usuario anadimos las restricciones del estado (no se contempla cuando
         # el usuario esta bloqueado porqu no deberia llegar aqui)
         if (session.usuario == None or session.usuario["tipo"] == "Usuario"):
@@ -75,6 +75,7 @@ def busqueda():
 
         infoTabla = tabla(productos)
         infoBarChart = graficaBar(productos)
+
         infoPieChart = graficaPie(productos)
         #graficaPie = URL(c='busq_val',f='graficaPie',vars=dict(productos=productos))
 
@@ -239,14 +240,6 @@ def gestionar_validacion():
     if (admin==0):
         redirect(URL(c ="default",f="index"))
 
-    if len(request.args): 
-        page=int(request.args[0])
-    else: 
-        page=0
-    
-    items_per_page = 5
-    
-    limitby=(page*items_per_page,(page+1)*items_per_page+1)
 
     # Hago el query Espera
 
@@ -256,9 +249,9 @@ def gestionar_validacion():
     + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='Por Validar';"
     sqlRechazadas = "select producto.id_producto, producto.nombre, tipo_actividad.nombre from producto inner join tipo_actividad"\
     + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='No Validado';"
-    productosV = db.executesql(sqlValidadas)[limitby[0]:limitby[1]]
-    productosE = db.executesql(sqlEspera)[limitby[0]:limitby[1]]
-    productosR = db.executesql(sqlRechazadas)[limitby[0]:limitby[1]]
+    productosV = db.executesql(sqlValidadas)
+    productosE = db.executesql(sqlEspera)
+    productosR = db.executesql(sqlRechazadas)
 
     return locals()
 
@@ -287,8 +280,8 @@ def validar(id_producto):
     datos_usuario['correo_alter'] = None
     if usuario.correo_alter != None:
         datos_usuario['correo_alter'] = usuario.correo_alter
-    
-        
+
+
     producto = {'nombre': producto.nombre}
 
     # enviamos la notificacion al usuario creador
@@ -381,7 +374,7 @@ def graficaBar(productos):
         if anio < fecha_desde:
             anio = fecha_desde
         if anio > fecha_hasta:
-            anio = fecha_hasta            
+            anio = fecha_hasta
         id_programa = producto[5]
         fechas[anio][id_programa]['repeticiones'] += 1
     return fechas
@@ -405,7 +398,7 @@ def tabla(productos):
         if anio < fecha_desde:
             anio = fecha_desde
         if anio > fecha_hasta:
-            anio = fecha_hasta            
+            anio = fecha_hasta
         id_programa = producto[5]
         programas[id_programa][anio]+= 1
         programas[id_programa]['total']+=1

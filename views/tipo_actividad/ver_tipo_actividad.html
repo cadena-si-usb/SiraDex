@@ -26,7 +26,7 @@
     <h3> Campos </h3>
 
 <div class="row">
-
+{{if editable :}}
     <div class="col-sm-5 col-sm-push-9" style="margin-top:10px;margin-left:50px">
 
         <button type="button" class="btn btn-default green btn-border"
@@ -35,7 +35,12 @@
           <span class="glyphicon glyphicon-plus-sign"></span>  Agregar Campo
         </button>
         <br></br>
+{{else:}}
 
+<p> No se puede agregar, eliminar o editar los campos de esta actividad pues
+existen productos relacionados con ella. Si desea agregar campos adicionales, inhabilite esta actividad y cree otra nueva con los campos necesarios.
+</p>
+{{pass}}
     </div>
 
     <div class="container-fluid card">
@@ -46,7 +51,7 @@
                       <th class="hColumns"> Nombre </th>
                       <th class="hColumns"> Tipo </th>
                       <th class="hColumns"> Obligatorio </th>
-                      {{ if admin in [1,2]: }}
+                      {{ if admin in [1,2] and editable: }}
                         <th class="hColumns text-center"> Editar </th>
                         <th class="hColumns text-center"> Eliminar </th>
                       {{pass}}
@@ -63,7 +68,7 @@
                               <td class="hColumns center-vertically"> {{=campo.nombre}} </td>
                               <td class="hColumns center-vertically"> {{=campo.tipo_campo}} </td>
                               <td class="hColumns center-vertically"> {{= 'Si' if campo.obligatorio else 'No'}} </td>
-                              {{ if admin in [1,2]: }}
+                              {{ if admin in [1,2] and editable: }}
                                 <td class="hColumns text-center center-vertically">
                                   <a href="#">
                                       <span class="glyphicon glyphicon-edit blue"

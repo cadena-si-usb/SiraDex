@@ -32,7 +32,7 @@ $(document).ready(function(){
   $('#agregarProgBtn').on('click', function(e){
     $("#modalAgregar input.form-control").val("");
   });
-  
+
   // Pasamos los argumentos para editar el catalogo.
   $('#ModalEditarPrograma').on('show.bs.modal', function(e){
       var id_programa = $(e.relatedTarget).data('id-programa');
@@ -72,6 +72,19 @@ $(document).ready(function(){
       $("#BotonEliminar").attr("href", linkEliminar);
   });
 
+  // Para limpiar el modal de agregar cuando se cierra.
+  $("#myModal").on("hidden.bs.modal", function(){
+    $("#no_table_Nombre").val("");
+    $("#no_table_Codigo").val("");
+    $("#no_table_Descripcion").val("");
+    $(".error").html("");
+  });
+
+  // Para limpiar el modal de editar cuando se cierra.
+  $("#ModalEditarPrograma").on("hidden.bs.modal", function(){
+    $(".error").html("");
+  });
+
   // -.........................................................................-
   // Para realizar la búsqueda.
   var options = {
@@ -85,7 +98,7 @@ $(document).ready(function(){
 
   // Para el show more y show less en descripción.
   // Y mostrar un titulo con longitud larga sin que se modifique la vista.
-  $("#TipoActividadTable tr").not(":eq(0)").each(function(){ //.not(":eq(0)") first is header of table
+  $("#ProgramaTable tr").not(":eq(0)").each(function(){ //.not(":eq(0)") first is header of table
     var titulo = $(this).find(".a-table").text();
     var tituloLong = titulo.length;
     var descripcion = $(this).find(".hideContent").text();
@@ -95,14 +108,14 @@ $(document).ready(function(){
 
     // Verificar si la longitud del titulo es mayor a 18 para así reacomodarlo en la columna correspondiente.
     if (tituloLong >= 18){
-      var splitTitulo = titulo.split(" ");     
+      var splitTitulo = titulo.split(" ");
       var restTitulo = splitTitulo[0];
       amountText = splitTitulo[0].length;
       i = 1;
 
       while (true){
         if (splitTitulo.length > i && amountText + splitTitulo[i].length + 1 < 18){
-            restTitulo += " " + splitTitulo[i];  
+            restTitulo += " " + splitTitulo[i];
             amountText += splitTitulo[i].length;
             i++;
         }else{
@@ -120,14 +133,14 @@ $(document).ready(function(){
     }
 
     // Si la descripción es menor a 46 se muestra sin modificación.
-    // Si es mayor a 46 entonces se hace el split y se muestra restContent y 
+    // Si es mayor a 46 entonces se hace el split y se muestra restContent y
     // result dependiendo si se quiere ver más o si no.
     if (descripcionLong < 46){
       $(this).find(".showMoreContent").hide();
     }else{
       var restContent = '';
       var result = '';
-      
+
       var splitDescription = descripcion.split(" ");
       amountText = 0;
       i = 1;
@@ -135,12 +148,12 @@ $(document).ready(function(){
       // Para lo que se mostrará por defecto.
       restContent += splitDescription[0];
       amountText += splitDescription[0].length;
- 
+
       while (true){
         if (splitDescription.length > i && amountText + splitDescription[i].length + 1 < 46){
-            restContent += " " + splitDescription[i]; 
+            restContent += " " + splitDescription[i];
             amountText += splitDescription[i].length;
-            i++; 
+            i++;
         }else{
           restContent += '\n';
           break;
@@ -158,7 +171,7 @@ $(document).ready(function(){
 
         while (true){
           if (splitDescription.length > i && amountText + splitDescription[i].length + 1 < 46){
-              result += " " + splitDescription[i];  
+              result += " " + splitDescription[i];
               amountText += splitDescription[i].length;
               i++;
           }else{

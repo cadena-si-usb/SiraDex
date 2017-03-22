@@ -54,27 +54,33 @@
 <script>
 
 function textoRestante1(maxLong, idDivUsar){
-  var longitudTexto = $(idDivUsar).val().length;
-  var textoRestante = maxLong - longitudTexto;
+	console.log("antes");
+	console.log(idDivUsar);
+	if ($(idDivUsar).val()) {
+		var longitudTexto = $(idDivUsar).val().length;
+		console.log("despues");
+		var textoRestante = maxLong - longitudTexto;
 
-  // Selecciono el div que es "hermano" del textfield de nombre.
-  var longitudTextoAct = $(idDivUsar).val().length;
-  $(idDivUsar).siblings(".help-block").first().html((maxLong - longitudTextoAct) + " caracteres");
+		// Selecciono el div que es "hermano" del textfield de nombre.
+		var longitudTextoAct = $(idDivUsar).val().length;
+		$(idDivUsar).siblings(".help-block").first().html((maxLong - longitudTextoAct) + " caracteres");
 
-  // Si estoy escribiendo en el textfield de nombre, entonces...
-  $(idDivUsar).on('keypress keyup keydown', function(e){
-    var longitudTexto = $(idDivUsar).val().length;
-    var textoRestante = maxLong - longitudTexto;
+		// Si estoy escribiendo en el textfield de nombre, entonces...
+		$(idDivUsar).on('keypress keyup keydown', function(e){
+			var longitudTexto = $(idDivUsar).val().length;
+			var textoRestante = maxLong - longitudTexto;
 
-    $(idDivUsar).siblings(".help-block").first().html(textoRestante + " caracteres.");
+			$(idDivUsar).siblings(".help-block").first().html(textoRestante + " caracteres.");
 
-    /* keyCode.46: delete, keyCode.8: enter, keyCode.37 al keyCode.40: arrows. */
-    if (textoRestante <= 0 && e.keyCode != 46 && e.keyCode != 8 && e.keyCode != 37
-        && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40){
-          $(idDivUsar).val($(idDivUsar).val().substring(0, maxLong));
-          return false;
-    }
-  });
+			/* keyCode.46: delete, keyCode.8: enter, keyCode.37 al keyCode.40: arrows. */
+			if (textoRestante <= 0 && e.keyCode != 46 && e.keyCode != 8 && e.keyCode != 37
+					&& e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40){
+						$(idDivUsar).val($(idDivUsar).val().substring(0, maxLong));
+						return false;
+			}
+		});
+	}
+
 };
 
 $(document).ready(function () {
@@ -297,7 +303,7 @@ $(document).ready(function () {
 		    $(this).val('');
 		    $(this).filestyle('clear');
 		};
-		
+
 		if (this.files[0].size > 2097152){
 			var text = 'Sólo se permiten archivos de hasta 2 MB, el archivo que se cargo es de '+((this.files[0].size)/1024/1024).toFixed(1)+' MB';
 	        alert(text);

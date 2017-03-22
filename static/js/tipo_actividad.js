@@ -29,9 +29,9 @@ $(document).ready(function(){
     $(".formularioTipo").hide();
   }
 
-    // Se muestra valor por defecto del programa desde el cual se ve la vista 
+    // Se muestra valor por defecto del programa desde el cual se ve la vista
   $('#myModal').on('show.bs.modal', function(e){
-    
+
       if (($("#identificador_de_programa").length > 0 ) &&
            $("#identificador_de_programa").attr("data-programa") != "None"){
         var id_programa = $("#identificador_de_programa").attr("data-programa");
@@ -97,6 +97,18 @@ $(document).ready(function(){
       $(".error_wrapper").css('color','red');
   }
 
+  // Para limpiar el modal de agregar cuando se cierra.
+  $("#myModal").on("hidden.bs.modal", function(){
+    $("#no_table_Nombre").val("");
+    $("#no_table_Codigo").val("");
+    $("#no_table_Descripcion").val("");
+    $(".error").html("");
+  });
+
+  // Para limpiar el modal de editar cuando se cierra.
+  $("#myModalEditar").on("hidden.bs.modal", function(){
+    $(".error").html("");
+  });
 
   // -.........................................................................-
   // Para realizar la búsqueda.
@@ -125,7 +137,7 @@ $(document).ready(function(){
       var restTitulo = splitTitulo[0];
       amountText = splitTitulo[0].length;
       i = 1;
-      
+
       while (true){
         if (splitTitulo.length >= i && amountText + splitTitulo[i].length + 1 < 18){
             restTitulo += " " + splitTitulo[i];
@@ -149,13 +161,14 @@ $(document).ready(function(){
     // Si la descripción es menor a 46 se muestra sin modificación.
     // Si es mayor a 46 entonces se hace el split y se muestra restContent y
     // result dependiendo si se quiere ver más o si no.
-    if (descripcionLong < 36){
+    if (descripcionLong < 46){
       $(this).find(".showMoreContent").hide();
     }else{
       var restContent = '';
       var result = '';
 
       var splitDescription = descripcion.split(" ");
+      console.log (splitDescription)
       amountText = 0;
       i = 1;
 
@@ -164,7 +177,7 @@ $(document).ready(function(){
       amountText += splitDescription[0].length;
 
       while (true){
-        if (splitDescription.length >= i && amountText + splitDescription[i].length + 1 < 30){
+        if (splitDescription.length >= i && amountText + splitDescription[i].length + 1 < 58){
             restContent += " " + splitDescription[i];
             amountText += splitDescription[i].length;
             i++;
@@ -174,24 +187,25 @@ $(document).ready(function(){
         }
       }
 
-
       amountText = 0;
 
       // Para lo que se oculta.
       if (splitDescription.length > i){
         result += splitDescription[i];
         amountText += splitDescription[i].length;
+        console.log('i');
+        console.log(splitDescription[i]);
         i += 1;
-
+        console.log('i+1');
+        console.log(splitDescription[i]);
         while (true){
-          if (splitDescription[i] && splitDescription.length >= i && amountText + splitDescription[i].length + 1 < 30){
+          if (splitDescription.length >= i && amountText + splitDescription[i].length + 1 < 58){
               result += " " + splitDescription[i];
               amountText += splitDescription[i].length;
               i++;
           }else{
             result += '\n';
             amountText = 0;
-            break;
           }
 
           if (splitDescription.length <= i)
@@ -221,6 +235,6 @@ $(document).ready(function(){
       $(this).closest('tr').find(".descripcion_tipo").find(".restContent").hide();
     }
   });
-  
-  
+
+
 });
