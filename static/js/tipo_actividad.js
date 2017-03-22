@@ -131,6 +131,9 @@ $(document).ready(function(){
     var amountText;
     var i;
 
+    console.log("LENG");
+    console.log(descripcionLong);
+
     // Verificar si la longitud del titulo es mayor a 18 para así reacomodarlo en la columna correspondiente.
     if (tituloLong >= 18){
       var splitTitulo = titulo.split(" ");
@@ -177,7 +180,7 @@ $(document).ready(function(){
       amountText += splitDescription[0].length;
 
       while (true){
-        if (splitDescription.length >= i && amountText + splitDescription[i].length + 1 < 58){
+        if (splitDescription.length > i && amountText + splitDescription[i].length + 1 < 46){
             restContent += " " + splitDescription[i];
             amountText += splitDescription[i].length;
             i++;
@@ -199,7 +202,7 @@ $(document).ready(function(){
         console.log('i+1');
         console.log(splitDescription[i]);
         while (true){
-          if (splitDescription.length >= i && amountText + splitDescription[i].length + 1 < 58){
+          if (splitDescription.length > i && amountText + splitDescription[i].length + 1 < 58){
               result += " " + splitDescription[i];
               amountText += splitDescription[i].length;
               i++;
@@ -218,6 +221,10 @@ $(document).ready(function(){
       result = result.replace(/\n/g, "<br />");
       $(this).find(".hideContent").html(restContent);
       $(this).find(".restContent").html(result);
+
+      if (result == ''){
+        $(this).find(".showMoreContent").hide();
+      }
     }
   });
 
