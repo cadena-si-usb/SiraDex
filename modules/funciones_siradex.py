@@ -14,7 +14,7 @@ def convertToNumber(s):
 def get_tipo_usuario(session):
 
     # Session Actual
-    #print("Usuario:-->"+session.usuario["tipo"])
+    print("Usuario:-->"+session.usuario["tipo"])
     #session = current.session
     if session.usuario != None:
 
@@ -30,8 +30,9 @@ def get_tipo_usuario(session):
         elif (session.usuario["tipo"] == "Usuario"):
             admin = 0
         
-        # elif(session.usuario["tipo"] == "Bloqueado"):
-        #     admin = -1
+        else:
+            redirect(URL(c ="default",f="index"))
+
         
     else:
         redirect(URL(c ="default",f="index"))

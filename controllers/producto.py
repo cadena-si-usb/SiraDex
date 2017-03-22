@@ -250,6 +250,7 @@ def agregar():
 
                 #Ignora campos de autor
                 if campo[0:5] != 'autor' and campo[0:8] != 'borrador':
+                    print campo
                     campo = campo.replace("_"," ")
                     id_camp = db(db.CAMPO.nombre_interno==campo).select().first().id_campo
                     valor = getattr(form.vars ,var)
