@@ -94,7 +94,7 @@ $(document).ready(function () {
 	var cantidad_comprobantes = 5;
 	var autores_agregados = 0
 	var cantidad_autores  = 5;
-	var maxDescripcion = 550;
+	var maxDescripcion = 100;
 	var maxTextoL = 512;
 
 	// Muestra la cantidad de caracteres disponible en el textfield de nombre.
@@ -125,6 +125,8 @@ $(document).ready(function () {
 	textoRestante1(maxLongColaboradores, $("#no_table_colaboradores"));
 
 	textoRestante1(maxTextoL, $(".Texto_Largo"));
+
+	textoRestante1(maxLongNombre, $(".Texto_Corto"));
 
 
 	for (i = 1; i <= cantidad_comprobantes; i++) {

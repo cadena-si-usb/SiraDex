@@ -51,6 +51,30 @@
 	}
 </style>
 <script type="text/javascript">
+
+function textoRestante1(maxLong, idDivUsar){
+  var longitudTexto = $(idDivUsar).val().length;
+  var textoRestante = maxLong - longitudTexto;
+
+  // Selecciono el div que es "hermano" del textfield de nombre.
+  var longitudTextoAct = $(idDivUsar).val().length;
+  $(idDivUsar).siblings(".help-block").first().html((maxLong - longitudTextoAct) + " caracteres");
+
+  // Si estoy escribiendo en el textfield de nombre, entonces...
+  $(idDivUsar).on('keypress keyup keydown', function(e){
+    var longitudTexto = $(idDivUsar).val().length;
+    var textoRestante = maxLong - longitudTexto;
+
+    $(idDivUsar).siblings(".help-block").first().html(textoRestante + " caracteres.");
+
+    /* keyCode.46: delete, keyCode.8: enter, keyCode.37 al keyCode.40: arrows. */
+    if (textoRestante <= 0 && e.keyCode != 46 && e.keyCode != 8 && e.keyCode != 37
+        && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40){
+          $(idDivUsar).val($(idDivUsar).val().substring(0, maxLong));
+          return false;
+    }
+  });
+};
 		$(document).ready(function () {
 			$(":file").filestyle({
 		    buttonBefore: true,
@@ -58,6 +82,10 @@
 		    placeholder: "Sin Archivo",
 		    buttonText: "  Adjuntar",
 		  });
+
+			var maxLongNombre  = 50;    // Longitud máxima que tendrá el campo nombre.
+			var maxLongDescrip = 250;   // Longitud máxima que tendrá el campo descripción.
+			var maxLongColaboradores = 200;
 			var comprobantes_eliminados = 0;
 			var comprobantes_bd = {{=len(comprobantes)}};
 			var documento_bd = {{=len(documentos)}};
@@ -68,7 +96,38 @@
 			var agregados_aqui = 0;
 			var autores_agregados = {{= num_aut }};
 			var cantidad_autores  = 5;
+			var maxDescripcion = 550;
+			var maxTextoL = 512;
 
+			// Muestra la cantidad de caracteres disponible en el textfield de nombre.
+
+
+			$("#no_table_fecha_realizacion").siblings(".help-block").html( "El formato para la fecha es de AAAA-MM-DD");
+
+
+			$(".Cedula").click(function(){
+
+				$(".Cedula").siblings(".help-block").html( "el formato de la cédula es XX.XXX.XXX");
+
+			});
+
+			$(".Telefono").click(function(){
+
+				$(".Telefono").siblings(".help-block").html( "el formato de teléfono es (0xxx)xxx-xxxx");
+
+			});
+
+			textoRestante1(maxLongNombre, $("#no_table_nombre" ));
+
+			textoRestante1(maxLongDescrip, $("#no_table_descripcion"));
+
+			textoRestante1(maxLongNombre, $("#no_table_lugar"));
+
+			textoRestante1(maxLongColaboradores, $("#no_table_colaboradores"));
+
+			textoRestante1(maxTextoL, $(".Texto_Largo"));
+
+			textoRestante1(maxLongNombre, $(".Texto_Corto"));
 			// agregar autores adicionales
 			$('#no_table_autor_1__row').before('<div id="autores_row" class="form-group">\
 															<h3 class="col-sm-offset-3">Otros Autores</h3>\
@@ -318,7 +377,7 @@
 					alert("La fecha del producto no puede estar vacío ");
 					return false;
 				}
-				
+
 				if($('#no_table_fecha_realizacion').val()!="" ){
 					var fechaActual = new Date();
 					var anio = fechaActual.getFullYear();
