@@ -51,7 +51,7 @@
                         {{if doc[1] != '':}}
                               <div class = "col-sm-8">
                                   <a  href='/{{=request.application}}/producto/get_documento/{{=doc[0]}}/{{=doc[3]}}' target="blanck">
-                                      {{=doc[2]}}
+                                      {{=doc[4]}}
                                   </a>
                               </div>
                               <span >
@@ -60,7 +60,7 @@
 
                               </span>
                         {{else:}}
-                          <span>{{='-- En el campo: "'+ doc[2] + '" no se cargo documento --'}}</span>
+                          <span>{{='-- En el campo: "'+ doc[4] + '" no se cargo documento --'}}</span>
                         {{pass}}
                         </li>
                       {{pass}}
