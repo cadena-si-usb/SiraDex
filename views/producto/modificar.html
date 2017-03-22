@@ -96,7 +96,7 @@ function textoRestante1(maxLong, idDivUsar){
 			var agregados_aqui = 0;
 			var autores_agregados = {{= num_aut }};
 			var cantidad_autores  = 5;
-			var maxDescripcion = 550;
+			var maxDescripcion = 100;
 			var maxTextoL = 512;
 
 			// Muestra la cantidad de caracteres disponible en el textfield de nombre.
@@ -128,6 +128,11 @@ function textoRestante1(maxLong, idDivUsar){
 			textoRestante1(maxTextoL, $(".Texto_Largo"));
 
 			textoRestante1(maxLongNombre, $(".Texto_Corto"));
+
+			for (i = 1; i <= cantidad_comprobantes; i++) {
+					textoRestante1(maxDescripcion, $('#no_table_d3scr1pc10n_comprobante_'+i));
+			}
+
 			// agregar autores adicionales
 			$('#no_table_autor_1__row').before('<div id="autores_row" class="form-group">\
 															<h3 class="col-sm-offset-3">Otros Autores</h3>\
