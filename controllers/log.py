@@ -37,7 +37,7 @@ def consultar():
     else:
         page=0
 
-    items_per_page = 5
+    items_per_page = 20
 
     limitby=(page*items_per_page,(page+1)*items_per_page+1)
 
