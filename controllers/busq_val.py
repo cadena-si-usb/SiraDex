@@ -57,7 +57,7 @@ def busqueda():
 
         productos = db.executesql(sql)
 
-        infoPieChart = graficaPie(productos)        
+        infoPieChart = graficaPie(productos)
         #graficaPie = URL(c='busq_val',f='graficaPie',vars=dict(productos=productos))
         graficaBar = URL(c='busq_val',f='graficaBar',vars=dict(productos=productos))
         tabla = URL(c='busq_val',f='tabla',vars=dict(productos=productos))
@@ -250,8 +250,8 @@ def validar(id_producto):
     datos_usuario['correo_alter'] = None
     if usuario.correo_alter != None:
         datos_usuario['correo_alter'] = usuario.correo_alter
-    
-        
+
+
     producto = {'nombre': producto.nombre}
 
     # enviamos la notificacion al usuario creador
@@ -364,7 +364,7 @@ def graficaBar():
 
             if (i <= 0):
                 i=0
-           
+
             programas_dict[id_programa]['repeticiones'][i]+=1
 
 
@@ -385,7 +385,7 @@ def tabla():
     line_chart = pygal.Bar()
 
     if productos == None:
-        return line_chart.render_table(transpose=True) 
+        return line_chart.render_table(transpose=True)
 
     line_chart.x_labels = map(str, range(fecha_desde, fecha_hasta + 1))
 
@@ -416,7 +416,7 @@ def tabla():
 
             if (i <= 0):
                 i=0
-           
+
             programas_dict[id_programa]['repeticiones'][i]+=1
 
 
