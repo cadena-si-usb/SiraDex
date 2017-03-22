@@ -193,8 +193,11 @@ $(document).ready(function(){
       if (splitDescription.length > i){
         result += splitDescription[i];
         amountText += splitDescription[i].length;
+        console.log('i');
+        console.log(splitDescription[i]);
         i += 1;
-
+        console.log('i+1');
+        console.log(splitDescription[i]);
         while (true){
           if (splitDescription.length >= i && amountText + splitDescription[i].length + 1 < 58){
               result += " " + splitDescription[i];

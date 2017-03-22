@@ -29,7 +29,6 @@
 
         {{if programa_nombre != None:}}
            <div id="identificador_de_programa" data-programa="{{=id_programa}}"></div>
-
        {{pass}}
 
     <script src="{{=URL('static','js/global.js')}}"></script>
@@ -181,7 +180,8 @@
 
                             <td class="hColumns text-center center-vertically">
                               <button class="glyphicon glyphicon-eye-open showMoreContent"
-                                      style="border:none;background:none;"></button></td>
+                                      style="border:none;background:none;"></button>
+                            </td>
                             <td class="hColumns text-center center-vertically">
                                 <a href="{{=URL(c='producto', f='agregar',args=[tipoActividad.id_tipo])}}">
                                    <span class="glyphicon glyphicon-plus-sign"></span>
