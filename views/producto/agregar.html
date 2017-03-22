@@ -224,10 +224,22 @@ $(document).ready(function () {
 												</div>\
 												<br>'
 										);
+	
 	for (i = 1; i <= cantidad_comprobantes; i++) {
     	$('#no_table_c0mpr0bant3_'+i+'__row').addClass("hidden");
+    	$('#no_table_c0mpr0bant3_'+i+'__row').find(".bootstrap-filestyle").addClass("col-sm-11").css("float","left").after('<div class="col-sm-1"> <a class="remove-tag-comprobante" data-comprobante="'+i+'" onClick = "">\
+			                                              <span class="glyphicon glyphicon-remove red"></span>\
+			                                    				</a></div>\
+			                                    			');
     	$('#no_table_d3scr1pc10n_comprobante_'+i+'__row').addClass("hidden");
 	}
+
+	$('.remove-tag-comprobante').click(function(e){
+			var comprobante = $(this).data('comprobante');
+			console.log($('#no_table_c0mpr0bant3_'+ comprobante).val())
+			$('#no_table_c0mpr0bant3_'+ comprobante).val('');
+			$('#no_table_c0mpr0bant3_'+ comprobante).closest(":file").filestyle('clear');
+	});
 
 
 
@@ -276,14 +288,19 @@ $(document).ready(function () {
 		    alert('Sólo se permite cargar archivos PDF');
 		    $(this).val('');
 		    $(this).filestyle('clear');
-		}
+		};
 		
 		if (this.files[0].size > 2097152){
 			var text = 'Sólo se permiten archivos de hasta 2 MB, el archivo que se cargo es de '+((this.files[0].size)/1024/1024).toFixed(1)+' MB';
 	        alert(text);
 		    $(this).val('');
 		    $(this).filestyle('clear');
-		}
+		};
+		if($(this).val().split('.')[0].length > 50){
+		    alert('El nombre del archivo debe tener menos de 50 caracteres');
+		    $(this).val('');
+		    $(this).filestyle('clear');
+		};
 	});
 
 
