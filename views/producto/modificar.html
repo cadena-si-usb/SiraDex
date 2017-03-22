@@ -356,7 +356,18 @@ function textoRestante1(maxLong, idDivUsar){
 				    alert('solo se permite cargar archivos PDF');
 				    $(this).val('');
 				    $(this).filestyle('clear');
-				}
+				};
+				if($(this).val().split('.')[0].length > 50){
+				    alert('El nombre del archivo debe tener menos de 50 caracteres');
+				    $(this).val('');
+				    $(this).filestyle('clear');
+				};
+				if (this.files[0].size > 2097152){
+					var text = 'Sólo se permiten archivos de hasta 2 MB, el archivo que se cargo es de '+((this.files[0].size)/1024/1024).toFixed(1)+' MB';
+			        alert(text);
+				    $(this).val('');
+				    $(this).filestyle('clear');
+				};
 			});
 
 

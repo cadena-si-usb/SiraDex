@@ -143,7 +143,9 @@ def grafica_pie():
 
 def perfil():
     if session.usuario != None:
+        print "El admin es:"
         admin = get_tipo_usuario(session)
+        print admin
 
         correo_i = session.usuario["usbid"]+"@usb.ve"
 
