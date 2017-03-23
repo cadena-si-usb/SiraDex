@@ -133,6 +133,7 @@ def enviar_correo_contacto(mail, usuario, asunto, mensaje):
 				Usuario  = {email, nombre}
 				Razon    = ''
 '''
+
 def enviar_correo_bienvenida(mail, usuario):
 	email  = usuario['email']
 	asunto = '[SIRADEx] Bienvenida'
