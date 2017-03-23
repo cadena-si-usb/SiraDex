@@ -50,7 +50,7 @@ def gestionar():
 
         ## parseamos los datos para la notificacion
         datos_usuario = {'nombres' : usuario.nombres + ' ' + usuario.apellidos}
-        if usuario.correo_alter != None:
+        if usuario.correo_alter != None and  usuario.correo_alter != '':
              datos_usuario['email'] = usuario.correo_alter
              ## Enviamos la notificacion al correo alternativo
              enviar_correo_contacto(mail, datos_usuario, asunto, mensaje)
@@ -125,6 +125,8 @@ def agregar():
             telefonoAux = request.vars.telefono
             correo_alterAux = request.vars.correo_alter
             tipoAux = request.vars.tipo
+            print("AQUI AQUI:", telefonoAux)
+            print("AQUI AQUI:", correo_alterAux)
 
 
             # Primero verificamos que el usuario que intenta agregarse no esta en la base de datos
@@ -209,6 +211,23 @@ def modificar():
             if(request.args[0] != session.usuario["usbid"]):
                 db(db.USUARIO.usbid == request.args[0]).update(tipo = request.vars.tipo)
                 insertar_log(db, 'USUARIO', datetime.datetime.now(), request.client, 'CAMBIO DE USUARIO ' + request.args[0] + ' A TIPO ' + request.vars.tipo.upper(), session.usuario['usbid'])
+                if request.vars.tipo.upper() == "BLOQUEADO":
+                    asunto  = "Su usuario ha sido bloqueado."
+                    mensaje = "Atención: Cumplimos con comunicarle que su usuario en el sistema SIRADEx ha sido bloqueado.\n Si cree que esto ha sido un error, por favor contacte al Decanato de Extesión."
+                    ## Obtenemos el usuario al que deseamos contactar.
+                    usuario = db(db.USUARIO.usbid == request.args[0]).select().first()
+
+                    ## parseamos los datos para la notificacion
+                    datos_usuario = {'nombres' : usuario.nombres + ' ' + usuario.apellidos}
+                    if usuario.correo_alter != None and  usuario.correo_alter != '':
+                         datos_usuario['email'] = usuario.correo_alter
+                         ## Enviamos la notificacion al correo alternativo
+                         enviar_correo_contacto(mail, datos_usuario, asunto, mensaje)
+
+                    datos_usuario['email'] = usuario.correo_inst
+                    ## Enviamos la notificacion al correo institucional
+                    enviar_correo_contacto(mail, datos_usuario, asunto, mensaje)
+
                 redirect(URL('gestionar'))
             else:
                 message = T("Para cambiar sus permisos, por favor comuníquese con un administrador")
