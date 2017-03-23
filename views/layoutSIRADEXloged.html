@@ -66,6 +66,9 @@
                     <li><a href="{{=URL(c='usuarios', f='gestionar')}}">Usuarios</a></li>
                     <li role="separator" class="divider"></li>
                     {{pass}}
+                        {{if admin == 2 :}}
+                            <li><a href="{{=URL(c='log', f='graficas')}}">Consultar Gráficas de Log</a></li>
+                        {{pass}}
 		                <li><a href="{{=URL(c='tipo_actividad', f='gestionar')}}">Tipos de Actividad</a></li>
                     <li><a href="{{=URL(c='catalogo', f='vGestionarCatalogos')}}">Catálogos</a></li>
                     <li><a href="{{=URL(c='archivo_historico', f='gestionar') }}">Papelera</a></li>
