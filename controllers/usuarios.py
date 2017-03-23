@@ -52,11 +52,14 @@ def gestionar():
         datos_usuario = {'nombres' : usuario.nombres + ' ' + usuario.apellidos}
         if usuario.correo_alter != None:
              datos_usuario['email'] = usuario.correo_alter
-        else:
-             datos_usuario['email'] = usuario.correo_inst
+             ## Enviamos la notificacion al correo alternativo
+             enviar_correo_contacto(mail, datos_usuario, asunto, mensaje)
 
-        ## Enviamos la notificacion
+
+        datos_usuario['email'] = usuario.correo_inst
+        ## Enviamos la notificacion al correo institucional
         enviar_correo_contacto(mail, datos_usuario, asunto, mensaje)
+
         insertar_log(db, 'CONTACTO', datetime.datetime.now(), request.client, 'ENVIO DE MENSAJE A '+ usbid, session.usuario['usbid'])
 
         session.message = 'Correo enviado satisfactoriamente'
