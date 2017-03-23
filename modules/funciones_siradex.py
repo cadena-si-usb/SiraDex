@@ -14,7 +14,7 @@ def convertToNumber(s):
 def get_tipo_usuario(session):
 
     # Session Actual
-    
+    #session = current.session
     if session.usuario != None:
 
         if session.usuario["tipo"] == "Bloqueado":
@@ -22,17 +22,17 @@ def get_tipo_usuario(session):
 
         elif(session.usuario["tipo"] == "DEX"):
             admin = 2
-        
+
         elif(session.usuario["tipo"] == "Administrador"):
             admin = 1
-        
+
         elif (session.usuario["tipo"] == "Usuario"):
             admin = 0
-        
+
         else:
             redirect(URL(c ="default",f="index"))
 
-        
+
     else:
         redirect(URL(c ="default",f="index"))
         #admin = -1
@@ -51,16 +51,15 @@ def get_tipo_usuario_not_loged(session):
 
         elif(session.usuario["tipo"] == "DEX"):
             admin = 2
-        
+
         elif(session.usuario["tipo"] == "Administrador"):
             admin = 1
-        
+
         elif (session.usuario["tipo"] == "Usuario"):
             admin = 0
-        
+
     else:
         #redirect(URL(c ="default",f="index"))
         admin = -1
 
     return admin
-    

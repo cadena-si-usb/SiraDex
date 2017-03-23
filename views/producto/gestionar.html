@@ -30,6 +30,197 @@
 {{end}}
 
 {{block contenido}}
+
+<!-- Custom DataTables plugin -->
+<script src="{{=URL('static','DataTables/datatables.js')}}"></script>
+<link rel="stylesheet" type="text/css" href="{{=URL('static','DataTables/datatables.css')}}">
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    var opciones = {
+      bFilter: false,
+      ordering: false,
+      responsive: true,
+        "language": {
+            search:         "Buscar:",
+            searchPlaceholder: "",
+            lengthMenu:     "Mostrar _MENU_ entradas",
+            info:           "Mostrando _START_ a _END_ de _TOTAL_ entradas.",
+            infoEmpty:      "Mostrando 0 a 0 de 0 entradas",
+            infoFiltered:   "(filtradas de _MAX_ entradas en total)",
+            infoPostFix:    "",
+            loadingRecords: "Carga en curso...",
+            zeroRecords:    "No se encontraron usuarios en la busqueda",
+            emptyTable:     "No hay informacion disponible en la tabla",
+            processing:     "Procesando...",
+            paginate: {
+                first:      "Primero",
+                previous:   "Anterior",
+                next:       "Siguiente",
+                last:       "Ultimo"
+            },
+            aria: {
+                sortAscending:  ": Se ordenan las columnas por orden creciente",
+                sortDescending: ": Se ordenan las columnas por orden decreciente"
+            }
+        },
+         "columns": [
+            { "orderable": false },
+            { "orderable": false },
+            { "orderable": false },
+            null,
+            null,
+            null
+        ]
+    };
+
+    var opciones2 = {
+      bFilter: false,
+      ordering: false,
+      responsive: true,
+        "language": {
+            search:         "Buscar:",
+            searchPlaceholder: "",
+            lengthMenu:     "Mostrar _MENU_ entradas",
+            info:           "Mostrando _START_ a _END_ de _TOTAL_ entradas.",
+            infoEmpty:      "Mostrando 0 a 0 de 0 entradas",
+            infoFiltered:   "(filtradas de _MAX_ entradas en total)",
+            infoPostFix:    "",
+            loadingRecords: "Carga en curso...",
+            zeroRecords:    "No se encontraron usuarios en la busqueda",
+            emptyTable:     "No hay informacion disponible en la tabla",
+            processing:     "Procesando...",
+            paginate: {
+                first:      "Primero",
+                previous:   "Anterior",
+                next:       "Siguiente",
+                last:       "Ultimo"
+            },
+            aria: {
+                sortAscending:  ": Se ordenan las columnas por orden creciente",
+                sortDescending: ": Se ordenan las columnas por orden decreciente"
+            }
+        },
+         "columns": [
+            { "orderable": false },
+            { "orderable": false },
+            { "orderable": false },
+            null,
+            null,
+            null
+        ]
+    };
+
+    var opciones3 = {
+      bFilter: false,
+      ordering: false,
+      responsive: true,
+        "language": {
+            search:         "Buscar:",
+            searchPlaceholder: "",
+            lengthMenu:     "Mostrar _MENU_ entradas",
+            info:           "Mostrando _START_ a _END_ de _TOTAL_ entradas.",
+            infoEmpty:      "Mostrando 0 a 0 de 0 entradas",
+            infoFiltered:   "(filtradas de _MAX_ entradas en total)",
+            infoPostFix:    "",
+            loadingRecords: "Carga en curso...",
+            zeroRecords:    "No se encontraron usuarios en la busqueda",
+            emptyTable:     "No hay informacion disponible en la tabla",
+            processing:     "Procesando...",
+            paginate: {
+                first:      "Primero",
+                previous:   "Anterior",
+                next:       "Siguiente",
+                last:       "Ultimo"
+            },
+            aria: {
+                sortAscending:  ": Se ordenan las columnas por orden creciente",
+                sortDescending: ": Se ordenan las columnas por orden decreciente"
+            }
+        },
+         "columns": [
+            { "orderable": false },
+            { "orderable": false },
+            { "orderable": false },
+            null,
+            null,
+            null
+        ]
+    };
+
+    var opciones4 = {
+      bFilter: false,
+      ordering: false,
+      responsive: true,
+        "language": {
+            search:         "Buscar:",
+            searchPlaceholder: "",
+            lengthMenu:     "Mostrar _MENU_ entradas",
+            info:           "Mostrando _START_ a _END_ de _TOTAL_ entradas.",
+            infoEmpty:      "Mostrando 0 a 0 de 0 entradas",
+            infoFiltered:   "(filtradas de _MAX_ entradas en total)",
+            infoPostFix:    "",
+            loadingRecords: "Carga en curso...",
+            zeroRecords:    "No se encontraron usuarios en la busqueda",
+            emptyTable:     "No hay informacion disponible en la tabla",
+            processing:     "Procesando...",
+            paginate: {
+                first:      "Primero",
+                previous:   "Anterior",
+                next:       "Siguiente",
+                last:       "Ultimo"
+            },
+            aria: {
+                sortAscending:  ": Se ordenan las columnas por orden creciente",
+                sortDescending: ": Se ordenan las columnas por orden decreciente"
+            }
+        },
+         "columns": [
+            { "orderable": false },
+            { "orderable": false },
+            { "orderable": false },
+            null,
+            null,
+            null
+        ]
+    };
+
+    // Asume que cada tabla de usuario tiene el mismo número de columnas
+    var cantidadColumnas = $("#ValidadasTable thead th").length;
+    columnas = [];
+    for (var i = 0; i<cantidadColumnas; i++){
+      columnas.push({ "orderable": false });
+    }
+    opciones["columns"] = columnas;
+    $("#ValidadasTable").DataTable(opciones);
+
+    var cantidadColumnas = $("#NoValidadasTable thead th").length;
+    columnas = [];
+    for (var i = 0; i<cantidadColumnas; i++){
+      columnas.push({ "orderable": false });
+    }
+    opciones2["columns"] = columnas;
+    $("#NoValidadasTable").DataTable(opciones2);
+
+    var cantidadColumnas = $("#PorValidarTable thead th").length;
+    columnas = [];
+    for (var i = 0; i<cantidadColumnas; i++){
+      columnas.push({ "orderable": false });
+    }
+    opciones3["columns"] = columnas;
+
+    $("#PorValidarTable").DataTable(opciones3);
+
+    var cantidadColumnas = $("#BorradoresTable thead th").length;
+    columnas = [];
+    for (var i = 0; i<cantidadColumnas; i++){
+      columnas.push({ "orderable": false });
+    }
+    opciones4["columns"] = columnas;
+    $("#BorradoresTable").DataTable(opciones4);
+  });
+</script>
+
     <!-- <div class="container">  -->
 
     <br>
@@ -87,10 +278,7 @@
         <div class="tab-content">
         <!-- Activas -->
         <div role="tabpanel" class="tab-pane active" id="activas">
-                {{if cant_val == 0:}}
-                    No tienes productos validados
-                {{else:}}
-                    <table class="table table-hover table-striped borde-tabla">
+                    <table id='ValidadasTable' class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
                         <thead>
                             <tr>
                                 <th class="hColumns">Nombre</th>
@@ -99,6 +287,11 @@
                                 <th class="hColumns text-center">Eliminar</th>
                         </thead>
                         <tbody id="actividades">
+                          {{if cant_val == 0:}}
+                              <tr class="clickable">
+                                <td class="hColumns" colspan="7"> No tienes productos validados</td>
+                              </tr>
+                          {{else:}}
                             {{for x in rows:}}
                                 {{if x.estado == 'Validado':}}
                                 <tr class="clickable">
@@ -127,25 +320,13 @@
                                 </tr>
                                 {{pass}}
                             {{pass}}
+                          {{pass}}
                         </tbody>
                     </table>
-
-            <div class="text-center">
-              <ul class="pagination pagination-lg pager" id="myPager"></ul>
-            </div>
-            <!-- ESTABA AL FINAL PARA LA PAGINACION -->
-            <div class="text-center">
-              <ul class="pagination pagination-lg pager" id="myPager"></ul>
-            </div>
-          {{pass}}
-
         </div>
         <!-- Por Validar -->
         <div role="tabpanel" class="tab-pane" id="espera">
-                {{if cant_esp == 0:}}
-                    No tienes productos por validar
-                {{else:}}
-                    <table class="table table-hover table-striped borde-tabla">
+                    <table id='PorValidarTable' class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
                         <thead>
                             <tr>
                                 <th class="hColumns">Nombre</th>
@@ -158,6 +339,11 @@
                             </tr>
                         </thead>
                         <tbody id="actividades">
+                          {{if cant_esp == 0:}}
+                            <tr class="clickable">
+                              <td class="hColumns" colspan="7"> No tienes productos por validar</td>
+                            </tr>
+                          {{else:}}
                             {{for x in rows:}}
                                 {{if x.estado == 'Por Validar':}}
                                     <tr class="clickable">
@@ -186,24 +372,15 @@
                                     </tr>
                                 {{pass}}
                             {{pass}}
+                          {{pass}}
                         </tbody>
                     </table>
-                    <div class="text-center">
-                      <ul class="pagination pagination-lg pager" id="myPager"></ul>
-                    </div>
-                        <!-- ESTABA AL FINAL PARA LA PAGINACION -->
-                    <div class="text-center">
-                        <ul class="pagination pagination-lg pager" id="myPager"></ul>
-                    </div>
-                {{pass}}
+
         </div>
 
         <!-- No Validados -->
         <div role="tabpanel" class="tab-pane" id="rechazadas">
-                {{if cant_rec == 0:}}
-                    No tienes productos no validados
-                {{else:}}
-                    <table class="table table-hover table-striped borde-tabla">
+                    <table id='NoValidadasTable' class="table table-hover table-striped borde-tabla"  style="margin:0px !important; width: 100% !important">
                         <thead>
                             <tr>
                                 <th class="hColumns">Nombre</th>
@@ -214,6 +391,11 @@
                                 <th class="hColumns text-center">Eliminar</th>
                         </thead>
                         <tbody id="actividades">
+                          {{if cant_rec == 0:}}
+                              <tr class="clickable">
+                                <td class="hColumns" colspan="6">  No tienes productos no validados</td>
+                              </tr>
+                          {{else:}}
                             {{for x in rows:}}
                                 {{if x.estado == 'No Validado':}}
                                 <tr class="clickable">
@@ -243,24 +425,15 @@
                                 </tr>
                                 {{pass}}
                             {{pass}}
+                          {{pass}}
                         </tbody>
                     </table>
                   </table>
-                  <div class="text-center">
-                    <ul class="pagination pagination-lg pager" id="myPager"></ul>
-                  </div>
-                      <!-- ESTABA AL FINAL PARA LA PAGINACION -->
-                  <div class="text-center">
-                      <ul class="pagination pagination-lg pager" id="myPager"></ul>
-                  </div>
-                {{pass}}
+
         </div>
         <!-- Borradores -->
         <div role="tabpanel" class="tab-pane" id="borradores">
-                {{if cant_bor == 0:}}
-                    No tienes productos guardados como borrador
-                {{else:}}
-                    <table class="table table-hover table-striped borde-tabla">
+                    <table id='BorradoresTable' class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
                         <thead>
                             <tr>
                                 <th class="hColumns">Nombre</th>
@@ -270,6 +443,12 @@
                                 <th class="hColumns text-center">Eliminar</th>
                         </thead>
                         <tbody id="actividades">
+                          {{if cant_bor == 0:}}
+                              <tr class="clickable">
+                                <td class="hColumns" colspan="5">No tienes productos guardados como borrador</td>
+                              </tr>
+                          {{else:}}
+
                             {{for x in rows:}}
                                 {{if x.estado == 'Borrador':}}
                                 <tr class="clickable">
@@ -293,6 +472,7 @@
                                 </tr>
                                 {{pass}}
                             {{pass}}
+                          {{pass}}
                         </tbody>
                     </table>
                   </table>
@@ -303,7 +483,7 @@
                   <div class="text-center">
                       <ul class="pagination pagination-lg pager" id="myPager"></ul>
                   </div>
-                {{pass}}
+
         </div>
 
         </div>

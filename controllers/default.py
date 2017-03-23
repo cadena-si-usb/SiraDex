@@ -88,14 +88,18 @@ def login_cas():
             datos_usuario = {'nombres' : session.usuario['first_name'] + ' ' + session.usuario['last_name']}
             datos_usuario['email'] = session.usuario['email']
 
+            if session.usuario["phone"]:
+                telefono = session.usuario["phone"]
+            else:
+                telefono = ""
 
             db.USUARIO.insert(ci=session.usuario["cedula"],  # Lo insertamos en la base de datos.
             usbid=session.usuario["usbid"],
             nombres=session.usuario["first_name"],
             apellidos=session.usuario["last_name"],
             correo_inst=session.usuario["email"],
-            correo_alter= None,
-            telefono=session.usuario["phone"],
+            correo_alter= "",
+            telefono=telefono,
             tipo = "Usuario")
 
             insertar_log(db, 'REGISTRO', datetime.datetime.now(), request.client, 'REGISTRO SATISFACTORIO', usbid)
@@ -239,6 +243,7 @@ def EditarPerfil():
 
         # Modificar datos del perfil
         usuario = db(db.USUARIO.ci==session.usuario['cedula']).select().first()
+        print usuario
 
 
         forma=SQLFORM.factory(
