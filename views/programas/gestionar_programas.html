@@ -72,28 +72,7 @@
     <div id="programs">
       <div class="row">
           <div class="col-sm-6">
-               <form class="navbar-form" role="search">
-                  <div class="input-group col-lg-12">
-                      <!-- barra de busqueda -->
-                          <input  type="text"
-                                  class="form-control search"
-                                  placeholder="Buscar Programa"
-                                  id="form-busqueda">
-
-
-                      <!-- Lupa -->
-
-                      <span class="input-group-btn">
-                          <span
-                                  class="btn btn-default glyphicon glyphicon-search"
-                                  id="btn-lupa" style="top:0px !important;">
-                          </span>
-                      </span>
-                   </div>
-              </form>
           </div>
-
-
           {{ if admin in [1,2]: }}
             <div class="col-sm-5 col-sm-push-3" style="margin-top:10px; ; margin-left:30px">
                 <button type="button" id="agregarProgBtn" class="btn btn-default green btn-border" data-toggle="modal" data-target="#myModal">
