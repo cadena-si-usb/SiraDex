@@ -14,7 +14,6 @@ def convertToNumber(s):
 def get_tipo_usuario(session):
 
     # Session Actual
-    print("Usuario:-->"+session.usuario["tipo"])
     #session = current.session
     if session.usuario != None:
 
