@@ -321,7 +321,7 @@ def enviar_tipo_papelera():
 
 #. --------------------------------------------------------------------------- .
 def ver_tipo_actividad():
-
+    #session.message = ""
     admin = get_tipo_usuario(session)
 
     # if (admin==0):
@@ -351,11 +351,21 @@ def ver_tipo_actividad():
     formulario_editar_campo  = formularioEditarCampo()
 
     if formSimple.accepts(request.vars, session,formname="formSimple"):
-
+        session.message = ""
         # Verifico si se seleccionó el campo "Obligatorio".
         if request.vars.Obligatorio == None:
            request.vars.Obligatorio = 'f'
-
+        
+        # Determina si el campo ya ha sido registrado en esta actividad
+        queryCampo = reduce(lambda a, b: (a&b),[db.CAMPO.nombre == request.vars.Nombre])
+        id_camposEnBaseDeDatos = db(queryCampo).select(db.CAMPO.id_campo)
+        id_campo = None
+        for id_campoEnBD in id_camposEnBaseDeDatos :
+            id_campo = id_campoEnBD
+            if db((db.ACT_POSEE_CAMPO.id_tipo_act == id_tipo) & (db.ACT_POSEE_CAMPO.id_campo == id_campo)) :
+                session.message = "Nombre de campo ya existe en la actividad."
+                redirect(URL("ver_tipo_actividad", args=[id_tipo]))
+        
         # Se inserta el campo, en la base de datos, que se desea utilizar.
         db.CAMPO.insert(nombre = request.vars.Nombre,
                         nombre_interno = "C"+str(abs(convertToNumber(request.vars.Nombre))),
@@ -369,7 +379,7 @@ def ver_tipo_actividad():
                                             db.CAMPO.obligatorio == request.vars.Obligatorio])
 
         id_campo = db(queryCampo).select(db.CAMPO.id_campo).first()
-
+        
         # Se almacena la relación entre el campo añadido y el tipo de actividad
         # correspondiente.
         db.ACT_POSEE_CAMPO.insert(id_tipo_act = id_tipo, id_campo = id_campo)
@@ -378,7 +388,7 @@ def ver_tipo_actividad():
         redirect(URL('ver_tipo_actividad.html',args=[id_tipo]))
 
     if formMultiple.accepts(request.vars, session,formname="formMultiple"):
-
+        session.message = ""
         query = reduce(lambda a, b: (a&b),[db.TIPO_ACTIVIDAD.id_tipo == id_tipo,
                                       db.TIPO_ACTIVIDAD.id_tipo == db.ACT_POSEE_CAMPO.id_tipo_act,
                                       db.ACT_POSEE_CAMPO.id_campo == db.CAMPO.id_campo])
@@ -419,7 +429,7 @@ def ver_tipo_actividad():
         redirect(URL('ver_tipo_actividad.html',args=[id_tipo]))
 
     if formulario_editar_campo.accepts(request.vars, session,formname="formulario_editar_campo"):
-
+        session.message = ""
         id_campo = request.vars.id_campo
 
         # Verifico si se seleccionó el campo "Obligatorio".
