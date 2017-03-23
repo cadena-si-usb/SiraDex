@@ -76,7 +76,7 @@ def login_cas():
             if datosUsuario.tipo == "Bloqueado":
                 insertar_log(db, 'LOGIN', datetime.datetime.now(), request.client, 'LOGIN USUARIO BLOQUEADO', usbid)
                 response.flash = T("Usuario bloqueado")
-                redirect(URL(c = "default",f="index"))
+                redirect(URL(c = "default",f="logout_cas"))
             else:
                 insertar_log(db, 'LOGIN', datetime.datetime.now(), request.client, 'LOGIN SATISFACTORIO', usbid)
                 redirect(URL('perfil'))
