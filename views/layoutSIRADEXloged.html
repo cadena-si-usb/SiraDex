@@ -25,13 +25,13 @@
 
 
                 <!-- EN SERVIDOR -->
-                 <a  id = login
+                 <!-- <a  id = login
                             class ='btn btn-xs'
-                            href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas'> 
+                            href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas'> -->
 
                 <!-- EN DESARROLLO -->
-                         <!-- <a  class ='btn btn-xs '
-                            href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas'> -->
+                         <a  class ='btn btn-xs '
+                            href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas'>
                             Iniciar Sesión
                     </a>
                 </li>
@@ -67,7 +67,7 @@
                     <li role="separator" class="divider"></li>
                     {{pass}}
                         {{if admin == 2 :}}
-                            <li><a href="{{=URL(c='log', f='graficas')}}">Consultar Gráficas de Log</a></li>
+                            <li><a href="{{=URL(c='log', f='graficas')}}">Consultar Gráficas de LOG.</a></li>
                         {{pass}}
 		                <li><a href="{{=URL(c='tipo_actividad', f='gestionar')}}">Tipos de Actividad</a></li>
                     <li><a href="{{=URL(c='catalogo', f='vGestionarCatalogos')}}">Catálogos</a></li>
