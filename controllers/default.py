@@ -26,9 +26,9 @@ def call(): return service()
 
 # URLS DE RETORNO PARA EL CAS ##
 # PARA EL SERVIDOR:
-URL_RETORNO = "http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas"
+#URL_RETORNO = "http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas"
 # PARA DESSARROLLO. Cambiar el puerto 8000 si es necesario.
-# URL_RETORNO = "http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas"
+URL_RETORNO = "http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas"
 
 # FUNCIONES USUARIO
 def login_cas():
@@ -88,14 +88,18 @@ def login_cas():
             datos_usuario = {'nombres' : session.usuario['first_name'] + ' ' + session.usuario['last_name']}
             datos_usuario['email'] = session.usuario['email']
 
+            if session.usuario["phone"]:
+                telefono = session.usuario["phone"]
+            else:
+                telefono = ""
 
             db.USUARIO.insert(ci=session.usuario["cedula"],  # Lo insertamos en la base de datos.
             usbid=session.usuario["usbid"],
             nombres=session.usuario["first_name"],
             apellidos=session.usuario["last_name"],
             correo_inst=session.usuario["email"],
-            correo_alter= None,
-            telefono=session.usuario["phone"],
+            correo_alter= "",
+            telefono=telefono,
             tipo = "Usuario")
 
             insertar_log(db, 'REGISTRO', datetime.datetime.now(), request.client, 'REGISTRO SATISFACTORIO', usbid)
@@ -239,6 +243,7 @@ def EditarPerfil():
 
         # Modificar datos del perfil
         usuario = db(db.USUARIO.ci==session.usuario['cedula']).select().first()
+        print usuario
 
 
         forma=SQLFORM.factory(

@@ -125,9 +125,13 @@ function textoRestante1(maxLong, idDivUsar){
 
 			textoRestante1(maxLongColaboradores, $("#no_table_colaboradores"));
 
-			textoRestante1(maxTextoL, $(".Texto_Largo"));
+			if ($(".Texto_Largo").length != 0) {
+					textoRestante1(maxTextoL, $(".Texto_Largo"));
+			};
 
-			textoRestante1(maxLongNombre, $(".Texto_Corto"));
+			if ($(".Texto_Corto").length != 0) {
+					textoRestante1(maxLongNombre, $(".Texto_Corto"));
+			};
 
 			for (i = 1; i <= cantidad_comprobantes; i++) {
 					textoRestante1(maxDescripcion, $('#no_table_d3scr1pc10n_comprobante_'+i));
@@ -294,7 +298,7 @@ function textoRestante1(maxLong, idDivUsar){
 			$('#no_table_c0mpr0bant3_1__row').before(html);
 			for (i = 1; i <= cantidad_comprobantes; i++) {
 		    	$('#no_table_c0mpr0bant3_'+i+'__row').addClass("hidden");
-		    	$('#no_table_c0mpr0bant3_'+i+'__row').find(".bootstrap-filestyle").addClass("col-sm-11").css("float","left").after('<div class="col-sm-1"> <a class="remove-tag-comprobante" data-comprobante="'+i+'" onClick = "">\
+		    	$('#no_table_c0mpr0bant3_'+i+'__row').find(".bootstrap-filestyle").addClass("col-xs-11").css("float","left").after('<div class="col-sm-1"> <a class="remove-tag-comprobante" data-comprobante="'+i+'" onClick = "">\
 					                                              <span class="glyphicon glyphicon-remove red"></span>\
 					                                    				</a></div>\
 					                                    			');
@@ -305,6 +309,7 @@ function textoRestante1(maxLong, idDivUsar){
 					var comprobante = $(this).data('comprobante');
 					console.log($('#no_table_c0mpr0bant3_'+ comprobante).val())
 					$('#no_table_c0mpr0bant3_'+ comprobante).val('');
+					$('#no_table_d3scr1pc10n_comprobante_'+ comprobante).val('');
 					$('#no_table_c0mpr0bant3_'+ comprobante).closest(":file").filestyle('clear');
 			});
 
