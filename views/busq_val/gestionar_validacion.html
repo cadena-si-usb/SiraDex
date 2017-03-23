@@ -50,11 +50,11 @@
                 { "orderable": false }
             ]
         };
-        
+
         // Se asume que tienen la misma cantidad de columnas los distintos
         // tipos de solicitudes
         var cantidadColumnas = $("#porValidarTable thead th").length;
-        
+
         columnas = [];
         for (var i = 0; i<cantidadColumnas; i++){
           if (i == 2) {
@@ -76,42 +76,42 @@
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active esp">
-                    <a  href="#esp" 
-                        aria-controls="esp" 
-                        role="tab" 
+                    <a  href="#esp"
+                        aria-controls="esp"
+                        role="tab"
                         data-toggle="tab">
                         Por Validar
                     </a>
                 </li>
-                
+
                 <li role="presentation" class="act">
-                    <a  href="#val" 
-                        aria-controls="val" 
-                        role="tab" 
+                    <a  href="#val"
+                        aria-controls="val"
+                        role="tab"
                         data-toggle="tab">
                         Validados
                     </a>
                 </li>
 
                 <li role="presentation" class="rec">
-                    <a  href="#rec" 
-                        aria-controls="rec" 
-                        role="tab" 
+                    <a  href="#rec"
+                        aria-controls="rec"
+                        role="tab"
                         data-toggle="tab">
                         No Validados
                     </a>
-                </li>       
+                </li>
             </ul>
 
             <!-- Tab panes -->
-        
+
             <div class="tab-content">
                 <!-- Espera -->
                 <div role="tabpanel" class="tab-pane active" id="esp">
                     {{if len(productosE) == 0:}}
                         No hay productos por validar
                     {{else:}}
-                        <table id="porValidarTable" class="table table-hover table-striped borde-tabla">
+                        <table id="porValidarTable" class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
                             <thead>
 	                            <tr>
 	                                <th class="hColumns">ID Producto</th>
@@ -122,7 +122,7 @@
                             </thead>
                             <tbody>
                                 {{for producto in productosE:}}
-                                   
+
                                     <tr class="clickable">
                                         <td class="hColumns center-vertically">
                                             {{=producto[0]}}
@@ -131,32 +131,32 @@
                                         <td class="hColumns center-vertically detalles">
                                             {{=producto[1]}}
                                         </td>
-                                            
+
                                         <td class="hColumns center-vertically detalles">
                                            {{=producto[2]}}
                                         </td>
-                                            
+
                                         <td class="hColumns text-center center-vertically">
                                             <a href="{{=URL(f='ver_producto', args=[producto[0]])}}">
                                                <span class="glyphicon glyphicon-eye-open" style="color:#9E9E9E"></span>
                                             </a>
                                         </td>
-                                        
+
                                     </tr>
                                 {{pass}}
-                                
-                                    
+
+
                             </tbody>
                         </table>
                     {{pass}}
-                </div>        
-                
+                </div>
+
                 <!-- Validados -->
                 <div role="tabpanel" class="tab-pane" id="val">
-                    {{if len(productosV) == 0:}}        
+                    {{if len(productosV) == 0:}}
                         No hay productos validados
                     {{else:}}
-                        <table id="validadoTable" class="table table-hover table-striped borde-tabla">
+                        <table id="validadoTable" class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
                             <thead>
 	                            <tr>
 	                                <th class="hColumns">ID Producto</th>
@@ -167,41 +167,41 @@
                             </thead>
                             <tbody>
                                 {{for producto in productosV:}}
-                                    <tr class="clickable">                      
+                                    <tr class="clickable">
                                         <td class="hColumns center-vertically">
                                             {{=producto[0]}}
                                         </td>
 
                                         <td class="hColumns center-vertically detalles">
                                             {{=producto[1]}}
-                                        </td> 
-                                            
+                                        </td>
+
                                         <td class="hColumns center-vertically detalles">
                                             {{=producto[2]}}
-                                        </td> 
-                                            
+                                        </td>
+
                                         <td class="hColumns text-center center-vertically">
                                             <a href="{{=URL(f='ver_producto', args=[producto[0]])}}">
                                                 <span class="glyphicon glyphicon-eye-open" style="color:#9E9E9E"></span>
                                             </a>
                                         </td>
 
-                                        
+
                                     </tr>
                                 {{pass}}
-                                
-                                    
+
+
                             </tbody>
                         </table>
                     {{pass}}
                 </div>
-                
+
                 <!--  No Validados -->
                 <div role="tabpanel" class="tab-pane" id="rec">
-                    {{if len(productosR) == 0:}}        
+                    {{if len(productosR) == 0:}}
                         No hay productos no validados
                     {{else:}}
-                        <table id="rechazadoTable" class="table table-hover table-striped borde-tabla">
+                        <table id="rechazadoTable" class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
                             <thead>
 	                            <tr>
 	                                <th class="hColumns">ID Producto</th>
@@ -212,7 +212,7 @@
                             </thead>
                             <tbody>
                                 {{for producto in productosR:}}
-                                    <tr class="clickable">                                     
+                                    <tr class="clickable">
                                         <td class="hColumns center-vertically detalles">
                                             {{=producto[0]}}
                                         </td>
@@ -220,29 +220,29 @@
                                         <td class="hColumns center-vertically detalles">
                                             {{=producto[1]}}
                                         </td>
-                                            
+
                                         <td class="hColumns center-vertically detalles">
                                             {{=producto[2]}}
-                                        </td>    
-                                            
+                                        </td>
+
                                         <td class="hColumns text-center center-vertically">
                                             <a href="{{=URL(f='ver_producto', args=[producto[0]])}}">
                                             	<span class="glyphicon glyphicon-eye-open" style="color:#9E9E9E"></span>
                                             </a>
                                         </td>
-                                       
-                                        
+
+
                                     </tr>
                                 {{pass}}
-                                
-                                
+
+
                             </tbody>
                         </table>
                     {{pass}}
                 </div>
 
             </div>
-            
+
         </div>
     </div>
 </div>
@@ -253,6 +253,6 @@
     <!-- SCRIPT PARA MOSTRAR Y OCULTAR DETALLES -->
     <script src="{{=URL('static','js/showDetails.js')}}"
             type="text/javascript">
-    
+
     </script>
 {{end}}
