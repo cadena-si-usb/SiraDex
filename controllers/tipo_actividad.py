@@ -287,7 +287,7 @@ def eliminar_campo():
 
     id_tipo = int(request.args[0])
     id_campo = int(request.args[1])
-
+    
     # Busco los productos que tengan asociado ese campo, y lo elimino.
     db(db.PRODUCTO_TIENE_CAMPO.id_campo == id_campo).delete()
 
@@ -361,8 +361,10 @@ def ver_tipo_actividad():
         id_camposEnBaseDeDatos = db(queryCampo).select(db.CAMPO.id_campo)
         id_campo = None
         for id_campoEnBD in id_camposEnBaseDeDatos :
-            id_campo = id_campoEnBD
-            if db((db.ACT_POSEE_CAMPO.id_tipo_act == id_tipo) & (db.ACT_POSEE_CAMPO.id_campo == id_campo)) :
+            id_campo = int(id_campoEnBD.id_campo)
+            if db((db.ACT_POSEE_CAMPO.id_tipo_act == id_tipo) & (db.ACT_POSEE_CAMPO.id_campo == id_campo)).select() :
+                print("id_tipo",id_tipo)
+                print("id_campo",id_campo)
                 session.message = "Nombre de campo ya existe en la actividad."
                 redirect(URL("ver_tipo_actividad", args=[id_tipo]))
         
@@ -376,9 +378,16 @@ def ver_tipo_actividad():
         # Se busca el id del campo.
         queryCampo = reduce(lambda a, b: (a&b),[db.CAMPO.nombre == request.vars.Nombre,
                                             db.CAMPO.tipo_campo == request.vars.Tipo,
-                                            db.CAMPO.obligatorio == request.vars.Obligatorio])
+                                            db.CAMPO.obligatorio == request.vars.Obligatorio,
+                                            db.CAMPO.nombre_interno == "C"+str(abs(convertToNumber(request.vars.Nombre)))])
 
-        id_campo = db(queryCampo).select(db.CAMPO.id_campo).first()
+        #id_campo = db(queryCampo).select(db.CAMPO.id_campo).first()
+        id_campo = None
+        id_camposEnBaseDeDatos = db(queryCampo).select(db.CAMPO.id_campo)
+        for id_campoEnBD in id_camposEnBaseDeDatos :
+            id_campo = int(id_campoEnBD.id_campo)
+            if db((db.ACT_POSEE_CAMPO.id_tipo_act == id_tipo) & (db.ACT_POSEE_CAMPO.id_campo != id_campo)).select() :
+                break
         
         # Se almacena la relación entre el campo añadido y el tipo de actividad
         # correspondiente.
