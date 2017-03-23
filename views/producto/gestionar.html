@@ -107,6 +107,9 @@
             { "orderable": false },
             null,
             null,
+            null,
+            null,
+            null,
             null
         ]
     };
@@ -142,6 +145,9 @@
             { "orderable": false },
             { "orderable": false },
             { "orderable": false },
+            null,
+            null,
+            null,
             null,
             null,
             null
@@ -181,11 +187,21 @@
             { "orderable": false },
             null,
             null,
+            null,
+            null,
+            null,
             null
         ]
     };
 
-    // Asume que cada tabla de usuario tiene el mismo número de columnas
+    var cantidadColumnas = $("#RechazadasTable thead th").length;
+    columnas2 = [];
+    for (var i = 0; i<cantidadColumnas; i++){
+      columnas2.push({ "orderable": false });
+    }
+    opciones2["columns"] = columnas2;
+    $("#RechazadasTable").DataTable(opciones2);
+
     var cantidadColumnas = $("#ValidadasTable thead th").length;
     columnas = [];
     for (var i = 0; i<cantidadColumnas; i++){
@@ -194,30 +210,21 @@
     opciones["columns"] = columnas;
     $("#ValidadasTable").DataTable(opciones);
 
-    var cantidadColumnas = $("#NoValidadasTable thead th").length;
-    columnas = [];
+    var cantidadColumnas = $("#BorradoresTable thead th").length;
+    columnas4 = [];
     for (var i = 0; i<cantidadColumnas; i++){
-      columnas.push({ "orderable": false });
+      columnas4.push({ "orderable": false });
     }
-    opciones2["columns"] = columnas;
-    $("#NoValidadasTable").DataTable(opciones2);
+    opciones4["columns"] = columnas4;
+    $("#BorradoresTable").DataTable(opciones4);
 
     var cantidadColumnas = $("#PorValidarTable thead th").length;
-    columnas = [];
+    columnas3 = [];
     for (var i = 0; i<cantidadColumnas; i++){
-      columnas.push({ "orderable": false });
+      columnas3.push({ "orderable": false });
     }
-    opciones3["columns"] = columnas;
-
+    opciones3["columns"] = columnas3;
     $("#PorValidarTable").DataTable(opciones3);
-
-    var cantidadColumnas = $("#BorradoresTable thead th").length;
-    columnas = [];
-    for (var i = 0; i<cantidadColumnas; i++){
-      columnas.push({ "orderable": false });
-    }
-    opciones4["columns"] = columnas;
-    $("#BorradoresTable").DataTable(opciones4);
   });
 </script>
 
@@ -280,16 +287,20 @@
         <div role="tabpanel" class="tab-pane active" id="activas">
                     <table id='ValidadasTable' class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
                         <thead>
-                            <tr>
+                          <tr>
                                 <th class="hColumns">Nombre</th>
                                 <th class="hColumns text-center">Editar</th>
                                 <th class="hColumns text-center">Descargar</th>
                                 <th class="hColumns text-center">Eliminar</th>
+                        </tr>
                         </thead>
                         <tbody id="actividades">
                           {{if cant_val == 0:}}
                               <tr class="clickable">
                                 <td class="hColumns" colspan="7"> No tienes productos validados</td>
+                                <th class="hColumns"></th>
+                                <th class="hColumns"></th>
+                                <th class="hColumns text-center"></th>
                               </tr>
                           {{else:}}
                             {{for x in rows:}}
@@ -328,7 +339,7 @@
         <div role="tabpanel" class="tab-pane" id="espera">
                     <table id='PorValidarTable' class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
                         <thead>
-                            <tr>
+                          <tr>
                                 <th class="hColumns">Nombre</th>
                                 <th class="hColumns">Tipo Actividad</th>
                                 <th class="hColumns">Modificación</th>
@@ -336,12 +347,18 @@
                                 <th class="hColumns text-center">Editar</th>
                                 <th class="hColumns text-center">Descargar</th>
                                 <th class="hColumns text-center">Eliminar</th>
-                            </tr>
+                          </tr>
                         </thead>
                         <tbody id="actividades">
                           {{if cant_esp == 0:}}
                             <tr class="clickable">
                               <td class="hColumns" colspan="7"> No tienes productos por validar</td>
+                              <th class="hColumns"></th>
+                              <th class="hColumns"></th>
+                              <th class="hColumns text-center"></th>
+                              <th class="hColumns text-center"></th>
+                              <th class="hColumns"></th>
+                              <th class="hColumns"></th>
                             </tr>
                           {{else:}}
                             {{for x in rows:}}
@@ -380,7 +397,7 @@
 
         <!-- No Validados -->
         <div role="tabpanel" class="tab-pane" id="rechazadas">
-                    <table id='NoValidadasTable' class="table table-hover table-striped borde-tabla"  style="margin:0px !important; width: 100% !important">
+                    <table id='RechazadasTable' class="table table-hover table-striped borde-tabla"  style="margin:0px !important; width: 100% !important">
                         <thead>
                             <tr>
                                 <th class="hColumns">Nombre</th>
@@ -389,11 +406,17 @@
                                 <th class="hColumns text-center">Editar</th>
                                 <th class="hColumns text-center">Descargar</th>
                                 <th class="hColumns text-center">Eliminar</th>
+                            </tr>
                         </thead>
                         <tbody id="actividades">
                           {{if cant_rec == 0:}}
                               <tr class="clickable">
-                                <td class="hColumns" colspan="6">  No tienes productos no validados</td>
+                                <td class="hColumns">  No tienes productos no validados</td>
+                                <th class="hColumns"></th>
+                                <th class="hColumns"></th>
+                                <th class="hColumns text-center"></th>
+                                <th class="hColumns text-center"></th>
+                                <th class="hColumns"></th>
                               </tr>
                           {{else:}}
                             {{for x in rows:}}
@@ -427,7 +450,6 @@
                             {{pass}}
                           {{pass}}
                         </tbody>
-                    </table>
                   </table>
 
         </div>
@@ -441,11 +463,16 @@
                                 <th class="hColumns">Ult. Modificación</th>
                                 <th class="hColumns text-center">Editar</th>
                                 <th class="hColumns text-center">Eliminar</th>
+                            </tr>
                         </thead>
                         <tbody id="actividades">
                           {{if cant_bor == 0:}}
                               <tr class="clickable">
-                                <td class="hColumns" colspan="5">No tienes productos guardados como borrador</td>
+                                <td class="hColumns">No tienes productos guardados como borrador</td>
+                                <th class="hColumns"></th>
+                                <th class="hColumns"></th>
+                                <th class="hColumns text-center"></th>
+                                <th class="hColumns text-center"></th>
                               </tr>
                           {{else:}}
 
@@ -475,17 +502,8 @@
                           {{pass}}
                         </tbody>
                     </table>
-                  </table>
-                  <div class="text-center">
-                    <ul class="pagination pagination-lg pager" id="myPager"></ul>
-                  </div>
-                      <!-- ESTABA AL FINAL PARA LA PAGINACION -->
-                  <div class="text-center">
-                      <ul class="pagination pagination-lg pager" id="myPager"></ul>
-                  </div>
 
         </div>
-
         </div>
         </div>
         </div>
