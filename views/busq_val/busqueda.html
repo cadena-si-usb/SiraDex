@@ -5,14 +5,66 @@
 {{end}}
 
 {{block subtitulo}}
-	
+
 {{end}}
 
-
 {{block contenido}}
+
+	<!-- Custom DataTables plugin -->
+	<script src="{{=URL('static','DataTables/datatables.js')}}"></script>
+	<link rel="stylesheet" type="text/css" href="{{=URL('static','DataTables/datatables.css')}}">
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var opciones = {
+				bFilter: false,
+				responsive: true,
+					"language": {
+							search:         "Buscar:",
+							searchPlaceholder: "",
+							lengthMenu:     "Mostrar _MENU_ entradas",
+							info:           "Mostrando _START_ a _END_ de _TOTAL_ entradas.",
+							infoEmpty:      "Mostrando 0 a 0 de 0 entradas",
+							infoFiltered:   "(filtradas de _MAX_ entradas en total)",
+							infoPostFix:    "",
+							loadingRecords: "Carga en curso...",
+							zeroRecords:    "No se encontraron usuarios en la busqueda",
+							emptyTable:     "No hay informacion disponible en la tabla",
+							processing:     "Procesando...",
+							paginate: {
+									first:      "Primero",
+									previous:   "Anterior",
+									next:       "Siguiente",
+									last:       "Ultimo"
+							},
+							aria: {
+									sortAscending:  ": Se ordenan las columnas por orden creciente",
+									sortDescending: ": Se ordenan las columnas por orden decreciente"
+							}
+					},
+					 "columns": [
+							{ "orderable": false },
+							{ "orderable": false },
+							{ "orderable": false },
+							null,
+							null,
+							null
+					]
+			};
+
+			// Asume que cada tabla de usuario tiene el mismo número de columnas
+			var cantidadColumnas = $("#busquedasTable thead th").length;
+			columnas = [];
+			for (var i = 0; i<cantidadColumnas; i++){
+				columnas.push({ "orderable": false });
+			}
+			opciones["columns"] = columnas;
+			$("#busquedasTable").DataTable(opciones);
+		});
+	</script>
 <!-- GRAFICAS Y TABLA -->
 {{try:}}
-  {{if productos != () or len(productos)!=0:}}  
+  {{if productos != () or len(productos)!=0:}}
     <!-- GRAFICAS -->
     <h2>
       Gráficas
@@ -22,31 +74,31 @@
 
     <div class="row graficas">
       <!-- Grafica de torta -->
-      <div class="col-md-6"  > 
+      <div class="col-md-6"  >
       <center>
         <div class="tab-content card" style="text-align: center;">
           <div id="pieChart" style="width: 100%">
           </div>
-          
+
           <button type="button" id="btn-pieChart" class="btn btn-default green btn-border" data-toggle="modal" data-target="#modalPie">
             <span class="glyphicon glyphicon-resize-full"></span> Aumentar
           </button>
         </div>
-      </center> 
+      </center>
       </div>
       <!-- Grafica de barra -->
-      <div class="col-md-6"  > 
+      <div class="col-md-6"  >
       <center>
         <div class="tab-content card" style="text-align: center;">
-          
+
           <div id="barChart" class="chart"></div>
-          
+
           <button type="button" id="btn-pieChart" class="btn btn-default green btn-border" data-toggle="modal" data-target="#modalBar">
             <span class="glyphicon glyphicon-resize-full"></span> Aumentar
           </button>
         </div>
-      </center> 
-      </div>      
+      </center>
+      </div>
     </div>
 
     <!-- TABLA -->
@@ -75,9 +127,9 @@
   <div role="tabpanel" class="tab-pane active" id="esp">
   {{try:}}
     {{if len(productos) == 0:}}
-      No hay actividades 
+      No hay actividades
     {{else:}}
-      <table class="table table-striped table-condensed table-hover sortable">
+      <table id='busquedasTable' class="table table-striped table-condensed table-hover sortable" style="margin:0px !important; width: 100% !important">
         <thead>
           <tr>
           <th>Nombre Producto</th>
@@ -99,7 +151,7 @@
 
               <td class="detalles">
               {{=producto[4]}}
-              </td>                                           
+              </td>
 
               <td>
               <a href="{{=URL(f='ver_producto', args=[producto[3]])}}">
@@ -129,19 +181,19 @@
 
   <!-- Modal content -->
   <div class="modal-content">
-    
+
     <div class="modal-header">
        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      <h4 class="modal-title"><center>Gráfica de Productos por Programa</center></h4> 
+      <h4 class="modal-title"><center>Gráfica de Productos por Programa</center></h4>
     </div>
 
     <div class="modal-body">
     <center>
-      
+
       <div id="pieChartB"></div>
     </center>
     </div>
-    
+
     <div class="modal-footer">
        <center>
       <button type="button" class="btn btn-default green btn-border " data-dismiss="modal">
@@ -149,7 +201,7 @@
         <span class="glyphicon glyphicon-resize-small"></span>
         Cerrar
         </button>
-      </center> 
+      </center>
     </div>
   </div>
   </div>
@@ -160,26 +212,26 @@
   <div class="modal-dialog">
   <!-- Modal content -->
   <div class="modal-content" style="width: 55em; margin-left: -5.8em">
-    
+
     <div class="modal-header">
        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      <h4 class="modal-title"><center>Gráfica de Productos por Programa y Años</center></h4> 
+      <h4 class="modal-title"><center>Gráfica de Productos por Programa y Años</center></h4>
     </div>
 
     <div class="modal-body" style="margin-left: -6em;">
     <center>
-      
+
       <div id="barChartB"></div>
     </center>
     </div>
-    
+
     <div class="modal-footer">
        <center>
       <button type="button" class="btn btn-default green btn-border " data-dismiss="modal">
         <span class="glyphicon glyphicon-resize-small"></span>
         Cerrar
         </button>
-      </center> 
+      </center>
     </div>
   </div>
   </div>
@@ -202,7 +254,7 @@
       $("#ver_graficas").hide();
       $("#ocultar_graficas").show();
       $(".graficas").toggle(300);
-    });  
+    });
 
     $("#ocultar_tabla").click(function(){
       $("#ocultar_tabla").hide();
@@ -241,8 +293,8 @@ function PieChart() {
                           parseInt({{=infoPieChart[i]['repeticiones']}},10),
                           '{{=infoPieChart[i]["nombre"]}}\nTotal: {{=infoPieChart[i]["repeticiones"]}}'
                       ]]);
-    var new_light_color = 'rgb(' +  (Math.floor((255-111)*Math.random()) + 28) + ',' + 
-                                    (Math.floor((255-170)*Math.random()) + 42) + ',' + 
+    var new_light_color = 'rgb(' +  (Math.floor((255-111)*Math.random()) + 28) + ',' +
+                                    (Math.floor((255-170)*Math.random()) + 42) + ',' +
                                     (Math.floor((255-109)*Math.random()) + 64) + ')';
     colorsArray.push(new_light_color);
   {{pass}}
@@ -263,10 +315,10 @@ function PieChart() {
     google.visualization.events.addListener(chart, 'select', selectHandler);
     function selectHandler() {
       var selectedItem = chart.getSelection()[0];
-      
+
       if (selectedItem) {
         var topping = dataTable.getValue(selectedItem.row, 0);
-      
+
         {{for i in infoPieChart:}}
           if(topping == '{{=infoPieChart[i]["abreviacion"]}}'){
             window.location = "/tipo_actividad/gestionar/"+{{=infoPieChart[i]["id"]}};
@@ -279,19 +331,19 @@ function PieChart() {
 function BarChart() {
   var b = [['Programa']];
   var colorsArray = [];
-  
+
   {{for v0 in infoBarChart.values():}}
     {{for v1 in v0.values():}}
       if (b[0].indexOf('{{=v1["abreviacion"]}}') == -1){
         b[0].push('{{=v1["abreviacion"]}}');
       }
-      var new_light_color = 'rgb(' +  (Math.floor((255-111)*Math.random()) + 28) + ',' + 
-                                      (Math.floor((255-170)*Math.random()) + 42) + ',' + 
+      var new_light_color = 'rgb(' +  (Math.floor((255-111)*Math.random()) + 28) + ',' +
+                                      (Math.floor((255-170)*Math.random()) + 42) + ',' +
                                       (Math.floor((255-109)*Math.random()) + 64) + ')';
       colorsArray.push(new_light_color);
     {{pass}}
   {{pass}}
-  
+
   b[0].push({ role: 'annotation' } );
   // Este deberia ser la leyenda del njombre completo
   b[0].push({ role: 'tooltip' } );
@@ -321,7 +373,7 @@ function BarChart() {
     var chartBig = new google.visualization.ColumnChart(document.getElementById('barChartB'));
     chartBig.draw(data, options2);
 
-    // Agregando funcion para redirigir al hacer click  
+    // Agregando funcion para redirigir al hacer click
 }
 
 function Table() {
@@ -331,13 +383,13 @@ function Table() {
           data.addColumn('number', '{{=k0}}');
         {{pass}}
         data.addColumn('number', 'Total');
-        
+
   var programas = [];
   {{for k0,v0 in infoTabla.iteritems():}}
     var b = ['{{=v0["nombre"]}}'];
     {{for i in sorted(v0):}}
       {{if i != "nombre":}}
-          {{if v0[i] != 0 and i != "total":}}            
+          {{if v0[i] != 0 and i != "total":}}
             {{dictionary["anio"]= i}}
             {{dictionary["Programa"] = k0 }}
           b.push({v:parseInt('{{=v0[i]}}'),f:'<a href="{{=URL(c="busq_val",f="busqueda",vars=dictionary) }}">{{=v0[i]}}</a>'});
@@ -364,6 +416,6 @@ $(window).resize(function(){
 </script>
 
 <!-- SCRIPT PARA MOSTRAR Y OCULTAR DETALLES -->
-<script src="{{=URL('static','js/showDetails.js')}}" type="text/javascript"></script> 
+<script src="{{=URL('static','js/showDetails.js')}}" type="text/javascript"></script>
 
 {{end}}

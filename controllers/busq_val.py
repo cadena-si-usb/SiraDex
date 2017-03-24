@@ -278,7 +278,7 @@ def validar(id_producto):
     datos_usuario = {'nombres' : usuario.nombres + ' ' + usuario.apellidos}
     datos_usuario['correo_inst'] = usuario.correo_inst
     datos_usuario['correo_alter'] = None
-    if usuario.correo_alter != None:
+    if usuario.correo_alter != None and usuario.correo_alter != '':
         datos_usuario['correo_alter'] = usuario.correo_alter
 
 
@@ -296,7 +296,7 @@ def validar(id_producto):
         datos_coautor = {'nombres' : usuario.nombres + ' ' + usuario.apellidos }
         datos_coautor['correo_inst'] = usuario.correo_inst
         datos_coautor['correo_alter'] = None
-        if usuario.correo_alter != None:
+        if usuario.correo_alter != None and  usuario.correo_alter != '':
             datos_coautor['correo_alter'] = usuario.correo_alter
         # Enviamos el correo.
         enviar_correo_validacion_coautor(mail, datos_coautor, datos_usuario, producto)

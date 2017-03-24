@@ -8,80 +8,154 @@
 {{end}}
 
 {{block descripcion}}
+
+<!-- Custom DataTables plugin -->
+<script src="{{=URL('static','DataTables/datatables.js')}}"></script>
+<link rel="stylesheet" type="text/css" href="{{=URL('static','DataTables/datatables.css')}}">
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    var opciones = {
+      bFilter: false,
+      ordering: false,
+      responsive: true,
+        "language": {
+            search:         "Buscar:",
+            searchPlaceholder: "",
+            lengthMenu:     "Mostrar _MENU_ entradas",
+            info:           "Mostrando _START_ a _END_ de _TOTAL_ entradas.",
+            infoEmpty:      "Mostrando 0 a 0 de 0 entradas",
+            infoFiltered:   "(filtradas de _MAX_ entradas en total)",
+            infoPostFix:    "",
+            loadingRecords: "Carga en curso...",
+            zeroRecords:    "No se encontraron usuarios en la busqueda",
+            emptyTable:     "No hay informacion disponible en la tabla",
+            processing:     "Procesando...",
+            paginate: {
+                first:      "Primero",
+                previous:   "Anterior",
+                next:       "Siguiente",
+                last:       "Ultimo"
+            },
+            aria: {
+                sortAscending:  ": Se ordenan las columnas por orden creciente",
+                sortDescending: ": Se ordenan las columnas por orden decreciente"
+            }
+        },
+         "columns": [
+            { "orderable": false },
+            { "orderable": false },
+            { "orderable": false },
+            null,
+            null,
+            null
+        ]
+    };
+
+    // Asume que cada tabla de usuario tiene el mismo número de columnas
+    var cantidadColumnas = 1;
+    columnas = [];
+    for (var i = 0; i<cantidadColumnas; i++){
+      columnas.push({ "orderable": false });
+    }
+    opciones["columns"] = columnas;
+    $("#ValidadasTable").DataTable(opciones);
+    $("#NoValidadasTable").DataTable(opciones);
+    $("#PorValidarTable").DataTable(opciones);
+  });
+</script>
+
 <style scoped="scoped">
   embed{
     max-height: 20em;
   }
 </style>
-
-<div class="row"> 
-  <!-- usuario -->
-  <div class="col-md-5" style="margin-top: 6em;">
-    <h1>
-      <!-- Nombre del usuario -->
-      {{=session.usuario['first_name'].split(' ')[0]}} {{=session.usuario['last_name'].split(' ')[0]}}
-      <!-- icono editar -->
-      <a id="editar" href="{{=URL('EditarPerfil')}}" >
-      <!-- {{=IMG(_src=URL('static', 'icon', args='i_edit.png'),_style='max-height:1em') }}-->
-      <span class="glyphicon glyphicon-edit green-icn"></span>
-      </a>
-    </h1>
-    <!-- datos del usuario -->
-    <p class="text-justify">
-      <b>Nombre completo:</b> {{=session.usuario['first_name']}} {{=session.usuario['last_name']}}
-      <br>
-      {{try:}}
-        {{if session.usuario['dpto'] != None:}}
-          <b>Departamento: </b>{{=session.usuario['dpto']}}
-        {{pass}}
-        <br>
-      {{except:}}
-        {{try:}}
-          {{if session.usuario['carrera'] != None:}}
-            <b>Carrera: </b>{{=session.usuario['carrera']}}
-          {{pass}}
-          <br>
-        {{except:}}
-        {{pass}}
-      {{pass}}
-      <b>Usbid:</b> {{=session.usuario['usbid']}}
-      <br>
-      <b>Cedula:</b> {{=session.usuario['cedula']}}
-      <br>
-      <b>Correo:</b> {{=session.usuario['usbid']+"@usb.ve"}}
-      <br>
-      {{ if session.usuario['alternativo'] != None:}}
-        <b>Correo alternativo:</b> {{=session.usuario['alternativo']}}
-        <br>
-      {{pass}}
-      {{if session.usuario['phone'] != None:}}
-        <b>Telefono:</b> {{=session.usuario['phone']}}
-      {{pass}}
-      <br>
-    </p>
-  </div>
-  <!-- piechart -->
-  <div class="col-md-4">
-    <div class="tab-content card" style="text-align: center;">
-      <div id="pieChart">
-      </div>
-    </div>
-  </div>
-  <!-- botones -->
-  <div class="col-md-3" style="margin-bottom: 30px">
-    <br>      
     <div class="row">
-      <span style="margin-left: 42.99em">
-        <a href="{{=URL(c='producto',f='gestionar')}}">        
-          <button type="button" class="btn btn-default green btn-border center-block" data-toggle="modal" data-target="#myModal">
-          Ver todos mis Productos
-          <span class="glyphicon glyphicon-chevron-right"></span>
-          </button>
-        </a>
-      </span>
-    </div>
-  </div>
-</div>
+        <!-- usuario -->
+        <div class="col-md-5" style="margin-top: 6em;">
+          <!-- Nombre del usuario -->
+          <h1>
+            {{=session.usuario['first_name'].split(' ')[0]}} {{=session.usuario['last_name'].split(' ')[0]}}
+
+            <!-- icono editar -->
+            <a id="editar" href="{{=URL('EditarPerfil')}}" >
+            <!-- {{=IMG(_src=URL('static', 'icon', args='i_edit.png'),_style='max-height:1em') }}-->
+            <span class="glyphicon glyphicon-edit green-icn"></span>
+            </a>
+          </h1>
+
+          <!-- datos del usuario -->
+          <p class="text-justify">
+            <b>Nombre completo:</b> {{=session.usuario['first_name']}} {{=session.usuario['last_name']}}
+            <br>
+            {{try:}}
+              {{if session.usuario['dpto'] != None:}}
+                <b>Departamento: </b>{{=session.usuario['dpto']}}
+              {{pass}}
+              <br>
+            {{except:}}
+              {{try:}}
+                {{if session.usuario['carrera'] != None:}}
+                  <b>Carrera: </b>{{=session.usuario['carrera']}}
+                {{pass}}
+                <br>
+              {{except:}}
+              {{pass}}
+            {{pass}}
+            <b>Usbid:</b> {{=session.usuario['usbid']}}
+            <br>
+            <b>Cedula:</b> {{=session.usuario['cedula']}}
+            <br>
+            <b>Correo:</b> {{=session.usuario['usbid']+"@usb.ve"}}
+            <br>
+            {{ if session.usuario['alternativo'] != None:}}
+              <b>Correo alternativo:</b> {{=session.usuario['alternativo']}}
+              <br>
+            {{pass}}
+            {{if session.usuario['phone'] != None:}}
+              <b>Telefono:</b> {{=session.usuario['phone']}}
+            {{pass}}
+            <br>
+          </p>
+        </div>
+        <!-- tabla -->
+        <div class="col-md-4">
+          <div class="tab-content card" style="text-align: center;">
+
+          <div id="pieChart">
+          </div>
+
+          <!--<button type="button" id="btn-pieChart" class="btn btn-default green btn-border" data-toggle="modal" data-target="#grafica" style="margin-top: -5em;">
+            <span class="glyphicon glyphicon-resize-full"></span> Aumentar
+          </button>-->
+          </div>
+        </div>
+
+        <!-- botones -->
+          <div class="col-md-3">
+            <!--<div class="row">
+              <span style="margin-left: 42.99em;">
+
+                    <button type="button" class="btn btn-default green btn-border center-block" data-toggle="modal" data-target="#tabla">
+                        <span class="glyphicon glyphicon-resize-full"></span>
+                        Ver Actividades por año
+                    </button>
+              </span>
+            </div>-->
+            <br>
+            <div class="row">
+              <span style="margin-left: 42.99em;">
+
+                <a href="{{=URL(c='producto',f='gestionar')}}">
+                    <button type="button" class="btn btn-default green btn-border center-block" data-toggle="modal" data-target="#myModal">
+                        Ver todos mis Productos
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </button>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
 
 
 <!-- Modal 2 -->
@@ -106,7 +180,7 @@
       </div>
     </div>
   </div>
-</div>  
+</div>
 
 <!-- Modal 3 -->
 <div id="grafica" class="modal fade" role="dialog">
@@ -129,7 +203,7 @@
     </div>
 
   </div>
-</div>     
+</div>
 {{end}}
 
 {{block contenido}}
@@ -175,7 +249,7 @@
             {{if productos["Validados"]==[]:}}
             No tiene productos validados
             {{else:}}
-            <table class="table table-hover table-striped borde-tabla">
+            <table id='ValidadasTable' class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
                 <tbody>
                 {{for x in productos["Validados"]:}}
                    <tr class="clickable">
@@ -193,7 +267,7 @@
             {{if productos["Por Validar"]==[]:}}
             No tiene productos por validar
             {{else:}}
-                <table class="table table-hover table-striped borde-tabla">
+                <table id='NoValidadasTable'  class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
                 <tbody>
                 {{for x in productos["Por Validar"]:}}
                     <tr class="clickable">
@@ -211,7 +285,7 @@
             {{if productos["No Validados"]==[]:}}
             No tiene productos no validados
             {{else:}}
-            <table class="table table-hover table-striped borde-tabla">
+            <table  id='PorValidarTable' class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
                 {{for x in productos["No Validados"]:}}
                 <tr class="clickable">
                     <td class="hColumns center-vertically">
@@ -249,54 +323,60 @@
     });
 
     // Load the Visualization API and the corechart package.
-    google.charts.load('current', {'packages':['corechart']});
-    // Set a callback to run when the Google Visualization API is loaded.
-    google.charts.setOnLoadCallback(PieChart);
+  google.charts.load('current', {'packages':['corechart']});
+  // Set a callback to run when the Google Visualization API is loaded.
+  google.charts.setOnLoadCallback(PieChart);
 
-    // Grafica de torta
-    function PieChart() {
-      // Inicialziar datos
-      var dataTable = new google.visualization.DataTable();
-      dataTable.addColumn('string', 'Programa');
-      dataTable.addColumn('number', 'Productos');
-      dataTable.addColumn({type: 'string', role: 'tooltip'});
+  // Grafica de torta
+  function PieChart() {
+    // Inicialziar datos
+    var dataTable = new google.visualization.DataTable();
+    dataTable.addColumn('string', 'Programa');
+    dataTable.addColumn('number', 'Productos');
+    dataTable.addColumn({type: 'string', role: 'tooltip'});
 
-      // Generar color para cada slice
-      var colorsArray = [];
-      {{for i in infoPieChart:}}
-        dataTable.addRows([['{{=infoPieChart[i]["abreviacion"]}}',parseInt({{=infoPieChart[i]['repeticiones']}},10),'{{=infoPieChart[i]["nombre"]}}\nTotal: {{=infoPieChart[i]["repeticiones"]}}']]);
-        var new_light_color = 'rgb(' +  (Math.floor((255-111)*Math.random()) + 28) + ',' + 
-                                        (Math.floor((255-170)*Math.random()) + 42) + ',' + 
-                                        (Math.floor((255-109)*Math.random()) + 64) + ')';
-        colorsArray.push(new_light_color);
-      {{pass}}
+    // Generar color para cada slice
+    var colorsArray = [];
+    {{for i in infoPieChart:}}
+      dataTable.addRows([['{{=infoPieChart[i]["abreviacion"]}}',parseInt({{=infoPieChart[i]['repeticiones']}},10),'{{=infoPieChart[i]["nombre"]}}\nTotal: {{=infoPieChart[i]["repeticiones"]}}']]);
+      var new_light_color = 'rgb(' +  (Math.floor((255-111)*Math.random()) + 28) + ',' +
+                                      (Math.floor((255-170)*Math.random()) + 42) + ',' +
+                                      (Math.floor((255-109)*Math.random()) + 64) + ')';
+      colorsArray.push(new_light_color);
+    {{pass}}
 
-        // Set opciones de las graficas
-        var options =  {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent'};
+      // Set opciones de las graficas
+      var options =  {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent'};
+      var options2 = {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent'};
 
-        // Instanciar las graficas, dibujarlas usando opciones
-        var chart = new google.visualization.PieChart(document.getElementById('pieChart'));
-        chart.draw(dataTable, options);
+      // Instanciar las graficas, dibujarlas usando opciones
+      var chart = new google.visualization.PieChart(document.getElementById('pieChart'));
+      chart.draw(dataTable, options);
 
-        // Agregando funcion para redirigir al hacer click
-        google.visualization.events.addListener(chart, 'select', selectHandler);
-        function selectHandler() {
-          var selectedItem = chart.getSelection()[0];
-          
-          if (selectedItem) {
-            var topping = dataTable.getValue(selectedItem.row, 0);
-          
-            {{for i in infoPieChart:}}
-              if(topping == '{{=infoPieChart[i]["abreviacion"]}}'){
-                window.location = "/tipo_actividad/gestionar/"+{{=infoPieChart[i]["id"]}};
-              }
-            {{pass}}
-          }
+      // grafica dentro del modal
+      var chartBig = new google.visualization.PieChart(document.getElementById('pieChartB'));
+      chartBig.draw(dataTable, options2);
+
+      // Agregando funcion para redirigir al hacer click
+      google.visualization.events.addListener(chart, 'select', selectHandler);
+      function selectHandler() {
+        var selectedItem = chart.getSelection()[0];
+
+        if (selectedItem) {
+          var topping = dataTable.getValue(selectedItem.row, 0);
+
+          {{for i in infoPieChart:}}
+            if(topping == '{{=infoPieChart[i]["abreviacion"]}}'){
+              window.location = "/tipo_actividad/gestionar/"+{{=infoPieChart[i]["id"]}};
+            }
+          {{pass}}
         }
-    }
+      }
+  }
 
-    $(window).resize(function(){
-      PieChart();
-    });
+  $(window).resize(function(){
+  PieChart();
+  BarChart();
+});
   </script>
 {{end}}

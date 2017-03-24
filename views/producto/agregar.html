@@ -54,32 +54,29 @@
 <script>
 
 function textoRestante1(maxLong, idDivUsar){
-	console.log("antes");
-	console.log(idDivUsar);
-	if ($(idDivUsar).val()) {
+	
+	var longitudTexto = $(idDivUsar).val().length;
+	var textoRestante = maxLong - longitudTexto;
+
+	// Selecciono el div que es "hermano" del textfield de nombre.
+	var longitudTextoAct = $(idDivUsar).val().length;
+	$(idDivUsar).siblings(".help-block").first().html((maxLong - longitudTextoAct) + " caracteres");
+
+	// Si estoy escribiendo en el textfield de nombre, entonces...
+	$(idDivUsar).on('keypress keyup keydown', function(e){
 		var longitudTexto = $(idDivUsar).val().length;
-		console.log("despues");
 		var textoRestante = maxLong - longitudTexto;
 
-		// Selecciono el div que es "hermano" del textfield de nombre.
-		var longitudTextoAct = $(idDivUsar).val().length;
-		$(idDivUsar).siblings(".help-block").first().html((maxLong - longitudTextoAct) + " caracteres");
+		$(idDivUsar).siblings(".help-block").first().html(textoRestante + " caracteres.");
 
-		// Si estoy escribiendo en el textfield de nombre, entonces...
-		$(idDivUsar).on('keypress keyup keydown', function(e){
-			var longitudTexto = $(idDivUsar).val().length;
-			var textoRestante = maxLong - longitudTexto;
-
-			$(idDivUsar).siblings(".help-block").first().html(textoRestante + " caracteres.");
-
-			/* keyCode.46: delete, keyCode.8: enter, keyCode.37 al keyCode.40: arrows. */
-			if (textoRestante <= 0 && e.keyCode != 46 && e.keyCode != 8 && e.keyCode != 37
-					&& e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40){
-						$(idDivUsar).val($(idDivUsar).val().substring(0, maxLong));
-						return false;
-			}
-		});
-	}
+		/* keyCode.46: delete, keyCode.8: enter, keyCode.37 al keyCode.40: arrows. */
+		if (textoRestante <= 0 && e.keyCode != 46 && e.keyCode != 8 && e.keyCode != 37
+				&& e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40){
+					$(idDivUsar).val($(idDivUsar).val().substring(0, maxLong));
+					return false;
+		}
+	});
+	
 
 };
 
@@ -130,8 +127,13 @@ $(document).ready(function () {
 
 	textoRestante1(maxLongColaboradores, $("#no_table_colaboradores"));
 
-	textoRestante1(maxTextoL, $(".Texto_Largo"));
+	if ($(".Texto_Largo").length != 0) {
+			textoRestante1(maxTextoL, $(".Texto_Largo"));
+	};
 
+	if ($(".Texto_Corto").length != 0) {
+					textoRestante1(maxLongNombre, $(".Texto_Corto"));
+			};
 
 
 	for (i = 1; i <= cantidad_comprobantes; i++) {
@@ -242,7 +244,7 @@ $(document).ready(function () {
 										);
 	for (i = 1; i <= cantidad_comprobantes; i++) {
     	$('#no_table_c0mpr0bant3_'+i+'__row').addClass("hidden");
-    	$('#no_table_c0mpr0bant3_'+i+'__row').find(".bootstrap-filestyle").addClass("col-sm-11").css("float","left").after('<div class="col-sm-1"> <a class="remove-tag-comprobante" data-comprobante="'+i+'" onClick = "">\
+    	$('#no_table_c0mpr0bant3_'+i+'__row').find(".bootstrap-filestyle").addClass("col-xs-11").css("float","left").after('<div class="col-sm-1"> <a class="remove-tag-comprobante" data-comprobante="'+i+'" onClick = "">\
 			                                              <span class="glyphicon glyphicon-remove red"></span>\
 			                                    				</a></div>\
 			                                    			');
@@ -253,7 +255,9 @@ $(document).ready(function () {
 			var comprobante = $(this).data('comprobante');
 			console.log($('#no_table_c0mpr0bant3_'+ comprobante).val())
 			$('#no_table_c0mpr0bant3_'+ comprobante).val('');
+			$('#no_table_d3scr1pc10n_comprobante_'+ comprobante).val('');
 			$('#no_table_c0mpr0bant3_'+ comprobante).closest(":file").filestyle('clear');
+
 	});
 
 

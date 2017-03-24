@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # this file is released under public domain and you can use without limitations
 
 # -------------------------------------------------------------------------
@@ -26,9 +26,9 @@ def call(): return service()
 
 # URLS DE RETORNO PARA EL CAS ##
 # PARA EL SERVIDOR:
-URL_RETORNO = "http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas"
+#URL_RETORNO = "http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas"
 # PARA DESSARROLLO. Cambiar el puerto 8000 si es necesario.
-# URL_RETORNO = "http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas"
+URL_RETORNO = "http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas"
 
 # FUNCIONES USUARIO
 def login_cas():
@@ -76,7 +76,7 @@ def login_cas():
             if datosUsuario.tipo == "Bloqueado":
                 insertar_log(db, 'LOGIN', datetime.datetime.now(), request.client, 'LOGIN USUARIO BLOQUEADO', usbid)
                 response.flash = T("Usuario bloqueado")
-                redirect(URL(c = "default",f="index"))
+                redirect(URL(c = "default",f="logout_cas"))
             else:
                 insertar_log(db, 'LOGIN', datetime.datetime.now(), request.client, 'LOGIN SATISFACTORIO', usbid)
                 redirect(URL('perfil'))
@@ -88,14 +88,18 @@ def login_cas():
             datos_usuario = {'nombres' : session.usuario['first_name'] + ' ' + session.usuario['last_name']}
             datos_usuario['email'] = session.usuario['email']
 
+            if session.usuario["phone"]:
+                telefono = session.usuario["phone"]
+            else:
+                telefono = ""
 
             db.USUARIO.insert(ci=session.usuario["cedula"],  # Lo insertamos en la base de datos.
             usbid=session.usuario["usbid"],
             nombres=session.usuario["first_name"],
             apellidos=session.usuario["last_name"],
             correo_inst=session.usuario["email"],
-            correo_alter= None,
-            telefono=session.usuario["phone"],
+            correo_alter= "",
+            telefono=telefono,
             tipo = "Usuario")
 
             insertar_log(db, 'REGISTRO', datetime.datetime.now(), request.client, 'REGISTRO SATISFACTORIO', usbid)
@@ -148,14 +152,20 @@ def perfil():
         print admin
 
         correo_i = session.usuario["usbid"]+"@usb.ve"
+        alternativo = session.usuario["alternativo"] if session.usuario["alternativo"]!=None else ''
+        telefono = session.usuario["phone"] if session.usuario["phone"]!=None else ''
 
+        if session.usuario['alternativo']==None:
+            print("None")
+        else:
+            print("no es None")
         form = SQLFORM.factory(
             Field("USBID", default=session.usuario["usbid"],writable = False),
             Field('Nombres',default=session.usuario["first_name"],writable = False),
             Field('Apellidos', default=session.usuario["last_name"],writable=False),
             Field('Correo_Institucional', default=correo_i,writable=False),
-            Field('Telefono',label = "Teléfono", default=session.usuario["phone"],writable=False),
-            Field('Correo_Alternativo', default=session.usuario["alternativo"],writable=False),
+            Field('Telefono',label = "Teléfono", default=telefono ,writable=False),
+            Field('Correo_Alternativo', default=alternativo ,writable=False),
             readonly=True)
 
         # Productos Registrados por el Usuario
@@ -239,6 +249,9 @@ def EditarPerfil():
 
         # Modificar datos del perfil
         usuario = db(db.USUARIO.ci==session.usuario['cedula']).select().first()
+        print usuario
+        alternativo = session.usuario["alternativo"] if session.usuario["alternativo"]!=None else ''
+        telefono = session.usuario["phone"] if session.usuario["phone"]!=None else ''
 
 
         forma=SQLFORM.factory(
@@ -274,7 +287,7 @@ def EditarPerfil():
             message = T("Debe colocar su teléfono y correo alternativo.")
 
 
-        return dict(form1 = form, form = forma, admin = admin)
+        return dict(form1 = form, form = forma, admin = admin, telefono=telefono, alternativo=alternativo)
     else:
         redirect(URL("index"))
 
