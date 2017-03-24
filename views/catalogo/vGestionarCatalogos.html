@@ -106,7 +106,7 @@
                         <button id="agregarCampoCatalogoBtn" type="button" class="btn btn-default btn-block green btn-border"
                                 data-toggle="modal" data-target="#modalAgregarCampo"
                                 data-id-catalogo="{{=catalogo[0].id}}">
-                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Campo
+                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> <span class="to_long">Campo</span>
                         </button>
                     </div>
                     <div class="col-sm-2">
@@ -115,14 +115,14 @@
                               data-id-catalogo = "{{=catalogo[0].id}}"
                               data-hayErroresEditarNombre="{{=hayErroresEditarNombre}}"
                               data-nombre = "{{=catalogo[0].nombre}}">
-                          <span class="glyphicon glyphicon-edit " aria-hidden="true"></span> Renombrar
+                          <span class="glyphicon glyphicon-edit " aria-hidden="true"></span> <span class="to_long">Renombrar</span>
                       </button>
                     </div>
                     <div class="col-sm-2">
                       <button type="button" class="btn btn-default btn-block red-trash btn-border"
                               data-toggle="modal" data-target="#modalEliminarCatalogo"
                               data-link-eliminar-catalogo = "{{=URL(f='eliminarCatalogo', args=[catalogo[0].id])}}">
-                          <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> Eliminar
+                          <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> <span class="to_long">Eliminar</span>
                       </button>
                     </div>
                   </center>
