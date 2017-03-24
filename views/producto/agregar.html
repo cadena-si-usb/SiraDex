@@ -54,7 +54,7 @@
 <script>
 
 function textoRestante1(maxLong, idDivUsar){
-	
+
 	var longitudTexto = $(idDivUsar).val().length;
 	var textoRestante = maxLong - longitudTexto;
 
@@ -76,7 +76,7 @@ function textoRestante1(maxLong, idDivUsar){
 					return false;
 		}
 	});
-	
+
 
 };
 
@@ -219,15 +219,15 @@ $(document).ready(function () {
 		});
 
 	 $('#no_table_c0mpr0bant3_1__row').before('	<div id="comprobantes__row" class="form-group">\
-													<h3 class="col-sm-offset-3">Comprobantes (*)</h3>\
+													<h3 class="col-sm-offset-2">Comprobantes (*)</h3>\
 													\
 													<div class="row">\
 														<div class="col-sm-10 col-sm-offset-2">\
 											    		\
-											    		<span class="col-sm-6">\
+											    		<span class="col-sm-6"> Los comprobantes representan el soporte necesario para la validación de tu producto de extensión.\
 															Puedes subir hasta <span id="cant_restante"><b id="num_cant">5</b></span> comprobantes más\
 															<br>\
-															Sólo puedes subir documentos PDF\
+															Sólo puedes subir documentos PDF con un máximo de <b>2 MB</b> por documento.\
 														</span>\
 														\
 														<div class="col-sm-6">\
@@ -260,7 +260,14 @@ $(document).ready(function () {
 
 	});
 
+	var esBorrador = false;
+	$("input[name='borrador']").click(function(){
+		esBorrador = true;
+	})
 
+	$("input[value='Enviar Producto']").click(function(){
+		esBorrador = false;
+	});
 
 	$('#agregar_comprobante').click(function(){
 
@@ -419,7 +426,7 @@ $(document).ready(function () {
 			}
 		}
 
-		if (!infor_cargada){
+		if (!infor_cargada && !esBorrador){
 			alert("Tiene que adjuntar al menos un comprobante");
 			return false;
 		}

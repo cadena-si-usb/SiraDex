@@ -139,7 +139,7 @@ function textoRestante1(maxLong, idDivUsar){
 
 			// agregar autores adicionales
 			$('#no_table_autor_1__row').before('<div id="autores_row" class="form-group">\
-															<h3 class="col-sm-offset-3">Otros Autores</h3>\
+															<h3 class="col-sm-offset-2">Otros Autores</h3>\
 															\
 															<div class="row">\
 																<div class="col-sm-10 col-sm-offset-2" style="margin-left:15em;">\
@@ -252,14 +252,14 @@ function textoRestante1(maxLong, idDivUsar){
 
 
 			var html='<div id="comprobantes__row" class="form-group">\
-							<hr class="col-sm-offset-3 col-sm-8">\
-							<h3 id = "comprobantes" class="col-sm-offset-3 col-sm-3">Comprobantes</h3>\
-							<span class="col-sm-offset-3 col-sm-6" id="cant_restante">\
+							<hr class="col-sm-offset-2 col-sm-8">\
+							<h3 id = "comprobantes" class="col-sm-offset-2 col-sm-3">Comprobantes</h3>\
+							<span class="col-sm-offset-2 col-sm-6" id="cant_restante"> Los comprobantes representan el soporte necesario para la validación de tu producto de extensión.\
 								Puedes subir <b>'+(cantidad_comprobantes-comprobante_mostrado)+'</b> comprobantes mas <br>\
-								Solo puede subir documentos PDF\
+								Solo puede subir documentos PDF con un máximo de <b>2 MB</b> por documento.\
 							</span>\
 							<div class="row">\
-								<div class="col-sm-offset-3 col-sm-4 content"><br>\
+								<div class="col-sm-offset-2 col-sm-4 content"><br>\
 									{{if (len(comprobantes)==0): }}\
 										<p>No hay comprobantes cargados</p>\
 									{{else:}}\
@@ -317,6 +317,13 @@ function textoRestante1(maxLong, idDivUsar){
 				$('#agregar_comprobante').addClass("hidden");
 			}
 
+			var esBorrador = false;
+			$("input[name='borrador']").click(function(){
+				esBorrador = true;
+			});
+			$("input[value='Enviar Producto']").click(function(){
+				esBorrador = false;
+			});
 			$('#agregar_comprobante').click(function(){
 				if (comprobante_mostrado<cantidad_comprobantes){
 
@@ -477,7 +484,7 @@ function textoRestante1(maxLong, idDivUsar){
 			    		infor_cargada = true;
 					}
 				}
-				if (!infor_cargada && comprobantes_eliminados==comprobantes_bd){
+				if (!infor_cargada && (comprobantes_eliminados==comprobantes_bd) && !esBorrador){
 					alert("Tiene que adjuntar al menos un comprobante");
 					return false;
 				}
