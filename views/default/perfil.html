@@ -367,7 +367,8 @@
 
           {{for i in infoPieChart:}}
             if(topping == '{{=infoPieChart[i]["abreviacion"]}}'){
-              window.location = "http://localhost:8000/tipo_actividad/gestionar/"+{{=infoPieChart[i]["id"]}};
+              // este codigo lo arreglo LM
+              window.location = "{{=URL(c='busq_val', f='busqueda', vars={'Autor':session.usuario['usbid'], 'Producto':'', 'Programa':infoPieChart[i]['id'], 'TipoActividad':'all','fecha':''})}}";
             }
           {{pass}}
         }
