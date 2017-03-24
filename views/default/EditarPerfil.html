@@ -9,8 +9,8 @@
     <!-- Nombre del usuario -->
     {{=session.usuario['first_name']}}
     {{=session.usuario['last_name']}}
-    <div id=div_correo_alternativo data-correo-alternativo="{{=session.usuario['alternativo']}}"></div>
-    <div id=div_telefono data-telefono="{{=session.usuario['phone']}}"></div>
+    <div id=div_correo_alternativo data-correo-alternativo="{{=alternativo}}"></div>
+    <div id=div_telefono data-telefono="{{=telefono}}"></div>
 {{end}}
 
 {{block descripcion}}
@@ -33,19 +33,7 @@
     </div>
         
 {{end}}
-
-{{block contenido}}
-
-<!--<script src="{{=URL('static','js/editarPerfil.js')}}"> </script>-->
-
-    <div class="row">
-        <div class="col-lg-12 center-block">
-        <center>
-     	OPCIONES DE GRÁFICAS
-        </center>
-        </div>           
-    </div>
-{{end}}                                    
+                                  
 
 {{block script}}
 

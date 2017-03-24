@@ -1,21 +1,19 @@
 {{ extend 'layoutSIRADEXloged.html'}}
 
 {{block titulo}}
-	BackUp
+  BackUp
 {{end}}
 
 {{block subtitulo}}
-	Gestión de respaldos
+  Gestión de respaldos
 {{end}}
 
 {{block descripcion}}
 
 {{=response.flash or ''}}
     <div class="row"  style="margin-bottom: 0em;"> 
-        <div class="col-md-2 col-md-offset-7">
-        <!-- Datos del usuario -->
+        <div class="col-lg-2 col-lg-offset-7">
                 <div>
-                  <!-- <a href="{{=URL(c='usuarios',f ='agregar')}}"> -->
                   <button type="button" 
                           id="agregarProgBtn" 
                           class="btn btn-default green btn-border"  
@@ -24,11 +22,10 @@
                     
                     <span class="glyphicon glyphicon-plus-sign" aria-hidden="true" data-toggle="modal" data-target="#ModalCrearBackup"></span> Generar backup
                   </button>
-                  <!-- </a> -->
                 </div>
         </div>
 
-        <div class="col-md-3 ">
+        <div class="col-lg-3">
 
                 <div>
                   <!-- <a href="{{=URL(c='usuarios',f ='agregar')}}"> -->
@@ -44,21 +41,6 @@
                   </button>
                   <!-- </a> -->
                 </div>        
-          
-        <!-- Datos del usuario -->
-                <div>
-                  <!-- <a href="{{=URL(c='usuarios',f ='agregar')}}"> -->
-                 <!-- <button type="button" id="agregarProgBtn" class="btn btn-default green btn-border"  style="margin-bottom: 1em;" >-->
-                  <!-- Agregar cuando se vaya a implementar la funcion de restaurar desde
-                       archivo al boton: data-toggle="modal" data-target="#myModalAgregar"
-                  -->
-<!--
-                    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Restaurar desde archivo
-                  </button>-->
-                  <!-- </a> -->
-                </div>
-            <!-- <p class="text-justify">
-            </p> -->
         </div>        
     </div>  
 {{end}}
@@ -70,7 +52,7 @@
             No hay Backups 
         {{else:}}
 
-          <table class="table table-condensed table-striped table-hover sortable">
+          <table class="table table-condensed table-striped table-hover">
           <table class="table table-hover table-striped borde-tabla">
               <thead>
 
@@ -168,14 +150,15 @@
       </div>
 
       <div class="modal-body">
-      <form method="post" class="form-horizontal" role="form" action={{=URL(c='backup',f='backup_aut')}}>
+      <form method="post" class="form-horizontal" role="form" id="form_auto" action={{=URL(c='backup',f='backup_aut')}}>
           <!-- Seleccion de Fecha -->
           <div class="form-group">
-              <label for="programa" class = "control-label col-sm-4"> Modo</label>
+              <label for="programa" class="control-label col-sm-4"> Modo</label>
               <div class="col-sm-8">
                     <select name="modo" 
                             class="form-control"
-                            id="modo" 
+                            id="modo"
+                            onchange="cambio()" 
                             style="width: 100%">
                     <option value="None" selected="">--Ninguno--</option>
                     <option value=diario>Diario</option>
@@ -188,7 +171,13 @@
 
               <label for="programa" class = "control-label col-sm-4"> Hora (24h)</label>
               <div class="col-sm-8">
-                  <input type="number" name="hora" id="focusedInput" class="form-control datepicker" min=0 max=23 style="width: 100%"/>
+                  <input  type="number" 
+                          name="hora" 
+                          id="focusedInput" 
+                          class="form-control datepicker" 
+                          min=0 max=23 
+                          onkeypress="cambio()"
+                          style="width: 100%"/>
               </div>
               <br><br>
 
@@ -196,7 +185,8 @@
               <div class="col-sm-8">
                   <select name="dias_automatizar" 
                           class="form-control"
-                          id="dias" 
+                          id="dias"
+                          onchange="cambio()"
                           style="width: 100%"
                           disabled="">
                     <option value="None" selected="">--Ninguno--</option>
@@ -212,7 +202,7 @@
               </div>
               <br><br>
 
-              <label for="programa" class = "control-label col-sm-4"> Activar</label>
+              <label for="programa" class = "control-label col-sm-4">Activar</label>
               <div class="col-sm-8">
               <!-- Rounded switch -->
               <label class="switch">
@@ -223,7 +213,7 @@
           </div>
 
           <div class="form-group ">
-              <input type="submit" class="col-sm-offset-3 col-sm-8 btn blue-add btn-border " value="Automatizar" />
+              <input type="submit" id="btn_auto" disabled=true class="col-sm-offset-3 col-sm-8 btn blue-add btn-border " value="Automatizar"/>
               <input type="hidden" name="_formname" value="crear_tipo" />
           </div>
       </form>
@@ -241,8 +231,7 @@
   </div>
   </div>
 </div>
-
-			     
+       
 <!-- Modal Eliminar-->
 <div class="container">
   <!-- Modal -->
@@ -285,9 +274,7 @@
             <br>
             <center>
                 <a id="BotonRestaurar" >
-                  <button type="button" 
-                          class="btn blue-add btn-border"
-                          >
+                  <button type="button" class="btn blue-add btn-border">
                           Restaurar
                   </button>
                 </a>
@@ -301,7 +288,9 @@
 
 
     <!-- Modal -->
-<div class="container">											    
+
+<!-- Modal Restaurar desde archivo -->
+<div class="container">
     <div id="myModalAgregar" class="modal fade" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -315,7 +304,7 @@
                     <!--Seleccion de Programa-->
                     <div class="form-group">
                         <div class="col-sm-12">
-                        <form action="{{=URL(c='backup',f='restaurar_file')}}" method="post">
+                        <form action="{{=URL(c='backup',f='restaurar_file')}}" method="post">
                           
                           <input type="file" name="archivo">
                           <br>
@@ -332,21 +321,21 @@
 
  <!-- Modal Backup Restaruado de Archivo-->
 <div class ="container">
-<div class="modal" id="ModalCargaBackup" role="dialog">
-  <div class="modal-dialog">
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <center><h4 class="modal-title">Backup Restaurado</h4><center>
-      </div>
-      <div class="modal-body">
-          <p> <center> El backup ha sido restaurado exitosamente </center> </p>
+  <div class="modal" id="ModalCargaBackup" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <center><h4 class="modal-title">Backup Restaurado</h4><center>
+        </div>
+        <div class="modal-body">
+            <p> <center> El backup ha sido restaurado exitosamente </center> </p>
+        </div>
       </div>
     </div>
   </div>
-</div>
-</div>														    
+</div>                                
 
 
 
@@ -379,7 +368,6 @@
         }
       });
 
-
       // Pasamos los argumentos para eliminar campo
       $('#ModalEliminarBackup').on('show.bs.modal', function(e){
           var linkEliminar = $(e.relatedTarget).data('link-eliminar-backup');
@@ -394,30 +382,31 @@
 
       $('#modo').on('change',function(){
         if($(this).val()!='semanal'){
-          console.log('no semanal');
           $('#dias').attr('disabled','');
         }
         else{
-          console.log('semanal');
           $('#dias').removeAttr( "disabled");
         };
       })
 
+      function cambio(){
+        var inp_modo = document.getElementById("modo").value;
+        var inp_hora = document.getElementById("focusedInput").value;
+        var inp_dias = document.getElementById("dias").value;
+        if(inp_modo != 'None' && inp_modo != 'semanal' && inp_hora != ""){
+          document.getElementById("btn_auto").disabled = false;
+        }else if (inp_modo == 'semanal' && inp_hora != "" && inp_dias != "None"){
+          document.getElementById("btn_auto").disabled = false;
+        }else{
+          document.getElementById("btn_auto").disabled = true;
+        }
+      }
+
     </script>
-
-    <script src="{{=URL('static','js/sorttable.js')}}"
-            type="text/javascript">
-    </script>   
-
     <!-- SCRIPT PARA MOSTRAR Y OCULTAR DETALLES -->
     <script src="{{=URL('static','js/showDetails.js')}}"
             type="text/javascript">
     </script>    
-
-        <!-- SCRIPT PARA PAGINAR TABLA DE ACTIVIDADES -->
-    <script src="{{=URL('static','js/pagintable.js')}}"
-            type="text/javascript">
-    </script>
 
 
 {{end}}

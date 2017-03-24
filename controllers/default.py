@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # this file is released under public domain and you can use without limitations
 
 # -------------------------------------------------------------------------
@@ -152,14 +152,20 @@ def perfil():
         print admin
 
         correo_i = session.usuario["usbid"]+"@usb.ve"
+        alternativo = session.usuario["alternativo"] if session.usuario["alternativo"]!=None else ''
+        telefono = session.usuario["phone"] if session.usuario["phone"]!=None else ''
 
+        if session.usuario['alternativo']==None:
+            print("None")
+        else:
+            print("no es None")
         form = SQLFORM.factory(
             Field("USBID", default=session.usuario["usbid"],writable = False),
             Field('Nombres',default=session.usuario["first_name"],writable = False),
             Field('Apellidos', default=session.usuario["last_name"],writable=False),
             Field('Correo_Institucional', default=correo_i,writable=False),
-            Field('Telefono',label = "Teléfono", default=session.usuario["phone"],writable=False),
-            Field('Correo_Alternativo', default=session.usuario["alternativo"],writable=False),
+            Field('Telefono',label = "Teléfono", default=telefono ,writable=False),
+            Field('Correo_Alternativo', default=alternativo ,writable=False),
             readonly=True)
 
         # Productos Registrados por el Usuario
@@ -244,6 +250,8 @@ def EditarPerfil():
         # Modificar datos del perfil
         usuario = db(db.USUARIO.ci==session.usuario['cedula']).select().first()
         print usuario
+        alternativo = session.usuario["alternativo"] if session.usuario["alternativo"]!=None else ''
+        telefono = session.usuario["phone"] if session.usuario["phone"]!=None else ''
 
 
         forma=SQLFORM.factory(
@@ -279,7 +287,7 @@ def EditarPerfil():
             message = T("Debe colocar su teléfono y correo alternativo.")
 
 
-        return dict(form1 = form, form = forma, admin = admin)
+        return dict(form1 = form, form = forma, admin = admin, telefono=telefono, alternativo=alternativo)
     else:
         redirect(URL("index"))
 

@@ -529,7 +529,6 @@ a: hover {
 /*             Switch             */
 /*                                */
 /**********************************/
-/* The switch - the box around the slider */
 .switch {
   position: relative;
   display: inline-block;
@@ -537,10 +536,8 @@ a: hover {
   height: 1.5em;
 }
 
-/* Hide default HTML checkbox */
 .switch input {display:none;}
 
-/* The slider */
 .slider {
   position: absolute;
   cursor: pointer;
@@ -579,11 +576,33 @@ input:checked + .slider:before {
   transform: translateX(1.5em);
 }
 
-/* Rounded sliders */
 .slider.round {
   border-radius: 34px;
 }
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+/**********************************/
+/*                                */
+/*            Botones             */
+/*                                */
+/**********************************/
+@media( max-width: 400px ){	
+	.to_long{
+		display: none;
+	}
+}
+
+@media (min-width: 760px) and (max-width: 970px) {
+		.to_long{
+		display: none;
+	}
+}
+
+@media (min-width: 992px) and (max-width: 1220px) {
+		.to_long{
+		display: none;
+	}
 }
