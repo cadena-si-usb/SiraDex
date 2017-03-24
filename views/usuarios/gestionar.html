@@ -126,14 +126,6 @@
             </a>
         </li>
 
-        <li role="presentation" class='rec'>
-            <a  href="#indef"
-                aria-controls="indef"
-                role="tab"
-                data-toggle="tab">
-                Indefinido
-            </a>
-        </li>
         </ul>
 
         <!-- Tab panes -->
@@ -310,57 +302,6 @@
                 {{for usuario in usuarios:}}
                     {{if usuario.tipo == 'Bloqueado':}}
                    <tr class="clickable">
-                        <td class="hColumns center-vertically">{{ =usuario.usbid}}</td>
-                        <td class="hColumns center-vertically">{{ =usuario.nombres}}</td>
-                        <td class="hColumns center-vertically">{{ =usuario.apellidos}}</td>
-
-                        <!-- Boton Contactar -->
-                        <td class="hColumns text-center center-vertically">
-                            <button type="button" data-toggle="modal"
-                                                  data-target="#modalContactarUsuario"
-                                                  data-id-usuario="{{=usuario.usbid}}"
-                                                  class="glyphicon glyphicon-envelope green-icn"
-                                                  aria-hidden="true" style="border:none;background:none;color:#337ab7;">
-                              <!-- <span  aria-hidden="true"></span> -->
-                            </button>
-                        </td>
-
-                        <!-- Boton Modificar -->
-                        <td class="hColumns text-center center-vertically">
-                            <a href="{{=URL(c='usuarios',f='modificar', args=[ usuario.usbid ] )}}">
-                                <span class="glyphicon glyphicon-edit green-icn"></span>
-                            </a>
-                        </td>
-
-                        <td class="hColumns text-center center-vertically">
-                            <a>
-                               <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#modalEliminarUsuario"
-                                      data-link-eliminar="{{=URL(c='usuarios',f='eliminar', args=[usuario.usbid])}}"></span>
-                            </a>
-                        </td>
-                    </tr>
-                    {{pass}}
-                {{pass}}
-                </tbody>
-            </table>
-        </div>
-        <!-- Indefinido -->
-        <div role="tabpanel" class="tab-pane" id="indef">
-            <table id="indefinidosTable" class="table table-hover table-striped borde-tabla"  style="margin:0px !important; width: 100% !important" >
-                <thead>
-                    <tr>
-                        <th class="hColumns">Usbid </th>
-                        <th class="hColumns">Nombres </th>
-                        <th class="hColumns">Apellidos </th>
-                        <th class="hColumns text-center">Contactar </th>
-                        <th class="hColumns text-center">Modificar </th>
-                        <th class="hColumns text-center">Eliminar </th>
-                    </tr>
-                </thead>
-                <tbody>
-                {{for usuario in usuarios:}}
-                    {{if usuario.tipo not in ['Bloqueado','Administrador','Usuario','DEX']:}}
-                    <tr>
                         <td class="hColumns center-vertically">{{ =usuario.usbid}}</td>
                         <td class="hColumns center-vertically">{{ =usuario.nombres}}</td>
                         <td class="hColumns center-vertically">{{ =usuario.apellidos}}</td>

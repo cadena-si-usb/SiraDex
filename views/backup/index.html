@@ -44,21 +44,6 @@
                   </button>
                   <!-- </a> -->
                 </div>        
-          
-        <!-- Datos del usuario -->
-                <div>
-                  <!-- <a href="{{=URL(c='usuarios',f ='agregar')}}"> -->
-                 <!-- <button type="button" id="agregarProgBtn" class="btn btn-default green btn-border"  style="margin-bottom: 1em;" >-->
-                  <!-- Agregar cuando se vaya a implementar la funcion de restaurar desde
-                       archivo al boton: data-toggle="modal" data-target="#myModalAgregar"
-                  -->
-<!--
-                    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Restaurar desde archivo
-                  </button>-->
-                  <!-- </a> -->
-                </div>
-            <!-- <p class="text-justify">
-            </p> -->
         </div>        
     </div>  
 {{end}}
@@ -315,7 +300,7 @@
                     <!--Seleccion de Programa-->
                     <div class="form-group">
                         <div class="col-sm-12">
-                        <form action="{{=URL(c='backup',f='restaurar_file')}}" method="post">
+                        <form action="{{=URL(c='backup',f='restaurar_file')}}" method="post">
                           
                           <input type="file" name="archivo">
                           <br>
