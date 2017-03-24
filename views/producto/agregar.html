@@ -54,27 +54,30 @@
 <script>
 
 function textoRestante1(maxLong, idDivUsar){
-  var longitudTexto = $(idDivUsar).val().length;
-  var textoRestante = maxLong - longitudTexto;
+	
+	var longitudTexto = $(idDivUsar).val().length;
+	var textoRestante = maxLong - longitudTexto;
 
-  // Selecciono el div que es "hermano" del textfield de nombre.
-  var longitudTextoAct = $(idDivUsar).val().length;
-  $(idDivUsar).siblings(".help-block").first().html((maxLong - longitudTextoAct) + " caracteres");
+	// Selecciono el div que es "hermano" del textfield de nombre.
+	var longitudTextoAct = $(idDivUsar).val().length;
+	$(idDivUsar).siblings(".help-block").first().html((maxLong - longitudTextoAct) + " caracteres");
 
-  // Si estoy escribiendo en el textfield de nombre, entonces...
-  $(idDivUsar).on('keypress keyup keydown', function(e){
-    var longitudTexto = $(idDivUsar).val().length;
-    var textoRestante = maxLong - longitudTexto;
+	// Si estoy escribiendo en el textfield de nombre, entonces...
+	$(idDivUsar).on('keypress keyup keydown', function(e){
+		var longitudTexto = $(idDivUsar).val().length;
+		var textoRestante = maxLong - longitudTexto;
 
-    $(idDivUsar).siblings(".help-block").first().html(textoRestante + " caracteres.");
+		$(idDivUsar).siblings(".help-block").first().html(textoRestante + " caracteres.");
 
-    /* keyCode.46: delete, keyCode.8: enter, keyCode.37 al keyCode.40: arrows. */
-    if (textoRestante <= 0 && e.keyCode != 46 && e.keyCode != 8 && e.keyCode != 37
-        && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40){
-          $(idDivUsar).val($(idDivUsar).val().substring(0, maxLong));
-          return false;
-    }
-  });
+		/* keyCode.46: delete, keyCode.8: enter, keyCode.37 al keyCode.40: arrows. */
+		if (textoRestante <= 0 && e.keyCode != 46 && e.keyCode != 8 && e.keyCode != 37
+				&& e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40){
+					$(idDivUsar).val($(idDivUsar).val().substring(0, maxLong));
+					return false;
+		}
+	});
+	
+
 };
 
 $(document).ready(function () {
@@ -86,7 +89,7 @@ $(document).ready(function () {
 	  });
 
 	var maxLongNombre  = 50;    // Longitud máxima que tendrá el campo nombre.
-	var maxLongDescrip = 2048;   // Longitud máxima que tendrá el campo descripción.
+	var maxLongDescrip = 250;   // Longitud máxima que tendrá el campo descripción.
 	var maxLongColaboradores = 200;
 	var comprobante_mostrado = 0;
 	var error_comprobante = 0;
@@ -94,13 +97,15 @@ $(document).ready(function () {
 	var cantidad_comprobantes = 5;
 	var autores_agregados = 0
 	var cantidad_autores  = 5;
+	var maxDescripcion = 100;
+	var maxTextoL = 512;
 
 	// Muestra la cantidad de caracteres disponible en el textfield de nombre.
 
 
 	$("#no_table_fecha_realizacion").siblings(".help-block").html( "El formato para la fecha es de AAAA-MM-DD");
 
-	
+
 
 	$(".Cedula").click(function(){
 
@@ -119,8 +124,21 @@ $(document).ready(function () {
 	textoRestante1(maxLongDescrip, $("#no_table_descripcion"));
 
 	textoRestante1(maxLongNombre, $("#no_table_lugar"));
-	
+
 	textoRestante1(maxLongColaboradores, $("#no_table_colaboradores"));
+
+	if ($(".Texto_Largo").length != 0) {
+			textoRestante1(maxTextoL, $(".Texto_Largo"));
+	};
+
+	if ($(".Texto_Corto").length != 0) {
+					textoRestante1(maxLongNombre, $(".Texto_Corto"));
+			};
+
+
+	for (i = 1; i <= cantidad_comprobantes; i++) {
+			textoRestante1(maxDescripcion, $('#no_table_d3scr1pc10n_comprobante_'+i));
+	}
 
 
 	$("#no_table_colaboradores").siblings(".help-block").after("<span class=help-block> Nombres completos y separados por comas de personas ajenas a la USB que colaboraron con usted.</span>");
@@ -226,8 +244,21 @@ $(document).ready(function () {
 										);
 	for (i = 1; i <= cantidad_comprobantes; i++) {
     	$('#no_table_c0mpr0bant3_'+i+'__row').addClass("hidden");
+    	$('#no_table_c0mpr0bant3_'+i+'__row').find(".bootstrap-filestyle").addClass("col-xs-11").css("float","left").after('<div class="col-sm-1"> <a class="remove-tag-comprobante" data-comprobante="'+i+'" onClick = "">\
+			                                              <span class="glyphicon glyphicon-remove red"></span>\
+			                                    				</a></div>\
+			                                    			');
     	$('#no_table_d3scr1pc10n_comprobante_'+i+'__row').addClass("hidden");
 	}
+
+	$('.remove-tag-comprobante').click(function(e){
+			var comprobante = $(this).data('comprobante');
+			console.log($('#no_table_c0mpr0bant3_'+ comprobante).val())
+			$('#no_table_c0mpr0bant3_'+ comprobante).val('');
+			$('#no_table_d3scr1pc10n_comprobante_'+ comprobante).val('');
+			$('#no_table_c0mpr0bant3_'+ comprobante).closest(":file").filestyle('clear');
+
+	});
 
 
 
@@ -276,14 +307,19 @@ $(document).ready(function () {
 		    alert('Sólo se permite cargar archivos PDF');
 		    $(this).val('');
 		    $(this).filestyle('clear');
-		}
-		
+		};
+
 		if (this.files[0].size > 2097152){
 			var text = 'Sólo se permiten archivos de hasta 2 MB, el archivo que se cargo es de '+((this.files[0].size)/1024/1024).toFixed(1)+' MB';
 	        alert(text);
 		    $(this).val('');
 		    $(this).filestyle('clear');
-		}
+		};
+		if($(this).val().split('.')[0].length > 50){
+		    alert('El nombre del archivo debe tener menos de 50 caracteres');
+		    $(this).val('');
+		    $(this).filestyle('clear');
+		};
 	});
 
 
@@ -343,7 +379,7 @@ $(document).ready(function () {
 		}
 
 		if($('.Telefono').val()!=""){
-			if($('.Cedula').val()!=null){
+			if($('.Telefono').val()!=null){
 				var Var = $('.Telefono').val();
 				if (/\(0\d{3}\)\d{3}-\d{4}$/.test(Var)== false){
 					alert("No es el formato del número de teléfono adecuado ");

@@ -65,10 +65,6 @@ def login_cas():
 
         session.usuario = usuario
         session.usuario['usbid'] = usbid
-        try:
-            print usuario['carrera']
-        except:
-            print('Es una esceocion')
         if not db(tablaUsuarios.usbid == usbid).isempty():
             datosUsuario = db(tablaUsuarios.usbid==usbid).select()[0]
             session.usuario['tipo'] = datosUsuario.tipo
@@ -80,7 +76,7 @@ def login_cas():
             if datosUsuario.tipo == "Bloqueado":
                 insertar_log(db, 'LOGIN', datetime.datetime.now(), request.client, 'LOGIN USUARIO BLOQUEADO', usbid)
                 response.flash = T("Usuario bloqueado")
-                redirect(URL(c = "default",f="index"))
+                redirect(URL(c = "default",f="logout_cas"))
             else:
                 insertar_log(db, 'LOGIN', datetime.datetime.now(), request.client, 'LOGIN SATISFACTORIO', usbid)
                 redirect(URL('perfil'))
@@ -92,14 +88,18 @@ def login_cas():
             datos_usuario = {'nombres' : session.usuario['first_name'] + ' ' + session.usuario['last_name']}
             datos_usuario['email'] = session.usuario['email']
 
+            if session.usuario["phone"]:
+                telefono = session.usuario["phone"]
+            else:
+                telefono = ""
 
             db.USUARIO.insert(ci=session.usuario["cedula"],  # Lo insertamos en la base de datos.
             usbid=session.usuario["usbid"],
             nombres=session.usuario["first_name"],
             apellidos=session.usuario["last_name"],
             correo_inst=session.usuario["email"],
-            correo_alter= None,
-            telefono=session.usuario["phone"],
+            correo_alter= "",
+            telefono=telefono,
             tipo = "Usuario")
 
             insertar_log(db, 'REGISTRO', datetime.datetime.now(), request.client, 'REGISTRO SATISFACTORIO', usbid)
@@ -130,7 +130,6 @@ def grafica_pie():
     programas={}
 
     for producto in datos:
-        print producto
         id_programa = producto[0]
         try:
             programas[id_programa]['repeticiones'] += 1
@@ -148,17 +147,25 @@ def grafica_pie():
 
 def perfil():
     if session.usuario != None:
+        print "El admin es:"
         admin = get_tipo_usuario(session)
+        print admin
 
         correo_i = session.usuario["usbid"]+"@usb.ve"
+        alternativo = session.usuario["alternativo"] if session.usuario["alternativo"]!=None else ''
+        telefono = session.usuario["phone"] if session.usuario["phone"]!=None else ''
 
+        if session.usuario['alternativo']==None:
+            print("None")
+        else:
+            print("no es None")
         form = SQLFORM.factory(
             Field("USBID", default=session.usuario["usbid"],writable = False),
             Field('Nombres',default=session.usuario["first_name"],writable = False),
             Field('Apellidos', default=session.usuario["last_name"],writable=False),
             Field('Correo_Institucional', default=correo_i,writable=False),
-            Field('Telefono',label = "Teléfono", default=session.usuario["phone"],writable=False),
-            Field('Correo_Alternativo', default=session.usuario["alternativo"],writable=False),
+            Field('Telefono',label = "Teléfono", default=telefono ,writable=False),
+            Field('Correo_Alternativo', default=alternativo ,writable=False),
             readonly=True)
 
         # Productos Registrados por el Usuario
@@ -242,18 +249,20 @@ def EditarPerfil():
 
         # Modificar datos del perfil
         usuario = db(db.USUARIO.ci==session.usuario['cedula']).select().first()
+        print usuario
+        alternativo = session.usuario["alternativo"] if session.usuario["alternativo"]!=None else ''
+        telefono = session.usuario["phone"] if session.usuario["phone"]!=None else ''
 
 
         forma=SQLFORM.factory(
             Field('telefono',
-                   requires=[IS_NOT_EMPTY(error_message='El teléfono no puede quedar vacío.'),
-                             IS_LENGTH(20),
-                             IS_MATCH('^[0-9]+$', error_message="Use sólo números.")]),
+                   requires=[IS_LENGTH(20),
+                             IS_MATCH('^\(0[0-9]{3}\)[0-9]{3}-[0-9]{4}$|^$', error_message="Formato inválido")]),
             Field('correo_alter',
-                   requires=[IS_NOT_EMPTY(error_message='El correo no puede quedar vacío.'),
-                             IS_MATCH('^[.A-z0-9À-ÿŸ\s-]+@[.A-z0-9À-ÿŸ\s-]+$', error_message="Este correo no es válido.")]),
+                   requires=[IS_MATCH('^[.A-z0-9À-ÿŸ\s-]+@[.A-z0-9À-ÿŸ\s-]+$|^$', error_message="Formato inválido")]),
             submit_button='Agregar',
-            labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'}
+            labels={'telefono':'Teléfono', 'correo_alter':'Correo alternativo'},
+            col3={'telefono':'Ej: (0212)123-1234','correo_alter':'Ej: ejemplo@gmail.com'}
             )
 
         forma.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
@@ -272,16 +281,13 @@ def EditarPerfil():
 
             db(db.USUARIO.ci == session.usuario["cedula"]).update(telefono=valor_telefono, correo_alter=valor_correo)
 
-            print "\n\nEl nuevo usuario quedo: "
-            print session.usuario
-
             insertar_log(db, 'PERFIL', datetime.datetime.now(), request.client, 'ACT. PERFIL SATISFACTORIA', session.usuario['usbid'])
             redirect(URL('perfil'))
         else :
             message = T("Debe colocar su teléfono y correo alternativo.")
 
 
-        return dict(form1 = form, form = forma, admin = admin)
+        return dict(form1 = form, form = forma, admin = admin, telefono=telefono, alternativo=alternativo)
     else:
         redirect(URL("index"))
 
@@ -318,7 +324,6 @@ def obtener_actividades():
                 option = tipo.nombre
                 if len(option)>88:
                     option = option[0:88]+"..."
-                    print option
                 concat += '<option value="'+str(tipo.id_tipo)+'">'+option+'</option>'
 
     return "jQuery('#lista_tipos').empty().append('"+concat+"')"

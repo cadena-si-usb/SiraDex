@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from funciones_siradex import get_tipo_usuario
+from funciones_siradex import get_tipo_usuario,convertToNumber
 from log import insertar_log
 
 #. --------------------------------------------------------------------------- .
@@ -26,7 +26,7 @@ def construir_formulario_agregar_tipo():
                         Field('Nombre',
                                requires = [IS_NOT_EMPTY(error_message='El nombre del tipo de actividad no puede quedar vacío.'),
                                            IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use sólo letras, sin números ni caracteres especiales."),
-                                           IS_LENGTH(128)]),
+                                           IS_LENGTH(128, error_message="Use como máximo 128 caracteres")]),
                         Field('Codigo',
                                requires = [IS_NOT_EMPTY(error_message='El tipo de actividad debe tener un código.'),
                                            IS_MATCH('^[A-z0-9À-ÿŸ\s-]*$', error_message="Use sólo letras, el caracter '-' y números."),
@@ -37,7 +37,7 @@ def construir_formulario_agregar_tipo():
                                                     error_message = 'Debes elegir entre "Evaluables por pares académicos" o "No evaluables por pares académicos"')),
                         Field('Descripcion', type="text",
                               requires = [IS_NOT_EMPTY(error_message='La descripción del tipo de actividad no puede quedar vacía.'),
-                                          IS_LENGTH(2048)]),
+                                          IS_LENGTH(2048, error_message="Use como máximo 2048 caracteres")]),
                         Field('Programa',
                               requires = IS_IN_SET(programas, zero="Seleccione...",
                                                    error_message = 'Debe elegir uno de los programas listados.')),
@@ -66,7 +66,7 @@ def construir_formulario_editar_tipo():
                         Field('Nombre',
                               requires = [IS_NOT_EMPTY(error_message='El nombre del tipo de actividad no puede quedar vacío.'),
                                           IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use sólo letras, sin números ni caracteres especiales."),
-                                          IS_LENGTH(128)]),
+                                          IS_LENGTH(128, error_message="Use como máximo 128 caracteres")]),
                         Field('Codigo',
                              requires = [IS_NOT_EMPTY(error_message='El tipo de actividad debe tener un codigo.'),
                                          IS_MATCH('^[A-z0-9À-ÿŸ\s-]*$', error_message="Use solo letras, el caracter '-' y números."),
@@ -77,7 +77,7 @@ def construir_formulario_editar_tipo():
                                                     error_message = 'Debe elegir entre "Evaluables por pares académicos" o "No evaluables por pares académicos"')),
                         Field('Descripcion', type="text",
                               requires = [IS_NOT_EMPTY(error_message='La descripción del tipo de actividad no puede quedar vacía.'),
-                                          IS_LENGTH(2048)]),
+                                          IS_LENGTH(2048, error_message="Use como máximo 2048 caracteres")]),
                         Field('Programa',
                               requires = IS_IN_SET(programas, zero="Seleccione...",
                                                    error_message = 'Debe elegir uno de los programas listados.')),
@@ -99,18 +99,9 @@ def construir_formulario_editar_tipo():
 def gestionar():
 
     admin = get_tipo_usuario(session)
-
+    session.message=""
     formulario_agregar_tipo = construir_formulario_agregar_tipo()
     formulario_editar_tipo = construir_formulario_editar_tipo()
-
-    if len(request.args) == 2: 
-        page=int(request.args[1])
-    else: 
-        page=0
-    
-    items_per_page = 5
-    
-    limitby=(page*items_per_page,(page+1)*items_per_page+1)
 
     # Vista básica
     if formulario_editar_tipo.accepts(request.vars, session,formname="formulario_editar_tipo"):
@@ -134,22 +125,22 @@ def gestionar():
       insertar_log(db, 'ACTIVIDAD', datetime.datetime.now(), request.client, 'NUEVO TIPO DE ACTIVIDAD '+ request.vars.Nombre.upper(), session.usuario['usbid'])
 
     if (len(request.args) == 0) or (request.args[0] == 'None'):
-        
-        listaTipoActividades = db(db.TIPO_ACTIVIDAD.papelera == False).select(db.TIPO_ACTIVIDAD.ALL,limitby=limitby)
+
+        listaTipoActividades = db(db.TIPO_ACTIVIDAD.papelera == False).select(db.TIPO_ACTIVIDAD.ALL)
         programa = dict()
         programa["nombre"] = None
         programa["descripcion"] = None
         id_programa = None
 
     elif  (request.args[0] != None):
-        
+
         id_programa = request.args[0]
 
         listaTipoActividades =   db((db.TIPO_ACTIVIDAD.papelera == False)
-                                 & (db.TIPO_ACTIVIDAD.id_programa == id_programa)).select(db.TIPO_ACTIVIDAD.ALL,limitby=limitby)
+                                 & (db.TIPO_ACTIVIDAD.id_programa == id_programa)).select(db.TIPO_ACTIVIDAD.ALL)
 
         programa = db(db.PROGRAMA.id_programa == id_programa).select(db.PROGRAMA.ALL).first()
-    
+
 
     return dict(admin = get_tipo_usuario(session)
           , listaTipoActividades = listaTipoActividades
@@ -158,15 +149,14 @@ def gestionar():
           , formulario_editar_tipo = formulario_editar_tipo
           , hayErroresAgregar = formulario_agregar_tipo.errors
           , hayErroresEditar = formulario_editar_tipo.errors
-          , id_programa = id_programa \
-          , page=page,items_per_page=items_per_page)
+          , id_programa = id_programa)
 
 #. --------------------------------------------------------------------------- .
 '''
     Permite añadir un nuevo tipo de actividad.
 '''
 def agregar_tipo():
-
+    session.message=""
     admin = get_tipo_usuario(session)
 
     if (admin==0):
@@ -334,9 +324,11 @@ def ver_tipo_actividad():
 
     admin = get_tipo_usuario(session)
 
-    if (admin==0):
-        redirect(URL(c ="default",f="index"))
+    # if (admin==0):
+    #     redirect(URL(c ="default",f="index"))
 
+    if not request.args:
+        raise HTTP(404)
     id_tipo = request.args[0]
 
     query = reduce(lambda a, b: (a & b), [db.TIPO_ACTIVIDAD.id_tipo == id_tipo,
@@ -347,6 +339,12 @@ def ver_tipo_actividad():
 
     tipo = db(db.TIPO_ACTIVIDAD.id_tipo == id_tipo).select(db.TIPO_ACTIVIDAD.ALL).first()
     programa = db(db.PROGRAMA.id_programa == tipo.id_programa).select(db.PROGRAMA.ALL).first()
+
+    # Se determina si hay productos con este tipo de actividad
+    # De haber, entonces no se puede editar porque se alteran los demas
+    # productos
+    editable = not db((db.PRODUCTO_TIENE_CAMPO.id_campo == db.ACT_POSEE_CAMPO.id_campo) & \
+                  (db.ACT_POSEE_CAMPO.id_tipo_act == id_tipo)).select()
 
     # Formularios para agregar campos o catalogos
     formSimple, formMultiple = formulario_agregar_tipo_campos()
@@ -360,6 +358,7 @@ def ver_tipo_actividad():
 
         # Se inserta el campo, en la base de datos, que se desea utilizar.
         db.CAMPO.insert(nombre = request.vars.Nombre,
+                        nombre_interno = "C"+str(abs(convertToNumber(request.vars.Nombre))),
                         obligatorio = request.vars.Obligatorio,
                         tipo_campo = request.vars.Tipo,
                         id_catalogo = None)
@@ -403,6 +402,7 @@ def ver_tipo_actividad():
         for campo in campos_catalogo:
 
             db.CAMPO.insert(nombre = campo.nombre,
+                            nombre_interno = "C"+str(abs(convertToNumber(campo.nombre))),
                             obligatorio = campo.obligatorio,
                             tipo_campo = campo.tipo_campo,
                             id_catalogo = id_catalogo
@@ -421,17 +421,18 @@ def ver_tipo_actividad():
     if formulario_editar_campo.accepts(request.vars, session,formname="formulario_editar_campo"):
 
         id_campo = request.vars.id_campo
-        
+
         # Verifico si se seleccionó el campo "Obligatorio".
         if request.vars.obligatorio == None:
            request.vars.obligatorio = 'f'
-           
+
         # Los atributos del campo son puestos por defecto en el formulario
         campo = db(db.CAMPO.id_campo == id_campo).select(db.CAMPO.ALL).first()
 
         campo.update_record(nombre      = request.vars.nombre,
                             tipo_campo  = request.vars.tipo_campo,
-                            obligatorio = request.vars.obligatorio)
+                            obligatorio = request.vars.obligatorio,
+                            nombre_interno = "C"+str(abs(convertToNumber(request.vars.nombre))))
 
         # Se obtiene el id del tipo de actividad asociado al campo para
         # hacer un redirect
@@ -445,14 +446,11 @@ def ver_tipo_actividad():
                 admin = get_tipo_usuario(session), tipo_nombre = tipo.nombre,
                 programa_nombre = programa.nombre,
                 formSimple = formSimple, formMultiple = formMultiple,
-                formulario_editar_campo=formulario_editar_campo)
+                formulario_editar_campo=formulario_editar_campo,
+                editable = editable)
 
 def editar_tipo():
-
-    admin = get_tipo_usuario(session)
-
-    if (admin==0):
-        redirect(URL(c ="default",f="index"))
+    session.message = ""
 
     id = request.args[0]        # Se identifica cual tipo de actividad se identificará.
 
@@ -525,11 +523,6 @@ Funcion que se encarga de modificar las caracteriticas de un
 campo de un catalogo.
 '''
 def formularioEditarCampo():
-
-    admin = get_tipo_usuario(session)
-
-    if (admin==0):
-        redirect(URL(c ="default",f="index"))
 
     formulario = SQLFORM.factory(
                     Field('nombre',

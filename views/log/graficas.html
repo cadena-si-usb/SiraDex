@@ -23,14 +23,18 @@
     <script src="{{=URL('static','js/global.js')}}"></script>
     <h2>Inicios de sesión durante la última semana </h2>
       <div id="chart_login_diario"></div>
+
     <h2>Inicios de sesión durante las últimas 12 semanas</h2>
       <div id="chart_login_trimestre"></div>
 
+    <h2>Productos Aprobados vs. Rechazados durante las últimas 12 semanas</h2>
+      <div id="chart_apr_rech_trimestre"></div>
+
     <h2>Registro de productos nuevos durante la última semana </h2>
       <div id="chart_prod_diario"></div>
-    <h2>Registro de productos nuevas durante las últimas 12 semanas</h2>
-      <div id="chart_prod_trimestre"></div>
 
+    <h2>Registro de productos nuevos durante las últimas 12 semanas</h2>
+      <div id="chart_prod_trimestre"></div>
 
     <!-- Google Chart API -->
 
@@ -45,6 +49,29 @@
       google.charts.setOnLoadCallback(drawChartLoginTrimestre);
       google.charts.setOnLoadCallback(drawChartProdDiario);
       google.charts.setOnLoadCallback(drawChartProdTrimestre);
+      google.charts.setOnLoadCallback(drawChartAprVsRech);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChartAprVsRech() {
+        var data = google.visualization.arrayToDataTable(
+          [['Accion', 'Numero'], ['Validados', {{=str(apr_vs_rech[1])}}], ['No Validados', {{=str(apr_vs_rech[0])}}]]
+        );
+
+        var view = new google.visualization.DataView(data);
+        view.setColumns([0, 1])
+
+        var options = {
+          title: "Productos Aprobados vs. Rechazados durante las últimas 12 semanas",
+          width: 850,
+          height: 400,
+          pieHole: 0.2,
+        };
+        var chart = new google.visualization.PieChart(document.getElementById("chart_apr_rech_trimestre"));
+        chart.draw(view, options);
+      }
+
 
       // Callback that creates and populates a data table,
       // instantiates the pie chart, passes in the data and

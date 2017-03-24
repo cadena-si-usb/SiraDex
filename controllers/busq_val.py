@@ -7,7 +7,7 @@ from datetime  import date
 
 # Funcion para busquedas publicas
 def busqueda():
-    print request.vars 
+    print request.vars
 
     dictionary = {}
     for key in request.vars:
@@ -59,7 +59,7 @@ def busqueda():
 
         if request.vars.anio != None:
             sql += " AND extract(year FROM prod.fecha_realizacion)=" + request.vars.anio
-            
+
         # Ahora dependiendo del usuario anadimos las restricciones del estado (no se contempla cuando
         # el usuario esta bloqueado porqu no deberia llegar aqui)
         if (session.usuario == None or session.usuario["tipo"] == "Usuario"):
@@ -75,6 +75,7 @@ def busqueda():
 
         infoTabla = tabla(productos)
         infoBarChart = graficaBar(productos)
+
         infoPieChart = graficaPie(productos)
         #graficaPie = URL(c='busq_val',f='graficaPie',vars=dict(productos=productos))
 
@@ -87,7 +88,8 @@ def busqueda():
 def ver_producto():
 
     admin = get_tipo_usuario_not_loged(session)
-
+    if not request.args:
+        raise HTTP(404)
     id_producto = int(request.args(0))
     producto = db(db.PRODUCTO.id_producto == id_producto).select().first()
     usuario_producto = db(db.USUARIO.usbid == producto.usbid_usu_creador).select().first()
@@ -118,11 +120,13 @@ def ver_producto():
     #Agregamos los otros elementos de los campos
     campos = db(db.PRODUCTO_TIENE_CAMPO.id_prod == producto.id_producto).select()
 
+    hayDoc = False
     elementos = []
     documento= []
     for campo_valor in campos:
         campo = db(db.CAMPO.id_campo == campo_valor.id_campo).select().first()
-        nombre_campo = campo.nombre
+        nombre_campo = campo.nombre_interno
+        label_campo = campo.nombre
         nombre_campo = nombre_campo.replace(" ", "_")
 
         try :
@@ -132,10 +136,14 @@ def ver_producto():
             pass
 
         if campo.tipo_campo=="Documento":
-            temp=[str(campo.id_campo), nombre_campo ]
+            hayDoc = True
+            temp=[campo.id_campo,campo_valor.valor_campo, nombre_campo,campo_valor.id_prod,label_campo]
             documento += [temp]
         else :
-             elementos.append(Field(nombre_campo, default=campo_valor.valor_campo, writable=False))
+            if campo_valor.valor_campo!='' and  campo_valor.valor_campo!=None :
+                elementos.append(Field(nombre_campo, label=label_campo, default=campo_valor.valor_campo, writable=False))
+            else:
+                elementos.append(Field(nombre_campo, label=label_campo, default="-- Información no proporcionada --", writable=False))
 
     if len(elementos) != 0:
         form_datos = SQLFORM.factory(*elementos, readonly=True)
@@ -188,29 +196,36 @@ def ver_producto():
         hayErrores = formulario_validar.errors
 
     if formulario_rechazar.accepts(request.vars, session, formname="formulario_rechazar"):
+        print "se rechazo"
+        print request.vars
         id_producto = request.vars.id_producto_r
         razon = request.vars.razon
 
         ## Enviamos notificacion de rechazo
         # obtenemos el producto a rehazar
         producto =  db(db.PRODUCTO.id_producto == id_producto).select().first()
-
+        print producto
         # obtenemos el usuario que realizo el producto
         usuario = db(db.USUARIO.usbid == producto.usbid_usu_creador).select().first()
 
+        print usuario
         # parseamos los datos para la notificacion
         datos_usuario = {'nombres' : usuario.nombres + ' ' + usuario.apellidos}
+        datos_usuario['correo_inst'] = usuario.correo_inst
+        datos_usuario['correo_alter'] = None
         if usuario.correo_alter != None:
-            datos_usuario['email'] = usuario.correo_alter
-        else:
-            datos_usuario['email'] = usuario.correo_inst
+            if usuario.correo_alter != "":
+                datos_usuario['correo_alter'] = usuario.correo_alter
+            datos_usuario['correo_alter'] = usuario.correo_alter
 
         producto = {'nombre': producto.nombre}
 
         # enviamos la notificacion
+        print "enviar correo"
         enviar_correo_rechazo(mail, datos_usuario, producto, razon)
-
+        print "se envio el correo"
         # rechazamos efectimavamente el producto.
+        print "llamando a rechazar"
         rechazar(id_producto)
 
     ## Fin formulario de rechazo
@@ -219,20 +234,12 @@ def ver_producto():
 
 # Vista de validaciones
 def gestionar_validacion():
-
+    session.message=""
     admin = get_tipo_usuario(session)
 
     if (admin==0):
         redirect(URL(c ="default",f="index"))
 
-    if len(request.args): 
-        page=int(request.args[0])
-    else: 
-        page=0
-    
-    items_per_page = 5
-    
-    limitby=(page*items_per_page,(page+1)*items_per_page+1)
 
     # Hago el query Espera
 
@@ -242,9 +249,9 @@ def gestionar_validacion():
     + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='Por Validar';"
     sqlRechazadas = "select producto.id_producto, producto.nombre, tipo_actividad.nombre from producto inner join tipo_actividad"\
     + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='No Validado';"
-    productosV = db.executesql(sqlValidadas)[limitby[0]:limitby[1]]
-    productosE = db.executesql(sqlEspera)[limitby[0]:limitby[1]]
-    productosR = db.executesql(sqlRechazadas)[limitby[0]:limitby[1]]
+    productosV = db.executesql(sqlValidadas)
+    productosE = db.executesql(sqlEspera)
+    productosR = db.executesql(sqlRechazadas)
 
     return locals()
 
@@ -269,10 +276,11 @@ def validar(id_producto):
 
     # parseamos los datos para la notificacion
     datos_usuario = {'nombres' : usuario.nombres + ' ' + usuario.apellidos}
-    if usuario.correo_alter != None:
-        datos_usuario['email'] = usuario.correo_alter
-    else:
-        datos_usuario['email'] = usuario.correo_inst
+    datos_usuario['correo_inst'] = usuario.correo_inst
+    datos_usuario['correo_alter'] = None
+    if usuario.correo_alter != None and usuario.correo_alter != '':
+        datos_usuario['correo_alter'] = usuario.correo_alter
+
 
     producto = {'nombre': producto.nombre}
 
@@ -286,10 +294,10 @@ def validar(id_producto):
         usuario = db(db.USUARIO.usbid == participacion.usbid_usuario).select().first()
 
         datos_coautor = {'nombres' : usuario.nombres + ' ' + usuario.apellidos }
-        if usuario.correo_alter != None:
-            datos_coautor['email'] = usuario.correo_alter
-        else:
-            datos_coautor['email'] = usuario.correo_inst
+        datos_coautor['correo_inst'] = usuario.correo_inst
+        datos_coautor['correo_alter'] = None
+        if usuario.correo_alter != None and  usuario.correo_alter != '':
+            datos_coautor['correo_alter'] = usuario.correo_alter
         # Enviamos el correo.
         enviar_correo_validacion_coautor(mail, datos_coautor, datos_usuario, producto)
 
@@ -300,7 +308,7 @@ def validar(id_producto):
 
 # Metodo para rechazar una producto
 def rechazar(id_producto):
-
+    print "entre a rechazar"
     admin = get_tipo_usuario(session)
 
     if (admin==0):
@@ -309,6 +317,7 @@ def rechazar(id_producto):
     db(db.PRODUCTO.id_producto == id_producto).update(estado='No Validado')
     insertar_log(db, 'VALIDACION', datetime.datetime.now(), request.client, 'PRODUCTO CON ID ' + str(id_producto) + ' NO VALIDADO', session.usuario['usbid'])
     session.message = 'Producto rechazado'
+    print "\n\n\nA redirigir en rechazar"
     redirect(URL('gestionar_validacion.html'))
 
 def graficaPie(productos):
@@ -365,7 +374,7 @@ def graficaBar(productos):
         if anio < fecha_desde:
             anio = fecha_desde
         if anio > fecha_hasta:
-            anio = fecha_hasta            
+            anio = fecha_hasta
         id_programa = producto[5]
         fechas[anio][id_programa]['repeticiones'] += 1
     return fechas
@@ -389,7 +398,7 @@ def tabla(productos):
         if anio < fecha_desde:
             anio = fecha_desde
         if anio > fecha_hasta:
-            anio = fecha_hasta            
+            anio = fecha_hasta
         id_programa = producto[5]
         programas[id_programa][anio]+= 1
         programas[id_programa]['total']+=1

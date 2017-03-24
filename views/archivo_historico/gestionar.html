@@ -5,6 +5,78 @@
 {{end}}
 
 {{block contenido}}
+
+    <!-- Custom DataTables plugin -->
+    <script src="{{=URL('static','DataTables/datatables.js')}}"></script>
+    <link rel="stylesheet" type="text/css" href="{{=URL('static','DataTables/datatables.css')}}">
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+        var opciones = {
+          responsive: true,
+            "language": {
+                search:         "Buscar:",
+                searchPlaceholder: "",
+                lengthMenu:     "Mostrar _MENU_ entradas",
+                info:           "Mostrando _START_ a _END_ de _TOTAL_ entradas.",
+                infoEmpty:      "Mostrando 0 a 0 de 0 entradas",
+                infoFiltered:   "(filtradas de _MAX_ entradas en total)",
+                infoPostFix:    "",
+                loadingRecords: "Carga en curso...",
+                zeroRecords:    "No se encontraron programas en la busqueda",
+                emptyTable:     "No hay informacion disponible en la tabla",
+                processing:     "Procesando...",
+                paginate: {
+                    first:      "Primero",
+                    previous:   "Anterior",
+                    next:       "Siguiente",
+                    last:       "Ultimo"
+                },
+                aria: {
+                    sortAscending:  ": Se ordenan las columnas por orden creciente",
+                    sortDescending: ": Se ordenan las columnas por orden decreciente"
+                }
+            },
+             "columns": [
+                { "orderable": false },
+                { "orderable": false },
+                {"width" : "30%"},
+                { "orderable": false }
+            ]
+        };
+        
+        // Se asume que tienen la misma cantidad de columnas los distintos
+        // tipos de solicitudes
+        var cantidadColumnasTipoAct = $("#tipoActividadesPapeleraTable thead th").length;
+        var cantidadColumnasProgramas = $("#programasPapeleraTable thead th").length;
+        
+        columnasTipoAct = [];
+        for (var i = 0; i<cantidadColumnasTipoAct; i++){
+            columnasTipoAct.push({ "orderable": false });
+        }
+        
+        columnasProgramas = [];
+        for (var i = 0; i<cantidadColumnasProgramas; i++){
+            columnasProgramas.push({ "orderable": false });
+        }
+        
+        // Por si la tabla está vacía
+        // En este caso se debe verificar porque si len es cero abajo, entonces
+        // se ponen menos columnas en el tbody que en el theader
+        
+        if ($("#tipoActividadesPapeleraTable tbody td").length ==  cantidadColumnasProgramas){
+          opciones["columns"] = columnasTipoAct;
+          $("#tipoActividadesPapeleraTable").DataTable(opciones);
+        }
+        
+        if ($("#programasPapeleraTable tbody tr:first-child td").length ==  cantidadColumnasProgramas){
+          opciones["columns"] = columnasProgramas;
+          $("#programasPapeleraTable").DataTable(opciones);
+        }
+      });
+    </script>
+
+
 <!-- Nav tabs -->
 {{=mensaje}}
 <div class="card">
@@ -22,7 +94,7 @@
 <div class="tab-content">
   <div class="tab-pane active" id="Tipos-de-Actividad" role="tabpanel">
         <div class="container-fluid">
-        <table class="table table-hover table-striped borde-tabla">
+        <table id="tipoActividadesPapeleraTable" class="table table-hover table-striped borde-tabla">
             <thead>
                 <tr>
                     <th class="hColumns">Tipos de Actividad Eliminados </th>
@@ -70,7 +142,7 @@
   </div>
   <div class="tab-pane" id="Programas" role="tabpanel">
       <div class="container-fluid">
-        <table class="table table-hover table-striped borde-tabla">
+        <table id="programasPapeleraTable" class="table table-hover table-striped borde-tabla">
             <thead>
                 <tr>
                     <th class="hColumns"> Programas Eliminados </th>

@@ -26,6 +26,65 @@
 {{end}}
 
 {{block contenido}}
+
+
+    <!-- Custom DataTables plugin -->
+    <script src="{{=URL('static','DataTables/datatables.js')}}"></script>
+    <link rel="stylesheet" type="text/css" href="{{=URL('static','DataTables/datatables.css')}}">
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+        var opciones = {
+          responsive: true,
+            "language": {
+                search:         "Buscar:",
+                searchPlaceholder: "",
+                lengthMenu:     "Mostrar _MENU_ entradas",
+                info:           "Mostrando _START_ a _END_ de _TOTAL_ entradas.",
+                infoEmpty:      "Mostrando 0 a 0 de 0 entradas",
+                infoFiltered:   "(filtradas de _MAX_ entradas en total)",
+                infoPostFix:    "",
+                loadingRecords: "Carga en curso...",
+                zeroRecords:    "No se encontraron usuarios en la busqueda",
+                emptyTable:     "No hay informacion disponible en la tabla",
+                processing:     "Procesando...",
+                paginate: {
+                    first:      "Primero",
+                    previous:   "Anterior",
+                    next:       "Siguiente",
+                    last:       "Ultimo"
+                },
+                aria: {
+                    sortAscending:  ": Se ordenan las columnas por orden creciente",
+                    sortDescending: ": Se ordenan las columnas por orden decreciente"
+                }
+            },
+             "columns": [
+                { "orderable": false },
+                { "orderable": false },
+                { "orderable": false },
+                null,
+                null,
+                null
+            ]
+        };
+
+        // Asume que cada tabla de usuario tiene el mismo número de columnas
+        var cantidadColumnas = $("#administradoresTable thead th").length;
+        columnas = [];
+        for (var i = 0; i<cantidadColumnas; i++){
+          columnas.push({ "orderable": false });
+        }
+        opciones["columns"] = columnas;
+        $("#administradoresTable").DataTable(opciones);
+        $("#DExTable").DataTable(opciones);
+        $("#usuariosTable").DataTable(opciones);
+        $("#bloqueadosTable").DataTable(opciones);
+        $("#indefinidosTable").DataTable(opciones);
+      });
+    </script>
+
+
     <div class="row">
     <div class="col-md-12">
         <div class="card">
@@ -81,7 +140,7 @@
         <div class="tab-content">
         <!-- Administradores -->
         <div role="tabpanel" class="tab-pane active" id="admin">
-            <table class="table table-hover table-striped borde-tabla">
+            <table id="administradoresTable" class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
                 <thead>
                     <tr>
                         <th class="hColumns">Usbid </th>
@@ -133,7 +192,7 @@
         </div>
         <!-- Usuarios -->
         <div role="tabpanel" class="tab-pane" id="user">
-             <table class="table table-hover table-striped borde-tabla">
+             <table id="usuariosTable" class="table table-hover table-striped borde-tabla"  style="margin:0px !important; width: 100% !important">
                 <thead>
                     <tr>
                         <th class="hColumns">Usbid </th>
@@ -185,7 +244,7 @@
         </div>
         <!--  DEX -->
         <div role="tabpanel" class="tab-pane" id="dex">
-            <table class="table table-hover table-striped borde-tabla">
+            <table id="DExTable" class="table table-hover table-striped borde-tabla"  style="margin:0px !important; width: 100% !important">
                 <thead>
                     <tr>
                         <th class="hColumns">Usbid </th>
@@ -236,7 +295,7 @@
         </div>
         <!-- Bloqueados -->
         <div role="tabpanel" class="tab-pane" id="bloq">
-            <table class="table table-hover table-striped borde-tabla">
+            <table id="bloqueadosTable" class="table table-hover table-striped borde-tabla"  style="margin:0px !important; width: 100% !important">
                 <thead>
                     <tr>
                         <th class="hColumns">Usbid </th>
@@ -287,7 +346,7 @@
         </div>
         <!-- Indefinido -->
         <div role="tabpanel" class="tab-pane" id="indef">
-            <table class="table table-hover table-striped borde-tabla">
+            <table id="indefinidosTable" class="table table-hover table-striped borde-tabla"  style="margin:0px !important; width: 100% !important" >
                 <thead>
                     <tr>
                         <th class="hColumns">Usbid </th>
@@ -305,7 +364,7 @@
                         <td class="hColumns center-vertically">{{ =usuario.usbid}}</td>
                         <td class="hColumns center-vertically">{{ =usuario.nombres}}</td>
                         <td class="hColumns center-vertically">{{ =usuario.apellidos}}</td>
-                        
+
                         <!-- Boton Contactar -->
                         <td class="hColumns text-center center-vertically">
                             <button type="button" data-toggle="modal"

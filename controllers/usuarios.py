@@ -50,13 +50,16 @@ def gestionar():
 
         ## parseamos los datos para la notificacion
         datos_usuario = {'nombres' : usuario.nombres + ' ' + usuario.apellidos}
-        if usuario.correo_alter != None:
+        if usuario.correo_alter != None and  usuario.correo_alter != '':
              datos_usuario['email'] = usuario.correo_alter
-        else:
-             datos_usuario['email'] = usuario.correo_inst
+             ## Enviamos la notificacion al correo alternativo
+             enviar_correo_contacto(mail, datos_usuario, asunto, mensaje)
 
-        ## Enviamos la notificacion
+
+        datos_usuario['email'] = usuario.correo_inst
+        ## Enviamos la notificacion al correo institucional
         enviar_correo_contacto(mail, datos_usuario, asunto, mensaje)
+
         insertar_log(db, 'CONTACTO', datetime.datetime.now(), request.client, 'ENVIO DE MENSAJE A '+ usbid, session.usuario['usbid'])
 
         session.message = 'Correo enviado satisfactoriamente'
@@ -69,7 +72,7 @@ def gestionar():
     return dict(form_editar=form_editar, hayErrores=hayErrores, formulario_contactar=formulario_contactar,usuarios = aux,message = message, admin=get_tipo_usuario(session))
 
 def agregar():
-
+    # (0212)363-7827
     admin = get_tipo_usuario(session)
 
     if (admin==0 or admin==2):
@@ -80,18 +83,17 @@ def agregar():
         Field('usbid',
                requires=[IS_NOT_EMPTY(error_message='El USBID no puede quedar vacío.')]),
         Field('telefono',
-               requires=[IS_NOT_EMPTY(error_message='El teléfono no puede quedar vacío.'),
-                         IS_LENGTH(20),
-                         IS_MATCH('^[0-9]+$', error_message="Use sólo números.")]),
+               requires=[IS_LENGTH(20),
+                         IS_MATCH('^\(0[0-9]{3}\)[0-9]{3}-[0-9]{4}$|^$', error_message="El formato es inválido")]),
         Field('correo_alter',
-               requires=[IS_NOT_EMPTY(error_message='El correo no puede quedar vacío.'),
-                         IS_MATCH('^[.A-z0-9À-ÿŸ\s-]+@[.A-z0-9À-ÿŸ\s-]+$', error_message="Use sólo letras, el caracter '-' y números.")]),
+               requires=[IS_MATCH('^[.A-z0-9À-ÿŸ\s-]+@[.A-z0-9À-ÿŸ\s-]+\.[.A-z0-9À-ÿŸ\s-]+$|^$',error_message="El formato inválido")]),
         Field('tipo',
                requires=IS_IN_SET({'Usuario':'Usuario', 'DEX':'DEX', 'Administrador':'Administrador', 'Bloqueado':'Bloqueado'},
                                                     zero=T('Seleccione...'),
                                                     error_message = 'Debe elegir un tipo de usuario')),
         submit_button='Agregar',
-        labels={'usbid':'USBID','telefono':'Teléfono', 'correo_alter':'Correo alternativo','tipo':'Tipo'}
+        labels={'usbid':'USBID (*)','telefono':'Teléfono', 'correo_alter':'Correo alternativo','tipo':'Tipo (*)'},
+        col3={'telefono':'Ej: (0212)123-1234','correo_alter':'Ej: ejemplo@gmail.com'}
         )
 
     """
@@ -123,6 +125,8 @@ def agregar():
             telefonoAux = request.vars.telefono
             correo_alterAux = request.vars.correo_alter
             tipoAux = request.vars.tipo
+            print("AQUI AQUI:", telefonoAux)
+            print("AQUI AQUI:", correo_alterAux)
 
 
             # Primero verificamos que el usuario que intenta agregarse no esta en la base de datos
@@ -207,6 +211,23 @@ def modificar():
             if(request.args[0] != session.usuario["usbid"]):
                 db(db.USUARIO.usbid == request.args[0]).update(tipo = request.vars.tipo)
                 insertar_log(db, 'USUARIO', datetime.datetime.now(), request.client, 'CAMBIO DE USUARIO ' + request.args[0] + ' A TIPO ' + request.vars.tipo.upper(), session.usuario['usbid'])
+                if request.vars.tipo.upper() == "BLOQUEADO":
+                    asunto  = "Su usuario ha sido bloqueado."
+                    mensaje = "Atención: Cumplimos con comunicarle que su usuario en el sistema SIRADEx ha sido bloqueado.\n Si cree que esto ha sido un error, por favor contacte al Decanato de Extesión."
+                    ## Obtenemos el usuario al que deseamos contactar.
+                    usuario = db(db.USUARIO.usbid == request.args[0]).select().first()
+
+                    ## parseamos los datos para la notificacion
+                    datos_usuario = {'nombres' : usuario.nombres + ' ' + usuario.apellidos}
+                    if usuario.correo_alter != None and  usuario.correo_alter != '':
+                         datos_usuario['email'] = usuario.correo_alter
+                         ## Enviamos la notificacion al correo alternativo
+                         enviar_correo_contacto(mail, datos_usuario, asunto, mensaje)
+
+                    datos_usuario['email'] = usuario.correo_inst
+                    ## Enviamos la notificacion al correo institucional
+                    enviar_correo_contacto(mail, datos_usuario, asunto, mensaje)
+
                 redirect(URL('gestionar'))
             else:
                 message = T("Para cambiar sus permisos, por favor comuníquese con un administrador")

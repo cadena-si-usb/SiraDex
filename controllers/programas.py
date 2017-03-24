@@ -57,17 +57,9 @@ def gestionar_programas():
 
     admin = get_tipo_usuario(session)
 
-    if len(request.args): 
-        page=int(request.args[0])
-    else: 
-        page=0
     
-    items_per_page = 5
-    
-    limitby=(page*items_per_page,(page+1)*items_per_page+1)
-
     # Obtengo todos los programas almacenados en la base de datos.
-    programas = db(db.PROGRAMA.papelera == False).select(limitby=limitby)
+    programas = db(db.PROGRAMA.papelera == False).select()
 
     # Para agregar un programa.
     formulario = SQLFORM.factory(
@@ -146,8 +138,7 @@ def gestionar_programas():
     # MÉTODO POST FORMULARIO EDITAR:
     return dict(admin=admin, programas=programas, hayErroresAgregar=formulario.errors,
                 hayErroresEditar=formulario_editar.errors, formulario=formulario,
-                formulario_editar=formulario_editar, \
-                page=page,items_per_page=items_per_page)
+                formulario_editar=formulario_editar)
 
 def eliminar_programa():
     admin = get_tipo_usuario(session)

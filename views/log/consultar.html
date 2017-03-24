@@ -1,4 +1,4 @@
-{{extend 'layoutSIRADEXloged.html'}}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     {{extend 'layoutSIRADEXloged.html'}}
 
 {{block titulo}}
 
@@ -24,6 +24,9 @@
     <script src="{{=URL('static','js/list.js')}}"></script>
     <script src="{{=URL('static','js/log.js')}}"></script>
 
+    <!-- Custom DataTables plugin -->
+    <script src="{{=URL('static','DataTables/datatables.js')}}"></script>
+    <link rel="stylesheet" type="text/css" href="{{=URL('static','DataTables/datatables.css')}}">
     <div id="log">
       <div class="row">
         <div class="col-sm-6">
@@ -32,7 +35,7 @@
                     <!-- barra de busqueda -->
                         <input  type="text"
                                 class="form-control search"
-                                placeholder="Buscar entrada en el Log"
+                                placeholder="Filtrar elementos..."
                                 id="form-busqueda">
 
                     <!-- Lupa -->
@@ -125,4 +128,10 @@
   </div>
 </div>
 
+<script>
+  // reloads page after downloading log data
+  $('input[type=submit]' ).click(function() {
+    setTimeout(function(){window.location.reload();},1000)
+  });
+</script>
 {{end}}
