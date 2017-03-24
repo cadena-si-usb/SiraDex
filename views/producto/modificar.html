@@ -316,7 +316,14 @@ function textoRestante1(maxLong, idDivUsar){
 			if (comprobante_mostrado==cantidad_comprobantes){
 				$('#agregar_comprobante').addClass("hidden");
 			}
-
+			
+			var esBorrador = false;
+			$("input[name='borrador']").click(function(){
+				esBorrador = true;
+			});
+			$("input[value='Enviar Producto']").click(function(){
+				esBorrador = false;
+			});
 			$('#agregar_comprobante').click(function(){
 				if (comprobante_mostrado<cantidad_comprobantes){
 
@@ -477,7 +484,7 @@ function textoRestante1(maxLong, idDivUsar){
 			    		infor_cargada = true;
 					}
 				}
-				if (!infor_cargada && comprobantes_eliminados==comprobantes_bd){
+				if (!infor_cargada && (comprobantes_eliminados==comprobantes_bd) && !esBorrador){
 					alert("Tiene que adjuntar al menos un comprobante");
 					return false;
 				}

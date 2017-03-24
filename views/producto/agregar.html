@@ -259,8 +259,15 @@ $(document).ready(function () {
 			$('#no_table_c0mpr0bant3_'+ comprobante).closest(":file").filestyle('clear');
 
 	});
+	
+	var esBorrador = false;
+	$("input[name='borrador']").click(function(){
+		esBorrador = true;
+	})
 
-
+	$("input[value='Enviar Producto']").click(function(){
+		esBorrador = false;
+	});
 
 	$('#agregar_comprobante').click(function(){
 
@@ -419,7 +426,7 @@ $(document).ready(function () {
 			}
 		}
 
-		if (!infor_cargada){
+		if (!infor_cargada && !esBorrador){
 			alert("Tiene que adjuntar al menos un comprobante");
 			return false;
 		}
