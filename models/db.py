@@ -147,15 +147,6 @@ db.define_table('USUARIO',
     migrate=False,
 );
 
-
-############# QUITARIA ESTO Y PONER CAMPO JEFE EN USUARIO SOLO SI ES NECESARIO
-db.define_table('JEFE_DEPENDENCIA',
-    Field('id_jefe', type='id'),
-    Field('usbid_usuario',db.USUARIO.usbid),
-    primarykey=['id_jefe'],
-    migrate=False
-);
-
 db.define_table('PROGRAMA',
     Field('id_programa', type='id'),
     Field('nombre',type='string',length=256, notnull=True, unique=True),
@@ -177,13 +168,10 @@ db.define_table('TIPO_ACTIVIDAD',
     Field('descripcion',type='string',length=2048, notnull=True,
            requires=[IS_LENGTH(2048,error_message='Tamaño máximo de 2048 caracteres')]),
     Field('id_programa',db.PROGRAMA.id_programa),
-    Field('validacion',type='string', length=128, notnull=True, default='True'),
     Field('producto', type='string', length=256,
            requires=[IS_NOT_EMPTY(error_message='No puede ser vacía'),
                      IS_LENGTH(256,error_message='El nombre no pude ser más de 256 caracteres')]),
     Field('nro_campos', type='integer', requires=IS_NOT_EMPTY(error_message='No puede ser vacía')),
-    Field('id_jefe_creador',db.JEFE_DEPENDENCIA.id_jefe),
-    Field('usbid_usuario_propone',db.USUARIO.usbid),
     Field('papelera', type='boolean', notnull = True, default=False),
     Field('modif_fecha', type='date'),
     primarykey=['id_tipo'],
@@ -197,12 +185,10 @@ db.define_table('PRODUCTO',
            requires=[IS_LENGTH(128,error_message='Tamaño máximo de 128 caracteres')]),
     Field('descripcion', type='string',length=256),
     Field('estado',type='string', default='Por Validar', requires=IS_IN_SET(['Validado', 'Por Validar', 'No Validado', 'Borrador'])),
-    Field('evaluacion_criterio',type='string',length=256),
-    Field('evaluacion_valor',type='string', length=256),
     Field('fecha_realizacion', type='date'),
     Field('fecha_modificacion', type='date'),
     Field('lugar', type='string',length=50),
-    Field('usbid_usu_modificador', db.USUARIO.usbid),
+    Field('colaboradores', type='string',length=256),
     Field('usbid_usu_creador', db.USUARIO.usbid),
     primarykey=['id_producto'],
     migrate=False
@@ -212,17 +198,9 @@ db.define_table('COMPROBANTE',
     Field('id_comprobante', type='id'),
     Field('archivo', type='upload',autodelete=True, uploadseparate=True, uploadfolder=os.path.join(request.folder,'uploads')),
     Field('descripcion', type='string', length=100),
-    Field('producto','reference producto'),
+    Field('producto','reference producto'),  #No entiendo porque se hace esto.Preguntar.En el esquema se usa para cascada.
     primarykey=['id_comprobante'],
     migrate = False
-);
-
-db.define_table('PERMISOS_TIPO_ACT',
-    Field('permiso',type='string',length=256),
-    Field('id_tipo', db.TIPO_ACTIVIDAD.id_tipo),
-    primarykey=['permiso','id_tipo'],
-    migrate=False
-
 );
 
 db.define_table('CATALOGO',
@@ -249,7 +227,8 @@ db.define_table('CAMPO_CATALOGO',
 db.define_table('CAMPO',
     Field('id_campo', type='id'),
     Field('id_catalogo', db.CATALOGO.id_catalogo),
-    Field('nombre',type='string', length=256),
+    Field('nombre', type='string', length=256),
+    Field('nombre_interno', type='string', length=256),
     Field('tipo_campo',type='string', length=64,
            requires = [IS_IN_SET(tipo_campos)],
            widget = SQLFORM.widgets.options.widget),
@@ -281,35 +260,26 @@ db.define_table('PARTICIPA_PRODUCTO',
     migrate=False
 );
 
-db.define_table('GESTIONA_TIPO_ACT',
-    Field('id_jefe', db.JEFE_DEPENDENCIA.id_jefe),
-    Field('id_tipo_act', db.TIPO_ACTIVIDAD.id_tipo),
-    primarykey=['id_jefe','id_tipo_act'],
-    migrate=False
-);
-
-
-db.define_table('GESTIONA_CATALOGO',
-    Field('id_jefe', db.JEFE_DEPENDENCIA.id_jefe),
-    Field('id_catalogo',db.CATALOGO.id_catalogo),
-    primarykey=['id_jefe','id_catalogo'],
-    migrate=False
-);
-
 db.define_table('LOG_SIRADEX',
-    Field('accion',type='string'),
+    Field('id_log', type='id'),
+    Field('accion',type='string'), #En el schema aparece como TEXT, investigar diferencias.
     Field('accion_fecha',type='date'),
     Field('accion_ip',type='string', length=256),
     Field('descripcion',type='string'),
-    Field('usbid_usuario',db.USUARIO.usbid),
-    primarykey=['accion','accion_fecha','accion_ip'],
+    Field('usbid_usuario', type='string'),
+    primarykey=['id_log'],
     migrate=False
 );
 
-db.define_table('BACKUP',
-    Field('id_backup', type='id'),
-    Field('descripcion', type='string', length=256),
-    Field('fecha', type='date'),
-    primarykey=['id_backup'],
+"""
+db.define_table('NOMBRE_CAMPO_ADICIONAL',
+    Field('nombre_interno',type='string'),
+    Field('nombre_mostrado',type="string"),
+    primarykey=['id_campo_adicional'],
     migrate=False
-);
+)
+"""
+
+#Nota: Preguntarle a los desarrolladores sobre la necesidad de comprobaciones
+#con notnull=TRUE, unique=TRUE aqui o NOT NULL en schema, de modo que pueda modificarse
+#para que sea lo mas eficiente posible.

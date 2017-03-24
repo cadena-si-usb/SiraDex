@@ -1,5 +1,6 @@
 $(document).ready(function(){
 
+
   var maxLongNombre  = 128;    // Longitud máxima que tendrá el campo nombre.
   var maxLongDescrip = 2048;   // Longitud máxima que tendrá el campo descripción.
   var maxLongCodigo = 10;      // Longitud máxima que tendrá el campo código.
@@ -27,6 +28,17 @@ $(document).ready(function(){
   {
     $(".formularioTipo").hide();
   }
+
+    // Se muestra valor por defecto del programa desde el cual se ve la vista
+  $('#myModal').on('show.bs.modal', function(e){
+
+      if (($("#identificador_de_programa").length > 0 ) &&
+           $("#identificador_de_programa").attr("data-programa") != "None"){
+        var id_programa = $("#identificador_de_programa").attr("data-programa");
+        var opcion = $("#myModal .generic-widget.form-control#no_table_Programa option[value='"+ id_programa +"']");
+        opcion.attr("selected", true);
+      }
+  });
 
    // Pasamos los argumentos para eliminar catalogo.
   $('#myModalDelete').on('show.bs.modal', function(e){
@@ -85,6 +97,18 @@ $(document).ready(function(){
       $(".error_wrapper").css('color','red');
   }
 
+  // Para limpiar el modal de agregar cuando se cierra.
+  $("#myModal").on("hidden.bs.modal", function(){
+    $("#no_table_Nombre").val("");
+    $("#no_table_Codigo").val("");
+    $("#no_table_Descripcion").val("");
+    $(".error").html("");
+  });
+
+  // Para limpiar el modal de editar cuando se cierra.
+  $("#myModalEditar").on("hidden.bs.modal", function(){
+    $(".error").html("");
+  });
 
   // -.........................................................................-
   // Para realizar la búsqueda.
@@ -107,6 +131,9 @@ $(document).ready(function(){
     var amountText;
     var i;
 
+    console.log("LENG");
+    console.log(descripcionLong);
+
     // Verificar si la longitud del titulo es mayor a 18 para así reacomodarlo en la columna correspondiente.
     if (tituloLong >= 18){
       var splitTitulo = titulo.split(" ");
@@ -115,13 +142,14 @@ $(document).ready(function(){
       i = 1;
 
       while (true){
-        if (splitTitulo.length > i && amountText + splitTitulo[i].length + 1 < 18){
+        if (splitTitulo.length >= i && amountText + splitTitulo[i].length + 1 < 18){
             restTitulo += " " + splitTitulo[i];
             amountText += splitTitulo[i].length;
             i++;
         }else{
           restTitulo += '\n';
           amountText = 0;
+          break;
         }
 
         if (splitTitulo.length <= i)
@@ -136,13 +164,14 @@ $(document).ready(function(){
     // Si la descripción es menor a 46 se muestra sin modificación.
     // Si es mayor a 46 entonces se hace el split y se muestra restContent y
     // result dependiendo si se quiere ver más o si no.
-    if (descripcionLong < 36){
+    if (descripcionLong < 46){
       $(this).find(".showMoreContent").hide();
     }else{
       var restContent = '';
       var result = '';
 
       var splitDescription = descripcion.split(" ");
+      console.log (splitDescription)
       amountText = 0;
       i = 1;
 
@@ -151,7 +180,7 @@ $(document).ready(function(){
       amountText += splitDescription[0].length;
 
       while (true){
-        if (splitDescription.length > i && amountText + splitDescription[i].length + 1 < 30){
+        if (splitDescription.length > i && amountText + splitDescription[i].length + 1 < 46){
             restContent += " " + splitDescription[i];
             amountText += splitDescription[i].length;
             i++;
@@ -161,17 +190,19 @@ $(document).ready(function(){
         }
       }
 
-
       amountText = 0;
 
       // Para lo que se oculta.
       if (splitDescription.length > i){
         result += splitDescription[i];
         amountText += splitDescription[i].length;
+        console.log('i');
+        console.log(splitDescription[i]);
         i += 1;
-
+        console.log('i+1');
+        console.log(splitDescription[i]);
         while (true){
-          if (splitDescription.length > i && amountText + splitDescription[i].length + 1 < 30){
+          if (splitDescription.length > i && amountText + splitDescription[i].length + 1 < 58){
               result += " " + splitDescription[i];
               amountText += splitDescription[i].length;
               i++;
@@ -190,6 +221,10 @@ $(document).ready(function(){
       result = result.replace(/\n/g, "<br />");
       $(this).find(".hideContent").html(restContent);
       $(this).find(".restContent").html(result);
+
+      if (result == ''){
+        $(this).find(".showMoreContent").hide();
+      }
     }
   });
 
@@ -207,4 +242,6 @@ $(document).ready(function(){
       $(this).closest('tr').find(".descripcion_tipo").find(".restContent").hide();
     }
   });
+
+
 });

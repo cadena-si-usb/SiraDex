@@ -1,41 +1,46 @@
 {{ extend 'layoutSIRADEXloged.html'}}
 
 {{block titulo}}
-	BackUp
+  BackUp
 {{end}}
 
 {{block subtitulo}}
-	Gestión de respaldos
+  Gestión de respaldos
 {{end}}
 
 {{block descripcion}}
+
+{{=response.flash or ''}}
     <div class="row"  style="margin-bottom: 0em;"> 
-        <div class="col-md-2 col-md-offset-7">
-        <!-- Datos del usuario -->
+        <div class="col-lg-2 col-lg-offset-7">
                 <div>
-                  <!-- <a href="{{=URL(c='usuarios',f ='agregar')}}"> -->
-                  <button type="button" id="agregarProgBtn" class="btn btn-default green btn-border"  style="margin-bottom: 1em;" onclick="location.href='{{=URL('generar_backup')}}'"">
+                  <button type="button" 
+                          id="agregarProgBtn" 
+                          class="btn btn-default green btn-border"  
+                          style="margin-bottom: 1em;" 
+                          onclick="location.href='{{=URL('generar_backup')}}'">
+                    
                     <span class="glyphicon glyphicon-plus-sign" aria-hidden="true" data-toggle="modal" data-target="#ModalCrearBackup"></span> Generar backup
                   </button>
-                  <!-- </a> -->
                 </div>
         </div>
 
-        <div class="col-md-3 ">
-        <!-- Datos del usuario -->
+        <div class="col-lg-3">
+
                 <div>
                   <!-- <a href="{{=URL(c='usuarios',f ='agregar')}}"> -->
-                  <button type="button" id="agregarProgBtn" class="btn btn-default green btn-border"  style="margin-bottom: 1em;" >
-                  <!-- Agregar cuando se vaya a implementar la funcion de restaurar desde
-                       archivo al boton: data-toggle="modal" data-target="#myModalAgregar"
-                  -->
+                  <button type="button" 
+                          id="agregarProgBtn" 
+                          class="btn btn-default green btn-border"  
+                          style="margin-bottom: 1em;" 
+                          data-toggle="modal" 
+                          data-target="#modalAuto"
+                          >
 
-                    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Restaurar desde archivo
+                    <span class="glyphicon glyphicon-time" aria-hidden="true" data-toggle="modal" data-target="#ModalCrearBackup"></span> Automatizar backup
                   </button>
                   <!-- </a> -->
-                </div>
-            <!-- <p class="text-justify">
-            </p> -->
+                </div>        
         </div>        
     </div>  
 {{end}}
@@ -46,57 +51,63 @@
         {{if len(backups) == 0:}}
             No hay Backups 
         {{else:}}
-          <table class="table table-condensed table-striped table-hover sortable">
-            <thead>
-              <tr>
-              <th>Fecha</th>
-              <th>Hora</th>
-              <th><center>Restaurar</center></th>
-              <th><center>Descargar</center></th>
-              <th><center>Eliminar</center></th>
-              </tr>
-            </thead>
-            <tbody>
-                {{for backup in backups: }}
 
-                  {{if backup.endswith(".sql"):}}
-                    <tr>
-                    <td class="detalles">
-                        {{=backup.replace("_"," ").split()[1]}}/
-                        {{=backup.replace("_"," ").split()[2]}}/
-                        {{=backup.replace("_"," ").split()[4][0:4]}} 
-                    </td> 
-                    <td>
-                        {{=backup.replace("_"," ").split()[3][0:2]}}:
-                        {{=backup.replace("_"," ").split()[3][2:4]}}:
-                        {{=backup.replace("_"," ").split()[3][4:6]}}
-                    </td>                                      
-                        
-                    <td class="center-vertically">
-                    <a href="{{=URL(c='backup',f='restaurar_backup',args=[ backup ] )}}">
-                          <center>
-                      <span class="glyphicon glyphicon-refresh restaurar"></span>
+          <table class="table table-condensed table-striped table-hover">
+          <table class="table table-hover table-striped borde-tabla">
+              <thead>
 
-                          <center>
-                    </a>
-                    </td>
-                    <td class="center-vertically">
-                        <center>
-                        <a href="{{=URL(c='backup',f='descargar_backup',args=[ backup ] )}}"
-                        class="glyphicon glyphicon-save blue" target="blanck" title="Descargar Backup"></a>
-                        </center>
-                    </td>
-                    <td class="center-vertically">
-                    <a href="#">
-                      <center>
-                      <span class="glyphicon glyphicon-remove eliminar" style="color:#F44336" data-toggle="modal" data-target="#ModalEliminarBackup"></span>
+                    <th class="hColumns">Fecha </th>
+                    <th class="hColumns">Hora </th>
+                    <th class="hColumns text-center">Restaurar </th>
+                    <th class="hColumns text-center">Descargar </th>
+                    <th class="hColumns text-center">Eliminar </th>
+              </thead>
 
-                      </center>
-                    </a>
+              <tbody>
+                {{if len(backups) == 0:}}
+                  <center>
+                      <td colspan="5" class="text-center"> No hay registros del Backups.</td>
+                  </center>
+                {{else:}}
 
-                    </tr>
+                  {{for backup in backups: }}
+                    {{if backup.endswith(".sql"):}}
+                      <tr class="clickable">
+                        <td class="detalles">
+                          {{=backup.replace("_"," ").split()[1]}}/
+                          {{=backup.replace("_"," ").split()[2]}}/
+                          {{=backup.replace("_"," ").split()[4][0:4]}} 
+                        </td>
+                        <td>
+                            {{=backup.replace("_"," ").split()[3][0:2]}}:
+                            {{=backup.replace("_"," ").split()[3][2:4]}}:
+                            {{=backup.replace("_"," ").split()[3][4:6]}}
+                        </td>       
+                        <td class="hColumns text-center center-vertically">
+                          <span class="glyphicon glyphicon-refresh restaurar"
+                                data-toggle="modal" 
+                                data-target="#ModalRestaurarBackup"
+                                data-link-restaurar-backup="{{=URL(c='backup',f='restaurar_backup',args=[ backup ])}}">
+                          </span>
+                        </td>
+                        <td class="hColumns text-center center-vertically">
+                          <a  class="glyphicon glyphicon-save blue"
+                              href="{{=URL(c='backup',f='descargar_backup',args=[ backup ] )}}"
+                              target="blanck"
+                              title="Descargar Backup">
+                          </a>
+                        </td>
+                        <td class="hColumns text-centercenter-vertically">
+                          <span class="glyphicon glyphicon-remove red"
+                                data-toggle="modal" 
+                                data-target="#ModalEliminarBackup"
+                                data-link-eliminar-backup="{{=URL(c='backup',f='eliminar',args=[ backup ])}}">
+                          </span>
+                        </td>                              
+                      </tr>
                   {{pass}}
                 {{pass}}
+              {{pass}}
             </tbody>
           </table>
         {{pass}}
@@ -104,7 +115,7 @@
         <div class="text-center">
           <ul class="pagination pagination-lg pager" id="myPager"></ul>
         </div>
-        {{pass}}
+        
         </div> 
         </div> 
 
@@ -125,7 +136,102 @@
   </div>
 </div>
 </div>
-			     
+
+<!-- Modal Automatizar -->
+<div class="container">
+  <div id="modalAuto" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content -->
+    <div class="modal-content">
+      
+      <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"><center>Frecuencia de Automatizacion</center></h4> 
+      </div>
+
+      <div class="modal-body">
+      <form method="post" class="form-horizontal" role="form" id="form_auto" action={{=URL(c='backup',f='backup_aut')}}>
+          <!-- Seleccion de Fecha -->
+          <div class="form-group">
+              <label for="programa" class="control-label col-sm-4"> Modo</label>
+              <div class="col-sm-8">
+                    <select name="modo" 
+                            class="form-control"
+                            id="modo"
+                            onchange="cambio()" 
+                            style="width: 100%">
+                    <option value="None" selected="">--Ninguno--</option>
+                    <option value=diario>Diario</option>
+                    <option value=semanal>Semanal</option>
+                    <option value=mensual>Mensual</option>
+                    
+                  </select>
+              </div>
+              <br><br>
+
+              <label for="programa" class = "control-label col-sm-4"> Hora (24h)</label>
+              <div class="col-sm-8">
+                  <input  type="number" 
+                          name="hora" 
+                          id="focusedInput" 
+                          class="form-control datepicker" 
+                          min=0 max=23 
+                          onkeypress="cambio()"
+                          style="width: 100%"/>
+              </div>
+              <br><br>
+
+              <label for="programa" class = "control-label col-sm-4"> Dia</label>
+              <div class="col-sm-8">
+                  <select name="dias_automatizar" 
+                          class="form-control"
+                          id="dias"
+                          onchange="cambio()"
+                          style="width: 100%"
+                          disabled="">
+                    <option value="None" selected="">--Ninguno--</option>
+                    <option value=1>Lunes</option>
+                    <option value=2>Martes</option>
+                    <option value=3>Miercoles</option>
+                    <option value=4>Jueves</option>
+                    <option value=5>Viernes</option>
+                    <option value=6>Sabado</option>
+                    <option value=7>Domingo</option>
+                    
+                  </select>
+              </div>
+              <br><br>
+
+              <label for="programa" class = "control-label col-sm-4">Activar</label>
+              <div class="col-sm-8">
+              <!-- Rounded switch -->
+              <label class="switch">
+                <input type="checkbox" name="activar">
+                <div class="slider round"></div>
+              </label>              
+              </div>
+          </div>
+
+          <div class="form-group ">
+              <input type="submit" id="btn_auto" disabled=true class="col-sm-offset-3 col-sm-8 btn blue-add btn-border " value="Automatizar"/>
+              <input type="hidden" name="_formname" value="crear_tipo" />
+          </div>
+      </form>
+      </div>
+      
+      <div class="modal-footer">
+         <center>
+        <button type="button" class="btn btn-default green btn-border " data-dismiss="modal">
+          <span class="glyphicon glyphicon-resize-small"></span>
+          Cerrar
+          </button>
+        </center> 
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+       
 <!-- Modal Eliminar-->
 <div class="container">
   <!-- Modal -->
@@ -140,7 +246,7 @@
             <center> <p>¿Está seguro que quiere eliminar este backup?</p> </center>
             <br>
             <center>
-                <a id="BotonEliminar" href="{{=URL(c='backup',f='eliminar',args=[ backup ])}}">
+                <a id="BotonEliminar" >
                   <button type="button" class="btn blue-add btn-border">
                           Eliminar
                   </button>
@@ -153,8 +259,38 @@
     </div>
   </div>
 
+<!-- Modal Restaurar-->
+<div class="container">
+  <!-- Modal -->
+  <div class="modal" id="ModalRestaurarBackup" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <center> <h4 class="modal-title">Restaurar Backup</h4> </center>
+        </div>
+        <div class="modal-body">
+            <center> <p>¿Está seguro que quiere restaurar este backup?</p> </center>
+            <br>
+            <center>
+                <a id="BotonRestaurar" >
+                  <button type="button" class="btn blue-add btn-border">
+                          Restaurar
+                  </button>
+                </a>
+                <button type="button" class="btn btn-default btn-border" data-dismiss="modal">Cerrar</button>
+            </center>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
     <!-- Modal -->
-<div class="container">											    
+
+<!-- Modal Restaurar desde archivo -->
+<div class="container">
     <div id="myModalAgregar" class="modal fade" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -185,22 +321,24 @@
 
  <!-- Modal Backup Restaruado de Archivo-->
 <div class ="container">
-<div class="modal" id="ModalCargaBackup" role="dialog">
-  <div class="modal-dialog">
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <center><h4 class="modal-title">Backup Restaurado</h4><center>
-      </div>
-      <div class="modal-body">
-          <p> <center> El backup ha sido restaurado exitosamente </center> </p>
+  <div class="modal" id="ModalCargaBackup" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <center><h4 class="modal-title">Backup Restaurado</h4><center>
+        </div>
+        <div class="modal-body">
+            <p> <center> El backup ha sido restaurado exitosamente </center> </p>
+        </div>
       </div>
     </div>
   </div>
-</div>
-</div>														    
-														    
+</div>                                
+
+
+
 {{end}}
 
 
@@ -221,30 +359,54 @@
 
         });
 
-  $('.upload').change(function(){
-    var ext = $(this).val().split('.').pop().toLowerCase();
-    if(ext != 'sql') {
-        alert('solo se permite cargar archivos SQL');
-        $(this).val('');
-        $(this).filestyle('clear');
-    }
-  });
+      $('.upload').change(function(){
+        var ext = $(this).val().split('.').pop().toLowerCase();
+        if(ext != 'sql') {
+            alert('solo se permite cargar archivos SQL');
+            $(this).val('');
+            $(this).filestyle('clear');
+        }
+      });
+
+      // Pasamos los argumentos para eliminar campo
+      $('#ModalEliminarBackup').on('show.bs.modal', function(e){
+          var linkEliminar = $(e.relatedTarget).data('link-eliminar-backup');
+          $("#BotonEliminar").attr("href", linkEliminar);
+      });
+
+      // Pasamos los argumentos para eliminar campo
+      $('#ModalRestaurarBackup').on('show.bs.modal', function(e){
+          var linkRestaurar = $(e.relatedTarget).data('link-restaurar-backup');
+          $("#BotonRestaurar").attr("href", linkRestaurar);
+      });
+
+      $('#modo').on('change',function(){
+        if($(this).val()!='semanal'){
+          $('#dias').attr('disabled','');
+        }
+        else{
+          $('#dias').removeAttr( "disabled");
+        };
+      })
+
+      function cambio(){
+        var inp_modo = document.getElementById("modo").value;
+        var inp_hora = document.getElementById("focusedInput").value;
+        var inp_dias = document.getElementById("dias").value;
+        if(inp_modo != 'None' && inp_modo != 'semanal' && inp_hora != ""){
+          document.getElementById("btn_auto").disabled = false;
+        }else if (inp_modo == 'semanal' && inp_hora != "" && inp_dias != "None"){
+          document.getElementById("btn_auto").disabled = false;
+        }else{
+          document.getElementById("btn_auto").disabled = true;
+        }
+      }
 
     </script>
-
-    <script src="{{=URL('static','js/sorttable.js')}}"
-            type="text/javascript">
-    </script>   
-
     <!-- SCRIPT PARA MOSTRAR Y OCULTAR DETALLES -->
     <script src="{{=URL('static','js/showDetails.js')}}"
             type="text/javascript">
     </script>    
-
-        <!-- SCRIPT PARA PAGINAR TABLA DE ACTIVIDADES -->
-    <script src="{{=URL('static','js/pagintable.js')}}"
-            type="text/javascript">
-    </script>
 
 
 {{end}}

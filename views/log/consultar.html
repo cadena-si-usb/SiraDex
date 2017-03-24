@@ -1,0 +1,137 @@
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     {{extend 'layoutSIRADEXloged.html'}}
+
+{{block titulo}}
+
+    Consulta de Eventos - Log
+
+{{end}}
+
+{{block descripcion}}
+    <div class="col-sm-12">
+          <h4>
+             <p>
+               Aquí podrá consultar el registro de eventos ocurridos en SIRADEx.
+             </p>
+           </h4>
+          <br>
+    </div>
+    <br>
+{{end}}
+
+{{block contenido}}
+
+    <script src="{{=URL('static','js/global.js')}}"></script>
+    <script src="{{=URL('static','js/list.js')}}"></script>
+    <script src="{{=URL('static','js/log.js')}}"></script>
+
+    <!-- Custom DataTables plugin -->
+    <script src="{{=URL('static','DataTables/datatables.js')}}"></script>
+    <link rel="stylesheet" type="text/css" href="{{=URL('static','DataTables/datatables.css')}}">
+    <div id="log">
+      <div class="row">
+        <div class="col-sm-6">
+             <form class="navbar-form" role="search">
+                <div class="input-group col-lg-12">
+                    <!-- barra de busqueda -->
+                        <input  type="text"
+                                class="form-control search"
+                                placeholder="Filtrar elementos..."
+                                id="form-busqueda">
+
+                    <!-- Lupa -->
+                    <span class="input-group-btn">
+                        <span
+                              class="btn btn-default glyphicon glyphicon-search"
+                              id="btn-lupa" style="top:0px !important;">
+                        </span>
+                    </span>
+                 </div>
+            </form>
+        </div>
+        {{ if admin in [1,2]: }}
+          <div class="col-sm-5 col-sm-push-1" style="margin-top:10px;margin-left:50px">
+              <a href="{{=URL(c='log', f='graficas')}}" >
+              <button type="button"  class="btn btn-default green btn-border">
+                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Ver Gráficas
+              </button>
+              </a>
+              <button type="button"
+                      class="btn btn-default green btn-border"
+                      id = "agregarTipoActividadBtn"
+                      data-toggle="modal"
+                      data-target="#myModal"
+                      >
+                <span class="glyphicon glyphicon-download-alt"
+                      aria-hidden="true"></span> Descargar
+              </button>
+          </div>
+        {{pass}}
+    </div>
+    <br>
+    <div>
+        <!-- Tabla con los tipos de actividad disponibles en el sistema -->
+        <div class="container-fluid card">
+
+            <table id ="LogTable" class="table table-hover table-striped borde-tabla">
+                <thead>
+                    <th class="hColumns text-center">Acción </th>
+                    <th class="hColumns text-center">Fecha </th>
+                    <th class="hColumns text-center">Usuario </th>
+                    <th class="hColumns text-center">IP </th>
+                    <th class="hColumns text-center">Descripción </th>
+                </thead>
+
+                <tbody class="clickable list">
+                  {{if len(log_entries) == 0:}}
+                  <tr>
+                      <td colspan="5" class="text-center"> No hay registros en el Log para mostrar.</td>
+                  </tr>
+                  {{else:}}
+                      {{for entry in log_entries:}}
+                        <tr>
+                            <td class="hColumns text-center accion">{{=entry.accion}}</td>
+                            <td class="hColumns text-center fecha">{{=entry.accion_fecha}}</td>
+                            <td class="hColumns text-center usuario">{{=entry.usbid_usuario}}</td>
+                            <td class="hColumns text-center ip">{{=entry.accion_ip}}</td>
+                            <td class="hColumns text-center descripcion">{{=entry.descripcion}}</td>
+                        </tr>
+                      {{pass}}
+                        <ul class="pager">
+                            {{if page:}}
+                          <li><a href="{{=URL(args=[page-1])}}">Anterior</a></li>
+                            {{pass}}
+                            {{if len(log_entries)>items_per_page:}}
+                          <li><a href="{{=URL(args=[page+1])}}">Siguiente</a></li>
+                            {{pass}}
+                        </ul>
+
+                  {{pass}}
+                </tbody>
+            </table>
+
+        </div>
+
+<!-- Modal Agregar-->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <center><h4 class="modal-title">Párametros de Descarga</h4><center>
+      </div>
+      <div class="modal-body">
+        <center><p>Por favor seleccione desde cuándo desea descargar los registros del Log.</p></center>
+        {{=formulario_periodo}}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // reloads page after downloading log data
+  $('input[type=submit]' ).click(function() {
+    setTimeout(function(){window.location.reload();},1000)
+  });
+</script>
+{{end}}

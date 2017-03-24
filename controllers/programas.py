@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from funciones_siradex import get_tipo_usuario
+from log import insertar_log
 
 #import imp
 #foo = imp.load_source('module.funciones_siradex', 'funciones_siradex.py')
@@ -18,16 +19,17 @@ def agregar_programa():
 
     formulario = SQLFORM.factory(
                         Field('Nombre',
-                              requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacio.'),
-                                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales.")]),
+                              requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacío.'),
+                                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use sólo letras, sin números ni caracteres especiales.")]),
                         Field('Abreviacion',
-                              requires = [IS_NOT_EMPTY(error_message='La abreviacion del programa no puede quedar vacia.'),
-                                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales.")]),
+                              requires = [IS_NOT_EMPTY(error_message='La abreviación del programa no puede quedar vacía.'),
+                                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use sólo letras, sin números ni caracteres especiales.")]),
                         Field('Descripcion', type="text",
-                              requires=IS_NOT_EMPTY(error_message='La descripcion del programa no puede quedar vacia.')),
+                              requires=IS_NOT_EMPTY(error_message='La descripción del programa no puede quedar vaca.')),
                         submit_button = 'Agregar',
                         labels = {'Descripcion' : 'Descripción',
-                                  'Nombre' : 'Nombre del Programa'},
+                                  'Nombre' : 'Nombre del Programa',
+                                  'Abreviacion' : 'Abreviación'},
                         )
 
     # Metodos POST
@@ -38,6 +40,7 @@ def agregar_programa():
                            abreviacion = request.vars.Abreviacion,
                            descripcion = request.vars.Descripcion
                            )
+        insertar_log(db, 'PROGRAMA', datetime.datetime.now(), request.client, 'CREACION DE PROGRAMA '+ request.vars.Nombre.upper(), session.usuario['usbid'])
         redirect(URL('gestionar_programas.html'))
     # En caso de que el formulario no sea aceptado
     elif formulario.errors:
@@ -54,26 +57,27 @@ def gestionar_programas():
 
     admin = get_tipo_usuario(session)
 
+    
     # Obtengo todos los programas almacenados en la base de datos.
     programas = db(db.PROGRAMA.papelera == False).select()
 
     # Para agregar un programa.
     formulario = SQLFORM.factory(
         Field('Nombre',
-              requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacio.'),
-                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales."),
+              requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacío.'),
+                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use sólo letras, sin números ni caracteres especiales."),
                           IS_LENGTH(256),
                           IS_NOT_IN_DB(db, 'PROGRAMA.nombre', error_message="Ya existe un programa con ese nombre.")]),
         Field('Abreviacion',
-                requires = [IS_NOT_EMPTY(error_message='La abreviacion del programa no puede quedar vacia.'),
-                            IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales.")]),
+                requires = [IS_NOT_EMPTY(error_message='La abreviación del programa no puede quedar vacía.'),
+                            IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use sólo letras, sin números ni caracteres especiales.")]),
         Field('Descripcion', type="text",
-              requires=[IS_NOT_EMPTY(error_message='La descripcion del programa no puede quedar vacia.'),
+              requires=[IS_NOT_EMPTY(error_message='La descripción del programa no puede quedar vacía.'),
                         IS_LENGTH(2048)]),
         submit_button = 'Agregar',
         labels = {'Descripcion' : 'Descripción',
                   'Nombre' : 'Nombre del Programa',
-                  'Abreviacion' : 'Abreviacion del Programa'},
+                  'Abreviacion' : 'Abreviación del Programa'},
         )
     formulario.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
     formulario.element(_type='submit')['_value']="Agregar"
@@ -81,21 +85,21 @@ def gestionar_programas():
     # Para editar un programa.
     formulario_editar  = SQLFORM.factory(
         Field('Nombre',
-              requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacio.'),
-                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales."),
+              requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacío.'),
+                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use sólo letras, sin números ni caracteres especiales."),
                           IS_LENGTH(256),
                           IS_NOT_IN_DB(db(db.PROGRAMA.id_programa != request.vars['id_programa']), 'PROGRAMA.nombre',
                                             error_message= ('Ya existe un programa con el nombre "' + request.vars['Nombre'] + '".') if not(request.vars['Nombre'] is None) else 'Ya existe un programa con el nombre ')]),
         Field('Abreviacion',
-                requires = [IS_NOT_EMPTY(error_message='La abreviacion del programa no puede quedar vacia.'),
-                            IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales.")]),
+                requires = [IS_NOT_EMPTY(error_message='La abreviación del programa no puede quedar vacía.'),
+                            IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin números ni caracteres especiales.")]),
         Field('Descripcion', type="text",
-              requires=IS_NOT_EMPTY(error_message='La descripcion del programa no puede quedar vacia.')),
+              requires=IS_NOT_EMPTY(error_message='La descripción del programa no puede quedar vacía.')),
         Field('id_programa', type="string"),
         submit_button = 'Agregar',
         labels = {'Descripcion' : 'Descripción',
                   'Nombre' : 'Nombre del Programa',
-                  'Abreviacion' : 'Abreviacion del Programa'},
+                  'Abreviacion' : 'Abreviación del Programa'},
         )
     formulario_editar.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
     formulario_editar.element(_type='submit')['_value']="Editar"
@@ -108,10 +112,11 @@ def gestionar_programas():
                             abreviacion = request.vars.Abreviacion,
                            descripcion = request.vars.Descripcion)
         # Se redirige a la vista de getión de programas.
+        insertar_log(db, 'PROGRAMA', datetime.datetime.now(), request.client, 'CREACION DE PROGRAMA '+ request.vars.Nombre.upper(), session.usuario['usbid'])
         redirect(URL('gestionar_programas.html'))
     # En caso de que el formulario no sea aceptado:
     elif (formulario.errors):
-        session.message = "Los datos del programa son inválidos. Intentelo nuevamente."
+        session.message = "Los datos del programa son inválidos. Inténtelo nuevamente."
 
     # Se verifica si los campos están llenos correctamente.
     if formulario_editar.accepts(request.vars, session, formname="formulario_editar"):
@@ -123,6 +128,7 @@ def gestionar_programas():
         programa.descripcion = request.vars.Descripcion
         programa.update_record()                    # Se actualiza el programa.
 
+        insertar_log(db, 'PROGRAMA', datetime.datetime.now(), request.client, 'MODIFICACION DE PROGRAMA '+ request.vars.Nombre.upper(), session.usuario['usbid'])
         redirect(URL('gestionar_programas.html'))   # Se redirige a la vista de gestión.
 
     # En caso de que el formulario no sea aceptado
@@ -148,6 +154,7 @@ def eliminar_programa():
     programa.modif_fecha        = request.now
     programa.usbid_usu_modificador = session.usuario['usbid']
     programa.update_record()
+    insertar_log(db, 'PROGRAMA', datetime.datetime.now(), request.client, 'ENVIO DE PROGRAMA '+ programa.nombre.upper() + ' A PAPELERA', session.usuario['usbid'])
     redirect(URL('gestionar_programas.html'))
 
 def editar_programa():
@@ -166,17 +173,17 @@ def editar_programa():
     formulario = SQLFORM.factory(
                         Field('Nombre',
                               default = programa.nombre,
-                              requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacio.'),
-                                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales.")]),
+                              requires = [IS_NOT_EMPTY(error_message='El nombre del programa no puede quedar vacío.'),
+                                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use sólo letras, sin números ni caracteres especiales.")]),
                         Field('Abreviacion',
-                            requires = [IS_NOT_EMPTY(error_message='La abreviacion del programa no puede quedar vacia.')]),
+                            requires = [IS_NOT_EMPTY(error_message='La abreviación del programa no puede quedar vacía.')]),
                         Field('Descripcion', type="text",
                               default = programa.descripcion,
-                              requires=IS_NOT_EMPTY(error_message='La descripcion del programa no puede quedar vacia.')),
+                              requires=IS_NOT_EMPTY(error_message='La descripción del programa no puede quedar vacía.')),
                         submit_button = 'Actualizar',
                         labels = {'Descripcion' : 'Descripción',
                                   'Nombre' : 'Nombre del Programa',
-                                  'Abreviacion' : 'Abreviacion del Programa'}
+                                  'Abreviacion' : 'Abreviación del Programa'}
                         )
 
     # Se verifica si los campos están llenos correctamente.
@@ -186,6 +193,7 @@ def editar_programa():
         programa.abreviacion = request.vars.Abreviacion
         programa.descripcion = request.vars.Descripcion
         programa.update_record()                    # Se actualiza el programa.
+        insertar_log(db, 'PROGRAMA', datetime.datetime.now(), request.client, 'MODIFICACION DE PROGRAMA '+ request.vars.Nombre.upper(), session.usuario['usbid'])
         redirect(URL('gestionar_programas.html'))   # Se redirige a la vista de gestión.
 
     # En caso de que el formulario no sea aceptado

@@ -10,32 +10,69 @@
     <script src="{{=URL('static','js/list.js')}}"></script>
     <script src="{{=URL('static','js/programa.js')}}"></script>
 
+    <!-- Custom DataTables plugin -->
+    <script src="{{=URL('static','DataTables/datatables.js')}}"></script>
+    <link rel="stylesheet" type="text/css" href="{{=URL('static','DataTables/datatables.css')}}">
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+
+        var opciones = {
+          responsive: true,
+            "language": {
+                search:         "Buscar:",
+                searchPlaceholder: "",
+                lengthMenu:     "Mostrar _MENU_ entradas",
+                info:           "Mostrando _START_ a _END_ de _TOTAL_ entradas.",
+                infoEmpty:      "Mostrando 0 a 0 de 0 entradas",
+                infoFiltered:   "(filtradas de _MAX_ entradas en total)",
+                infoPostFix:    "",
+                loadingRecords: "Carga en curso...",
+                zeroRecords:    "No se encontraron programas en la busqueda",
+                emptyTable:     "No hay informacion disponible en la tabla",
+                processing:     "Procesando...",
+                paginate: {
+                    first:      "Primero",
+                    previous:   "Anterior",
+                    next:       "Siguiente",
+                    last:       "Ultimo"
+                },
+                aria: {
+                    sortAscending:  ": Se ordenan las columnas por orden creciente",
+                    sortDescending: ": Se ordenan las columnas por orden decreciente"
+                }
+            },
+             "columns": [
+                {"width" : "30%"},
+                { "orderable": false },
+                { "orderable": false },
+                null,
+                null
+            ]
+        };
+
+        var cantidadColumnas = $("#ProgramaTable thead th").length;
+        columnas = [{"width" : "30%"}];
+        for (var i = 1; i<cantidadColumnas; i++){
+          columnas.push({ "orderable": false });
+        }
+
+        // Por si la tabla está vacía
+        // En este caso se debe verificar porque si len es cero abajo, entonces
+        // se ponen menos columnas en el tbody que en el theader
+        if ($("#ProgramaTable tbody tr:first-child td").length ==  cantidadColumnas){
+          opciones["columns"] = columnas;
+          $("#ProgramaTable").DataTable(opciones);
+        }
+
+      });
+    </script>
+
     <br>
     <div id="programs">
       <div class="row">
           <div class="col-sm-6">
-               <form class="navbar-form" role="search">
-                  <div class="input-group col-lg-12">
-                      <!-- barra de busqueda -->
-                          <input  type="text"
-                                  class="form-control search"
-                                  placeholder="Buscar Programa"
-                                  id="form-busqueda">
-
-
-                      <!-- Lupa -->
-
-                      <span class="input-group-btn">
-                          <span
-                                  class="btn btn-default glyphicon glyphicon-search"
-                                  id="btn-lupa" style="top:0px !important;">
-                          </span>
-                      </span>
-                   </div>
-              </form>
           </div>
-
-
           {{ if admin in [1,2]: }}
             <div class="col-sm-5 col-sm-push-3" style="margin-top:10px; ; margin-left:30px">
                 <button type="button" id="agregarProgBtn" class="btn btn-default green btn-border" data-toggle="modal" data-target="#myModal">
@@ -51,67 +88,74 @@
         </div>
       </div>
       <div class="container-fluid card">
-      <table id="TipoActividadTable" class="table table-striped table-condensed table-hover sortable">
-          <thead>
-              <tr>
-                  <th>Título</th>
-                  <th><center>Descripción</center></th>
-                  <th><center></center></th>
-                  <th><center>Abreviación</center></th>
-                  {{ if admin in [1,2]: }}
-                    <th><center>Editar</center></th>
-                    <th><center>Inhabilitar</center></th>
-                  {{pass}}
-              </tr>
-          </thead>
-          <tbody class="list">
-              {{if len(programas) == 0:}}
-                  <tr>
-                      <td> No hay programas que mostrar.</td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                  </tr>
-              {{else:}}
-                  {{for programa in programas:}}
-                      <tr>
-                          <td class="nombre_programa"><center><a class="a-table" href="{{=URL(c='tipo_actividad', f='gestionar')}}/{{=programa.id_programa}}">{{=programa.nombre}}</a></center></td>
-                          <td class="descripcion_programa">
-                            <center>
-                              <span class="hideContent">{{=programa.descripcion}}</span>
-                              <span class="restContent" style="display:none;"></span>
-                            </center>
-                          </td>
-                          <td><button class="glyphicon glyphicon-eye-open showMoreContent"
-                                      style="border:none;background:none;"></button></td>
-                          <td><center>{{=programa.abreviacion}}</center></td>
-                          {{ if admin in [1,2]: }}
-                            <td>
-                                <center>
-                                    <a>
-                                        <span class="glyphicon glyphicon-edit blue botonEditar" id="editarProgBtn" data-toggle="modal"
-                                              data-id-programa={{=programa.id_programa}}
-                                              data-abreviacion={{=programa.abreviacion}}
-                                              data-nombre="{{=programa.nombre}}"
-                                              data-descripcion="{{=programa.descripcion}}"
-                                              data-target="#ModalEditarPrograma"></span>
-                                    </a>
-                                <center>
-                             </td>
-                            <td>
-                                <center>
-                                    <a>
-                                       <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#modalEliminarPrograma"
-                                              data-link-eliminar-programa="{{=URL(f='eliminar_programa', args=[programa.id_programa])}}"></span>
-                                    </a>
-                                <center>
+        <table id="ProgramaTable" class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
+            <thead>
+                <tr>
+                    <th class="hColumns text-center">Título</th>
+                    <th class="hColumns text-center">Descripción</th>
+                    <th class="hColumns text-center"></th>
+                    <th class="hColumns text-center">Abreviación</th>
+                    {{ if admin in [1,2]: }}
+                      <th class="hColumns text-center">Editar</th>
+                      <th class="hColumns text-center">Inhabilitar</th>
+                    {{pass}}
+                </tr>
+            </thead>
+            <tbody class="list">
+                {{if len(programas) == 0:}}
+                    <tr>
+                        <td colspan="5"> No hay programas que mostrar.</td>
+                    </tr>
+                {{else:}}
+                    {{for programa in programas:}}
+                        <tr class="clickable">
+
+                            <td class="hColumns text-center center-vertically nombre_programa">
+                              <p><a class="a-table" href="{{=URL(c='tipo_actividad', f='gestionar')}}/{{=programa.id_programa}}">
+                                {{=programa.nombre}}
+                              </a></p>
                             </td>
-                          {{pass}}
-                      </tr>
-                  {{pass}}
-              {{pass}}
-          </tbody>
-      </table>
+
+                            <td class="hColumns text-center center-vertically descripcion_programa">
+                                <span class="hideContent">{{=programa.descripcion}}</span>
+                                <span class="restContent" style="display:none;"></span>
+                            </td>
+
+                            <td class="hColumns text-center center-vertically" >
+                                <button class="glyphicon glyphicon-eye-open showMoreContent"
+                                        style="border:none;background:none;">
+                                </button>
+                            </td>
+
+                            <td class="hColumns text-center center-vertically">
+                                {{=programa.abreviacion}}
+                            </td>
+
+                            {{ if admin in [1,2]: }}
+                              <td class="hColumns text-center center-vertically">
+                                  <a>
+                                      <span class="glyphicon glyphicon-edit blue botonEditar" id="editarProgBtn" data-toggle="modal"
+                                            data-id-programa={{=programa.id_programa}}
+                                            data-abreviacion={{=programa.abreviacion}}
+                                            data-nombre="{{=programa.nombre}}"
+                                            data-descripcion="{{=programa.descripcion}}"
+                                            data-target="#ModalEditarPrograma"></span>
+                                  </a>
+                               </td>
+                              <td class="hColumns text-center center-vertically">
+                                      <a>
+                                         <span class="glyphicon glyphicon-remove red" data-toggle="modal" data-target="#modalEliminarPrograma"
+                                                data-link-eliminar-programa="{{=URL(f='eliminar_programa', args=[programa.id_programa])}}"></span>
+                                      </a>
+                              </td>
+                            {{pass}}
+                        </tr>
+                    {{pass}}
+
+
+                {{pass}}
+            </tbody>
+        </table>
       </div>
     </div>
 <!-- Modal Agregar-->

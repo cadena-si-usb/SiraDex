@@ -11,7 +11,9 @@
 <script src="{{=URL('static','js/catalogo.js')}}"></script>
 
 <!-- Nav tabs -->
+{{=message}}
 <div class="row">
+
     <div class="col-sm-5 col-sm-push-9" style="margin-top:10px; ; margin-left:30px">
         <button type="button" id="agregarCatalogoBtn" class="btn btn-default green btn-border" data-toggle="modal" data-target="#modalAgregarCatalogo">
             <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Catálogo
@@ -33,7 +35,7 @@
   <div class="tab-content">
     {{if len(catalogos) == 0:}}
     <p> Actualmente no existen catálogos en el sistemas. Pruebe agregar
-        un nuevo catálogo usando el boton "Agregar Catálogo" </p>
+        un nuevo catálogo usando el botón "Agregar Catálogo" </p>
     {{pass}}
 
     {{for catalogo in catalogos:}}
@@ -43,7 +45,7 @@
                 <li class="list-group-item">
                   <div class="row">
                       <div class="col-sm-4">
-                        <p>Este catalogo aun no tiene campos.</p>
+                        <p>Este catálogo aún no tiene campos.</p>
                       </div>
                   </div>
                 </li>
@@ -101,25 +103,26 @@
               <div class="row">
                   <center>
                     <div class="col-sm-2 col-sm-offset-3">
-                        <button type="button" class="btn btn-default btn-block green btn-border"
+                        <button id="agregarCampoCatalogoBtn" type="button" class="btn btn-default btn-block green btn-border"
                                 data-toggle="modal" data-target="#modalAgregarCampo"
                                 data-id-catalogo="{{=catalogo[0].id}}">
-                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Campo
+                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> <span class="to_long">Campo</span>
                         </button>
                     </div>
                     <div class="col-sm-2">
-                      <button type="button" class="btn btn-default btn-block renombrar btn-border"
+                      <button type="button" id="renombrarNombreBtn" class="btn btn-default btn-block renombrar btn-border"
                               data-toggle="modal" data-target="#modalCambiarNombre"
                               data-id-catalogo = "{{=catalogo[0].id}}"
+                              data-hayErroresEditarNombre="{{=hayErroresEditarNombre}}"
                               data-nombre = "{{=catalogo[0].nombre}}">
-                          <span class="glyphicon glyphicon-edit " aria-hidden="true"></span> Renombrar
+                          <span class="glyphicon glyphicon-edit " aria-hidden="true"></span> <span class="to_long">Renombrar</span>
                       </button>
                     </div>
                     <div class="col-sm-2">
                       <button type="button" class="btn btn-default btn-block red-trash btn-border"
                               data-toggle="modal" data-target="#modalEliminarCatalogo"
                               data-link-eliminar-catalogo = "{{=URL(f='eliminarCatalogo', args=[catalogo[0].id])}}">
-                          <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> Eliminar
+                          <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> <span class="to_long">Eliminar</span>
                       </button>
                     </div>
                   </center>
@@ -151,7 +154,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <center><h4 class="modal-title"> Renombrar Catalogo </h4><center>
+        <center><h4 class="modal-title"> Renombrar Catálogo </h4><center>
       </div>
       <div class="modal-body">
           <p>{{ = formulario_cambiar_nombre }}</p>
@@ -165,10 +168,10 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <button type="button" id="agregarCatalogoBtn" class="close" data-dismiss="modal">&times;</button>
         <center><h4 class="modal-title"> Agregar Campo </h4><center>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" id="modalAgregarCampoCat" data-hayErroresAgregarCampo="{{=hayErroresAgregarCampo}}">
         {{=formulario_agregar_campo.custom.begin}}
 
           <div class="row">
@@ -263,7 +266,7 @@
             <center> <h4 class="modal-title">Eliminar Catálogo</h4> </center>
         </div>
         <div class="modal-body">
-            <center> <p>Está seguro que quiere eliminar este Catálogo.</p> </center>
+            <center> <p>¿Está seguro que quiere eliminar este Catálogo?.</p> </center>
             <br>
             <center>
                 <a id="botonEliminarCatalogo">
@@ -287,7 +290,7 @@
             <center> <h4 class="modal-title">Eliminar Campo del Catálogo</h4> </center>
         </div>
         <div class="modal-body">
-            <center> <p>Está seguro que quiere eliminar este campo del Catálogo.</p> </center>
+            <center> <p>¿Está seguro que quiere eliminar este campo del Catálogo?.</p> </center>
             <br>
             <center>
                 <a id="botonEliminarCampo">

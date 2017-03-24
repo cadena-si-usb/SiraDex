@@ -6,7 +6,7 @@
     **********************************************-->
     <meta charset = "UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-    <title> SIRADEX - {{block titulo}}{{end}}</title>
+    <title> SIRADEx - {{block titulo}}{{end}}</title>
     <!--*********************************************
         Extend e include
     **********************************************-->
@@ -16,12 +16,7 @@
     <!--*********************************************
         Link con bootstrap, CSS y JavaScript
     **********************************************-->
-    <!--
-        <link   rel="stylesheet" 
-                href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" 
-                integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" 
-                crossorigin="anonymous"> -->
-
+                
         <link   href="{{=URL('static', 'css/layoutStyle.css')}}"
                 rel="stylesheet"
                 type="text/css" />
@@ -44,12 +39,23 @@
                 rel="stylesheet"
                 type="text/css" />  
 
-         <link   href="{{=URL('static', 'css/jquery-ui.structure.css')}}"
+         <link  href="{{=URL('static', 'css/jquery-ui.structure.css')}}"
                 rel="stylesheet"
                 type="text/css" />               
-                
+    
+        <link href="{{=URL('static','css/font-awesome.css')}}" 
+              rel="stylesheet">
+        
+        <!--Load the AJAX API-->
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-        <link href="{{=URL('static','css/font-awesome.css')}}" rel="stylesheet">
+        <link   href="{{=URL('static','DataTables/datatables.css')}}"
+                rel="stylesheet" 
+                type="text/css" >
+
+        <link   href="{{=URL('static','css/pagination.css')}}"
+                rel="stylesheet" 
+                type="text/css" >
 </head>
 
 <body style="position: relative;min-height: 100%;top: 0px;">

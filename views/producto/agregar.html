@@ -19,6 +19,7 @@
 
 {{block contenido}}
 
+
 <div class="row">
 	<div class="col-md-12">
 		<div class="card">
@@ -27,8 +28,8 @@
 
 			</div>
 			<center><p>
-				 Una vez enviado su producto no podrá editarlo, este esperara a ser evaluado por el Comité de Evaluación
-				 de Decanato de Extensión. Si desea editarlo más tarde puede guardarlo como Borrador.
+				 Una vez enviado su producto no podrá editarlo, este esperará a ser evaluado por el Comité de Evaluación
+				 del Decanato de Extensión. Si desea editarlo más tarde puede guardarlo como Borrador.
 			</p></center>
 		</div>
 	</div>
@@ -48,35 +49,35 @@
     margin-left: -12%;
 	  margin-top: 4px;
 	}
-	.blue-add{
-		margin-left: 15%;
-	}
 </style>
 
 <script>
 
 function textoRestante1(maxLong, idDivUsar){
-  var longitudTexto = $(idDivUsar).val().length;
-  var textoRestante = maxLong - longitudTexto;
 
-  // Selecciono el div que es "hermano" del textfield de nombre.
-  var longitudTextoAct = $(idDivUsar).val().length;
-  $(idDivUsar).siblings(".help-block").html((maxLong - longitudTextoAct) + " caracteres");
+	var longitudTexto = $(idDivUsar).val().length;
+	var textoRestante = maxLong - longitudTexto;
 
-  // Si estoy escribiendo en el textfield de nombre, entonces...
-  $(idDivUsar).on('keypress keyup keydown', function(e){
-    var longitudTexto = $(idDivUsar).val().length;
-    var textoRestante = maxLong - longitudTexto;
+	// Selecciono el div que es "hermano" del textfield de nombre.
+	var longitudTextoAct = $(idDivUsar).val().length;
+	$(idDivUsar).siblings(".help-block").first().html((maxLong - longitudTextoAct) + " caracteres");
 
-    $(idDivUsar).siblings(".help-block").html(textoRestante + " caracteres.");
+	// Si estoy escribiendo en el textfield de nombre, entonces...
+	$(idDivUsar).on('keypress keyup keydown', function(e){
+		var longitudTexto = $(idDivUsar).val().length;
+		var textoRestante = maxLong - longitudTexto;
 
-    /* keyCode.46: delete, keyCode.8: enter, keyCode.37 al keyCode.40: arrows. */
-    if (textoRestante <= 0 && e.keyCode != 46 && e.keyCode != 8 && e.keyCode != 37
-        && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40){
-          $(idDivUsar).val($(idDivUsar).val().substring(0, maxLong));
-          return false;
-    }
-  });
+		$(idDivUsar).siblings(".help-block").first().html(textoRestante + " caracteres.");
+
+		/* keyCode.46: delete, keyCode.8: enter, keyCode.37 al keyCode.40: arrows. */
+		if (textoRestante <= 0 && e.keyCode != 46 && e.keyCode != 8 && e.keyCode != 37
+				&& e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40){
+					$(idDivUsar).val($(idDivUsar).val().substring(0, maxLong));
+					return false;
+		}
+	});
+
+
 };
 
 $(document).ready(function () {
@@ -88,29 +89,33 @@ $(document).ready(function () {
 	  });
 
 	var maxLongNombre  = 50;    // Longitud máxima que tendrá el campo nombre.
-	var maxLongDescrip = 2048;   // Longitud máxima que tendrá el campo descripción.
+	var maxLongDescrip = 250;   // Longitud máxima que tendrá el campo descripción.
+	var maxLongColaboradores = 200;
 	var comprobante_mostrado = 0;
 	var error_comprobante = 0;
 	var error_descripcion = 0;
 	var cantidad_comprobantes = 5;
 	var autores_agregados = 0
 	var cantidad_autores  = 5;
+	var maxDescripcion = 100;
+	var maxTextoL = 512;
 
 	// Muestra la cantidad de caracteres disponible en el textfield de nombre.
 
 
-	$("#no_table_fecha_realizacion").siblings(".help-block").html( "                                         El formato para la fecha es de YYYY-MM-DD");	
+	$("#no_table_fecha_realizacion").siblings(".help-block").html( "El formato para la fecha es de AAAA-MM-DD");
+
 
 
 	$(".Cedula").click(function(){
 
-		$(".Cedula").siblings(".help-block").html( "el formato de la cedula es XX.XXX.XXX");
+		$(".Cedula").siblings(".help-block").html( "el formato de la cédula es XX.XXX.XXX");
 
 	});
 
 	$(".Telefono").click(function(){
 
-		$(".Telefono").siblings(".help-block").html( "el formato de telefono es (0xxx)xxx-xxxx");
+		$(".Telefono").siblings(".help-block").html( "el formato de teléfono es (0xxx)xxx-xxxx");
 
 	});
 
@@ -120,33 +125,51 @@ $(document).ready(function () {
 
 	textoRestante1(maxLongNombre, $("#no_table_lugar"));
 
+	textoRestante1(maxLongColaboradores, $("#no_table_colaboradores"));
+
+	if ($(".Texto_Largo").length != 0) {
+			textoRestante1(maxTextoL, $(".Texto_Largo"));
+	};
+
+	if ($(".Texto_Corto").length != 0) {
+					textoRestante1(maxLongNombre, $(".Texto_Corto"));
+			};
+
+
+	for (i = 1; i <= cantidad_comprobantes; i++) {
+			textoRestante1(maxDescripcion, $('#no_table_d3scr1pc10n_comprobante_'+i));
+	}
+
+
+	$("#no_table_colaboradores").siblings(".help-block").after("<span class=help-block> Nombres completos y separados por comas de personas ajenas a la USB que colaboraron con usted.</span>");
+
 	// agregar autores adicionales
 	$('#no_table_autor_1__row').before('<div id="autores_row" class="form-group">\
-													<h3 class="col-sm-offset-3">Otros Autores</h3>\
-													\
-													<div class="row">\
-														<div class="col-sm-10 col-sm-offset-2" style="margin-left:15em;">\
+												<h3 class="col-sm-offset-3">Otros Autores</h3>\
+												\
+												<div class="row">\
+													<div class="col-sm-10 col-sm-offset-2">\
 											    	\
-											    	<span class="col-sm-8" style="text-align: justify;">\
-															Puedes agregar a otros usuarios registrados en el SIRADEX como Autores.\
+											    		<span class="col-sm-6" style="text-align: justify;">\
+															Puede agregar a otros usuarios registrados en el SIRADEx como Autores.\
 															<br>\
 															Todos los autores pueden ver este producto.\
 															<br>\
-															Un producto tiene un maximo de <b>5</b> autores adicionales.\
+															Un producto tiene un máximo de <b>5</b> autores adicionales.\
 														</span>\
 														\
-														<div class="col-md-offset-3">\
+														<div class="col-sm-6">\
 															<div style="margin-bottom: 0em;">\
 															  <button type="button" id="agregar_autor" class="btn btn-default green btn-border" onclick="return false;">\
 															    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Autor\
 															  </button>\
 															</div>\
-										        </div>\
-										        \
-														</div>\
+										        		</div>\
+										        		\
 													</div>\
-													</div>\
-													<br>'
+												</div>\
+										</div>\
+										<br>'
 										);
 
 		for (i = 1; i <= cantidad_autores; i++) {
@@ -196,40 +219,62 @@ $(document).ready(function () {
 		});
 
 	 $('#no_table_c0mpr0bant3_1__row').before('	<div id="comprobantes__row" class="form-group">\
-													<h3 class="col-sm-offset-3">Comprobantes</h3>\
+													<h3 class="col-sm-offset-2">Comprobantes (*)</h3>\
 													\
 													<div class="row">\
-														<div class="col-sm-10 col-sm-offset-2" style="margin-left:15em;">\
-											    	\
-											    	<span class="col-sm-6">\
-															Puedes subir <span id="cant_restante"><b id="num_cant">5</b></span> comprobantes mas\
+														<div class="col-sm-10 col-sm-offset-2">\
+											    		\
+											    		<span class="col-sm-6"> Los comprobantes representan el soporte necesario para la validación de tu producto de extensión.\
+															Puedes subir hasta <span id="cant_restante"><b id="num_cant">5</b></span> comprobantes más\
 															<br>\
-															Solo puedes subir documentos PDF\
+															Sólo puedes subir documentos PDF con un máximo de <b>2 MB</b> por documento.\
 														</span>\
 														\
-														<div class="col-md-offset-3">\
+														<div class="col-sm-6">\
 															<div style="margin-bottom: 0em;">\
 															  <button type="button" id="agregar_comprobante" class="btn btn-default green btn-border" onclick="return false;">\
 															    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Comprobante\
 															  </button>\
-															</div>\
-										        </div>\
-										        \
 														</div>\
+										        		\
+										        		</div>\
 													</div>\
-													<br>'
+												</div>\
+												<br>'
 										);
 	for (i = 1; i <= cantidad_comprobantes; i++) {
     	$('#no_table_c0mpr0bant3_'+i+'__row').addClass("hidden");
+    	$('#no_table_c0mpr0bant3_'+i+'__row').find(".bootstrap-filestyle").addClass("col-xs-11").css("float","left").after('<div class="col-sm-1"> <a class="remove-tag-comprobante" data-comprobante="'+i+'" onClick = "">\
+			                                              <span class="glyphicon glyphicon-remove red"></span>\
+			                                    				</a></div>\
+			                                    			');
     	$('#no_table_d3scr1pc10n_comprobante_'+i+'__row').addClass("hidden");
 	}
+
+	$('.remove-tag-comprobante').click(function(e){
+			var comprobante = $(this).data('comprobante');
+			console.log($('#no_table_c0mpr0bant3_'+ comprobante).val())
+			$('#no_table_c0mpr0bant3_'+ comprobante).val('');
+			$('#no_table_d3scr1pc10n_comprobante_'+ comprobante).val('');
+			$('#no_table_c0mpr0bant3_'+ comprobante).closest(":file").filestyle('clear');
+
+	});
+
+	var esBorrador = false;
+	$("input[name='borrador']").click(function(){
+		esBorrador = true;
+	})
+
+	$("input[value='Enviar Producto']").click(function(){
+		esBorrador = false;
+	});
 
 	$('#agregar_comprobante').click(function(){
 
 		if (comprobante_mostrado<cantidad_comprobantes){
 			if($('#no_table_c0mpr0bant3_'+comprobante_mostrado).val()=="" ){
 				if (!error_comprobante){
-					$('#no_table_c0mpr0bant3_'+comprobante_mostrado).parent().append('<span id="error_archivo_'+comprobante_mostrado+'" class="help-block error">Primero debes cargar el comprobante</span>');
+					$('#no_table_c0mpr0bant3_'+comprobante_mostrado).parent().append('<span id="error_archivo_'+comprobante_mostrado+'" class="help-block error">Primero debe cargar el comprobante</span>');
 					error_comprobante = 1;
 				}
 			}
@@ -237,7 +282,7 @@ $(document).ready(function () {
 				$('#error_archivo_'+comprobante_mostrado).addClass("hidden");
 				if($('#no_table_d3scr1pc10n_comprobante_'+comprobante_mostrado).val()==""){
 					if (!error_descripcion){
-						$('#no_table_d3scr1pc10n_comprobante_'+comprobante_mostrado).parent().append('<span id="error_descripcion_'+comprobante_mostrado+'" class="help-block error">La descripcion de un archivo cargado es obligatoria</span>');
+						$('#no_table_d3scr1pc10n_comprobante_'+comprobante_mostrado).parent().append('<span id="error_descripcion_'+comprobante_mostrado+'" class="help-block error">La descripción de un archivo cargado es obligatoria</span>');
 						error_descripcion = 1;
 					}
 				}
@@ -253,27 +298,35 @@ $(document).ready(function () {
 				};
 			};
 		};
+
+		$('#num_cant').remove();
+		$('#cant_restante').append('<b id="num_cant">'+(5-comprobante_mostrado+1 )+'</b>');
+
 		if (comprobante_mostrado==cantidad_comprobantes){
 			$('#agregar_comprobante').addClass("hidden");
 		}
-		$('#num_cant').remove();
-		$('#cant_restante').append('<b id="num_cant">'+(5-comprobante_mostrado )+'</b>');
+
 	});
 
 	$('.upload').change(function(){
 		var ext = $(this).val().split('.').pop().toLowerCase();
 		if(ext != 'pdf') {
-		    alert('solo se permite cargar archivos PDF');
+		    alert('Sólo se permite cargar archivos PDF');
 		    $(this).val('');
 		    $(this).filestyle('clear');
-		}
-		
+		};
+
 		if (this.files[0].size > 2097152){
-		var text = 'Solo se permiten archivos de hasta 2 MB, el archivo que se cargo es de '+		((this.files[0].size)/1024/1024).toFixed(1)+' MB';
+			var text = 'Sólo se permiten archivos de hasta 2 MB, el archivo que se cargo es de '+((this.files[0].size)/1024/1024).toFixed(1)+' MB';
 	        alert(text);
 		    $(this).val('');
 		    $(this).filestyle('clear');
-		}
+		};
+		if($(this).val().split('.')[0].length > 50){
+		    alert('El nombre del archivo debe tener menos de 50 caracteres');
+		    $(this).val('');
+		    $(this).filestyle('clear');
+		};
 	});
 
 
@@ -281,22 +334,39 @@ $(document).ready(function () {
 		var infor_cargada = false;
 
 		if($('#no_table_nombre').val()=="" ){
-			alert("El nombre del producto no puede estar vacio ");
+			alert("El nombre del producto no puede estar vacío ");
 			return false;
 		}
 
 		if($('#no_table_descripcion').val()=="" ){
-			alert("La descripcion del producto no puede estar vacio ");
+			alert("La descripción del producto no puede estar vacío ");
 			return false;
 		}
 
 		if($('#no_table_fecha_realizacion').val()=="" ){
-			alert("La fecha del producto no puede estar vacio ");
+			alert("La fecha del producto no puede estar vacío ");
 			return false;
 		}
 
+		if($('#no_table_fecha_realizacion').val()!="" ){
+			var fechaActual = new Date();
+			var anio = fechaActual.getFullYear();
+			var mes = fechaActual.getMonth() + 1;
+			var dia = fechaActual.getDate();
+
+			var fechaIngresada = $('#no_table_fecha_realizacion').val();
+			var anio2 = parseInt(fechaIngresada.substring(0,4));
+			var mes2 = parseInt(fechaIngresada.substring(5,7));
+			var dia2 = parseInt(fechaIngresada.substring(8,10));
+
+			if(anio< anio2 || mes < mes2 || dia < dia2 ){
+				alert("La fecha del producto no puede ser mayor que la fecha actual ");
+				return false;
+			}
+		}
+
 		if($('#no_table_lugar').val()=="" ){
-			alert("El lugar de la actividad no puede estar vacio ");
+			alert("El lugar de la actividad no puede estar vacío ");
 			return false;
 		}
 
@@ -309,17 +379,17 @@ $(document).ready(function () {
 			if($('.Cedula').val()!=null){
 				var Var = $('.Cedula').val();
 				if (/\d{2}.\d{3}.\d{3}$/.test(Var)== false){
-					alert("No es el formato del numero de cedula adecuado  ");
+					alert("No es el formato del número de cédula adecuado ");
 					return false;
 				}
 			}
 		}
 
 		if($('.Telefono').val()!=""){
-			if($('.Cedula').val()!=null){
+			if($('.Telefono').val()!=null){
 				var Var = $('.Telefono').val();
 				if (/\(0\d{3}\)\d{3}-\d{4}$/.test(Var)== false){
-					alert("No es el formato del numero de telefono adecuado ");
+					alert("No es el formato del número de teléfono adecuado ");
 					return false;
 				}
 			}
@@ -330,7 +400,7 @@ $(document).ready(function () {
 			if($('.Decimal').val()!=null){
 				var Var = $('.Decimal').val();
 				if (/\d\.\d/.test(Var)== false){
-					alert("No es un numero Decimal  ");
+					alert("No es un número Decimal  ");
 					return false;
 				}
 			}
@@ -340,7 +410,7 @@ $(document).ready(function () {
 			if($('.Entero').val()!=null){
 				var Var = $('.Entero').val();
 				if (/\d\.\d/.test(Var)== false){
-					alert("No es un numero Entero  ");
+					alert("No es un número Entero  ");
 					return false;
 				}
 			}
@@ -349,14 +419,14 @@ $(document).ready(function () {
 		for (i = 1; i <= cantidad_comprobantes; i++) {
 	    	if($('#no_table_c0mpr0bant3_'+i).val() !="" ){
 	    		if($('#no_table_d3scr1pc10n_comprobante_'+i).val()==""){
-	    			alert("La descripción de los comprobantes cargados no puede ser vacia");
+	    			alert("La descripción de los comprobantes cargados no puede ser vacía");
 	    			return false;
 	    		}
 	    		infor_cargada = true;
 			}
 		}
 
-		if (!infor_cargada){
+		if (!infor_cargada && !esBorrador){
 			alert("Tiene que adjuntar al menos un comprobante");
 			return false;
 		}

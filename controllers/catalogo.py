@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from funciones_siradex import get_tipo_usuario
+from log import insertar_log
 
 tipo_campos = ['Fecha', 'Telefono', 'Texto Corto','Documento','Cantidad Entera','Cantidad Decimal', 'Texto Largo', 'Cedula']
 
@@ -10,7 +11,8 @@ que existen en el sistema.
 '''
 
 def vGestionarCatalogos():
-
+    message=session.message
+    session.message=""
     admin = get_tipo_usuario(session)
 
     if (admin==0):
@@ -46,10 +48,11 @@ def vGestionarCatalogos():
     if formulario_agregar_catalogo.process(formname = "formulario_agregar_catalogo").accepted:
         # Creamos el catalogo y obtenemos su id, para pasarlo al controlador de agregar campo.
         id_catalogo = db.CATALOGO.insert(nombre = request.vars.nombre)['id_catalogo']
+        insertar_log(db, 'CATALOGO', datetime.datetime.now(), request.client, 'CREACION DE CATALOGO '+ request.vars.nombre.upper(), session.usuario['usbid'])
         redirect(URL('vGestionarCatalogos',args=[id_catalogo]))
     # En caso de que el formulario no sea aceptado
     else:
-        message = 'Error en el Formulario de Agregar Catalogo'
+        message = ''
 
     #Formulario para agregar un campo a un catalogo
     if formulario_agregar_campo.process(formname = "formulario_agregar_campo").accepted:
@@ -72,10 +75,11 @@ def vGestionarCatalogos():
                                      obligatorio = request.vars.obligatorio)
             message = ""
         # Redirijo a la misma pagina para seguir agregando campos
+        insertar_log(db, 'CAMPO', datetime.datetime.now(), request.client, 'NUEVO CAMPO '+ nombre_campo_nuevo.upper() + ' PARA CATALOGO CON ID '+ id_catalogo, session.usuario['usbid'])
         redirect(URL('vGestionarCatalogos',args=[id_catalogo]))
     # En caso de que el formulario no sea aceptado
     else:
-        message = 'Error en el Formulario de Agregar Campo'
+        message = ''
 
     if formulario_editar_campo.process(formname = "formulario_editar_campo").accepted:
         nombre_nuevo = request.vars.nombre
@@ -98,18 +102,18 @@ def vGestionarCatalogos():
 
         # Si el nombre no esta repetido, modificamos el campo
         if nombre_repetido:
-            session.message = 'Ya existe un campo llamado "' + nombre_nuevo + '" en el catalogo.'
+            message = 'Ya existe un campo llamado "' + nombre_nuevo + '" en el catálogo.'
         else:
             #Actualizamos el campo
             db.CAMPO_CATALOGO[id_campo] = dict(nombre      = nombre_nuevo,
                                                tipo_campo  = request.vars.tipo_campo,
                                                obligatorio = request.vars.obligatorio)
-
+            insertar_log(db, 'CAMPO', datetime.datetime.now(), request.client, 'MODIFICACION DE CAMPO CON ID '+ str(id_campo), session.usuario['usbid'])
             session.msgErr = 0
         # Redirijo a la misma pagina para seguir agregando campos
         redirect(URL('vGestionarCatalogos',args=[id_catalogo]))
     else:
-        message = 'Error en el Formulario de Editar Campo'
+        message = ''
 
     if formulario_cambiar_nombre.process(formname = "formulario_cambiar_nombre").accepted:
         nombre_nuevo = request.vars.nombre
@@ -117,9 +121,10 @@ def vGestionarCatalogos():
 
         #Actualizamos el nombre
         db.CATALOGO[id_catalogo] = dict(nombre = nombre_nuevo)
+        insertar_log(db, 'CATALOGO', datetime.datetime.now(), request.client, 'CATALOGO CON ID '+ str(id_catalogo) + ' RENOMBRADO A ' + nombre_nuevo.upper(), session.usuario['usbid'])
         redirect(URL('vGestionarCatalogos',args=[id_catalogo]))
     else:
-        message = 'Error en el Formulario de Editar Nombre Catalogo'
+        message = ''
 
 
     formulario_agregar_catalogo.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
@@ -140,8 +145,12 @@ def vGestionarCatalogos():
                 formulario_agregar_campo    = formulario_agregar_campo,
                 formulario_editar_campo     = formulario_editar_campo,
                 formulario_cambiar_nombre   = formulario_cambiar_nombre,
-                hayErroresAgregar=formulario_agregar_catalogo.errors,
-                admin = admin)
+                hayErroresAgregar = formulario_agregar_catalogo.errors,
+                hayErroresEditarNombre = formulario_cambiar_nombre.errors,
+                hayErroresEditarCampo  = formulario_editar_campo.errors,
+                hayErroresAgregarCampo  = formulario_agregar_campo.errors,
+                admin = admin,
+                message=message)
 
 '''
 Funcion que se encarga de agregar un catalogo a la
@@ -158,9 +167,9 @@ def AgregarCatalogo():
 
     formulario = SQLFORM.factory(
                         Field('nombre',
-                              requires = [IS_NOT_EMPTY(error_message='El nombre del catalogo no puede quedar vacio.'),
-                                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales."),
-                                          IS_NOT_IN_DB(db, 'CATALOGO.nombre', error_message="Ya existe un catalogo con ese nombre.")]),
+                              requires = [IS_NOT_EMPTY(error_message='El nombre del catálogo no puede quedar vacío.'),
+                                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use sólo letras, sin números ni caracteres especiales."),
+                                          IS_NOT_IN_DB(db, 'CATALOGO.nombre', error_message="Ya existe un catálogo con ese nombre.")]),
                               submit_button='Agregar',
                               labels={'nombre':'Nombre'})
 
@@ -180,8 +189,8 @@ def AgregarCampo():
     # Genero formulario para los campos
     formulario = SQLFORM.factory(
                     Field('nombre',
-                          requires = [IS_NOT_EMPTY(error_message='El nombre del campo no puede quedar vacio.'),
-                                      IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales.")]),
+                          requires = [IS_NOT_EMPTY(error_message='El nombre del campo no puede quedar vacío.'),
+                                      IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use sólo letras, sin números ni caracteres especiales.")]),
                     Field('tipo_campo',
                            requires = [IS_IN_SET(tipo_campos, zero='Seleccione...', error_message="Debe seleccionar un tipo para el campo.")],
                            widget = SQLFORM.widgets.options.widget),
@@ -222,6 +231,8 @@ def eliminarCatalogo():
 
     #eliminarmos el catalogo.
     del db.CATALOGO[id_catalogo]
+
+    insertar_log(db, 'CATALOGO', datetime.datetime.now(), request.client, 'ELIMINADO CATALOGO CON ID '+ (id_catalogo), session.usuario['usbid'])
 
     redirect(URL('vGestionarCatalogos.html'))
 
@@ -274,6 +285,7 @@ def eliminarCampos():
     # Que estan definidas ya, ni los productos ya listos.
     del db.CAMPO_CATALOGO[id_campo_cat]
 
+    insertar_log(db, 'CAMPO', datetime.datetime.now(), request.client, 'ELIMINACION DE CAMPO CON ID '+ str(id_campo_cat), session.usuario['usbid'])
     redirect(URL('vGestionarCatalogos',args=[id_catalogo]))
 
 def cambiarNombreCatalogo():
@@ -285,9 +297,9 @@ def cambiarNombreCatalogo():
 
     formulario = SQLFORM.factory(
                         Field('nombre',
-                              requires = [IS_NOT_EMPTY(error_message='El nombre del catalogo no puede quedar vacio.'),
-                                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use solo letras, sin numeros ni caracteres especiales."),
-                                          IS_NOT_IN_DB(db, 'CATALOGO.nombre', error_message="Ya existe un catalogo con ese nombre.")]),
+                              requires = [IS_NOT_EMPTY(error_message='El nombre del catálogo no puede quedar vacío.'),
+                                          IS_MATCH('^[A-zÀ-ÿŸ\s]*$', error_message="Use sólo letras, sin números ni caracteres especiales."),
+                                          IS_NOT_IN_DB(db, 'CATALOGO.nombre', error_message="Ya existe un catálogo con ese nombre.")]),
                         Field('id_catalogo', type='string'),
                               submit_button='Cambiar Nombre',
                               labels={'nombre':'Nuevo Nombre'})

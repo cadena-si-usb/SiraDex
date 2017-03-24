@@ -1,19 +1,76 @@
 {{extend 'layoutSIRADEXloged.html'}}
 
 {{block titulo}}
-    Bienvenido al SIRADEX
+    Bienvenido al SIRADEx
 {{end}}
 
 {{block subtitulo}}
 {{end}}
 
 {{block descripcion}}
+
+<!-- Custom DataTables plugin -->
+<script src="{{=URL('static','DataTables/datatables.js')}}"></script>
+<link rel="stylesheet" type="text/css" href="{{=URL('static','DataTables/datatables.css')}}">
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    var opciones = {
+      bFilter: false,
+      ordering: false,
+      responsive: true,
+        "language": {
+            search:         "Buscar:",
+            searchPlaceholder: "",
+            lengthMenu:     "Mostrar _MENU_ entradas",
+            info:           "Mostrando _START_ a _END_ de _TOTAL_ entradas.",
+            infoEmpty:      "Mostrando 0 a 0 de 0 entradas",
+            infoFiltered:   "(filtradas de _MAX_ entradas en total)",
+            infoPostFix:    "",
+            loadingRecords: "Carga en curso...",
+            zeroRecords:    "No se encontraron usuarios en la busqueda",
+            emptyTable:     "No hay informacion disponible en la tabla",
+            processing:     "Procesando...",
+            paginate: {
+                first:      "Primero",
+                previous:   "Anterior",
+                next:       "Siguiente",
+                last:       "Ultimo"
+            },
+            aria: {
+                sortAscending:  ": Se ordenan las columnas por orden creciente",
+                sortDescending: ": Se ordenan las columnas por orden decreciente"
+            }
+        },
+         "columns": [
+            { "orderable": false },
+            { "orderable": false },
+            { "orderable": false },
+            null,
+            null,
+            null
+        ]
+    };
+
+    // Asume que cada tabla de usuario tiene el mismo número de columnas
+    var cantidadColumnas = 1;
+    columnas = [];
+    for (var i = 0; i<cantidadColumnas; i++){
+      columnas.push({ "orderable": false });
+    }
+    opciones["columns"] = columnas;
+    $("#ValidadasTable").DataTable(opciones);
+    $("#NoValidadasTable").DataTable(opciones);
+    $("#PorValidarTable").DataTable(opciones);
+  });
+</script>
+
 <style scoped="scoped">
   embed{
     max-height: 20em;
   }
 </style>
-    <div class="row"> 
+    <div class="row">
         <!-- usuario -->
         <div class="col-md-5" style="margin-top: 6em;">
           <!-- Nombre del usuario -->
@@ -64,32 +121,34 @@
         <!-- tabla -->
         <div class="col-md-4">
           <div class="tab-content card" style="text-align: center;">
-            
-            <embed type="image/svg+xml" src="{{=grafica }}" />
-           <button type="button" id="btn-pieChart" class="btn btn-default green btn-border" data-toggle="modal" data-target="#grafica" style="margin-top: -5em;">
+
+          <div id="pieChart">
+          </div>
+
+          <!--<button type="button" id="btn-pieChart" class="btn btn-default green btn-border" data-toggle="modal" data-target="#grafica" style="margin-top: -5em;">
             <span class="glyphicon glyphicon-resize-full"></span> Aumentar
-          </button>
+          </button>-->
           </div>
         </div>
 
         <!-- botones -->
           <div class="col-md-3">
-            <div class="row">
+            <!--<div class="row">
               <span style="margin-left: 42.99em;">
-                          
+
                     <button type="button" class="btn btn-default green btn-border center-block" data-toggle="modal" data-target="#tabla">
                         <span class="glyphicon glyphicon-resize-full"></span>
                         Ver Actividades por año
                     </button>
-              </span>            
-            </div>
-            <br>      
+              </span>
+            </div>-->
+            <br>
             <div class="row">
               <span style="margin-left: 42.99em;">
-                  
-                <a href="{{=URL(c='producto',f='gestionar')}}">        
+
+                <a href="{{=URL(c='producto',f='gestionar')}}">
                     <button type="button" class="btn btn-default green btn-border center-block" data-toggle="modal" data-target="#myModal">
-                        Ver Todas Mis Productos
+                        Ver todos mis Productos
                         <span class="glyphicon glyphicon-chevron-right"></span>
                     </button>
                 </a>
@@ -121,7 +180,7 @@
       </div>
     </div>
   </div>
-</div>  
+</div>
 
 <!-- Modal 3 -->
 <div id="grafica" class="modal fade" role="dialog">
@@ -131,11 +190,9 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"><center>Grafica de Actividades</center></h4>
+        <h4 class="modal-title"><center>Gráfica de Actividades</center></h4>
       </div>
-      <div class="modal-body">
-        <embed type="image/svg+xml" src="{{=grafica }}" style="min-height:31em" />
-      </div>
+      <div id="pieChartB"></div>
       <div class="modal-footer">
       <center>
         <button type="button" class="btn btn-default green btn-border " data-dismiss="modal">
@@ -146,7 +203,7 @@
     </div>
 
   </div>
-</div>     
+</div>
 {{end}}
 
 {{block contenido}}
@@ -192,11 +249,11 @@
             {{if productos["Validados"]==[]:}}
             No tiene productos validados
             {{else:}}
-            <table class="table table-striped table-condensed table-hover sortable">
+            <table id='ValidadasTable' class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
                 <tbody>
                 {{for x in productos["Validados"]:}}
-                    <tr>
-                    <td class="center-vertically">
+                   <tr class="clickable">
+                    <td class="hColumns center-vertically">
                         {{=x.nombre}}
                     </td>
                     </tr>
@@ -210,11 +267,11 @@
             {{if productos["Por Validar"]==[]:}}
             No tiene productos por validar
             {{else:}}
-                <table class="table table-striped table-condensed table-hover sortable">
+                <table id='NoValidadasTable'  class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
                 <tbody>
                 {{for x in productos["Por Validar"]:}}
-                    <tr>
-                        <td class="center-vertically">
+                    <tr class="clickable">
+                        <td class="hColumns center-vertically">
                             {{=x.nombre}}
                         </td>
                     </tr>
@@ -228,10 +285,10 @@
             {{if productos["No Validados"]==[]:}}
             No tiene productos no validados
             {{else:}}
-            <table class="table table-striped table-condensed table-hover sortable">
+            <table  id='PorValidarTable' class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
                 {{for x in productos["No Validados"]:}}
-                <tr>
-                    <td class="center-vertically">
+                <tr class="clickable">
+                    <td class="hColumns center-vertically">
                         {{=x.nombre}}
                     </td>
                 </tr>
@@ -264,5 +321,63 @@
       $("#dv-esp").toggle(300);
           });
     });
+
+    // Load the Visualization API and the corechart package.
+  google.charts.load('current', {'packages':['corechart']});
+  // Set a callback to run when the Google Visualization API is loaded.
+  google.charts.setOnLoadCallback(PieChart);
+
+  // Grafica de torta
+  function PieChart() {
+    // Inicialziar datos
+    var dataTable = new google.visualization.DataTable();
+    dataTable.addColumn('string', 'Programa');
+    dataTable.addColumn('number', 'Productos');
+    dataTable.addColumn({type: 'string', role: 'tooltip'});
+
+    // Generar color para cada slice
+    var colorsArray = [];
+    {{for i in infoPieChart:}}
+      dataTable.addRows([['{{=infoPieChart[i]["abreviacion"]}}',parseInt({{=infoPieChart[i]['repeticiones']}},10),'{{=infoPieChart[i]["nombre"]}}\nTotal: {{=infoPieChart[i]["repeticiones"]}}']]);
+      var new_light_color = 'rgb(' +  (Math.floor((255-111)*Math.random()) + 28) + ',' +
+                                      (Math.floor((255-170)*Math.random()) + 42) + ',' +
+                                      (Math.floor((255-109)*Math.random()) + 64) + ')';
+      colorsArray.push(new_light_color);
+    {{pass}}
+
+      // Set opciones de las graficas
+      var options =  {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent'};
+      var options2 = {'title':'Productos por Programa\n ',colors: colorsArray,backgroundColor:'transparent'};
+
+      // Instanciar las graficas, dibujarlas usando opciones
+      var chart = new google.visualization.PieChart(document.getElementById('pieChart'));
+      chart.draw(dataTable, options);
+
+      // grafica dentro del modal
+      var chartBig = new google.visualization.PieChart(document.getElementById('pieChartB'));
+      chartBig.draw(dataTable, options2);
+
+      // Agregando funcion para redirigir al hacer click
+      google.visualization.events.addListener(chart, 'select', selectHandler);
+      function selectHandler() {
+        var selectedItem = chart.getSelection()[0];
+
+        if (selectedItem) {
+          var topping = dataTable.getValue(selectedItem.row, 0);
+
+          {{for i in infoPieChart:}}
+            if(topping == '{{=infoPieChart[i]["abreviacion"]}}'){
+              // este codigo lo arreglo LM
+              window.location = "{{=URL(c='busq_val', f='busqueda', vars={'Autor':session.usuario['usbid'], 'Producto':'', 'Programa':infoPieChart[i]['id'], 'TipoActividad':'all','fecha':''})}}";
+            }
+          {{pass}}
+        }
+      }
+  }
+
+  $(window).resize(function(){
+  PieChart();
+  BarChart();
+});
   </script>
 {{end}}
