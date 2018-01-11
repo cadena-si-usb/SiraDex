@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  var maxLongNombre  = 50;    // Longitud máxima que tendrá el campo nombre.
+  var maxLongNombre  = 128;    // Longitud máxima que tendrá el campo nombre.
   var maxLongDescrip = 2048;   // Longitud máxima que tendrá el campo descripción.
   var maxLongCodigo = 10;      // Longitud máxima que tendrá el campo código.
 
