@@ -4,7 +4,7 @@
 import datetime
 import os
 import shutil
-import contenttype as c
+#import contenttype as c
 import os.path
 from pprint    import pprint
 from datetime  import time
@@ -108,14 +108,16 @@ def agregar():
 
     nombre_actividad = tipo_actividad.nombre
     descripcion_actividad = tipo_actividad.descripcion
-
+    
     fields = []
+    """
     fields.append(Field('nombre','string',label="Nombre (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(50)]))
+    
     fields.append(Field('descripcion','string',label="Descripción (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(250)]))
     fields.append(Field('fecha_realizacion','date',label="Fecha de Culminación (*)",requires=[IS_NOT_EMPTY(error_message='Debe seleccionar una fecha'),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAAA-MM-DD')]))
     fields.append(Field('lugar','string',label="Lugar (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(50)]))
     fields.append(Field("colaboradores",label="Colaboradores"))
-
+    """
     # Otros Autores de la Actividad
     lista_usuarios = db(db.USUARIO.tipo == 'Usuario').select()
     usuarios = {}
@@ -304,11 +306,13 @@ def modificar():
     # Creamos el formulario
     rows = db(db.PRODUCTO_TIENE_CAMPO.id_prod == id_producto).select()
     fields = []
+    """
     fields.append(Field('nombre','string',label="Nombre (*)",requires=[IS_NOT_EMPTY(),IS_LENGTH(50)]))
     fields.append(Field('descripcion','string',label="Descripción (*)",requires=[IS_NOT_EMPTY(),IS_LENGTH(250)]))
     fields.append(Field('fecha_realizacion','date',label="Fecha de Culminación (*)",requires=[IS_NOT_EMPTY(),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha inválida, debe ser: AAA-MM-DD')]))
     fields.append(Field('lugar','string',label="Lugar (*)",requires=[IS_NOT_EMPTY(),IS_LENGTH(50)]))
     fields.append(Field("colaboradores",label="Colaboradores"))
+    """
     obl = {}
     no_obl = {}
 
