@@ -1,0 +1,119 @@
+{{extend 'layoutSIRADEX.html'}}
+
+{{block navegacion}}
+
+<nav class="navbar navbar-default" style="border-color:#FFF">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+
+            <!--Opciones administrador-->
+            {{if admin == -1:}}
+      <ul class="nav navbar-nav navbar-right">
+               <li class="activo">
+
+                <!-- EN SERVIDOR -->
+<<<<<<< HEAD
+                 <a  id = login
+                            class ='btn btn-xs'
+                            href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas'>
+                            
+                <!-- EN DESARROLLO 
+                         <a  class ='btn btn-xs '
+                            href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas'>-->
+=======
+                 <a id = login
+                            class ='btn btn-xs'
+                            href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Fsiradex.dex.usb.ve%2Fdefault%2Flogin_cas'>
+
+                <!-- EN DESARROLLO -->
+                         <!-- <a  class ='btn btn-xs '
+                            href='http://secure.dst.usb.ve/login?service=http%3A%2F%2Flocalhost%3A8000%2FSiraDex%2Fdefault%2Flogin_cas'> -->
+                     Iniciar Sesión
+                    </a>
+                </li>
+            {{else:}}
+      <form class="navbar-form navbar-left" role="search" action="{{=URL(c='busq_val',f='busqueda')}}" method="post">
+        <div class="input-group">
+          <input    type="text"
+                    class="form-control"
+                    id="form-busqueda"
+                    placeholder="Buscar"
+                    name="Producto">
+
+        <span class="input-group-btn">
+        <button type="submit"
+                class="btn btn-default glyphicon glyphicon-search"
+                id="btn-lupa"
+                style="top:0px !important;">
+        </button>
+        </span>
+        </div>
+      </form>
+
+      <ul class="nav navbar-nav navbar-right">
+
+            {{ if admin in [1,2]: }}
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="{{=URL(c='default', f='setVista', args=[2])}}"> Sistema</a>
+                <ul class="dropdown-menu" style="right:auto">
+                    {{if admin == 1:}}
+                    <li><a href="{{=URL(c='log', f='consultar')}}">Consultar Log</a></li>
+                    <li><a href="{{=URL(c='backup', f='index')}}">BackUp</a></li>
+                    <li><a href="{{=URL(c='usuarios', f='gestionar')}}">Usuarios</a></li>
+                    <li role="separator" class="divider"></li>
+                    {{pass}}
+		                <li><a href="{{=URL(c='tipo_actividad', f='gestionar')}}">Tipos de Actividad</a></li>
+                    <li><a href="{{=URL(c='catalogo', f='vGestionarCatalogos')}}">Catálogos</a></li>
+                    <li><a href="{{=URL(c='archivo_historico', f='gestionar') }}">Papelera</a></li>
+                </ul>
+            </li>
+            <li><a href="{{=URL(c='busq_val', f='gestionar_validacion')}}">
+                Solicitudes
+            </a></li>
+            {{ pass }}
+
+            <li><a href="{{=URL(c='programas', f='gestionar_programas')}}">
+                Programas
+            </a></li>
+
+
+
+            <!--Opciones basicas-->
+
+                <!--Cierre de sesion-->
+                <li class="dropdown activo">
+                    <a  class="dropdown-toggle"
+                        data-toggle="dropdown"
+                        href="{{=URL(c='default', f='perfil', args=[2])}}"> {{=session.usuario['first_name'].split(' ',1)[0]}} {{=session.usuario['last_name'].split(' ',1)[0]}}
+                    </a>
+                    <ul class="dropdown-menu" style="right:auto">
+                        <li><a href="{{=URL(c='default',f='perfil')}}">Ver Perfil</a></li>
+                        <li><a href="{{=URL(c='default',f='EditarPerfil')}}">Editar Perfil</a></li>
+                        <li><a href="{{=URL(c='producto',f='gestionar')}}">Mis Productos</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li>
+                        <!--Cierre de sesion-->
+                        <a href="{{=URL(c='default', f='logout_cas')}}">
+                                Cerrar Sesión
+                        </a>
+                        </li>
+                    </ul>
+            </li>
+            {{ pass }}
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+{{end}}
