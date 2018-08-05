@@ -116,6 +116,7 @@
 	                            <tr>
 	                                <th class="hColumns">ID Producto</th>
 	                                <th class="hColumns">Tipo Producto</th>
+                                  <th class="hColumns">Autor</th>
 	                                <th class="hColumns text-center">Mostrar</center></th>
 	                            </tr>
                             </thead>
@@ -131,6 +132,9 @@
                                             {{=producto[1]}}
                                         </td>
 
+                                        <td class="hColumns center-vertically detalles">
+                                            {{=producto[2]}}
+                                        </td>
                                         <td class="hColumns text-center center-vertically">
                                             <a href="{{=URL(f='ver_producto', args=[producto[0]])}}">
                                                <span class="glyphicon glyphicon-eye-open" style="color:#9E9E9E"></span>
@@ -156,6 +160,7 @@
 	                            <tr>
 	                                <th class="hColumns">ID Producto</th>
 	                                <th class="hColumns">Tipo Producto</th>
+                                  <th class="hColumns">Autor</th>
 	                                <th class="hColumns text-center">Mostrar</th>
 	                            </tr>
                             </thead>
@@ -167,6 +172,9 @@
                                         </td>
                                         <td class="hColumns center-vertically detalles">
                                             {{=producto[1]}}
+                                        </td>
+                                        <td class="hColumns center-vertically detalles">
+                                            {{=producto[2]}}
                                         </td>
                                         <td class="hColumns text-center center-vertically">
                                             <a href="{{=URL(f='ver_producto', args=[producto[0]])}}">
@@ -194,6 +202,7 @@
 	                            <tr>
 	                                <th class="hColumns">ID Producto</th>
 	                                <th class="hColumns">Tipo Producto</th>
+                                  <th class="hColumns">Author</th>
 	                                <th class="hColumns text-center">Mostrar</th>
 	                            </tr>
                             </thead>
@@ -206,6 +215,9 @@
 
                                         <td class="hColumns center-vertically detalles">
                                             {{=producto[1]}}
+                                        </td>
+                                        <td class="hColumns center-vertically detalles">
+                                            {{=producto[2]}}
                                         </td>
                                         <td class="hColumns text-center center-vertically">
                                             <a href="{{=URL(f='ver_producto', args=[producto[0]])}}">

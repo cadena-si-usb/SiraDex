@@ -241,11 +241,32 @@ def gestionar_validacion():
     + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='Por Validar';"
     sqlRechazadas = "select producto.id_producto,  tipo_actividad.nombre from producto inner join tipo_actividad"\
     + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='No Validado';"
+
     productosV = db.executesql(sqlValidadas)
     productosE = db.executesql(sqlEspera)
     productosR = db.executesql(sqlRechazadas)
 
-    print(productosV)
+    for prod in productosV:
+        id_producto = prod[0]
+        producto = db(db.PRODUCTO.id == id_producto).select().first()
+        usuario_producto = db(db.USUARIO.usbid == producto.usbid_usu_creador).select().first()
+        usuario_nombre = usuario_producto.nombres + " " + usuario_producto.apellidos
+        prod.append(usuario_nombre)
+
+    for prod in productosE:
+        id_producto = prod[0]
+        producto = db(db.PRODUCTO.id == id_producto).select().first()
+        usuario_producto = db(db.USUARIO.usbid == producto.usbid_usu_creador).select().first()
+        usuario_nombre = usuario_producto.nombres + " " + usuario_producto.apellidos
+        prod.append(usuario_nombre)
+
+    for prod in productosR:
+        id_producto = prod[0]
+        producto = db(db.PRODUCTO.id == id_producto).select().first()
+        usuario_producto = db(db.USUARIO.usbid == producto.usbid_usu_creador).select().first()
+        usuario_nombre = usuario_producto.nombres + " " + usuario_producto.apellidos
+        prod.append(usuario_nombre)
+
     return locals()
 
 # Metodo para validar un producto
