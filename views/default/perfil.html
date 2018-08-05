@@ -250,11 +250,24 @@
             No tiene productos validados
             {{else:}}
             <table id='ValidadasTable' class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
+                <thead>
+                  <tr>
+                        <th class="hColumns">ID</th>
+                        <th class="hColumns">Tipo Actividad</th>
+                        <th class="hColumns">Ult. Modificación</th>
+                </tr>
+                </thead>
                 <tbody>
                 {{for x in productos["Validados"]:}}
                    <tr class="clickable">
                     <td class="hColumns center-vertically">
-                        {{=x.nombre}}
+                        {{=x.id}}
+                    </td>
+                    <td class="hColumns center-vertically">
+                        {{=nombres[x]}}
+                    </td>
+                    <td class="hColumns center-vertically">
+                        {{=x.fecha_modificacion}}
                     </td>
                     </tr>
                 {{pass}}
@@ -268,13 +281,26 @@
             No tiene productos por validar
             {{else:}}
                 <table id='NoValidadasTable'  class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
+                <thead>
+                  <tr>
+                        <th class="hColumns">ID</th>
+                        <th class="hColumns">Tipo Actividad</th>
+                        <th class="hColumns">Ult. Modificación</th>
+                </tr>
+                </thead>
                 <tbody>
                 {{for x in productos["Por Validar"]:}}
-                    <tr class="clickable">
-                        <td class="hColumns center-vertically">
-                            {{=x.nombre}}
-                        </td>
-                    </tr>
+                  <tr class="clickable">
+                   <td class="hColumns center-vertically">
+                       {{=x.id}}
+                   </td>
+                   <td class="hColumns center-vertically">
+                       {{=nombres[x]}}
+                   </td>
+                   <td class="hColumns center-vertically">
+                       {{=x.fecha_modificacion}}
+                   </td>
+                   </tr>
                 {{pass}}
                 </tbody>
                 </table>
@@ -286,13 +312,28 @@
             No tiene productos no validados
             {{else:}}
             <table  id='PorValidarTable' class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
+              <thead>
+                <tr>
+                      <th class="hColumns">ID</th>
+                      <th class="hColumns">Tipo Actividad</th>
+                      <th class="hColumns">Ult. Modificación</th>
+              </tr>
+              </thead>
+              <tbody>
                 {{for x in productos["No Validados"]:}}
-                <tr class="clickable">
-                    <td class="hColumns center-vertically">
-                        {{=x.nombre}}
-                    </td>
-                </tr>
+                  <tr class="clickable">
+                   <td class="hColumns center-vertically">
+                       {{=x.id}}
+                   </td>
+                   <td class="hColumns center-vertically">
+                       {{=nombres[x]}}
+                   </td>
+                   <td class="hColumns center-vertically">
+                       {{=x.fecha_modificacion}}
+                   </td>
+                   </tr>
                 {{pass}}
+              </tbody>
             </table>
             {{pass}}
         </div>

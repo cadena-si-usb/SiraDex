@@ -67,11 +67,7 @@ def busqueda():
         elif (session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador"):
             sql += ";"
 
-        print "\nsql"
-        print sql
         productos = db.executesql(sql)
-        print "\nLo resultante"
-        print productos
 
         infoTabla = tabla(productos)
         infoBarChart = graficaBar(productos)
@@ -160,14 +156,10 @@ def ver_producto():
 
 
 
-    ## Formulario para colocar la razon de rechazo de un producto.
+    ## Formulario para colocar validar el producto
     formulario_validar = SQLFORM.factory(
-                          Field('nombre','string',
-                                    requires=[IS_NOT_EMPTY(error_message="El nombre del producto no puede quedar vacío."),
-                                              IS_LENGTH(50, error_message="El nombre del producto no puede superar los 50 caracteres.")]),
                           Field('id_producto',type="string"),
-                          submit_button = 'Validar',
-                          labels = {'nombre' : 'Nuevo Nombre'})
+                          submit_button = 'Validar')
 
     formulario_validar.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
     formulario_validar.element(_type='submit')['_value']="Validar"
@@ -243,15 +235,37 @@ def gestionar_validacion():
 
     # Hago el query Espera
 
-    sqlValidadas = "select producto.id_producto, producto.nombre, tipo_actividad.nombre from producto inner join tipo_actividad"\
+    sqlValidadas = "select producto.id_producto, tipo_actividad.nombre from producto inner join tipo_actividad"\
     + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='Validado';"
-    sqlEspera = "select producto.id_producto, producto.nombre, tipo_actividad.nombre from producto inner join tipo_actividad"\
+    sqlEspera = "select producto.id_producto,  tipo_actividad.nombre from producto inner join tipo_actividad"\
     + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='Por Validar';"
-    sqlRechazadas = "select producto.id_producto, producto.nombre, tipo_actividad.nombre from producto inner join tipo_actividad"\
+    sqlRechazadas = "select producto.id_producto,  tipo_actividad.nombre from producto inner join tipo_actividad"\
     + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='No Validado';"
+
     productosV = db.executesql(sqlValidadas)
     productosE = db.executesql(sqlEspera)
     productosR = db.executesql(sqlRechazadas)
+
+    for prod in productosV:
+        id_producto = prod[0]
+        producto = db(db.PRODUCTO.id == id_producto).select().first()
+        usuario_producto = db(db.USUARIO.usbid == producto.usbid_usu_creador).select().first()
+        usuario_nombre = usuario_producto.nombres + " " + usuario_producto.apellidos
+        prod.append(usuario_nombre)
+
+    for prod in productosE:
+        id_producto = prod[0]
+        producto = db(db.PRODUCTO.id == id_producto).select().first()
+        usuario_producto = db(db.USUARIO.usbid == producto.usbid_usu_creador).select().first()
+        usuario_nombre = usuario_producto.nombres + " " + usuario_producto.apellidos
+        prod.append(usuario_nombre)
+
+    for prod in productosR:
+        id_producto = prod[0]
+        producto = db(db.PRODUCTO.id == id_producto).select().first()
+        usuario_producto = db(db.USUARIO.usbid == producto.usbid_usu_creador).select().first()
+        usuario_nombre = usuario_producto.nombres + " " + usuario_producto.apellidos
+        prod.append(usuario_nombre)
 
     return locals()
 

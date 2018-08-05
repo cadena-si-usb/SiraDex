@@ -288,7 +288,9 @@
                     <table id='ValidadasTable' class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
                         <thead>
                           <tr>
-                                <th class="hColumns">Nombre</th>
+                                <th class="hColumns">ID</th>
+                                <th class="hColumns">Tipo Actividad</th>
+                                <th class="hColumns">Ult. Modificación</th>
                                 <th class="hColumns text-center">Editar</th>
                                 <th class="hColumns text-center">Descargar</th>
                                 <th class="hColumns text-center">Eliminar</th>
@@ -306,11 +308,12 @@
                             {{for x in rows:}}
                                 {{if x.estado == 'Validado':}}
                                 <tr class="clickable">
-                                    <!-- Nombre
 
-                                    <td class="center-vertically detalles" data-toggle="modal"
-                                    data-target="#myModal" data-producto={{=x.id_producto}}> -->
-                                    <td class="hColumns center-vertically detalles">{{=x.nombre}}</td>
+                                    <td class="hColumns center-vertically detalles">{{=x.id}}</td>
+
+                                    <td class="hColumns center-vertically detalles"> {{=nombres[x]}}</td>
+
+                                    <td class="hColumns center-vertically"> {{=x.fecha_modificacion}}</td>
 
                                     <!-- Boton Modificar -->
                                     <td class="hColumns text-center center-vertically">
@@ -319,7 +322,6 @@
 
                                     <!-- Boton Descargar -->
                                     <td class="hColumns text-center center-vertically">
-                                  <!--  {{=IMG(_src=URL('static', 'icon/i_download.png'),_height='25',_title="Descargar") }} -->
                                         <a href='/{{=request.application}}/{{=request.controller}}/get_pdf/{{=x.id_producto}}'
                                         class="glyphicon glyphicon-save blue" target="blanck" title="Imprimir Producto {{=x.id_producto}}"></a>
                                     </td>
@@ -340,10 +342,9 @@
                     <table id='PorValidarTable' class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
                         <thead>
                           <tr>
-                                <th class="hColumns">Nombre</th>
+                                <th class="hColumns">ID</th>
                                 <th class="hColumns">Tipo Actividad</th>
-                                <th class="hColumns">Modificación</th>
-                                <th class="hColumns">Finalización</th>
+                                <th class="hColumns">Ult. Modificación</th>
                                 <th class="hColumns text-center">Editar</th>
                                 <th class="hColumns text-center">Descargar</th>
                                 <th class="hColumns text-center">Eliminar</th>
@@ -352,7 +353,7 @@
                         <tbody id="actividades">
                           {{if cant_esp == 0:}}
                             <tr class="clickable">
-                              <td class="hColumns" colspan="7"> No tienes productos por validar</td>
+                              <td class="hColumns" colspan="6"> No tienes productos por validar</td>
                               <th class="hColumns"></th>
                               <th class="hColumns"></th>
                               <th class="hColumns text-center"></th>
@@ -364,14 +365,11 @@
                             {{for x in rows:}}
                                 {{if x.estado == 'Por Validar':}}
                                     <tr class="clickable">
-                                        <!-- Nombre Producto -->
-
-                                        <td class="hColumns center-vertically detalles">{{=x.nombre}}</td>
+                                        <!-- ID Producto -->
+                                        <td class="hColumns center-vertically detalles">{{=x.id}}</td>
                                         <!-- Nombre Actividad -->
                                         <td class="hColumns center-vertically detalles"> {{=nombres[x]}}</td>
                                         <!-- Modificacion -->
-                                        <td class="hColumns center-vertically"> {{=x.fecha_realizacion}}</td>
-                                        <!-- Realizacion  -->
                                         <td class="hColumns center-vertically"> {{=x.fecha_modificacion}}</td>
                                         <!-- Boton Modificar -->
                                         <td class="hColumns text-center center-vertically">
@@ -400,7 +398,7 @@
                     <table id='RechazadasTable' class="table table-hover table-striped borde-tabla"  style="margin:0px !important; width: 100% !important">
                         <thead>
                             <tr>
-                                <th class="hColumns">Nombre</th>
+                                <th class="hColumns">ID</th>
                                 <th class="hColumns">Tipo Actividad</th>
                                 <th class="hColumns">Ult. Modificación</th>
                                 <th class="hColumns text-center">Editar</th>
@@ -411,7 +409,7 @@
                         <tbody id="actividades">
                           {{if cant_rec == 0:}}
                               <tr class="clickable">
-                                <td class="hColumns">  No tienes productos no validados</td>
+                                <td class="hColumns" colspan="6"> No tienes productos no validados</td>
                                 <th class="hColumns"></th>
                                 <th class="hColumns"></th>
                                 <th class="hColumns text-center"></th>
@@ -422,7 +420,7 @@
                             {{for x in rows:}}
                                 {{if x.estado == 'No Validado':}}
                                 <tr class="clickable">
-                                    <td class="hColumns center-vertically detalles"> {{=x.nombre}}</td>
+                                    <td class="hColumns center-vertically detalles"> {{=x.id}}</td>
                                     <td class="hColumns center-vertically detalles"> {{=nombres[x]}}</td>
                                     <td class="hColumns center-vertically"> <!-- Modificacion --> {{=x.fecha_modificacion}}</td>
                                     <!-- Boton Modificar -->
@@ -458,7 +456,7 @@
                     <table id='BorradoresTable' class="table table-hover table-striped borde-tabla" style="margin:0px !important; width: 100% !important">
                         <thead>
                             <tr>
-                                <th class="hColumns">Nombre</th>
+                                <th class="hColumns">ID</th>
                                 <th class="hColumns">Tipo Actividad</th>
                                 <th class="hColumns">Ult. Modificación</th>
                                 <th class="hColumns text-center">Editar</th>
@@ -468,7 +466,7 @@
                         <tbody id="actividades">
                           {{if cant_bor == 0:}}
                               <tr class="clickable">
-                                <td class="hColumns">No tienes productos guardados como borrador</td>
+                                <td class="hColumns" colspan="5">No tienes productos guardados como borrador</td>
                                 <th class="hColumns"></th>
                                 <th class="hColumns"></th>
                                 <th class="hColumns text-center"></th>
@@ -479,7 +477,7 @@
                             {{for x in rows:}}
                                 {{if x.estado == 'Borrador':}}
                                 <tr class="clickable">
-                                    <td class="hColumns center-vertically detalles"> {{=x.nombre}}</td>
+                                    <td class="hColumns center-vertically detalles"> {{=x.id}}</td>
                                     <td class="hColumns center-vertically detalles"> {{=nombres[x]}}</td>
                                     <td class="hColumns center-vertically"> <!-- Modificacion --> {{=x.fecha_modificacion}}</td>
                                     <!-- Boton Modificar -->
