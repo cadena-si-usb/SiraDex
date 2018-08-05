@@ -246,6 +246,10 @@ def gestionar_validacion():
     productosE = db.executesql(sqlEspera)
     productosR = db.executesql(sqlRechazadas)
 
+    productosV = [list(prod) for prod in productosV]
+    productosE = [list(prod) for prod in productosE]
+    productosR = [list(prod) for prod in productosR]
+
     for prod in productosV:
         id_producto = prod[0]
         producto = db(db.PRODUCTO.id == id_producto).select().first()
