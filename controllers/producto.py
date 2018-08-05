@@ -646,11 +646,19 @@ def get_pdf():
         nombres_autores  = nombres_autores + ', ' + autorAux.nombres +' '+ autorAux.apellidos
 
     colaboradores = ""
-    if not producto.colaboradores :
-        colaboradores = "--Campo no Suministrado--"
-    else:
+    if producto.colaboradores :
         colaboradores = producto.colaboradores
 
+    # cargando informacion de los campos adicionales
+    dict_campos = dict()
+    campos = db((db.PRODUCTO_TIENE_CAMPO.id_campo == db.CAMPO.id_campo)
+                & (db.PRODUCTO_TIENE_CAMPO.id_prod == id_producto)).select()
+
+    for campo in campos:
+        if campo.CAMPO.tipo_campo in ['Fecha', 'Texto Corto', 'Texto Largo', 'Cedula']:
+            dict_campos[campo.CAMPO.nombre] = campo.PRODUCTO_TIENE_CAMPO.valor_campo
+
+    # print(dict_campos)
 
     tmpfilename = os.path.join(request.folder,'private',str(uuid4()))
     doc = SimpleDocTemplate(tmpfilename)
@@ -698,19 +706,28 @@ def get_pdf():
     elements.append(Paragraph('Sistema de Registro de Actividades de Extensión (SIRADEx)' , estilo_titulo))
     elements.append(Paragraph('<br/><br/>DATOS DEL PRODUCTO' , estilo_titulo))
 
-    data = [
-    [''],
-    ['', Paragraph('<b>NOMBRE DEL PRODUCTO:</b> ', estilo_tabla),  Paragraph(str(producto.nombre), estilo_tabla), ''],
-    ['', Paragraph('<b>AUTOR(ES):</b> ', estilo_tabla),  Paragraph(nombres_autores, estilo_tabla), ''],
-    ['', Paragraph('<b>COLABORADOR(ES):</b>', estilo_tabla),  Paragraph(str(colaboradores), estilo_tabla), ''],
-    ['', Paragraph('<b>REGISTRADO POR: </b>' , estilo_tabla),  Paragraph(str(creador.nombres +' '+ creador.apellidos), estilo_tabla),''],
-    ['', Paragraph('<b>CI:</b> ' , estilo_tabla),  Paragraph(str(creador.ci), estilo_tabla),''],
-    ['', Paragraph('<b>DESCRIPCIÓN:</b> ', estilo_tabla) ,  Paragraph(str (producto.descripcion), estilo_tabla), ''],
-    ['', Paragraph('<b>LUGAR DE REALIZACIÓN:</b>', estilo_tabla),  Paragraph(str (producto.lugar), estilo_tabla), ''],
-    ['', Paragraph('<b>FECHA DE CULMINACIÓN:</b> ', estilo_tabla) ,  Paragraph(str (producto.fecha_realizacion), estilo_tabla), ''],
-    ['', Paragraph('<b>ÚLTIMA FECHA DE MODIFICACIÓN: </b>' , estilo_tabla) ,  Paragraph(str (producto.fecha_modificacion), estilo_tabla), ''],
-    ['', Paragraph('<b>STATUS DE VALIDACIÓN: </b>', estilo_tabla) ,  Paragraph(str (producto.estado), estilo_tabla), '']
-    ]
+    data = []
+    data.append([''])
+    data.append(['', Paragraph('<b>ID DEL PRODUCTO:</b> ', estilo_tabla),  Paragraph(str(producto.id), estilo_tabla), ''])
+    data.append(['', Paragraph('<b>AUTOR(ES):</b> ', estilo_tabla),  Paragraph(nombres_autores, estilo_tabla), ''])
+
+    if colaboradores:
+        data.append(['', Paragraph('<b>COLABORADOR(ES):</b>', estilo_tabla),  Paragraph(str(colaboradores), estilo_tabla), ''])
+
+    data.append(['', Paragraph('<b>REGISTRADO POR: </b>' , estilo_tabla),  Paragraph(str(creador.nombres +' '+ creador.apellidos), estilo_tabla),''])
+    data.append(['', Paragraph('<b>CI:</b> ' , estilo_tabla),  Paragraph(str(creador.ci), estilo_tabla),''])
+
+    if dict_campos:
+        data.append([''])
+        data.append(['', Paragraph('<b>DETALLES DEL PRODUCTO </b> ' , estilo_tabla),  Paragraph('', estilo_tabla),''])
+
+        for campo in dict_campos:
+            data.append(['', Paragraph('<b>%s:</b> '%str(campo).upper() , estilo_tabla),  Paragraph(str(dict_campos[campo]), estilo_tabla),''])
+
+        data.append([''])
+
+    data.append(['', Paragraph('<b>ÚLTIMA FECHA DE MODIFICACIÓN: </b>' , estilo_tabla) ,  Paragraph(str (producto.fecha_modificacion), estilo_tabla), ''])
+    data.append(['', Paragraph('<b>STATUS DE VALIDACIÓN: </b>', estilo_tabla) ,  Paragraph(str (producto.estado), estilo_tabla), ''])
 
     t=Table(data, colWidths=(2.5*inch))
     t.setStyle(TableStyle([('VALIGN',(1,0),(1,8),'MIDDLE')]))
