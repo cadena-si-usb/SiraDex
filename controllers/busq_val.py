@@ -160,14 +160,10 @@ def ver_producto():
 
 
 
-    ## Formulario para colocar la razon de rechazo de un producto.
+    ## Formulario para colocar validar el producto
     formulario_validar = SQLFORM.factory(
-                          Field('nombre','string',
-                                    requires=[IS_NOT_EMPTY(error_message="El nombre del producto no puede quedar vacío."),
-                                              IS_LENGTH(50, error_message="El nombre del producto no puede superar los 50 caracteres.")]),
                           Field('id_producto',type="string"),
-                          submit_button = 'Validar',
-                          labels = {'nombre' : 'Nuevo Nombre'})
+                          submit_button = 'Validar')
 
     formulario_validar.element(_type='submit')['_class']="btn blue-add btn-block btn-border"
     formulario_validar.element(_type='submit')['_value']="Validar"
