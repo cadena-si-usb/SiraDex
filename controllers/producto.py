@@ -39,7 +39,7 @@ def gestionar():
     cant_bor = 0
 
     for row in rows:
-        dict_campos = dict()
+        dict_campos  = dict()
         dict_nombres = dict()
 
         campos = db((db.PRODUCTO_TIENE_CAMPO.id_campo == db.CAMPO.id_campo)
@@ -108,11 +108,11 @@ def agregar():
 
     nombre_actividad = tipo_actividad.nombre
     descripcion_actividad = tipo_actividad.descripcion
-    
+
     fields = []
     """
     fields.append(Field('nombre','string',label="Nombre (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(50)]))
-    
+
     fields.append(Field('descripcion','string',label="Descripción (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(250)]))
     fields.append(Field('fecha_realizacion','date',label="Fecha de Culminación (*)",requires=[IS_NOT_EMPTY(error_message='Debe seleccionar una fecha'),IS_DATE(format=T('%Y-%m-%d'),error_message='Fecha invalida, debe ser: AAAA-MM-DD')]))
     fields.append(Field('lugar','string',label="Lugar (*)",requires=[IS_NOT_EMPTY(error_message='Inserte texto'),IS_LENGTH(50)]))
