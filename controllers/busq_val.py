@@ -67,11 +67,7 @@ def busqueda():
         elif (session.usuario["tipo"] == "DEX" or session.usuario["tipo"] == "Administrador"):
             sql += ";"
 
-        print "\nsql"
-        print sql
         productos = db.executesql(sql)
-        print "\nLo resultante"
-        print productos
 
         infoTabla = tabla(productos)
         infoBarChart = graficaBar(productos)
@@ -239,16 +235,17 @@ def gestionar_validacion():
 
     # Hago el query Espera
 
-    sqlValidadas = "select producto.id_producto, producto.nombre, tipo_actividad.nombre from producto inner join tipo_actividad"\
+    sqlValidadas = "select producto.id_producto, tipo_actividad.nombre from producto inner join tipo_actividad"\
     + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='Validado';"
-    sqlEspera = "select producto.id_producto, producto.nombre, tipo_actividad.nombre from producto inner join tipo_actividad"\
+    sqlEspera = "select producto.id_producto,  tipo_actividad.nombre from producto inner join tipo_actividad"\
     + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='Por Validar';"
-    sqlRechazadas = "select producto.id_producto, producto.nombre, tipo_actividad.nombre from producto inner join tipo_actividad"\
+    sqlRechazadas = "select producto.id_producto,  tipo_actividad.nombre from producto inner join tipo_actividad"\
     + " on producto.id_tipo=tipo_actividad.id_tipo where producto.estado='No Validado';"
     productosV = db.executesql(sqlValidadas)
     productosE = db.executesql(sqlEspera)
     productosR = db.executesql(sqlRechazadas)
 
+    print(productosV)
     return locals()
 
 # Metodo para validar un producto
